@@ -13,17 +13,22 @@ const items = await getCollection('publications');
 	</head>
 	<body>
 		<Header />
-		<main>
-			<h1>Publications</h1>
-			<ul>
-				{items.map((p) => (
-					<li>
-						<strong>{p.data.title}</strong>
-						{p.data.authors && <> — {p.data.authors.join(', ')}</>}
-					</li>
-				))}
-			</ul>
-		</main>
+        <main>
+            <h1>Publications</h1>
+            <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1rem; margin-top: 1rem;">
+                {items.map((p) => (
+                    <article id={p.slug} style="border:1px solid rgba(var(--gray-light),1); border-radius: 12px; padding: 1rem; background: white;">
+                        <h3 style="margin-bottom:.25rem;">{p.data.title}</h3>
+                        <p style="margin:0; font-size:.95rem; color: rgb(var(--gray));">{p.data.authors?.join(', ')}</p>
+                        {p.data.abstract && <p style="margin-top:.5rem;">{p.data.abstract}</p>}
+                        {p.data.url && <p style="margin-top:.25rem;"><a href={p.data.url} target="_blank" rel="noopener">External link</a></p>}
+                        <p style="margin-top:.5rem;">
+                            <a href={new URL(`/?scroll=${encodeURIComponent(Astro.url.searchParams.get('scroll') || '0')}#publications`, Astro.site)}>&larr; Back to one-page view</a>
+                        </p>
+                    </article>
+                ))}
+            </div>
+        </main>
 		<Footer />
 	</body>
 </html>

@@ -5,6 +5,7 @@ import Header from '../components/Header.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 import { getCollection } from 'astro:content';
 const projects = await getCollection('projects');
+const publications = await getCollection('publications');
 ---
 
 <!doctype html>
@@ -66,10 +67,12 @@ const projects = await getCollection('projects');
             <section id="publications" style="padding: 3rem 0;">
                 <h2 style="margin: 1rem 0;">Publications</h2>
                 <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1rem;">
-                    <article class="card reveal">
-                        <h3 style="margin-bottom:.25rem;">Paper Title</h3>
-                        <p style="margin:0; font-size:.95rem; color: rgb(var(--gray));">Authors • Venue • Year</p>
-                    </article>
+                    {publications.map((p) => (
+                        <article class="card reveal clickable" data-slug={p.slug} data-title={p.data.title} data-description={p.data.abstract || ''} data-section="publications">
+                            <h3 style="margin-bottom:.25rem;">{p.data.title}</h3>
+                            <p style="margin:0; font-size:.95rem; color: rgb(var(--gray));">{p.data.authors?.join(', ')}</p>
+                        </article>
+                    ))}
                 </div>
             </section>
             <hr class="section-divider" />
@@ -162,9 +165,10 @@ const projects = await getCollection('projects');
             modalBody.textContent = card.getAttribute('data-description') || '';
             modal?.classList.add('open');
             const slug = card.getAttribute('data-slug');
+            const section = card.getAttribute('data-section') || 'projects';
             const scroll = window.scrollY;
             // Ensure query precedes hash for correct parsing
-            if (slug && modalLink) modalLink.setAttribute('href', `/projects?from=home&scroll=${scroll}#${slug}`);
+            if (slug && modalLink) modalLink.setAttribute('href', `/${section}?from=home&scroll=${scroll}#${slug}`);
         });
     });
     modalClose?.addEventListener('click', () => modal?.classList.remove('open'));

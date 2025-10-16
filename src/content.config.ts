@@ -42,7 +42,7 @@ const projects = defineCollection({
 // Publications
 const publications = defineCollection({
   loader: glob({ base: './src/content/publications', pattern: '**/*.{md,mdx}' }),
-  schema: () =>
+  schema: ({ image }) =>
     z.object({
       title: z.string(),
       authors: z.array(z.string()),
@@ -51,6 +51,8 @@ const publications = defineCollection({
       doi: z.string().optional(),
       url: z.string().url().optional(),
       abstract: z.string().optional(),
+      heroImage: image().optional(),
+      videoUrl: z.string().url().optional(),
     }),
 });
 
