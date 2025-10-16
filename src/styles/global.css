@@ -72,6 +72,32 @@ b {
 }
 a { color: var(--accent); }
 a:hover { opacity: .8; }
+
+/* Interactive cards */
+.card {
+    border: 1px solid rgba(var(--gray-light), 1);
+    border-radius: 14px;
+    padding: 1.25rem;
+    background: #fff;
+    transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+}
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 24px rgba(var(--black), .08);
+    border-color: rgba(var(--gray), .35);
+}
+
+/* Section divider */
+.section-divider {
+    border: 0;
+    height: 1px;
+    background: linear-gradient(90deg, rgba(var(--gray-light), 0), rgba(var(--gray-light), 1), rgba(var(--gray-light), 0));
+    margin: 3rem 0;
+}
+
+/* Reveal on scroll */
+.reveal { opacity: 0; transform: translateY(12px); transition: opacity .5s ease, transform .5s ease; }
+.reveal.visible { opacity: 1; transform: none; }
 p {
 	margin-bottom: 1em;
 }

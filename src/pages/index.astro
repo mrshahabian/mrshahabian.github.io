@@ -22,50 +22,115 @@ import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
             </section>
 
             <section id="projects" style="padding: 3rem 0;">
-                <h2 style="margin: 1rem 0;">Highlights</h2>
-                <ul>
-                    <li>Projects — explore selected work</li>
-                    <li>Publications — papers and articles</li>
-                    <li>Tutorials — educational content and code</li>
-                    <li>Events — workshops and gatherings</li>
-                </ul>
+                <h2 style="margin: 1rem 0;">Projects</h2>
+                <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1rem;">
+                    <article class="card reveal">
+                        <h3 style="margin-bottom:.25rem;">Project Title</h3>
+                        <p style="margin:0; font-size:.95rem; color: rgb(var(--gray));">Short description of the project showing the purpose and impact.</p>
+                    </article>
+                    <article class="card reveal">
+                        <h3 style="margin-bottom:.25rem;">Another Project</h3>
+                        <p style="margin:0; font-size:.95rem; color: rgb(var(--gray));">Concise summary of the problem, approach, and outcome.</p>
+                    </article>
+                    <article class="card reveal">
+                        <h3 style="margin-bottom:.25rem;">Third Project</h3>
+                        <p style="margin:0; font-size:.95rem; color: rgb(var(--gray));">Highlight technologies used and results achieved.</p>
+                    </article>
+                </div>
             </section>
+            <hr class="section-divider" />
 
             <section id="tutorials" style="padding: 3rem 0;">
                 <h2 style="margin: 1rem 0;">Tutorials</h2>
-                <p style="max-width: 48rem;">Educational content, videos, and code notebooks.</p>
+                <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1rem;">
+                    <article class="card reveal">
+                        <h3 style="margin-bottom:.25rem;">Tutorial Topic</h3>
+                        <p style="margin:0; font-size:.95rem; color: rgb(var(--gray));">Educational content, videos, and code notebooks.</p>
+                    </article>
+                    <article class="card reveal">
+                        <h3 style="margin-bottom:.25rem;">Notebook Walkthrough</h3>
+                        <p style="margin:0; font-size:.95rem; color: rgb(var(--gray));">Step-by-step guide with code examples.</p>
+                    </article>
+                </div>
             </section>
+            <hr class="section-divider" />
 
             <section id="events" style="padding: 3rem 0;">
                 <h2 style="margin: 1rem 0;">Events</h2>
-                <p style="max-width: 48rem;">Workshops, gatherings, and upcoming sessions.</p>
+                <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1rem;">
+                    <article class="card reveal">
+                        <h3 style="margin-bottom:.25rem;">Upcoming Workshop</h3>
+                        <p style="margin:0; font-size:.95rem; color: rgb(var(--gray));">Date • Location • Short description.</p>
+                    </article>
+                </div>
             </section>
+            <hr class="section-divider" />
 
             <section id="publications" style="padding: 3rem 0;">
                 <h2 style="margin: 1rem 0;">Publications</h2>
-                <p style="max-width: 48rem;">Recent papers and articles.</p>
+                <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1rem;">
+                    <article class="card reveal">
+                        <h3 style="margin-bottom:.25rem;">Paper Title</h3>
+                        <p style="margin:0; font-size:.95rem; color: rgb(var(--gray));">Authors • Venue • Year</p>
+                    </article>
+                </div>
             </section>
+            <hr class="section-divider" />
 
             <section id="experience" style="padding: 3rem 0;">
                 <h2 style="margin: 1rem 0;">Experience</h2>
-                <p style="max-width: 48rem;">Professional roles and responsibilities.</p>
+                <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1rem;">
+                    <article class="card reveal">
+                        <h3 style="margin-bottom:.25rem;">Role — Company</h3>
+                        <p style="margin:0; font-size:.95rem; color: rgb(var(--gray));">Dates • Key responsibilities</p>
+                    </article>
+                </div>
             </section>
+            <hr class="section-divider" />
 
             <section id="education" style="padding: 3rem 0;">
                 <h2 style="margin: 1rem 0;">Education</h2>
-                <p style="max-width: 48rem;">Degrees and academic achievements.</p>
+                <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1rem;">
+                    <article class="card reveal">
+                        <h3 style="margin-bottom:.25rem;">Degree — School</h3>
+                        <p style="margin:0; font-size:.95rem; color: rgb(var(--gray));">Dates • Thesis (optional)</p>
+                    </article>
+                </div>
             </section>
+            <hr class="section-divider" />
 
             <section id="resume" style="padding: 3rem 0;">
                 <h2 style="margin: 1rem 0;">Resume</h2>
                 <p style="max-width: 48rem;">A downloadable PDF will be added here.</p>
             </section>
+            <hr class="section-divider" />
 
             <section id="about" style="padding: 3rem 0;">
                 <h2 style="margin: 1rem 0;">About</h2>
                 <p style="max-width: 48rem;">Short bio and mission statement.</p>
             </section>
         </main>
+<script>
+    const observer = new IntersectionObserver((entries) => {
+        for (const entry of entries) {
+            if (entry.isIntersecting) entry.target.classList.add('visible');
+        }
+    }, { threshold: 0.15 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // Active nav link highlighting
+    const sections = Array.from(document.querySelectorAll('section[id]'));
+    const navLinks = Array.from(document.querySelectorAll('nav .internal-links a'));
+    const activeObs = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const id = '#' + entry.target.id;
+                navLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href') === id));
+            }
+        });
+    }, { rootMargin: '-40% 0px -55% 0px', threshold: 0.01 });
+    sections.forEach(sec => activeObs.observe(sec));
+</script>
 		<Footer />
 	</body>
 </html>
