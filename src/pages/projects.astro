@@ -17,9 +17,12 @@ const items = await getCollection('projects');
             <h1>Projects</h1>
             <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1rem; margin-top: 1rem;">
                 {items.map((p) => (
-                    <article style="border:1px solid rgba(var(--gray-light),1); border-radius: 12px; padding: 1rem; background: white;">
+                    <article id={p.slug} style="border:1px solid rgba(var(--gray-light),1); border-radius: 12px; padding: 1rem; background: white;">
                         <h3 style="margin-bottom:.25rem;">{p.data.title}</h3>
                         <p style="margin:0; font-size:.95rem; color: rgb(var(--gray));">{p.data.description}</p>
+                        <p style="margin-top:.5rem;">
+                            <a href={new URL(`/?scroll=${Math.round(globalThis?.scrollY || 0)}#projects`, Astro.site)}>&larr; Back to one-page view</a>
+                        </p>
                     </article>
                 ))}
             </div>
