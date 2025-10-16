@@ -4,7 +4,7 @@ import HeaderLink from './HeaderLink.astro';
 ---
 
 <header>
-    <nav style="padding: 1rem 0;">
+    <nav style="padding: 1.25rem 0;">
 		<h2><a href="/">{SITE_TITLE}</a></h2>
         <div class="internal-links" style="gap: .25rem;">
 			<HeaderLink href="/">Home</HeaderLink>
@@ -53,8 +53,8 @@ import HeaderLink from './HeaderLink.astro';
 	header {
 		margin: 0;
 		padding: 0 1em;
-		background: white;
-		box-shadow: 0 2px 8px rgba(var(--black), 5%);
+    background: white;
+    border-bottom: 1px solid rgba(var(--gray-light), 1);
 	}
 	h2 {
 		margin: 0;
