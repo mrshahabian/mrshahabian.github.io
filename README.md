@@ -1,62 +1,62 @@
-# Astro Starter Kit: Blog
+## Alashti Personal Website
 
-```sh
-npm create astro@latest -- --template blog
+Tech: Astro 5 + Tailwind 4 + MDX + Content Collections + GitHub Pages
+
+### Local setup
+```bash
+nvm use
+npm install
+npm run dev
+# open http://localhost:4321
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
-
-Features:
-
-- ✅ Minimal styling (make it your own!)
-- ✅ 100/100 Lighthouse performance
-- ✅ SEO-friendly with canonical URLs and OpenGraph data
-- ✅ Sitemap support
-- ✅ RSS Feed support
-- ✅ Markdown & MDX support
-
-## 🚀 Project Structure
-
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
-├── public/
-├── src/
-│   ├── components/
-│   ├── content/
-│   ├── layouts/
-│   └── pages/
-├── astro.config.mjs
-├── README.md
-├── package.json
-└── tsconfig.json
+Optional production preview:
+```bash
+npm run build
+npm run preview
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+### Content structure
+- `src/content/blog` — blog posts (md/mdx)
+- `src/content/projects` — project entries
+- `src/content/publications` — publications (authors, venue, year, doi/url)
+- `src/content/experience` — roles, companies, dates
+- `src/content/education` — degrees, schools
+- `src/content/tutorials` — tutorials with links to repo/notebooks/videos
+- `src/content/events` — workshops and events
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+Each folder accepts Markdown/MDX with frontmatter as defined in `src/content.config.ts`.
 
-The `src/content/` directory contains "collections" of related Markdown and MDX documents. Use `getCollection()` to retrieve posts from `src/content/blog/`, and type-check your frontmatter using an optional schema. See [Astro's Content Collections docs](https://docs.astro.build/en/guides/content-collections/) to learn more.
+### Deployment (GitHub Pages)
+This repo includes `.github/workflows/deploy.yml`.
 
-Any static assets, like images, can be placed in the `public/` directory.
+1) Push to GitHub `main` (already set up).
+2) In GitHub → Settings → Pages → Source: GitHub Actions.
+3) Set Custom domain: `www.alashti.com`. Enable “Enforce HTTPS”.
+4) DNS at GoDaddy (keep GoDaddy nameservers):
+   - CNAME: `www` → `mrshahabian.github.io`
+   - Optional apex redirect to `www`:
+     - A: `@` → 185.199.108.153
+     - A: `@` → 185.199.109.153
+     - A: `@` → 185.199.110.153
+     - A: `@` → 185.199.111.153
+     - AAAA: `@` → 2606:50c:8000::153
+     - AAAA: `@` → 2606:50c:8001::153
+     - AAAA: `@` → 2606:50c:8002::153
+     - AAAA: `@` → 2606:50c:8003::153
 
-## 🧞 Commands
+`public/CNAME` is set to `www.alashti.com` so Pages will keep the domain.
 
-All commands are run from the root of the project, from a terminal:
+### Environment / tooling
+- Node pinned via `.nvmrc` (v22) and `engines.node` in `package.json`.
+- `.gitignore` excludes `dist/`, `node_modules/`, `.env*`, logs, etc.
+- Put secrets (analytics, form keys) into `.env` (gitignored) when needed.
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+### Editing the nav / pages
+- Update nav links in `src/components/Header.astro`.
+- Page files live in `src/pages/`.
 
-## 👀 Want to learn more?
-
-Check out [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
-
-## Credit
-
-This theme is based off of the lovely [Bear Blog](https://github.com/HermanMartinus/bearblog/).
+### Common tasks
+- Add a blog post: create `src/content/blog/my-post.md`.
+- Add a project: create `src/content/projects/my-project.md` with `title`, `description`, optional `links`.
+- Add an event: create `src/content/events/my-event.md` with `title`, `description`, `date`.
