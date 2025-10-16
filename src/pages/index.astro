@@ -163,7 +163,8 @@ const projects = await getCollection('projects');
             modal?.classList.add('open');
             const slug = card.getAttribute('data-slug');
             const scroll = window.scrollY;
-            if (slug && modalLink) modalLink.setAttribute('href', `/projects#${slug}?from=home&scroll=${scroll}`);
+            // Ensure query precedes hash for correct parsing
+            if (slug && modalLink) modalLink.setAttribute('href', `/projects?from=home&scroll=${scroll}#${slug}`);
         });
     });
     modalClose?.addEventListener('click', () => modal?.classList.remove('open'));
