@@ -172,6 +172,12 @@ const publications = await getCollection('publications');
         });
     });
     modalClose?.addEventListener('click', () => modal?.classList.remove('open'));
+    // Force navigation to detail page on link click
+    modalLink?.addEventListener('click', (e) => {
+        e.preventDefault();
+        const href = modalLink.getAttribute('href');
+        if (href) window.location.assign(href);
+    });
     modal?.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('open'); });
 </script>
 		<Footer />
