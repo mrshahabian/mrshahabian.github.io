@@ -13,6 +13,7 @@ import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 	<body>
 		<Header />
         <main>
+			<div class="bg-blob" id="blob"></div>
             <section id="home" style="padding: 7rem 0 3rem;">
                 <h1 style="margin-bottom: .75rem; letter-spacing: .2px;">Build with clarity and style.</h1>
                 <p style="max-width: 48rem; font-size: 1.2rem; color: rgb(var(--gray));">
@@ -21,18 +22,18 @@ import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
                 </p>
             </section>
 
-            <section id="projects" style="padding: 3rem 0;">
+			<section id="projects" style="padding: 3rem 0;">
                 <h2 style="margin: 1rem 0;">Projects</h2>
-                <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1rem;">
-                    <article class="card reveal">
+				<div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1rem;">
+					<article class="card reveal clickable" data-title="Project Title" data-description="Detailed project description with goals, approach, and outcomes.">
                         <h3 style="margin-bottom:.25rem;">Project Title</h3>
                         <p style="margin:0; font-size:.95rem; color: rgb(var(--gray));">Short description of the project showing the purpose and impact.</p>
                     </article>
-                    <article class="card reveal">
+					<article class="card reveal clickable" data-title="Another Project" data-description="More detail about this project—stack, constraints, and results.">
                         <h3 style="margin-bottom:.25rem;">Another Project</h3>
                         <p style="margin:0; font-size:.95rem; color: rgb(var(--gray));">Concise summary of the problem, approach, and outcome.</p>
                     </article>
-                    <article class="card reveal">
+					<article class="card reveal clickable" data-title="Third Project" data-description="Key insights, metrics, and links to code or demos.">
                         <h3 style="margin-bottom:.25rem;">Third Project</h3>
                         <p style="margin:0; font-size:.95rem; color: rgb(var(--gray));">Highlight technologies used and results achieved.</p>
                     </article>
@@ -110,6 +111,13 @@ import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
                 <p style="max-width: 48rem;">Short bio and mission statement.</p>
             </section>
         </main>
+<div class="modal-overlay" id="modal">
+    <div class="modal">
+        <button class="modal-close" id="modalClose" aria-label="Close">×</button>
+        <h3 id="modalTitle">Title</h3>
+        <p id="modalBody">Details</p>
+    </div>
+ </div>
 <script>
     const observer = new IntersectionObserver((entries) => {
         for (const entry of entries) {
@@ -130,6 +138,29 @@ import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
         });
     }, { rootMargin: '-40% 0px -55% 0px', threshold: 0.01 });
     sections.forEach(sec => activeObs.observe(sec));
+
+    // Parallax blob reacts to mouse move
+    const blob = document.getElementById('blob');
+    window.addEventListener('mousemove', (e) => {
+        const x = (e.clientX / window.innerWidth - 0.5) * 40;
+        const y = (e.clientY / window.innerHeight - 0.5) * 40;
+        blob && (blob.style.transform = `translateX(-50%) translate(${x}px, ${y}px)`);
+    });
+
+    // Modal for card details
+    const modal = document.getElementById('modal');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalBody = document.getElementById('modalBody');
+    const modalClose = document.getElementById('modalClose');
+    document.querySelectorAll('.card.clickable').forEach(card => {
+        card.addEventListener('click', () => {
+            modalTitle.textContent = card.getAttribute('data-title') || 'Details';
+            modalBody.textContent = card.getAttribute('data-description') || '';
+            modal?.classList.add('open');
+        });
+    });
+    modalClose?.addEventListener('click', () => modal?.classList.remove('open'));
+    modal?.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('open'); });
 </script>
 		<Footer />
 	</body>
