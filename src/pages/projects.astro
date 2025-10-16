@@ -13,16 +13,17 @@ const items = await getCollection('projects');
 	</head>
 	<body>
 		<Header />
-		<main>
-			<h1>Projects</h1>
-			<ul>
-				{items.map((p) => (
-					<li>
-						<strong>{p.data.title}</strong> — {p.data.description}
-					</li>
-				))}
-			</ul>
-		</main>
+        <main>
+            <h1>Projects</h1>
+            <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1rem; margin-top: 1rem;">
+                {items.map((p) => (
+                    <article style="border:1px solid rgba(var(--gray-light),1); border-radius: 12px; padding: 1rem; background: white;">
+                        <h3 style="margin-bottom:.25rem;">{p.data.title}</h3>
+                        <p style="margin:0; font-size:.95rem; color: rgb(var(--gray));">{p.data.description}</p>
+                    </article>
+                ))}
+            </div>
+        </main>
 		<Footer />
 	</body>
 </html>
