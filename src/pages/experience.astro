@@ -1,0 +1,30 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { getCollection } from 'astro:content';
+const items = await getCollection('experience');
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title="Experience" description="Professional experience" />
+	</head>
+	<body>
+		<Header />
+		<main>
+			<h1>Experience</h1>
+			<ul>
+				{items.map((e) => (
+					<li>
+						<strong>{e.data.role}</strong> — {e.data.company}
+					</li>
+				))}
+			</ul>
+		</main>
+		<Footer />
+	</body>
+</html>
+
+

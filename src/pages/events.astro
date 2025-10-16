@@ -1,0 +1,31 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { getCollection } from 'astro:content';
+const items = (await getCollection('events')).sort((a, b) => a.data.date.localeCompare(b.data.date));
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title="Events" description="Workshops, gatherings, and events" />
+	</head>
+	<body>
+		<Header />
+		<main>
+			<h1>Events</h1>
+			<ul>
+				{items.map((e) => (
+					<li>
+						<strong>{e.data.title}</strong> — {e.data.date}
+						{e.data.location && <> — {e.data.location}</>}
+					</li>
+				))}
+			</ul>
+		</main>
+		<Footer />
+	</body>
+</html>
+
+

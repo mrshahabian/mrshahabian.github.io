@@ -1,0 +1,31 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { getCollection } from 'astro:content';
+const items = await getCollection('publications');
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title="Publications" description="Papers and articles" />
+	</head>
+	<body>
+		<Header />
+		<main>
+			<h1>Publications</h1>
+			<ul>
+				{items.map((p) => (
+					<li>
+						<strong>{p.data.title}</strong>
+						{p.data.authors && <> — {p.data.authors.join(', ')}</>}
+					</li>
+				))}
+			</ul>
+		</main>
+		<Footer />
+	</body>
+</html>
+
+

@@ -1,0 +1,30 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { getCollection } from 'astro:content';
+const items = await getCollection('education');
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title="Education" description="Academic education" />
+	</head>
+	<body>
+		<Header />
+		<main>
+			<h1>Education</h1>
+			<ul>
+				{items.map((e) => (
+					<li>
+						<strong>{e.data.degree}</strong> — {e.data.school}
+					</li>
+				))}
+			</ul>
+		</main>
+		<Footer />
+	</body>
+</html>
+
+

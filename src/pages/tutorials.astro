@@ -1,0 +1,30 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { getCollection } from 'astro:content';
+const items = await getCollection('tutorials');
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title="Tutorials" description="Educational tutorials, videos, and code notebooks" />
+	</head>
+	<body>
+		<Header />
+		<main>
+			<h1>Tutorials</h1>
+			<ul>
+				{items.map((t) => (
+					<li>
+						<strong>{t.data.title}</strong> — {t.data.description}
+					</li>
+				))}
+			</ul>
+		</main>
+		<Footer />
+	</body>
+</html>
+
+
