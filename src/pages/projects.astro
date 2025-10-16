@@ -21,7 +21,7 @@ const items = await getCollection('projects');
                         <h3 style="margin-bottom:.25rem;">{p.data.title}</h3>
                         <p style="margin:0; font-size:.95rem; color: rgb(var(--gray));">{p.data.description}</p>
                         <p style="margin-top:.5rem;">
-                            <a href={new URL(`/?scroll=${encodeURIComponent(Astro.request.url.searchParams.get('scroll') || '0')}#projects`, Astro.site)}>&larr; Back to one-page view</a>
+                            <a href={new URL(`/?scroll=${encodeURIComponent(Astro.url.searchParams.get('scroll') || '0')}#projects`, Astro.site)}>&larr; Back to one-page view</a>
                         </p>
                     </article>
                 ))}
