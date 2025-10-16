@@ -1,0 +1,26 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title="Resume" description="Download my resume/CV" />
+	</head>
+	<body>
+		<Header />
+		<main>
+			<h1>Resume</h1>
+			<p>Download the latest versions of my resume:</p>
+			<ul>
+				<li><a href="/Resume.pdf" target="_blank" rel="noopener">Resume (General)</a></li>
+				<li><a href="/Resume_PM.pdf" target="_blank" rel="noopener">Resume (PM)</a></li>
+			</ul>
+		</main>
+		<Footer />
+	</body>
+</html>
+
+
