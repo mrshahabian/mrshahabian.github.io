@@ -4,8 +4,36 @@ import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 import { getCollection } from 'astro:content';
-const projects = await getCollection('projects');
-const publications = await getCollection('publications');
+
+const projects = (await getCollection('projects')).sort((a, b) => {
+    const yearA = a.data.year || '0';
+    const yearB = b.data.year || '0';
+    return yearB.localeCompare(yearA);
+});
+
+const publications = (await getCollection('publications')).sort((a, b) => {
+    return (b.data.year || '0').localeCompare(a.data.year || '0');
+});
+
+const experience = (await getCollection('experience')).sort((a, b) => {
+    if (!a.data.end && b.data.end) return -1;
+    if (a.data.end && !b.data.end) return 1;
+    return 0;
+});
+
+const education = (await getCollection('education')).sort((a, b) => {
+    return (b.data.end || '9999').localeCompare(a.data.end || '9999');
+});
+
+const tutorials = (await getCollection('tutorials')).sort((a, b) => {
+    const dateA = a.data.pubDate || new Date(0);
+    const dateB = b.data.pubDate || new Date(0);
+    return dateB.valueOf() - dateA.valueOf();
+});
+
+const events = (await getCollection('events')).sort((a, b) => {
+    return b.data.date.localeCompare(a.data.date);
+});
 ---
 
 <!doctype html>
@@ -17,107 +45,229 @@ const publications = await getCollection('publications');
 		<Header />
         <main>
 			<div class="bg-blob" id="blob"></div>
-            <section id="home" style="padding: 7rem 0 3rem;">
-                <h1 style="margin-bottom: .75rem; letter-spacing: .2px;">Build with clarity and style.</h1>
-                <p style="max-width: 48rem; font-size: 1.2rem; color: rgb(var(--gray));">
-                    A minimalist, modern site to showcase projects, publications, and writing — with bold
-                    typography and a refined layout inspired by Cavora.
+            
+            <!-- Hero Section -->
+            <section id="home" style="padding: 7rem 0 4rem;">
+                <h1 style="margin-bottom: 1rem; letter-spacing: .2px; line-height: 1.1;">
+                    Mohamad Reza Shahabian Alashti, PhD
+                </h1>
+                <p style="max-width: 54rem; font-size: 1.35rem; color: rgb(var(--gray-dark)); margin-bottom: 1.5rem; font-weight: 500;">
+                    Machine Learning Research Scientist | Robotics, AI & Computer Vision
                 </p>
+                <p style="max-width: 54rem; font-size: 1.1rem; color: rgb(var(--gray)); line-height: 1.7;">
+                    <strong>Machine Learning</strong> and <strong>Computer Vision</strong> researcher with expertise in <strong>real-time human activity recognition</strong>, <strong>video-based motion analysis</strong>, and <strong>biomechanical signal processing</strong>. Currently a <strong>Postdoctoral Research Fellow</strong> at the <strong>University of Hertfordshire</strong>, contributing to multidisciplinary projects including <strong>SWAG (Soft Wearable Assistive Garment)</strong>, <strong>Hospital at Home</strong>, and the <strong>PRIME Study</strong>. Specializing in <strong>deep learning model development</strong>, <strong>PyTorch</strong>, <strong>Transformer architectures</strong>, <strong>sensor fusion</strong>, <strong>dataset design</strong>, and <strong>edge AI deployment</strong>. Passionate about translating academic research into impactful <strong>AI-driven healthcare solutions</strong> and <strong>agentic systems</strong> for <strong>ambient assisted living</strong>.
+                </p>
+                <div style="margin-top: 2rem; display: flex; gap: 1rem; flex-wrap: wrap;">
+                    <a href="#projects" style="background: var(--accent); color: white; padding: .75rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: 600; transition: opacity .2s;">View Projects</a>
+                    <a href="#publications" style="border: 2px solid var(--accent); color: var(--accent); padding: .75rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: 600; transition: all .2s;">Publications</a>
+                </div>
             </section>
 
-            <section id="projects" style="padding: 3rem 0;">
-                <h2 style="margin: 1rem 0;">Projects</h2>
-				<div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1rem;">
+            <!-- Projects Section -->
+            <section id="projects" style="padding: 4rem 0;">
+                <h2 style="margin: 0 0 2rem 0; font-size: 2.5rem;">Projects & Research</h2>
+				<div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.5rem;">
                     {projects.map((p) => (
-                        <article class="card reveal clickable" data-slug={p.slug} data-title={p.data.title} data-description={p.data.description}>
-                            <h3 style="margin-bottom:.25rem;">{p.data.title}</h3>
-                            <p style="margin:0; font-size:.95rem; color: rgb(var(--gray));">{p.data.description}</p>
+                        <a href={`/projects#${p.id}`} style="text-decoration: none; color: inherit;">
+                            <article class="card reveal">
+                                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: .5rem;">
+                                    <h3 style="margin:0; font-size: 1.3rem;">{p.data.title}</h3>
+                                    {p.data.year && <span style="color: rgb(var(--gray)); font-size: .9rem; white-space: nowrap; margin-left: 1rem;">{p.data.year}</span>}
+                                </div>
+                                <p style="margin:.5rem 0; font-size:.95rem; color: rgb(var(--gray));">{p.data.description}</p>
+                                {p.data.tags && p.data.tags.length > 0 && (
+                                    <div style="display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .75rem;">
+                                        {p.data.tags.slice(0, 4).map(tag => (
+                                            <span style="font-size: .75rem; background: rgba(var(--accent), .08); color: var(--accent); padding: .25rem .6rem; border-radius: 4px;">{tag}</span>
+                                        ))}
+                                    </div>
+                                )}
+                            </article>
+                        </a>
+                    ))}
+                </div>
+            </section>
+            <hr class="section-divider" />
+
+            <!-- Tutorials Section -->
+            <section id="tutorials" style="padding: 4rem 0;">
+                <h2 style="margin: 0 0 2rem 0; font-size: 2.5rem;">Tutorials & Educational Content</h2>
+                <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.5rem;">
+                    {tutorials.map((tutorial) => (
+                        <article class="card reveal">
+                            <h3 style="margin:0 0 .5rem 0; font-size: 1.3rem;">{tutorial.data.title}</h3>
+                            <p style="margin:.5rem 0; font-size:.95rem; color: rgb(var(--gray));">{tutorial.data.description}</p>
+                            {tutorial.data.tags && tutorial.data.tags.length > 0 && (
+                                <div style="display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .75rem;">
+                                    {tutorial.data.tags.slice(0, 4).map(tag => (
+                                        <span style="font-size: .75rem; background: rgba(var(--accent), .08); color: var(--accent); padding: .25rem .6rem; border-radius: 4px;">{tag}</span>
+                                    ))}
+                                </div>
+                            )}
                         </article>
                     ))}
                 </div>
             </section>
             <hr class="section-divider" />
 
-            <section id="tutorials" style="padding: 3rem 0;">
-                <h2 style="margin: 1rem 0;">Tutorials</h2>
-                <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1rem;">
-                    <article class="card reveal">
-                        <h3 style="margin-bottom:.25rem;">Tutorial Topic</h3>
-                        <p style="margin:0; font-size:.95rem; color: rgb(var(--gray));">Educational content, videos, and code notebooks.</p>
-                    </article>
-                    <article class="card reveal">
-                        <h3 style="margin-bottom:.25rem;">Notebook Walkthrough</h3>
-                        <p style="margin:0; font-size:.95rem; color: rgb(var(--gray));">Step-by-step guide with code examples.</p>
-                    </article>
+            <!-- Events Section -->
+            <section id="events" style="padding: 4rem 0;">
+                <h2 style="margin: 0 0 2rem 0; font-size: 2.5rem;">Events & Workshops</h2>
+                <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.5rem;">
+                    {events.map((event) => (
+                        <a href={`/events#${event.id}`} style="text-decoration: none; color: inherit;">
+                            <article class="card reveal">
+                                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: .5rem;">
+                                    <h3 style="margin:0; font-size: 1.3rem;">{event.data.title}</h3>
+                                </div>
+                                <p style="margin:.25rem 0; font-size:.9rem; color: var(--accent); font-weight: 600;">
+                                    📅 {event.data.date}
+                                </p>
+                                {event.data.location && (
+                                    <p style="margin:.25rem 0; font-size:.9rem; color: rgb(var(--gray));">
+                                        📍 {event.data.location}
+                                    </p>
+                                )}
+                                <p style="margin:.75rem 0 0 0; font-size:.95rem; color: rgb(var(--gray-dark));">{event.data.description}</p>
+                            </article>
+                        </a>
+                    ))}
                 </div>
             </section>
             <hr class="section-divider" />
 
-            <section id="events" style="padding: 3rem 0;">
-                <h2 style="margin: 1rem 0;">Events</h2>
-                <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1rem;">
-                    <article class="card reveal">
-                        <h3 style="margin-bottom:.25rem;">Upcoming Workshop</h3>
-                        <p style="margin:0; font-size:.95rem; color: rgb(var(--gray));">Date • Location • Short description.</p>
-                    </article>
-                </div>
-            </section>
-            <hr class="section-divider" />
-
-            <section id="publications" style="padding: 3rem 0;">
-                <h2 style="margin: 1rem 0;">Publications</h2>
-                <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1rem;">
+            <!-- Publications Section -->
+            <section id="publications" style="padding: 4rem 0;">
+                <h2 style="margin: 0 0 2rem 0; font-size: 2.5rem;">Publications</h2>
+                <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.5rem;">
                     {publications.map((p) => (
-                        <article class="card reveal clickable" data-slug={p.slug} data-title={p.data.title} data-description={p.data.abstract || ''} data-section="publications">
-                            <h3 style="margin-bottom:.25rem;">{p.data.title}</h3>
-                            <p style="margin:0; font-size:.95rem; color: rgb(var(--gray));">{p.data.authors?.join(', ')}</p>
+                        <a href={`/publications#${p.id}`} style="text-decoration: none; color: inherit;">
+                            <article class="card reveal">
+                                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: .5rem;">
+                                    <span style="color: rgb(var(--gray)); font-size: .9rem; font-weight: 600;">{p.data.year}</span>
+                                    {p.data.venue && <span style="color: var(--accent); font-size: .85rem; background: rgba(var(--accent), .08); padding: .2rem .6rem; border-radius: 4px;">{p.data.venue}</span>}
+                                </div>
+                                <h3 style="margin:.5rem 0; font-size: 1.1rem; line-height: 1.4;">{p.data.title}</h3>
+                                <p style="margin:.5rem 0; font-size:.85rem; color: rgb(var(--gray)); font-style: italic;">
+                                    {p.data.authors?.slice(0, 3).join(', ')}{p.data.authors && p.data.authors.length > 3 ? ', et al.' : ''}
+                                </p>
+                            </article>
+                        </a>
+                    ))}
+                </div>
+            </section>
+            <hr class="section-divider" />
+
+            <!-- Experience Section -->
+            <section id="experience" style="padding: 4rem 0;">
+                <h2 style="margin: 0 0 2rem 0; font-size: 2.5rem;">Professional Experience</h2>
+                <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 1.5rem;">
+                    {experience.map((exp) => (
+                        <article class="card reveal">
+                            <div style="margin-bottom: .75rem;">
+                                <h3 style="margin:0 0 .25rem 0; font-size: 1.2rem;">{exp.data.role}</h3>
+                                <p style="margin:0; font-size: 1rem; color: var(--accent); font-weight: 600;">{exp.data.company}</p>
+                                <p style="margin:.25rem 0 0 0; font-size:.9rem; color: rgb(var(--gray));">
+                                    {exp.data.start} {exp.data.end ? `- ${exp.data.end}` : '- Present'}
+                                    {exp.data.location && ` • ${exp.data.location}`}
+                                </p>
+                            </div>
+                            {exp.data.technologies && exp.data.technologies.length > 0 && (
+                                <div style="display: flex; flex-wrap: wrap; gap: .4rem; margin-top: .75rem;">
+                                    {exp.data.technologies.slice(0, 6).map(tech => (
+                                        <span style="font-size: .7rem; background: rgba(var(--gray-light), .6); color: rgb(var(--gray-dark)); padding: .2rem .5rem; border-radius: 3px;">{tech}</span>
+                                    ))}
+                                </div>
+                            )}
                         </article>
                     ))}
                 </div>
             </section>
             <hr class="section-divider" />
 
-            <section id="experience" style="padding: 3rem 0;">
-                <h2 style="margin: 1rem 0;">Experience</h2>
-                <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1rem;">
+            <!-- Education Section -->
+            <section id="education" style="padding: 4rem 0;">
+                <h2 style="margin: 0 0 2rem 0; font-size: 2.5rem;">Education</h2>
+                <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 1.5rem;">
+                    {education.map((edu) => (
+                        <article class="card reveal">
+                            <h3 style="margin:0 0 .25rem 0; font-size: 1.2rem;">{edu.data.degree}</h3>
+                            <p style="margin:0; font-size: 1rem; color: var(--accent); font-weight: 600;">{edu.data.school}</p>
+                            <p style="margin:.25rem 0; font-size:.9rem; color: rgb(var(--gray));">
+                                {edu.data.start && edu.data.end ? `${edu.data.start} - ${edu.data.end}` : edu.data.end || ''}
+                            </p>
+                            {edu.data.thesis && (
+                                <p style="margin:.75rem 0 0 0; font-size:.9rem; color: rgb(var(--gray-dark)); font-style: italic;">
+                                    Thesis: {edu.data.thesis}
+                                </p>
+                            )}
+                        </article>
+                    ))}
+                </div>
+            </section>
+            <hr class="section-divider" />
+
+            <!-- Skills Section -->
+            <section id="skills" style="padding: 4rem 0;">
+                <h2 style="margin: 0 0 2rem 0; font-size: 2.5rem;">Skills & Expertise</h2>
+                <div style="display: grid; gap: 1.5rem;">
                     <article class="card reveal">
-                        <h3 style="margin-bottom:.25rem;">Role — Company</h3>
-                        <p style="margin:0; font-size:.95rem; color: rgb(var(--gray));">Dates • Key responsibilities</p>
+                        <h3 style="margin: 0 0 .5rem 0; font-size: 1.1rem; color: var(--accent);">AI & Machine Learning</h3>
+                        <p style="margin: 0; color: rgb(var(--gray-dark)); line-height: 1.6;">
+                            Deep Learning, Computer Vision, Facial Emotion Recognition, Video-Based Human Activity Recognition, Pose Estimation, Sensor Fusion, Meta-Learning, Agentic AI, Vision Transformers (ViT), GANs
+                        </p>
+                    </article>
+                    <article class="card reveal">
+                        <h3 style="margin: 0 0 .5rem 0; font-size: 1.1rem; color: var(--accent);">Programming & Development</h3>
+                        <p style="margin: 0; color: rgb(var(--gray-dark)); line-height: 1.6;">
+                            Python, C, C++, JavaScript, ReactJS, Node.js, HTML/CSS
+                        </p>
+                    </article>
+                    <article class="card reveal">
+                        <h3 style="margin: 0 0 .5rem 0; font-size: 1.1rem; color: var(--accent);">Frameworks & Libraries</h3>
+                        <p style="margin: 0; color: rgb(var(--gray-dark)); line-height: 1.6;">
+                            PyTorch, TensorFlow, Keras, OpenCV, Scikit-Learn, NumPy, Pandas, Streamlit, QT, Docker, ROS1/ROS2
+                        </p>
+                    </article>
+                    <article class="card reveal">
+                        <h3 style="margin: 0 0 .5rem 0; font-size: 1.1rem; color: var(--accent);">Robotics & Embedded Systems</h3>
+                        <p style="margin: 0; color: rgb(var(--gray-dark)); line-height: 1.6;">
+                            ROS2, MoveIt, Navigation, Arduino, Raspberry Pi, Maxon Motor Control, Modbus RTU, Mechatronics Integration
+                        </p>
+                    </article>
+                    <article class="card reveal">
+                        <h3 style="margin: 0 0 .5rem 0; font-size: 1.1rem; color: var(--accent);">Cloud & Infrastructure</h3>
+                        <p style="margin: 0; color: rgb(var(--gray-dark)); line-height: 1.6;">
+                            Cloud Computing (AWS), Edge AI Deployment, Data Pipelines, Secure Cloud Storage, Scalable Web-Based Systems
+                        </p>
                     </article>
                 </div>
             </section>
             <hr class="section-divider" />
 
-            <section id="education" style="padding: 3rem 0;">
-                <h2 style="margin: 1rem 0;">Education</h2>
-                <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1rem;">
-                    <article class="card reveal">
-                        <h3 style="margin-bottom:.25rem;">Degree — School</h3>
-                        <p style="margin:0; font-size:.95rem; color: rgb(var(--gray));">Dates • Thesis (optional)</p>
-                    </article>
+            <!-- About Section -->
+            <section id="about" style="padding: 4rem 0;">
+                <h2 style="margin: 0 0 1.5rem 0; font-size: 2.5rem;">About Dr. Shahabian</h2>
+                <div class="card reveal" style="max-width: 54rem;">
+                    <p style="margin: 0 0 1rem 0; font-size: 1.05rem; line-height: 1.8; color: rgb(var(--gray-dark));">
+                        I am a <strong>Machine Learning Research Scientist</strong> specializing in <strong>robotics</strong>, <strong>artificial intelligence</strong>, and <strong>computer vision</strong>. My research focuses on developing intelligent systems for <strong>ambient assisted living</strong>, <strong>human-robot interaction (HRI)</strong>, and <strong>wearable assistive technologies</strong> using advanced <strong>deep learning</strong> and <strong>sensor fusion</strong> techniques.
+                    </p>
+                    <p style="margin: 0 0 1rem 0; font-size: 1.05rem; line-height: 1.8; color: rgb(var(--gray-dark));">
+                        Currently working as a <strong>Postdoctoral Research Fellow</strong> at the <strong>University of Hertfordshire</strong>, I contribute to cutting-edge projects including the <strong>SWAG (Soft Wearable Assistive Garment)</strong> project and the <strong>Hospital at Home</strong> initiative. My work involves developing <strong>AI-driven deep learning models</strong>, <strong>multi-sensor fusion systems</strong>, and <strong>multimodal recognition frameworks</strong> using <strong>PyTorch</strong>, <strong>ROS2</strong>, and <strong>Transformer architectures</strong>.
+                    </p>
+                    <p style="margin: 0 0 1rem 0; font-size: 1.05rem; line-height: 1.8; color: rgb(var(--gray-dark));">
+                        With a <strong>PhD in Computer Science</strong> and <strong>MSc in Mechatronics Engineering</strong>, my expertise spans from <strong>embedded systems</strong> and <strong>robotics engineering</strong> to state-of-the-art <strong>Vision Transformers (ViT)</strong>, <strong>Meta-Learning</strong>, and <strong>Agentic AI</strong>. I specialize in <strong>human activity recognition</strong>, <strong>pose estimation</strong>, <strong>EMG/IMU signal processing</strong>, <strong>video-based motion analysis</strong>, and <strong>edge AI deployment</strong> for real-time applications.
+                    </p>
+                    <p style="margin: 0 0 1rem 0; font-size: 1.05rem; line-height: 1.8; color: rgb(var(--gray-dark));">
+                        My research has been published in leading conferences including <strong>ICRA</strong>, <strong>ICSR</strong>, and <strong>BioRob</strong>. I have created publicly available datasets for the research community and actively contribute to advancing <strong>healthcare AI</strong> and <strong>assistive robotics</strong> for elderly care and rehabilitation.
+                    </p>
+                    <p style="margin: 1.5rem 0 0 0; font-size: 1rem; color: rgb(var(--gray));">
+                        <strong>Visa Status:</strong> UK Global Talent Visa – Academic Exceptional Promise, endorsed by the Royal Academy of Engineering (no sponsorship required).
+                    </p>
                 </div>
-            </section>
-            <hr class="section-divider" />
-
-            <section id="resume" style="padding: 3rem 0;">
-                <h2 style="margin: 1rem 0;">Resume</h2>
-                <p style="max-width: 48rem;">A downloadable PDF will be added here.</p>
-            </section>
-            <hr class="section-divider" />
-
-            <section id="about" style="padding: 3rem 0;">
-                <h2 style="margin: 1rem 0;">About</h2>
-                <p style="max-width: 48rem;">Short bio and mission statement.</p>
             </section>
         </main>
-<div class="modal-overlay" id="modal">
-    <div class="modal">
-        <button class="modal-close" id="modalClose" aria-label="Close">×</button>
-        <h3 id="modalTitle">Title</h3>
-        <p id="modalBody">Details</p>
-        <p style="margin-top: .75rem;"><a id="modalLink" href="#">View full details →</a></p>
-    </div>
- </div>
+
 <script>
     // Restore scroll position when coming back from section pages
     try {
@@ -125,6 +275,7 @@ const publications = await getCollection('publications');
         const s = params.get('scroll');
         if (s) setTimeout(() => window.scrollTo({ top: parseInt(s, 10) || 0, behavior: 'auto' }), 0);
     } catch {}
+    
     const observer = new IntersectionObserver((entries) => {
         for (const entry of entries) {
             if (entry.isIntersecting) entry.target.classList.add('visible');
@@ -138,7 +289,7 @@ const publications = await getCollection('publications');
     const activeObs = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                const id = '#' + entry.target.id;
+                const id = '/#' + entry.target.id;
                 navLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href') === id));
             }
         });
@@ -152,33 +303,6 @@ const publications = await getCollection('publications');
         const y = (e.clientY / window.innerHeight - 0.5) * 40;
         blob && (blob.style.transform = `translateX(-50%) translate(${x}px, ${y}px)`);
     });
-
-    // Modal for card details
-    const modal = document.getElementById('modal');
-    const modalTitle = document.getElementById('modalTitle');
-    const modalBody = document.getElementById('modalBody');
-    const modalClose = document.getElementById('modalClose');
-    const modalLink = document.getElementById('modalLink');
-    document.querySelectorAll('.card.clickable').forEach(card => {
-        card.addEventListener('click', () => {
-            modalTitle.textContent = card.getAttribute('data-title') || 'Details';
-            modalBody.textContent = card.getAttribute('data-description') || '';
-            modal?.classList.add('open');
-            const slug = card.getAttribute('data-slug');
-            const section = card.getAttribute('data-section') || 'projects';
-            const scroll = window.scrollY;
-            // Ensure query precedes hash for correct parsing
-            if (slug && modalLink) modalLink.setAttribute('href', `/${section}?from=home&scroll=${scroll}#${slug}`);
-        });
-    });
-    modalClose?.addEventListener('click', () => modal?.classList.remove('open'));
-    // Force navigation to detail page on link click
-    modalLink?.addEventListener('click', (e) => {
-        e.preventDefault();
-        const href = modalLink.getAttribute('href');
-        if (href) window.location.assign(href);
-    });
-    modal?.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('open'); });
 </script>
 		<Footer />
 	</body>

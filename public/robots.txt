@@ -1,0 +1,23 @@
+# Allow all search engines to index all pages
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://www.alashti.com/sitemap-index.xml
+
+# Allow specific bots
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Slurp
+Allow: /
+
+User-agent: DuckDuckBot
+Allow: /
+
+User-agent: Baiduspider
+Allow: /
+

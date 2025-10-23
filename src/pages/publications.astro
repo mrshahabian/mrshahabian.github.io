@@ -1,37 +1,340 @@
 ---
+import { getCollection, render } from 'astro:content';
 import BaseHead from '../components/BaseHead.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
-import { getCollection } from 'astro:content';
-const items = await getCollection('publications');
+import { SITE_TITLE } from '../consts';
+
+const publications = (await getCollection('publications')).sort((a, b) => {
+    return (b.data.year || '0').localeCompare(a.data.year || '0');
+});
+
+// Render all publications
+const renderedPublications = await Promise.all(
+    publications.map(async (pub) => {
+        const { Content } = await render(pub);
+        return { publication: pub, Content };
+    })
+);
 ---
 
 <!doctype html>
 <html lang="en">
 	<head>
-		<BaseHead title="Publications" description="Papers and articles" />
+		<BaseHead title={`Publications - ${SITE_TITLE}`} description="Research publications and academic work" />
+		<style>
+			.publications-container {
+				max-width: 64rem;
+				margin: 0 auto;
+				padding: 2rem 1rem;
+			}
+			.back-link {
+				display: inline-flex;
+				align-items: center;
+				gap: 0.5rem;
+				margin-bottom: 2rem;
+				color: var(--accent);
+				text-decoration: none;
+				font-weight: 600;
+				font-size: 1rem;
+			}
+			.back-link:hover {
+				opacity: 0.8;
+			}
+			.publication-section {
+				margin-bottom: 4rem;
+				padding: 2rem;
+				background: white;
+				border-radius: 16px;
+				box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
+				scroll-margin-top: 100px;
+			}
+			.publication-header {
+				margin-bottom: 2rem;
+				padding-bottom: 1.5rem;
+				border-bottom: 2px solid rgba(var(--gray-light), 1);
+			}
+			.publication-header h2 {
+				margin: 0 0 1rem 0;
+				color: rgb(var(--black));
+				font-size: 1.8rem;
+				line-height: 1.3;
+			}
+			.authors {
+				margin: 1rem 0;
+				padding: 1rem 1.5rem;
+				background: rgba(var(--gray-light), 0.4);
+				border-left: 4px solid var(--accent);
+				border-radius: 6px;
+			}
+			.authors strong {
+				color: var(--accent);
+				font-size: 0.9rem;
+				text-transform: uppercase;
+				letter-spacing: 0.5px;
+			}
+			.publication-meta {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 1.5rem;
+				margin: 1.5rem 0;
+				padding: 1.25rem;
+				background: rgba(var(--accent), 0.05);
+				border-radius: 12px;
+			}
+			.meta-item {
+				display: flex;
+				flex-direction: column;
+				gap: 0.25rem;
+			}
+			.meta-label {
+				font-size: 0.8rem;
+				color: rgb(var(--gray));
+				font-weight: 700;
+				text-transform: uppercase;
+				letter-spacing: 0.5px;
+			}
+			.meta-value {
+				color: rgb(var(--gray-dark));
+				font-weight: 600;
+				font-size: 1rem;
+			}
+			.venue-badge {
+				display: inline-block;
+				background: var(--accent);
+				color: white;
+				padding: 0.4rem 0.9rem;
+				border-radius: 6px;
+				font-size: 0.9rem;
+				font-weight: 600;
+			}
+			.abstract {
+				padding: 1.5rem;
+				background: rgba(var(--accent), 0.05);
+				border-radius: 12px;
+				margin: 1.5rem 0;
+				font-size: 1.05rem;
+				line-height: 1.8;
+				border-left: 4px solid var(--accent);
+			}
+			.abstract strong {
+				display: block;
+				margin-bottom: 0.75rem;
+				color: var(--accent);
+				font-size: 1.1rem;
+			}
+			.links {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 1rem;
+				margin: 2rem 0;
+			}
+			.links a {
+				display: inline-flex;
+				align-items: center;
+				gap: 0.5rem;
+				padding: 0.7rem 1.3rem;
+				background: var(--accent);
+				color: white;
+				text-decoration: none;
+				border-radius: 8px;
+				font-weight: 600;
+				transition: opacity 0.2s;
+				font-size: 0.95rem;
+			}
+			.links a:hover {
+				opacity: 0.85;
+			}
+			.publication-content {
+				margin-top: 2rem;
+				font-size: 1.05rem;
+				line-height: 1.8;
+			}
+			.publication-content h2 {
+				margin-top: 2rem;
+				margin-bottom: 1rem;
+				color: var(--accent);
+				font-size: 1.5rem;
+			}
+			.publication-content h3 {
+				margin-top: 1.5rem;
+				margin-bottom: 0.75rem;
+				color: rgb(var(--gray-dark));
+			}
+			.publication-content ul, .publication-content ol {
+				margin: 1rem 0;
+				padding-left: 1.5rem;
+			}
+			.publication-content li {
+				margin: 0.5rem 0;
+			}
+			.publication-content a {
+				color: var(--accent);
+				text-decoration: underline;
+			}
+			.publication-content code {
+				background: rgba(var(--gray-light), 0.6);
+				padding: 0.2rem 0.5rem;
+				border-radius: 4px;
+				font-size: 0.9em;
+			}
+			.publication-content pre {
+				background: rgb(var(--gray-dark));
+				color: white;
+				padding: 1.5rem;
+				border-radius: 8px;
+				overflow-x: auto;
+				margin: 1.5rem 0;
+			}
+			.publication-content pre code {
+				background: none;
+				padding: 0;
+			}
+			.publication-content img {
+				max-width: 100%;
+				height: auto;
+				border-radius: 12px;
+				margin: 2rem 0;
+				box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+			}
+			.publication-content blockquote {
+				border-left: 4px solid var(--accent);
+				padding-left: 1.5rem;
+				margin: 1.5rem 0;
+				color: rgb(var(--gray));
+				font-style: italic;
+			}
+			.video-container {
+				position: relative;
+				padding-bottom: 56.25%;
+				height: 0;
+				overflow: hidden;
+				margin: 2rem 0;
+				border-radius: 12px;
+			}
+			.video-container iframe {
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+			}
+		</style>
 	</head>
 	<body>
 		<Header />
-        <main>
-            <h1>Publications</h1>
-            <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1rem; margin-top: 1rem;">
-                {items.map((p) => (
-                    <article id={p.slug} style="border:1px solid rgba(var(--gray-light),1); border-radius: 12px; padding: 1rem; background: white;">
-                        <h3 style="margin-bottom:.25rem;">{p.data.title}</h3>
-                        <p style="margin:0; font-size:.95rem; color: rgb(var(--gray));">{p.data.authors?.join(', ')}</p>
-                        {p.data.abstract && <p style="margin-top:.5rem;">{p.data.abstract}</p>}
-                        {p.data.url && <p style="margin-top:.25rem;"><a href={p.data.url} target="_blank" rel="noopener">External link</a></p>}
-                        <p style="margin-top:.5rem;">
-                            <a href={new URL(`/?scroll=${encodeURIComponent(Astro.url.searchParams.get('scroll') || '0')}#publications`, Astro.site)}>&larr; Back to one-page view</a>
-                        </p>
-                    </article>
-                ))}
-            </div>
-        </main>
+		<main>
+			<div class="publications-container">
+				<a href="/#publications" class="back-link">
+					<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+						<polyline points="15 18 9 12 15 6"></polyline>
+					</svg>
+					Back to Home
+				</a>
+
+				<h1 style="margin-bottom: 3rem; font-size: 2.5rem;">All Publications</h1>
+
+				{renderedPublications.map(({ publication, Content }) => (
+					<article class="publication-section" id={publication.id}>
+						<div class="publication-header">
+							<div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem; flex-wrap: wrap; gap: 1rem;">
+								<span style="color: rgb(var(--gray)); font-size: 1rem; font-weight: 700;">📅 {publication.data.year}</span>
+								{publication.data.venue && (
+									<span class="venue-badge">{publication.data.venue}</span>
+								)}
+							</div>
+
+							<h2>{publication.data.title}</h2>
+							
+							{publication.data.authors && (
+								<div class="authors">
+									<strong>Authors:</strong> {publication.data.authors.join(', ')}
+								</div>
+							)}
+
+							{(publication.data.venue || publication.data.doi) && (
+								<div class="publication-meta">
+									{publication.data.venue && (
+										<div class="meta-item">
+											<span class="meta-label">Published In</span>
+											<span class="meta-value">{publication.data.venue}</span>
+										</div>
+									)}
+									{publication.data.year && (
+										<div class="meta-item">
+											<span class="meta-label">Year</span>
+											<span class="meta-value">{publication.data.year}</span>
+										</div>
+									)}
+									{publication.data.doi && (
+										<div class="meta-item">
+											<span class="meta-label">DOI</span>
+											<span class="meta-value">{publication.data.doi}</span>
+										</div>
+									)}
+								</div>
+							)}
+
+							{publication.data.abstract && (
+								<div class="abstract">
+									<strong>Abstract</strong>
+									<div>{publication.data.abstract}</div>
+								</div>
+							)}
+
+							{(publication.data.url || publication.data.doi || publication.data.videoUrl) && (
+								<div class="links">
+									{publication.data.url && (
+										<a href={publication.data.url} target="_blank" rel="noopener noreferrer">
+											<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+												<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+												<polyline points="14 2 14 8 20 8"></polyline>
+											</svg>
+											View Paper
+										</a>
+									)}
+									{publication.data.doi && (
+										<a href={`https://doi.org/${publication.data.doi}`} target="_blank" rel="noopener noreferrer">
+											<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+												<circle cx="12" cy="12" r="10"></circle>
+												<line x1="12" y1="16" x2="12" y2="12"></line>
+												<line x1="12" y1="8" x2="12.01" y2="8"></line>
+											</svg>
+											DOI Link
+										</a>
+									)}
+									{publication.data.videoUrl && (
+										<a href={publication.data.videoUrl} target="_blank" rel="noopener noreferrer">
+											<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+												<polygon points="5 3 19 12 5 21 5 3"></polygon>
+											</svg>
+											Watch Video
+										</a>
+									)}
+								</div>
+							)}
+						</div>
+
+						<div class="publication-content">
+							<Content />
+						</div>
+					</article>
+				))}
+			</div>
+		</main>
+
+		<script>
+			// Scroll to section if hash is present
+			if (window.location.hash) {
+				setTimeout(() => {
+					const element = document.querySelector(window.location.hash);
+					if (element) {
+						element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+					}
+				}, 100);
+			}
+		</script>
+
 		<Footer />
 	</body>
 </html>
-
-
-

@@ -46,6 +46,12 @@ const { title, description, image = FallbackImage } = Astro.props;
 <title>{title}</title>
 <meta name="title" content={title} />
 <meta name="description" content={description} />
+<meta name="author" content="Mohamad Reza Shahabian Alashti, PhD" />
+<meta name="keywords" content="Machine Learning, Computer Vision, Deep Learning, Human Activity Recognition, Robotics, AI Research, Wearable Robotics, Sensor Fusion, Meta-Learning, Transformer, PyTorch, ROS2, Ambient Assisted Living, Healthcare AI, Exoskeletons, EMG, IMU, Video Analysis, Pose Estimation, Vision Transformers, Agentic AI, Biomechanical Signal Processing, Human-Robot Interaction, Edge AI, Real-Time Recognition, Multi-View Vision, Postdoctoral Research, University of Hertfordshire, SWAG Project, Hospital at Home, Academic Research, PhD Computer Science, Mechatronics, Embedded Systems, Python, TensorFlow, OpenCV, GANs, ICSR, BioRob, ICRA, Research Publications, UK Global Talent, Royal Academy of Engineering" />
+<meta name="robots" content="index, follow" />
+<meta name="language" content="English" />
+<meta name="revisit-after" content="7 days" />
+<meta name="theme-color" content="#1e40af" />
 
 <!-- Open Graph / Facebook -->
 <meta property="og:type" content="website" />
@@ -53,6 +59,8 @@ const { title, description, image = FallbackImage } = Astro.props;
 <meta property="og:title" content={title} />
 <meta property="og:description" content={description} />
 <meta property="og:image" content={new URL(image.src, Astro.url)} />
+<meta property="og:site_name" content="Mohamad Reza Shahabian Alashti, PhD" />
+<meta property="og:locale" content="en_GB" />
 
 <!-- Twitter -->
 <meta property="twitter:card" content="summary_large_image" />
@@ -60,3 +68,62 @@ const { title, description, image = FallbackImage } = Astro.props;
 <meta property="twitter:title" content={title} />
 <meta property="twitter:description" content={description} />
 <meta property="twitter:image" content={new URL(image.src, Astro.url)} />
+<meta property="twitter:creator" content="@mrshahabian" />
+
+<!-- Academic & Professional Meta -->
+<meta name="citation_author" content="Shahabian Alashti, Mohamad Reza" />
+<meta name="citation_author_institution" content="University of Hertfordshire" />
+<link rel="me" href="https://linkedin.com/in/mrshahabian" />
+<link rel="me" href="https://scholar.google.com/citations?user=EWEbqssAAAAJ&hl=en" />
+<link rel="me" href="https://orcid.org/0000-0001-5037-9918" />
+
+<!-- Schema.org JSON-LD for better SEO -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Mohamad Reza Shahabian Alashti",
+  "honorificSuffix": "PhD",
+  "jobTitle": "Postdoctoral Research Fellow",
+  "description": "Machine Learning Research Scientist specializing in Robotics, AI & Computer Vision",
+  "url": "https://mrshahabian.com",
+  "sameAs": [
+    "https://linkedin.com/in/mrshahabian",
+    "https://scholar.google.com/citations?user=EWEbqssAAAAJ&hl=en",
+    "https://orcid.org/0000-0001-5037-9918"
+  ],
+  "affiliation": {
+    "@type": "Organization",
+    "name": "University of Hertfordshire",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Hatfield",
+      "addressCountry": "UK"
+    }
+  },
+  "alumniOf": [
+    {
+      "@type": "EducationalOrganization",
+      "name": "University of Hertfordshire",
+      "degree": "PhD in Computer Science"
+    },
+    {
+      "@type": "EducationalOrganization",
+      "name": "Azad University",
+      "degree": "MSc in Mechatronics Engineering"
+    }
+  ],
+  "knowsAbout": [
+    "Machine Learning",
+    "Deep Learning",
+    "Computer Vision",
+    "Robotics",
+    "Human Activity Recognition",
+    "Sensor Fusion",
+    "Wearable Robotics",
+    "Artificial Intelligence",
+    "PyTorch",
+    "ROS2"
+  ]
+}
+</script>
