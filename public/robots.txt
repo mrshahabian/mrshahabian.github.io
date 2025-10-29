@@ -3,7 +3,7 @@ User-agent: *
 Allow: /
 
 # Sitemap location
-Sitemap: https://www.alashti.com/sitemap-index.xml
+Sitemap: https://mrshahabian.com/sitemap-index.xml
 
 # Allow specific bots
 User-agent: Googlebot
