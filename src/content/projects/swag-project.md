@@ -3,7 +3,7 @@ title: "SWAG — Soft Wearable Assistive Garment"
 description: "AI-driven intent-detection system using multi-sensor biomechanical data for wearable robotics"
 tags: ["Deep Learning", "Sensor Fusion", "Meta-Learning", "Transformers", "EMG", "IMU", "Wearable Robotics", "Edge AI"]
 year: "2024-Present"
-role: "Lead Researcher"
+role: "Researcher"
 links:
   paper: "https://robotics.herts.ac.uk/"
 ---

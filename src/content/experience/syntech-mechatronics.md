@@ -1,6 +1,6 @@
 ---
 company: "SYNTECH Technology & Innovation Center, Iran"
-role: "Mechatronics Designer (Part-Time)"
+role: "Mechatronics Designer"
 start: "Feb 2012"
 end: "Mar 2016"
 location: "Qazvin, Iran"

@@ -1,6 +1,6 @@
 ---
 company: "University of Hertfordshire, UK"
-role: "Robotics Engineer (Part-Time)"
+role: "Robotics Engineer"
 start: "Oct 2022"
 end: "Feb 2024"
 location: "Hatfield, UK"

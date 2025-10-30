@@ -110,6 +110,7 @@ const events = defineCollection({
       date: z.string(),
       location: z.string().optional(),
       registrationUrl: z.string().url().optional(),
+      highlight: z.boolean().optional(),
     }),
 });
 

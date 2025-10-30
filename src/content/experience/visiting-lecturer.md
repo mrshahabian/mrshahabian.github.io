@@ -1,6 +1,6 @@
 ---
 company: "Various Institutions, London & Hertfordshire"
-role: "Visiting Lecturer (Part-Time)"
+role: "Visiting Lecturer"
 start: "Sep 2021"
 end: ""
 location: "London & Hertfordshire, UK"

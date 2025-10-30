@@ -1,6 +1,6 @@
 ---
 title: "Towards Memory-Driven Agentic AI for Human Activity Recognition"
-authors: ["Mohamad Reza Shahabian Alashti", "Co-authors"]
+authors: ["Mohamad Reza Shahabian Alashti", "Khashayar Ghamati", "Hooman Samani", "Abolfazl Zaraki"]
 venue: "ICSR 2025"
 year: "2025"
 abstract: "Exploring memory-driven agentic AI architectures for human activity recognition, enabling adaptive and goal-oriented behavior in ambient assisted living scenarios."

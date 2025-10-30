@@ -3,7 +3,7 @@ title: "Hospital@Home / PRIME Study"
 description: "AI-driven virtual ward system for ambient assistive care with multimodal patient monitoring"
 tags: ["Healthcare AI", "Multi-View HAR", "HRI", "Sensor Fusion", "Ambient Intelligence", "Deep Learning"]
 year: "2024-Present"
-role: "Lead AI Researcher"
+role: "AI Researcher"
 links:
   paper: "https://robotics.herts.ac.uk/"
 ---

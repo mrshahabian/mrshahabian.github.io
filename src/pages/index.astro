@@ -49,13 +49,13 @@ const events = (await getCollection('events')).sort((a, b) => {
             <!-- Hero Section -->
             <section id="home" style="padding: 7rem 0 4rem;">
                 <h1 style="margin-bottom: 1rem; letter-spacing: .2px; line-height: 1.1;">
-                    Mohamad Reza Shahabian Alashti, PhD
+                    Mohamad Reza Shahabian Alashti
                 </h1>
                 <p style="max-width: 54rem; font-size: 1.35rem; color: rgb(var(--gray-dark)); margin-bottom: 1.5rem; font-weight: 500;">
                     Machine Learning Research Scientist | Robotics, AI & Computer Vision
                 </p>
                 <p style="max-width: 54rem; font-size: 1.1rem; color: rgb(var(--gray)); line-height: 1.7;">
-                    <strong>Machine Learning</strong> and <strong>Computer Vision</strong> researcher with expertise in <strong>real-time human activity recognition</strong>, <strong>video-based motion analysis</strong>, and <strong>biomechanical signal processing</strong>. Currently a <strong>Postdoctoral Research Fellow</strong> at the <strong>University of Hertfordshire</strong>, contributing to multidisciplinary projects including <strong>SWAG (Soft Wearable Assistive Garment)</strong>, <strong>Hospital at Home</strong>, and the <strong>PRIME Study</strong>. Specializing in <strong>deep learning model development</strong>, <strong>PyTorch</strong>, <strong>Transformer architectures</strong>, <strong>sensor fusion</strong>, <strong>dataset design</strong>, and <strong>edge AI deployment</strong>. Passionate about translating academic research into impactful <strong>AI-driven healthcare solutions</strong> and <strong>agentic systems</strong> for <strong>ambient assisted living</strong>.
+                    <strong>Machine Learning</strong> and <strong>Computer Vision</strong> researcher with expertise in <strong>real-time human activity recognition</strong>, <strong>video-based motion analysis</strong>, and <strong>biomechanical signal processing</strong>. Currently a <strong>Research Fellow</strong> at the <strong>University of Hertfordshire</strong>, contributing to multidisciplinary projects including <strong>SWAG (Soft Wearable Assistive Garment)</strong>, <strong>Hospital at Home</strong>, and the <strong>PRIME Study</strong>. Specializing in <strong>deep learning model development</strong>, <strong>PyTorch</strong>, <strong>Transformer architectures</strong>, <strong>sensor fusion</strong>, <strong>dataset design</strong>, and <strong>edge AI deployment</strong>. Passionate about translating academic research into impactful <strong>AI-driven healthcare solutions</strong> and <strong>agentic systems</strong> for <strong>ambient assisted living</strong>.
                 </p>
                 <div style="margin-top: 2rem; display: flex; gap: 1rem; flex-wrap: wrap;">
                     <a href="#projects" style="background: var(--accent); color: white; padding: .75rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: 600; transition: opacity .2s;">View Projects</a>
@@ -116,7 +116,7 @@ const events = (await getCollection('events')).sort((a, b) => {
                 <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.5rem;">
                     {events.map((event) => (
                         <a href={`/events#${event.id}`} style="text-decoration: none; color: inherit;">
-                            <article class="card reveal">
+                            <article class={`card reveal${event.data.highlight ? ' highlight' : ''}`}>
                                 <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: .5rem;">
                                     <h3 style="margin:0; font-size: 1.3rem;">{event.data.title}</h3>
                                 </div>
@@ -253,7 +253,7 @@ const events = (await getCollection('events')).sort((a, b) => {
                         I am a <strong>Machine Learning Research Scientist</strong> specializing in <strong>robotics</strong>, <strong>artificial intelligence</strong>, and <strong>computer vision</strong>. My research focuses on developing intelligent systems for <strong>ambient assisted living</strong>, <strong>human-robot interaction (HRI)</strong>, and <strong>wearable assistive technologies</strong> using advanced <strong>deep learning</strong> and <strong>sensor fusion</strong> techniques.
                     </p>
                     <p style="margin: 0 0 1rem 0; font-size: 1.05rem; line-height: 1.8; color: rgb(var(--gray-dark));">
-                        Currently working as a <strong>Postdoctoral Research Fellow</strong> at the <strong>University of Hertfordshire</strong>, I contribute to cutting-edge projects including the <strong>SWAG (Soft Wearable Assistive Garment)</strong> project and the <strong>Hospital at Home</strong> initiative. My work involves developing <strong>AI-driven deep learning models</strong>, <strong>multi-sensor fusion systems</strong>, and <strong>multimodal recognition frameworks</strong> using <strong>PyTorch</strong>, <strong>ROS2</strong>, and <strong>Transformer architectures</strong>.
+                        Currently working as a <strong>Research Fellow</strong> at the <strong>University of Hertfordshire</strong>, I contribute to cutting-edge projects including the <strong>SWAG (Soft Wearable Assistive Garment)</strong> project and the <strong>Hospital at Home</strong> initiative. My work involves developing <strong>AI-driven deep learning models</strong>, <strong>multi-sensor fusion systems</strong>, and <strong>multimodal recognition frameworks</strong> using <strong>PyTorch</strong>, <strong>ROS2</strong>, and <strong>Transformer architectures</strong>.
                     </p>
                     <p style="margin: 0 0 1rem 0; font-size: 1.05rem; line-height: 1.8; color: rgb(var(--gray-dark));">
                         With a <strong>PhD in Computer Science</strong> and <strong>MSc in Mechatronics Engineering</strong>, my expertise spans from <strong>embedded systems</strong> and <strong>robotics engineering</strong> to state-of-the-art <strong>Vision Transformers (ViT)</strong>, <strong>Meta-Learning</strong>, and <strong>Agentic AI</strong>. I specialize in <strong>human activity recognition</strong>, <strong>pose estimation</strong>, <strong>EMG/IMU signal processing</strong>, <strong>video-based motion analysis</strong>, and <strong>edge AI deployment</strong> for real-time applications.

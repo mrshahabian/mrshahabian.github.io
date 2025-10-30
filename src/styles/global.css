@@ -93,6 +93,31 @@ a:hover { opacity: .8; }
     border-color: var(--accent-light);
 }
 
+/* Highlighted cards with subtle shining border */
+.card.highlight {
+    border-color: color-mix(in srgb, var(--accent) 55%, white);
+    box-shadow:
+        0 0 0 2px color-mix(in srgb, var(--accent) 30%, white),
+        0 12px 28px rgba(30, 64, 175, 0.18),
+        0 3px 10px rgba(15, 23, 42, 0.08);
+    animation: shinePulse 3s ease-in-out infinite;
+}
+
+@keyframes shinePulse {
+    0%, 100% {
+        box-shadow:
+            0 0 0 2px color-mix(in srgb, var(--accent) 26%, white),
+            0 10px 24px rgba(30, 64, 175, 0.16),
+            0 2px 8px rgba(15, 23, 42, 0.06);
+    }
+    50% {
+        box-shadow:
+            0 0 0 3px color-mix(in srgb, var(--accent) 38%, white),
+            0 16px 36px rgba(30, 64, 175, 0.22),
+            0 4px 12px rgba(15, 23, 42, 0.08);
+    }
+}
+
 /* Section divider */
 .section-divider {
     border: 0;

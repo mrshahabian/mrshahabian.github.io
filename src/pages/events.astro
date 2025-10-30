@@ -49,6 +49,16 @@ const renderedEvents = await Promise.all(
 				box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
 				scroll-margin-top: 100px;
 			}
+			.event-section.highlight {
+				background: color-mix(in srgb, var(--accent) 8%, white);
+				border: 1px solid color-mix(in srgb, var(--accent) 22%, white);
+				box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 22%, white), 0 10px 26px rgba(30, 64, 175, 0.16), 0 2px 8px rgba(15, 23, 42, 0.06);
+				animation: shinePulse 3s ease-in-out infinite;
+			}
+			@keyframes shinePulse {
+				0%, 100% { box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 22%, white), 0 10px 24px rgba(30, 64, 175, 0.16), 0 2px 8px rgba(15, 23, 42, 0.06); }
+				50% { box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 34%, white), 0 16px 34px rgba(30, 64, 175, 0.22), 0 3px 12px rgba(15, 23, 42, 0.08); }
+			}
 			.event-header {
 				margin-bottom: 2rem;
 				padding-bottom: 1.5rem;
@@ -150,7 +160,7 @@ const renderedEvents = await Promise.all(
 				<h1 style="margin-bottom: 3rem; font-size: 2.5rem;">Events & Workshops</h1>
 
 				{renderedEvents.map(({ event, Content }) => (
-					<article class="event-section" id={event.id}>
+					<article class={`event-section${event.data.highlight ? ' highlight' : ''}`} id={event.id}>
 						<div class="event-header">
 							<h2>{event.data.title}</h2>
 							
