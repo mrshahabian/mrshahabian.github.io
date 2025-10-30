@@ -5,7 +5,15 @@ import HeaderLink from './HeaderLink.astro';
 
 <header>
 	<nav style="padding: 1.25rem 0;">
-		<h2><a href="/">{SITE_TITLE}</a></h2>
+		<h2>
+			<a href="/" style="display: inline-flex; align-items: center; gap: .5rem;">
+				<picture>
+					<source srcset="/logo.svg" type="image/svg+xml" />
+					<img src="/logo.png" alt="{SITE_TITLE} logo" width="36" height="36" style="display:block;" />
+				</picture>
+				<span>{SITE_TITLE}</span>
+			</a>
+		</h2>
         <div class="internal-links" style="gap: .25rem;">
             <a href="/#home">Home</a>
             <a href="/#projects">Projects</a>
