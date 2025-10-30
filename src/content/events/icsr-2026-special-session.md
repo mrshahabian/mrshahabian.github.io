@@ -1,6 +1,6 @@
 ---
-title: "ICSR 2026 — Special Session: Assistive Robotics and Exoskeletons"
-description: "Assistive Robotics and Exoskeletons for Human Augmentation and Wellbeing"
+title: "ICSR 2026 — Special Session: Assistive Robotics and Exoskeletons for Human Augmentation and Wellbeing"
+description: "Building interdisciplinary bridges through assistive technologies, social robots, and creative therapies"
 date: "1-4 July 2026"
 location: "University of London, London, UK"
 highlight: true
@@ -12,8 +12,8 @@ highlight: true
 
 ### Conference Details
 
-- **Conference**: 18th International Conference on Social Robotics (ICSR 2026)
-- **Dates**: 1–4 July 2026
+- **Conference**: 18th International Conference on Social Robotics (ICSR 2026)  
+- **Dates**: 1–4 July 2026  
 - **Location**: University of London, London, UK
 
 ### Organisers
@@ -22,7 +22,7 @@ highlight: true
 - **Mohamad Reza Shahabian Alashti**  
 - **Shadiya Alingal Meethal**  
 - **Patrick Holthaus**  
-- **Gabriella Lakatos**
+- **Gabriella Lakatos**  
 
 *All organisers are affiliated with the Robotics Research Group, University of Hertfordshire, UK.*
 
@@ -30,53 +30,47 @@ highlight: true
 
 ### Description
 
-As assistive technologies become increasingly essential in promoting autonomy, wellbeing, and participation—particularly for ageing populations and remote care models—this special session investigates how wearable robotics can enhance human function in everyday life, clinical therapy, and creative practices.
+This special session bridges the fields of assistive robotics, rehabilitation, and social human–robot interaction, with an invitation to explore new intersections with creative and expressive therapies. As the field of social robotics matures, it becomes increasingly important to consider not just how robots assist physically—but how they engage, empower, and emotionally support users in therapeutic contexts.
 
-We focus on advances in exoskeletons, soft exosuits, and AI-powered assistive devices, drawing from multidisciplinary research across robotics, biomechanics, human–robot interaction, and healthcare. This includes systems that integrate multimodal sensing (EMG, EEG, IMU), machine learning for intent detection, and co-adaptive control for real-time human–robot collaboration.
+We focus on wearable robotic systems—such as exoskeletons, soft exosuits, and intelligent assistive devices—designed to enhance physical function, facilitate recovery, and promote independence in both clinical and everyday environments. These systems often integrate biosignals (EMG, EEG, IMU), deep learning models, and co-adaptive control for personalised support.
 
-Beyond physical support, we also explore emerging uses of assistive robots in **complementary therapies**, such as **art therapy**, where social and expressive robots contribute to cognitive and emotional wellbeing. The session highlights work at the intersection of rehabilitation, creativity, and socially responsive design.
+In addition to traditional rehabilitation, this session also invites contributions at the interface of assistive robotics and **creative therapies**—including **art therapy**—where **social robots and assistive technologies** are designed to support cognitive, emotional, and expressive goals. From supporting movement through collaborative painting to enabling voice and gesture in therapeutic storytelling, we aim to foreground how social and wearable robots can participate in multimodal, human-centred healing practices.
+
+This session embraces ICSR’s mission of advancing socially intelligent robotics while building bridges with fields such as occupational therapy, cognitive neuroscience, digital arts, and healthcare design.
 
 ---
 
 ### Key Themes
 
-This special session will focus on the following key themes:
-
-- **Wearable Assistive Systems**: Exoskeletons and exosuits for upper and lower limb support  
-- **Multimodal Sensing and Intent Detection**: EMG, EEG, IMU, and biosignal fusion  
-- **Adaptive and Co-Adaptive AI**: Deep learning and meta-learning for personalised assistance  
-- **Human–Robot Interaction and Shared Autonomy**: Transparency, trust, and safe collaboration  
-- **Rehabilitation and Remote Care**: Clinical integration, home-based therapy, and telepresence  
-- **Social Robots in Creative Therapies**: Art therapy and emotional enrichment through robot interaction  
-- **Digital Twins and Generative Models**: Simulation, prediction, and adaptive intervention planning  
-- **Societal and Ethical Dimensions**: Long-term use, accessibility, and user agency  
-- **Benchmarks and Validation**: Open datasets, real-world deployments, and reproducible studies  
+- **Wearable Assistive Robotics**: Exosuits and exoskeletons for daily support and motor recovery  
+- **Multimodal Sensing and Intent Detection**: EMG, EEG, IMU, and biosignal integration  
+- **AI-Driven Adaptation**: Deep and meta-learning for real-time, personalised assistance  
+- **Human–Robot Interaction in Rehabilitation and Art-Based Therapies**  
+- **Social Robots in Creative and Complementary Therapy**: Use of robots in art therapy, music-based interventions, or storytelling  
+- **Ethical and Inclusive Design**: Trust, long-term use, accessibility, and identity-sensitive interaction  
+- **Real-World Evaluation**: Clinical trials, longitudinal studies, and deployment in care and cultural settings  
+- **Benchmarks and Frameworks**: Open datasets, replicability, and cross-domain methodological tools  
 
 ---
 
 ### Call for Papers
 
-We invite submissions that explore technical, social, or therapeutic dimensions of assistive wearable robotics. This includes novel system design, clinical and creative applications, and interdisciplinary research that connects human augmentation with social robotics.
+We welcome submissions that explore novel intersections between assistive robotics, creative expression, and therapeutic applications. We particularly encourage contributions that:
 
-**Topics of Interest:**
-
-- Exosuit and exoskeleton engineering  
-- AI-driven intent detection and co-adaptation  
-- Multimodal biosignal processing (EMG, EEG, IMU)  
-- Social robots in therapeutic and creative settings  
-- Long-term usability and user experience studies  
-- Ethics, trust, and human-centred design  
-- Benchmark datasets and deployment frameworks  
-- Remote rehabilitation, telepresence, and assistive care  
+- Apply assistive or social robots in complementary therapies (e.g. art, music, narrative)
+- Explore adaptive control and intent recognition using biosignals
+- Address user agency, emotion, or trust in therapeutic HRI
+- Present technical or empirical work on robot-supported rehabilitation and wellbeing
+- Contribute datasets or methodologies for use in multi-domain studies  
 
 ---
 
 ### Submission Guidelines
 
-Submissions will undergo peer review and accepted papers will be included in the ICSR 2026 proceedings. We welcome full papers, short papers, and extended abstracts.
+Accepted papers will be published in the ICSR 2026 proceedings. Submissions may include full papers, short papers, or extended abstracts that speak to the core or exploratory themes of this interdisciplinary session.
 
 ---
 
 ### Contact
 
-For questions or to discuss a submission, please contact the session organisers via the Robotics Research Group, University of Hertfordshire.
+For queries or to discuss a potential contribution, please contact the session organisers via the Robotics Research Group, University of Hertfordshire.
