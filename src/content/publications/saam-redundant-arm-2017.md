@@ -1,10 +1,13 @@
 ---
 title: "Mechanical Basic and Detailed Design for the Redundant Arm SAAM applied on a Domestic Service Robot"
-authors: ["Mohamad Reza Shahabian Alashti", "SYNTECH Team"]
-venue: "Conference/Technical Report"
+authors: ["Farzad Cheraghpour Samavati", "Majid Iranikhah", "Parastoo Dastangoo","Mohamad Reza Shahabian Alashti"]
+venue: "Artificial Intelligence and Robotics (IRANOPEN)"
 year: "2017"
-abstract: "Detailing the mechanical design and development of SAAM, a 7-DoF redundant robotic arm for domestic service robots, with focus on kinematics, workspace analysis, and manufacturing considerations."
+url: "https://ieeexplore.ieee.org/document/7956447"
+abstract: "In this paper we describe design and manufacturing process of mechanical robotic arm SAAM (seven axis anthropomorphic manipulator). The main goal is designing a suitable arm for use as a service robot arm in the home environment. Design is described in the five step: Loading analysis, Stress Analysis, Material Selection, Failure Theory consideration, Safety Factor calculation. All steps calculation are done for each part of the arm. Finally, the process of manufacturing the arm is explained and the real sample of the arm is manufactured."
 ---
+
+Official page: [IEEE Xplore](https://ieeexplore.ieee.org/document/7956447)
 
 Comprehensive design work for the SAAM (7-DoF) robotic arm used in domestic service robots, covering:
 - Kinematic analysis and workspace optimization
