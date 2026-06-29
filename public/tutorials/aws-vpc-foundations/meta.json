@@ -1,0 +1,11 @@
+{
+  "title": "AWS VPC Foundations",
+  "description": "An interactive introduction to Amazon Virtual Private Cloud (VPC): subnets, routing, gateways, and secure network design on AWS.",
+  "order": 1,
+  "videos": [
+    { "title": "AWS VPC — official overview", "url": "https://www.youtube.com/results?search_query=aws+vpc+overview" }
+  ],
+  "books": [
+    { "title": "AWS Documentation — Amazon VPC User Guide", "url": "https://docs.aws.amazon.com/vpc/latest/userguide/what-is-amazon-vpc.html" }
+  ]
+}

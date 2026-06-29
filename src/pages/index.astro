@@ -4,6 +4,9 @@ import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 import { getCollection } from 'astro:content';
+import { getSections } from '../utils/tutorials';
+
+const tutorials = getSections();
 
 const projects = (await getCollection('projects')).sort((a, b) => {
     const yearA = a.data.year || '0';
@@ -23,12 +26,6 @@ const experience = (await getCollection('experience')).sort((a, b) => {
 
 const education = (await getCollection('education')).sort((a, b) => {
     return (b.data.end || '9999').localeCompare(a.data.end || '9999');
-});
-
-const tutorials = (await getCollection('tutorials')).sort((a, b) => {
-    const dateA = a.data.pubDate || new Date(0);
-    const dateB = b.data.pubDate || new Date(0);
-    return dateB.valueOf() - dateA.valueOf();
 });
 
 const events = (await getCollection('events')).sort((a, b) => {
@@ -96,20 +93,21 @@ const events = (await getCollection('events')).sort((a, b) => {
             <!-- Tutorials Section -->
             {tutorials.length > 0 && (
             <section id="tutorials" style="padding: 4rem 0;">
-                <h2 style="margin: 0 0 2rem 0; font-size: 2.5rem;">Tutorials & Educational Content</h2>
+                <div style="display:flex; justify-content:space-between; align-items:baseline; gap:1rem; flex-wrap:wrap;">
+                    <h2 style="margin: 0 0 2rem 0; font-size: 2.5rem;">Tutorials & Teaching</h2>
+                    <a href="/tutorials" style="color: var(--accent); font-weight:600; text-decoration:none;">View all →</a>
+                </div>
                 <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.5rem;">
-                    {tutorials.map((tutorial) => (
-                        <article class="card reveal">
-                            <h3 style="margin:0 0 .5rem 0; font-size: 1.3rem;">{tutorial.data.title}</h3>
-                            <p style="margin:.5rem 0; font-size:.95rem; color: rgb(var(--gray));">{tutorial.data.description}</p>
-                            {tutorial.data.tags && tutorial.data.tags.length > 0 && (
-                                <div style="display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .75rem;">
-                                    {tutorial.data.tags.slice(0, 4).map(tag => (
-                                        <span style="font-size: .75rem; background: rgba(var(--accent), .08); color: var(--accent); padding: .25rem .6rem; border-radius: 4px;">{tag}</span>
-                                    ))}
-                                </div>
-                            )}
-                        </article>
+                    {tutorials.map((topic) => (
+                        <a href={`/tutorials/${topic.slug}`} style="text-decoration:none; color:inherit;">
+                            <article class="card clickable reveal" style="height:100%;">
+                                <h3 style="margin:0 0 .5rem 0; font-size: 1.3rem;">{topic.title}</h3>
+                                <p style="margin:.5rem 0; font-size:.95rem; color: rgb(var(--gray));">{topic.description}</p>
+                                <p style="margin:.75rem 0 0 0; font-size:.85rem; color:var(--accent); font-weight:600;">
+                                    {topic.subsections.length} lesson{topic.subsections.length === 1 ? '' : 's'}
+                                </p>
+                            </article>
+                        </a>
                     ))}
                 </div>
             </section>

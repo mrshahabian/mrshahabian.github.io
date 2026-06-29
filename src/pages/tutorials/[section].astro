@@ -1,0 +1,105 @@
+---
+import BaseHead from '../../components/BaseHead.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import { SITE_TITLE } from '../../consts';
+import { getSections, getSection, formatSize } from '../../utils/tutorials';
+
+export function getStaticPaths() {
+	return getSections().map((s) => ({ params: { section: s.slug } }));
+}
+
+const { section } = Astro.params;
+const data = getSection(section!);
+if (!data) return Astro.redirect('/tutorials');
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title={`${data.title} - ${SITE_TITLE}`} description={data.description || `Tutorial: ${data.title}`} />
+	</head>
+	<body>
+		<Header />
+		<main style="max-width: 60rem; margin: 0 auto; padding: 2rem 1rem;">
+			<a href="/tutorials" style="display:inline-flex; align-items:center; gap:.4rem; color:var(--accent); text-decoration:none; font-weight:600; margin-bottom:1.5rem;">
+				<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+				All tutorials
+			</a>
+
+			<h1 style="margin-bottom:.5rem;">{data.title}</h1>
+			{data.description && (
+				<p style="font-size:1.1rem; color:rgb(var(--gray-dark)); margin-top:0;">{data.description}</p>
+			)}
+
+			{data.bodyHtml && (
+				<div class="tutorial-body" style="margin:1.5rem 0; line-height:1.8; color:rgb(var(--gray-dark));" set:html={data.bodyHtml} />
+			)}
+
+			<!-- Lessons -->
+			<section style="margin-top:2.5rem;">
+				<h2 style="font-size:1.6rem; margin-bottom:1rem;">Lessons</h2>
+				{data.subsections.length === 0 ? (
+					<p style="color:rgb(var(--gray));">No lessons added yet.</p>
+				) : (
+					<ol style="list-style:none; padding:0; margin:0; display:grid; gap:.75rem;">
+						{data.subsections.map((sub, i) => (
+							<li>
+								<a href={sub.url} style="text-decoration:none; color:inherit; display:block;">
+									<article class="card clickable" style="display:flex; align-items:center; gap:1rem;">
+										<span style="flex:0 0 auto; width:2rem; height:2rem; border-radius:50%; background:rgba(var(--accent),.1); color:var(--accent); font-weight:700; display:flex; align-items:center; justify-content:center; font-size:.95rem;">{i + 1}</span>
+										<span style="font-size:1.1rem; font-weight:600;">{sub.name}</span>
+										<span style="margin-left:auto; color:var(--accent);">→</span>
+									</article>
+								</a>
+							</li>
+						))}
+					</ol>
+				)}
+			</section>
+
+			<!-- Videos -->
+			{data.videos.length > 0 && (
+				<section style="margin-top:2.5rem;">
+					<h2 style="font-size:1.6rem; margin-bottom:1rem;">Videos</h2>
+					<ul style="line-height:2;">
+						{data.videos.map((v) => (
+							<li><a href={v.url} target="_blank" rel="noopener noreferrer" style="color:var(--accent);">▶ {v.title}</a></li>
+						))}
+					</ul>
+				</section>
+			)}
+
+			<!-- Books / reading -->
+			{data.books.length > 0 && (
+				<section style="margin-top:2.5rem;">
+					<h2 style="font-size:1.6rem; margin-bottom:1rem;">Books &amp; reading</h2>
+					<ul style="line-height:2;">
+						{data.books.map((b) => (
+							<li><a href={b.url} target="_blank" rel="noopener noreferrer" style="color:var(--accent);">📖 {b.title}</a></li>
+						))}
+					</ul>
+				</section>
+			)}
+
+			<!-- Downloadable resources -->
+			{data.resources.length > 0 && (
+				<section style="margin-top:2.5rem;">
+					<h2 style="font-size:1.6rem; margin-bottom:1rem;">Resources &amp; files</h2>
+					<ul style="list-style:none; padding:0; margin:0; display:grid; gap:.5rem;">
+						{data.resources.map((r) => (
+							<li>
+								<a href={r.url} download style="display:flex; align-items:center; gap:.6rem; padding:.6rem .9rem; background:rgba(var(--gray-light),.5); border-radius:8px; text-decoration:none; color:rgb(var(--gray-dark));">
+									<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+									<span style="font-weight:600;">{r.name}</span>
+									{r.size > 0 && <span style="margin-left:auto; font-size:.8rem; color:rgb(var(--gray));">{formatSize(r.size)}</span>}
+								</a>
+							</li>
+						))}
+					</ul>
+				</section>
+			)}
+		</main>
+		<Footer />
+	</body>
+</html>
