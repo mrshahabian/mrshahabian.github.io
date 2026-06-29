@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ISO 27001 Learning Suite</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --orange: #FF6B35;
+    --dark: #1a1a2e;
+    --teal: #2A9D8F;
+    --red: #E63946;
+    --amber: #F4A261;
+    --purple: #6A4C93;
+    --blue: #457B9D;
+    --navy: #1D3557;
+    --bg: #f4f4f8;
+    --white: #ffffff;
+    --border: #e2e2ea;
+    --text: #1a1a2e;
+    --muted: #666;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+  h1,h2,h3 { font-family: 'Playfair Display', Georgia, serif; }
+
+  /* HEADER */
+  #header {
+    background: var(--dark);
+    padding: 20px 24px 0;
+    position: sticky; top: 0; z-index: 200;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+  }
+  .header-top { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; max-width: 960px; margin-left: auto; margin-right: auto; }
+  .header-icon { background: var(--orange); border-radius: 10px; width: 46px; height: 46px; display:flex; align-items:center; justify-content:center; font-size:22px; flex-shrink:0; }
+  .header-label { color: var(--orange); font-size: 10px; letter-spacing: 3px; font-weight: 700; text-transform: uppercase; }
+  .header-title { color: #fff; font-size: 20px; line-height: 1.2; }
+  .tabs { display: flex; gap: 4px; max-width: 960px; margin: 0 auto; overflow-x: auto; }
+  .tab-btn {
+    background: transparent; color: #999; border: none;
+    border-radius: 8px 8px 0 0; padding: 10px 20px;
+    font-size: 13px; font-weight: 700; cursor: pointer;
+    white-space: nowrap; transition: all 0.2s;
+    font-family: 'DM Sans', sans-serif;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .tab-btn:hover { color: #fff; background: rgba(255,255,255,0.08); }
+  .tab-btn.active { background: var(--orange); color: #fff; }
+
+  /* CONTENT */
+  #content { max-width: 960px; margin: 0 auto; padding: 28px 20px 60px; }
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  /* SECTION HEADER */
+  .section-header { text-align: center; margin-bottom: 32px; }
+  .section-tag { font-size: 11px; letter-spacing: 4px; color: #999; text-transform: uppercase; margin-bottom: 8px; }
+  .section-title { font-size: 28px; color: var(--dark); margin-bottom: 8px; }
+  .section-desc { color: var(--muted); font-size: 14px; }
+
+  /* PDCA BAR */
+  .pdca-bar { display: flex; gap: 6px; margin-bottom: 32px; flex-wrap: wrap; }
+  .pdca-card {
+    flex: 1 1 120px; border-radius: 12px; padding: 14px 16px;
+    color: #fff; text-align: center;
+  }
+  .pdca-label { font-size: 22px; font-weight: 900; letter-spacing: 2px; }
+  .pdca-clauses { font-size: 11px; opacity: 0.75; margin-top: 2px; }
+  .pdca-desc { font-size: 12px; margin-top: 5px; opacity: 0.9; }
+
+  /* CLAUSE CARDS */
+  .clauses-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; margin-bottom: 36px; }
+  .clause-card {
+    background: var(--white); border: 2px solid var(--border);
+    border-radius: 14px; padding: 20px; cursor: pointer; transition: all 0.2s;
+  }
+  .clause-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.1); transform: translateY(-1px); }
+  .clause-card.open { border-color: var(--accent); box-shadow: 0 4px 20px var(--accent-light); }
+  .clause-head { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+  .clause-icon { font-size: 28px; }
+  .clause-num { font-size: 10px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; }
+  .clause-name { font-size: 15px; font-weight: 700; color: var(--dark); }
+  .clause-summary { font-size: 13px; color: var(--muted); line-height: 1.55; }
+  .clause-detail { margin-top: 16px; padding-top: 14px; border-top: 1px solid #eee; display: none; }
+  .clause-card.open .clause-detail { display: block; }
+  .plain-box { border-radius: 8px; padding: 10px 14px; margin-bottom: 12px; }
+  .plain-label { font-size: 10px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 5px; }
+  .plain-text { font-size: 13px; line-height: 1.6; color: #333; }
+  .key-title { font-size: 10px; font-weight: 700; color: #999; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 7px; }
+  .key-item { display: flex; gap: 8px; font-size: 13px; color: #333; margin-bottom: 5px; align-items: flex-start; }
+  .subclause-tag {
+    font-size: 11px; border-radius: 5px; padding: 3px 9px;
+    font-weight: 600; display: inline-block; margin: 3px 3px 3px 0;
+  }
+
+  /* ANNEX A */
+  .annex-box { background: var(--dark); border-radius: 16px; padding: 28px; }
+  .annex-title { color: #fff; font-size: 20px; margin-bottom: 6px; }
+  .annex-desc { color: #aaa; font-size: 13px; margin-bottom: 20px; }
+  .annex-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; }
+  .annex-card {
+    background: #2a2a4a; border-radius: 9px; padding: 13px;
+    transition: all 0.2s; cursor: default;
+  }
+  .annex-card:hover { background: var(--orange); }
+  .annex-card-top { display: flex; justify-content: space-between; align-items: center; }
+  .annex-emoji { font-size: 18px; }
+  .annex-count { font-size: 11px; color: var(--orange); font-weight: 700; }
+  .annex-card:hover .annex-count { color: #fff; }
+  .annex-ref { font-size: 10px; color: #aaa; margin-top: 5px; }
+  .annex-name { font-size: 13px; color: #fff; font-weight: 600; margin-top: 2px; line-height: 1.3; }
+  .annex-hover-desc { font-size: 11px; color: #ffe; margin-top: 7px; line-height: 1.4; display: none; }
+  .annex-card:hover .annex-hover-desc { display: block; }
+
+  /* QUIZ */
+  .quiz-wrap { max-width: 640px; margin: 0 auto; }
+  .quiz-progress-bar-bg { height: 6px; background: #e8e8e8; border-radius: 3px; margin-bottom: 28px; }
+  .quiz-progress-bar { height: 6px; background: var(--orange); border-radius: 3px; transition: width 0.4s; }
+  .quiz-meta { display: flex; justify-content: space-between; font-size: 13px; color: #888; margin-bottom: 14px; }
+  .quiz-score-label { color: var(--teal); font-weight: 700; }
+  .quiz-question-box { background: var(--dark); border-radius: 16px; padding: 28px; margin-bottom: 20px; }
+  .quiz-q-tag { color: var(--orange); font-size: 11px; letter-spacing: 2px; font-weight: 700; text-transform: uppercase; margin-bottom: 10px; }
+  .quiz-q-text { color: #fff; font-size: 17px; line-height: 1.6; font-family: 'Playfair Display', serif; }
+  .quiz-options { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
+  .quiz-opt {
+    background: var(--white); border: 2px solid var(--border);
+    border-radius: 10px; padding: 14px 18px;
+    text-align: left; cursor: pointer; font-size: 14px;
+    line-height: 1.5; transition: all 0.2s; color: var(--text);
+    font-family: 'DM Sans', sans-serif; width: 100%;
+  }
+  .quiz-opt:hover:not(:disabled) { border-color: var(--orange); background: #fff7f4; }
+  .quiz-opt.correct { border-color: var(--teal); background: #f0fff4; color: #1a5c50; }
+  .quiz-opt.wrong { border-color: var(--red); background: #fff0f0; color: #9c1b1b; }
+  .quiz-opt:disabled { cursor: default; }
+  .quiz-explanation {
+    border-radius: 10px; padding: 16px; margin-bottom: 20px;
+    font-size: 13px; line-height: 1.6;
+  }
+  .quiz-explanation.good { background: #edfdf5; border: 1px solid var(--teal); color: #1a5c50; }
+  .quiz-explanation.bad { background: #fff0f0; border: 1px solid var(--red); color: #9c1b1b; }
+  .quiz-exp-label { font-weight: 700; font-size: 13px; margin-bottom: 5px; }
+  .btn-primary {
+    background: var(--orange); color: #fff; border: none;
+    border-radius: 10px; padding: 13px 28px; font-size: 15px;
+    font-weight: 700; cursor: pointer; width: 100%;
+    font-family: 'DM Sans', sans-serif; transition: opacity 0.2s;
+  }
+  .btn-primary:hover { opacity: 0.88; }
+  .quiz-results { text-align: center; padding: 40px 20px; }
+  .result-emoji { font-size: 64px; margin-bottom: 16px; }
+  .result-title { font-size: 28px; color: var(--dark); margin-bottom: 6px; }
+  .result-pct { font-size: 52px; font-weight: 900; margin: 10px 0; }
+  .result-dots { display: flex; justify-content: center; gap: 8px; margin: 20px 0 28px; flex-wrap: wrap; }
+  .result-dot {
+    width: 36px; height: 36px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-size: 13px; font-weight: 700;
+  }
+  .result-msg { font-size: 14px; color: var(--muted); max-width: 380px; margin: 0 auto 28px; }
+
+  /* SCENARIOS */
+  .scenario-tabs { display: flex; gap: 10px; margin-bottom: 24px; flex-wrap: wrap; }
+  .scenario-tab {
+    padding: 10px 16px; border-radius: 10px; border: 2px solid var(--border);
+    background: var(--white); color: #555; font-weight: 700; cursor: pointer;
+    font-size: 13px; display: flex; align-items: center; gap: 8px;
+    font-family: 'DM Sans', sans-serif; transition: all 0.2s;
+  }
+  .scenario-tab.active { background: var(--dark); color: #fff; border-color: var(--dark); }
+  .diff-badge { font-size: 10px; border-radius: 4px; padding: 2px 7px; color: #fff; font-weight: 700; }
+  .scenario-header { background: var(--dark); border-radius: 16px; padding: 28px; margin-bottom: 24px; }
+  .scenario-meta { color: var(--orange); font-size: 10px; letter-spacing: 2px; font-weight: 700; text-transform: uppercase; margin-bottom: 6px; }
+  .scenario-title { color: #fff; font-size: 22px; margin-bottom: 14px; }
+  .scenario-body { color: #ccc; font-size: 15px; line-height: 1.7; }
+  .scenario-questions { display: flex; flex-direction: column; gap: 16px; }
+  .sq-card { border: 2px solid var(--border); border-radius: 12px; overflow: hidden; }
+  .sq-top { padding: 18px 20px; background: var(--white); }
+  .sq-head { display: flex; gap: 12px; align-items: flex-start; }
+  .sq-num {
+    background: var(--orange); color: #fff; border-radius: 50%;
+    width: 28px; height: 28px; display: flex; align-items: center;
+    justify-content: center; font-size: 13px; font-weight: 700; flex-shrink: 0; margin-top: 2px;
+  }
+  .sq-q { font-weight: 600; color: var(--dark); font-size: 15px; line-height: 1.5; margin-bottom: 8px; }
+  .sq-hint { font-size: 12px; color: #888; background: #f5f5f5; border-radius: 6px; padding: 6px 10px; display: inline-block; }
+  .sq-textarea {
+    width: 100%; min-height: 70px; padding: 10px 12px;
+    border-radius: 8px; border: 1px solid #ddd; font-size: 13px;
+    font-family: 'DM Sans', sans-serif; resize: vertical; color: #333;
+    margin-top: 14px;
+  }
+  .btn-reveal {
+    margin-top: 8px; border: none; border-radius: 8px;
+    padding: 8px 16px; font-size: 13px; font-weight: 700; cursor: pointer;
+    font-family: 'DM Sans', sans-serif; transition: all 0.2s;
+  }
+  .sq-answer { background: #f0fff4; border-top: 2px solid var(--teal); padding: 16px 20px 16px 60px; display: none; }
+  .sq-answer.show { display: block; }
+  .sq-answer-label { font-size: 10px; color: var(--teal); font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+  .sq-answer-text { font-size: 14px; color: #1a4a3a; line-height: 1.6; }
+
+  /* EXPLORER */
+  .search-wrap { position: relative; margin-bottom: 24px; }
+  .search-icon { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); font-size: 18px; }
+  .search-input {
+    width: 100%; padding: 14px 16px 14px 48px; font-size: 15px;
+    border-radius: 12px; border: 2px solid var(--border); outline: none;
+    font-family: 'DM Sans', sans-serif; transition: border-color 0.2s;
+    background: var(--white);
+  }
+  .search-input:focus { border-color: var(--orange); }
+  .explorer-tabs { display: flex; gap: 8px; margin-bottom: 20px; }
+  .exp-tab {
+    padding: 9px 20px; border-radius: 8px; border: 2px solid var(--border);
+    background: var(--white); font-weight: 700; cursor: pointer; font-size: 13px;
+    text-transform: uppercase; letter-spacing: 1px; font-family: 'DM Sans', sans-serif;
+    transition: all 0.2s;
+  }
+  .exp-tab.active { background: var(--orange); color: #fff; border-color: var(--orange); }
+  .explorer-clauses { display: flex; flex-direction: column; gap: 12px; }
+  .exp-clause {
+    border: 2px solid var(--border); border-radius: 12px;
+    padding: 20px; cursor: pointer; background: var(--white); transition: all 0.2s;
+  }
+  .exp-clause:hover { border-color: var(--orange); }
+  .exp-clause.open { border-color: var(--accent); background: var(--accent-light-bg); }
+  .exp-head { display: flex; align-items: center; gap: 14px; }
+  .exp-icon { font-size: 32px; }
+  .exp-meta { flex: 1; }
+  .exp-num { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
+  .exp-name { font-size: 16px; font-weight: 700; color: var(--dark); }
+  .exp-sum { font-size: 13px; color: var(--muted); margin-top: 4px; }
+  .exp-chevron { font-size: 18px; color: #ccc; }
+  .exp-detail { display: none; margin-top: 16px; padding-top: 14px; border-top: 1px solid #eee; }
+  .exp-clause.open .exp-detail { display: block; }
+  .exp-grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .exp-annex-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 14px; }
+  .exp-annex-card {
+    border: 2px solid var(--border); border-radius: 12px; padding: 18px;
+    background: var(--white); transition: all 0.2s;
+  }
+  .exp-annex-card:hover { border-color: var(--orange); }
+  .exp-annex-head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
+  .exp-annex-left { display: flex; gap: 10px; align-items: center; }
+  .exp-annex-emoji { font-size: 24px; }
+  .exp-annex-ref { font-size: 10px; color: var(--orange); font-weight: 700; }
+  .exp-annex-name { font-size: 14px; font-weight: 700; color: var(--dark); }
+  .exp-annex-badge { font-size: 11px; background: var(--dark); color: #fff; border-radius: 6px; padding: 3px 8px; font-weight: 700; white-space: nowrap; }
+  .exp-annex-desc { font-size: 13px; color: var(--muted); line-height: 1.5; }
+  .empty-state { text-align: center; padding: 40px; color: #aaa; font-size: 15px; }
+
+  @media (max-width: 600px) {
+    .clauses-grid { grid-template-columns: 1fr; }
+    .pdca-bar { }
+    .exp-grid2 { grid-template-columns: 1fr; }
+    .annex-grid { grid-template-columns: 1fr 1fr; }
+    .header-title { font-size: 16px; }
+    .tab-btn { padding: 10px 12px; font-size: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div id="header">
+  <div class="header-top">
+    <div class="header-icon">🛡️</div>
+    <div>
+      <div class="header-label">Interactive Learning Suite</div>
+      <h1 class="header-title">ISO/IEC 27001:2013</h1>
+    </div>
+  </div>
+  <div class="tabs">
+    <button class="tab-btn active" onclick="showTab('map',this)">🗺️ Visual Map</button>
+    <button class="tab-btn" onclick="showTab('quiz',this)">🧠 Quiz</button>
+    <button class="tab-btn" onclick="showTab('scenarios',this)">🎭 Scenarios</button>
+    <button class="tab-btn" onclick="showTab('explorer',this)">🔍 Explorer</button>
+  </div>
+</div>
+
+<div id="content">
+
+<!-- ═══════════════════════════════════════════════════════════ MAP PANEL -->
+<div id="panel-map" class="panel active">
+  <div class="section-header">
+    <div class="section-tag">The Standard at a Glance</div>
+    <h2 class="section-title">ISO 27001 Visual Map</h2>
+    <p class="section-desc">Click any clause card to expand details. The PDCA cycle drives the whole system.</p>
+  </div>
+
+  <div class="pdca-bar">
+    <div class="pdca-card" style="background:#FF6B35">
+      <div class="pdca-label">PLAN</div>
+      <div class="pdca-clauses">Clauses 4, 5, 6</div>
+      <div class="pdca-desc">Context · Leadership · Planning</div>
+    </div>
+    <div class="pdca-card" style="background:#2A9D8F">
+      <div class="pdca-label">DO</div>
+      <div class="pdca-clauses">Clauses 7, 8</div>
+      <div class="pdca-desc">Support · Operation</div>
+    </div>
+    <div class="pdca-card" style="background:#6A4C93">
+      <div class="pdca-label">CHECK</div>
+      <div class="pdca-clauses">Clause 9</div>
+      <div class="pdca-desc">Performance Evaluation</div>
+    </div>
+    <div class="pdca-card" style="background:#1D3557">
+      <div class="pdca-label">ACT</div>
+      <div class="pdca-clauses">Clause 10</div>
+      <div class="pdca-desc">Improvement</div>
+    </div>
+  </div>
+
+  <div class="clauses-grid" id="clauses-grid"></div>
+
+  <div class="annex-box">
+    <h3 class="annex-title">Annex A — 114 Controls across 14 Domains</h3>
+    <p class="annex-desc">These are the reference controls. Your Statement of Applicability (SoA) states which apply and why.</p>
+    <div class="annex-grid" id="annex-grid"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ QUIZ PANEL -->
+<div id="panel-quiz" class="panel">
+  <div id="quiz-container"></div>
+</div>
+
+<!-- ═════════════════════════════════════════════════════ SCENARIOS PANEL -->
+<div id="panel-scenarios" class="panel">
+  <div class="section-header">
+    <div class="section-tag">Real-World Application</div>
+    <h2 class="section-title">Scenario Worksheets</h2>
+    <p class="section-desc">Read the scenario, write your answer, then reveal the model solution.</p>
+  </div>
+  <div class="scenario-tabs" id="scenario-tabs"></div>
+  <div id="scenario-content"></div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════ EXPLORER PANEL -->
+<div id="panel-explorer" class="panel">
+  <div class="section-header">
+    <div class="section-tag">Navigate the Standard</div>
+    <h2 class="section-title">Clause Explorer</h2>
+    <p class="section-desc">Search any topic to find relevant clauses and controls instantly.</p>
+  </div>
+  <div class="search-wrap">
+    <span class="search-icon">🔍</span>
+    <input class="search-input" id="search-input" placeholder="Search: 'risk', 'access', 'backup', 'audit', 'policy'..." oninput="runSearch()">
+  </div>
+  <div class="explorer-tabs">
+    <button class="exp-tab active" id="exp-tab-clauses" onclick="switchExpTab('clauses')">📖 Clauses</button>
+    <button class="exp-tab" id="exp-tab-annex" onclick="switchExpTab('annex')">🛡️ Annex A</button>
+  </div>
+  <div id="explorer-results"></div>
+</div>
+
+</div><!-- /content -->
+
+<script>
+// ══════════════════════════════════ DATA ══════════════════════════════════
+
+const CLAUSES = [
+  { id:4, title:"Context of the Organization", color:"#FF6B35", icon:"🏢",
+    summary:"Understand your organisation, its context, interested parties, and define the ISMS scope.",
+    keyPoints:["Identify internal & external issues","Identify interested parties & their requirements","Define ISMS scope","Establish the ISMS"],
+    plainEnglish:"Before building security, know your business: what you do, who cares about your data, and where your security system applies.",
+    subclauses:["4.1 Understanding the organisation and its context","4.2 Needs and expectations of interested parties","4.3 ISMS scope","4.4 Information security management system"]
+  },
+  { id:5, title:"Leadership", color:"#E63946", icon:"👑",
+    summary:"Top management must demonstrate commitment, establish an information security policy, and assign roles.",
+    keyPoints:["Leadership commitment to ISMS","Information security policy","Assign roles & responsibilities"],
+    plainEnglish:"Security starts at the top. The CEO and board must champion it, set policy, and make sure someone owns it.",
+    subclauses:["5.1 Leadership and commitment","5.2 Policy","5.3 Organisational roles, responsibilities and authorities"]
+  },
+  { id:6, title:"Planning", color:"#F4A261", icon:"🗺️",
+    summary:"Identify risks and opportunities, perform risk assessments, create a risk treatment plan, and set security objectives.",
+    keyPoints:["Risk assessment process","Risk treatment options","Statement of Applicability (SoA)","Information security objectives"],
+    plainEnglish:"Figure out what could go wrong (risk assessment), decide what to do about it (treatment), and set measurable goals.",
+    subclauses:["6.1.1 General","6.1.2 Information security risk assessment","6.1.3 Information security risk treatment","6.2 Information security objectives"]
+  },
+  { id:7, title:"Support", color:"#2A9D8F", icon:"🛠️",
+    summary:"Provide resources, ensure competence, awareness, communication, and control documented information.",
+    keyPoints:["Resources for ISMS","Staff competence & training","Awareness programme","Documented information control"],
+    plainEnglish:"Give people the tools, training, and knowledge they need. Keep your documents organised and up to date.",
+    subclauses:["7.1 Resources","7.2 Competence","7.3 Awareness","7.4 Communication","7.5 Documented information"]
+  },
+  { id:8, title:"Operation", color:"#457B9D", icon:"⚙️",
+    summary:"Plan and control operational processes, perform risk assessments, and implement risk treatment.",
+    keyPoints:["Operational planning & control","Regular risk assessments","Implement risk treatment plan"],
+    plainEnglish:"Actually do the security work day-to-day: run your processes, revisit risks regularly, and execute your treatment plans.",
+    subclauses:["8.1 Operational planning and control","8.2 Information security risk assessment","8.3 Information security risk treatment"]
+  },
+  { id:9, title:"Performance Evaluation", color:"#6A4C93", icon:"📊",
+    summary:"Monitor, measure, analyse and evaluate ISMS performance through audits and management reviews.",
+    keyPoints:["Monitoring & measurement","Internal audit programme","Management review"],
+    plainEnglish:"Check if your security is actually working. Run audits, measure things, and report to management regularly.",
+    subclauses:["9.1 Monitoring, measurement, analysis and evaluation","9.2 Internal audit","9.3 Management review"]
+  },
+  { id:10, title:"Improvement", color:"#1D3557", icon:"📈",
+    summary:"Address nonconformities with corrective actions and continually improve the ISMS.",
+    keyPoints:["Corrective action process","Root cause analysis","Continual improvement"],
+    plainEnglish:"When things go wrong, fix them properly (not just a band-aid). Always look for ways to get better.",
+    subclauses:["10.1 Nonconformity and corrective action","10.2 Continual improvement"]
+  }
+];
+
+const ANNEX_A = [
+  { ref:"A.5", title:"Information Security Policies", controls:2, icon:"📋", desc:"Define and review security policies approved by management." },
+  { ref:"A.6", title:"Organisation of Information Security", controls:7, icon:"🏗️", desc:"Roles, responsibilities, mobile devices, and teleworking." },
+  { ref:"A.7", title:"Human Resource Security", controls:6, icon:"👥", desc:"Screening, training, disciplinary process, termination." },
+  { ref:"A.8", title:"Asset Management", controls:10, icon:"📦", desc:"Inventory, ownership, classification, and media handling." },
+  { ref:"A.9", title:"Access Control", controls:14, icon:"🔐", desc:"Limit access to information and prevent unauthorised access." },
+  { ref:"A.10", title:"Cryptography", controls:2, icon:"🔑", desc:"Proper use of cryptography and key management." },
+  { ref:"A.11", title:"Physical & Environmental Security", controls:15, icon:"🏢", desc:"Secure areas, equipment protection, clear desk policy." },
+  { ref:"A.12", title:"Operations Security", controls:14, icon:"💻", desc:"Malware, backups, logging, vulnerability management." },
+  { ref:"A.13", title:"Communications Security", controls:7, icon:"🌐", desc:"Network security, information transfer policies." },
+  { ref:"A.14", title:"System Acquisition, Dev & Maintenance", controls:13, icon:"🔧", desc:"Security in development lifecycle, test data." },
+  { ref:"A.15", title:"Supplier Relationships", controls:5, icon:"🤝", desc:"Security in supplier agreements and service delivery." },
+  { ref:"A.16", title:"Incident Management", controls:7, icon:"🚨", desc:"Reporting, response, learning from incidents." },
+  { ref:"A.17", title:"Business Continuity Management", controls:4, icon:"♻️", desc:"Information security continuity and redundancy." },
+  { ref:"A.18", title:"Compliance", controls:8, icon:"⚖️", desc:"Legal requirements, intellectual property, privacy, reviews." }
+];
+
+const QUIZ = [
+  { q:"Which clause requires an organisation to perform an information security risk assessment?",
+    opts:["Clause 5","Clause 6","Clause 8","Clause 9"], ans:1,
+    exp:"Clause 6.1.2 defines the risk assessment process. Clause 8.2 requires it to be performed at planned intervals." },
+  { q:"What document lists selected Annex A controls with justifications for inclusion or exclusion?",
+    opts:["Risk Treatment Plan","Statement of Applicability","Information Security Policy","Audit Report"], ans:1,
+    exp:"Clause 6.1.3(d) requires a Statement of Applicability (SoA) listing all controls, whether implemented, and reasons for inclusions/exclusions." },
+  { q:"Who is responsible for demonstrating leadership and commitment to the ISMS?",
+    opts:["The IT Manager","External Auditors","Top Management","The Risk Owner"], ans:2,
+    exp:"Clause 5.1 explicitly states 'Top management shall demonstrate leadership and commitment' to the ISMS." },
+  { q:"Under Clause 7.3, persons must be aware of which THREE things?",
+    opts:["The audit schedule","Security policy, their contribution, and implications of non-conformance","All Annex A controls","The risk register"], ans:1,
+    exp:"Clause 7.3 requires awareness of: (a) the information security policy, (b) their contribution to ISMS effectiveness, and (c) implications of non-conformance." },
+  { q:"Which Annex A domain covers background checks before employment?",
+    opts:["A.8 Asset Management","A.6 Organisation of Information Security","A.7 Human Resource Security","A.9 Access Control"], ans:2,
+    exp:"A.7.1.1 (Screening) requires background verification checks on all candidates, proportional to business requirements and risk." },
+  { q:"How often must management review the ISMS according to Clause 9.3?",
+    opts:["Monthly","Annually","At planned intervals","Only after incidents"], ans:2,
+    exp:"Clause 9.3 says 'at planned intervals' — the standard doesn't prescribe a specific frequency; organisations decide what is appropriate." },
+  { q:"What are the three core properties that an ISMS preserves (the CIA triad)?",
+    opts:["Privacy, Integrity, Accessibility","Confidentiality, Integrity, Availability","Security, Reliability, Compliance","Prevention, Detection, Response"], ans:1,
+    exp:"The Introduction states the ISMS 'preserves the confidentiality, integrity and availability of information' — the CIA triad." },
+  { q:"A company discovers a nonconformity. What does Clause 10.1 require?",
+    opts:["Only document it","React, investigate root cause, implement corrective action, review effectiveness","Report to ISO immediately","Suspend ISMS certification"], ans:1,
+    exp:"Clause 10.1 requires: react to the nonconformity, evaluate root causes, implement corrective action, review effectiveness, and update the ISMS if needed." },
+  { q:"Which Annex A control requires separating development, testing and operational environments?",
+    opts:["A.12.1.2 Change management","A.12.1.4 Separation of environments","A.14.2.1 Secure development policy","A.9.4.5 Access to source code"], ans:1,
+    exp:"A.12.1.4 requires development, testing and operational environments to be separated to reduce risks of unauthorised access or changes." },
+  { q:"What must be considered when determining the ISMS scope (Clause 4.3)?",
+    opts:["Only internal issues","External/internal issues, interested party requirements, and interfaces with other organisations","A full risk assessment","All Annex A controls"], ans:1,
+    exp:"Clause 4.3 requires consideration of: (a) issues from 4.1, (b) requirements from 4.2, and (c) interfaces and dependencies with other organisations." }
+];
+
+const SCENARIOS = [
+  { id:1, title:"The Laptop Left on the Train", icon:"🚂", diff:"Easy", diffColor:"#2A9D8F",
+    situation:"A sales manager leaves their unencrypted laptop on a train. It contains customer contracts and financial projections. The laptop is never recovered.",
+    questions:[
+      { q:"Which Annex A control was most clearly violated?", hint:"Think about protecting information on mobile devices",
+        ans:"A.6.2.1 (Mobile device policy) — a policy should have required encryption and secure handling of mobile devices." },
+      { q:"Under which clause should this incident be reported and managed?", hint:"Think about incidents",
+        ans:"A.16 (Information security incident management) — specifically A.16.1.2 reporting events and A.16.1.5 response procedures." },
+      { q:"What corrective action process applies after the incident?", hint:"Something went wrong and needs fixing properly",
+        ans:"Clause 10.1 — nonconformity and corrective action. Root cause analysis should determine why encryption wasn't enforced and implement controls to prevent recurrence." }
+    ]
+  },
+  { id:2, title:"The Disgruntled Ex-Employee", icon:"😤", diff:"Medium", diffColor:"#F4A261",
+    situation:"An employee is terminated following a disciplinary process. Two weeks later they access the company CRM remotely and download the full customer database. Their access was never removed.",
+    questions:[
+      { q:"Which A.9 control failed most critically?", hint:"Access rights on termination",
+        ans:"A.9.2.6 — Removal or adjustment of access rights. Access rights must be removed upon termination of employment, contract or agreement." },
+      { q:"What A.7 control should have set expectations before this situation arose?", hint:"Responsibilities after leaving",
+        ans:"A.7.3.1 — Termination responsibilities. Information security responsibilities and the consequences of breach should be communicated to departing employees." },
+      { q:"How does Clause 6.1.2 apply here in future risk planning?", hint:"Identifying risks before they happen",
+        ans:"The risk assessment should identify 'insider threat from departing employees' as a risk scenario, with timely access removal as a required mitigating control." }
+    ]
+  },
+  { id:3, title:"The Ransomware Attack", icon:"💀", diff:"Hard", diffColor:"#E63946",
+    situation:"A finance employee clicks a phishing link. Ransomware encrypts 80% of company servers. Backups haven't been tested in 18 months. The company cannot operate for 6 days.",
+    questions:[
+      { q:"List THREE Annex A controls that clearly failed here.", hint:"Malware, backups, and user awareness",
+        ans:"A.12.2.1 (Controls against malware), A.12.3.1 (Information backup — not tested), A.7.2.2 (Security awareness training — phishing not recognised by staff)." },
+      { q:"What business continuity controls (A.17) were inadequate?", hint:"Staying operational in a crisis",
+        ans:"A.17.1.1 and A.17.1.2 — planning and implementing information security continuity. A.17.2.1 — redundancy of processing facilities to meet availability requirements." },
+      { q:"After recovery, what Clause 9 and Clause 10 activities are mandatory?", hint:"Evaluate, learn, and improve",
+        ans:"Clause 9.3 management review must consider the incident. Clause 10.1 requires corrective action — root cause analysis, and measures to prevent recurrence including tested backup procedures." }
+    ]
+  },
+  { id:4, title:"The Startup Seeking Certification", icon:"🚀", diff:"Medium", diffColor:"#F4A261",
+    situation:"A 30-person SaaS startup wants ISO 27001 certification. They have no formal security processes, no documented policies, and no risk assessment. Their CTO has 6 months.",
+    questions:[
+      { q:"What are the FIRST three things they must do under Clauses 4 and 5?", hint:"Context, leadership, and scope",
+        ans:"1) Clause 4.1/4.2: understand business context and identify interested parties. 2) Clause 4.3: define the ISMS scope. 3) Clause 5.2: top management establishes an information security policy." },
+      { q:"What must the CTO produce under Clause 6.1?", hint:"Risk and treatment documents",
+        ans:"A risk assessment (6.1.2), a risk treatment plan (6.1.3), and a Statement of Applicability (SoA) listing which Annex A controls apply, whether implemented, and justification." },
+      { q:"Before the certification audit, what Clause 9 activities are mandatory?", hint:"Checking your own work first",
+        ans:"Clause 9.2 — at least one full internal audit cycle. Clause 9.3 — at least one management review. Both must have retained documented evidence for the auditor." }
+    ]
+  }
+];
+
+// ══════════════════════════════════ STATE ═════════════════════════════════
+let quizState = { current:0, score:0, answered:false, selected:null, answers:[], finished:false };
+let currentScenario = 0;
+let expTab = 'clauses';
+let openClause = null;
+let openExpClause = null;
+
+// ══════════════════════════════════ TABS ══════════════════════════════════
+function showTab(name, btn) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('panel-' + name).classList.add('active');
+  btn.classList.add('active');
+  if (name === 'explorer') renderExplorer();
+}
+
+// ════════════════════════════════ MAP ════════════════════════════════════
+function renderMap() {
+  // Clauses
+  const grid = document.getElementById('clauses-grid');
+  grid.innerHTML = CLAUSES.map(c => `
+    <div class="clause-card" id="clause-${c.id}" onclick="toggleClause(${c.id})" style="--accent:${c.color}; --accent-light:${c.color}22; --accent-light-bg:${c.color}08">
+      <div class="clause-head">
+        <span class="clause-icon">${c.icon}</span>
+        <div>
+          <div class="clause-num" style="color:${c.color}">Clause ${c.id}</div>
+          <div class="clause-name">${c.title}</div>
+        </div>
+      </div>
+      <div class="clause-summary">${c.summary}</div>
+      <div class="clause-detail">
+        <div class="plain-box" style="background:${c.color}15">
+          <div class="plain-label" style="color:${c.color}">💬 In Plain English</div>
+          <div class="plain-text">${c.plainEnglish}</div>
+        </div>
+        <div class="key-title">Key Requirements</div>
+        ${c.keyPoints.map(p=>`<div class="key-item"><span style="color:${c.color};flex-shrink:0">▶</span>${p}</div>`).join('')}
+        <div class="key-title" style="margin-top:12px">Subclauses</div>
+        ${c.subclauses.map(s=>`<span class="subclause-tag" style="background:${c.color}20;color:${c.color}">${s}</span>`).join('')}
+      </div>
+    </div>
+  `).join('');
+
+  // Annex A
+  const ag = document.getElementById('annex-grid');
+  ag.innerHTML = ANNEX_A.map(a => `
+    <div class="annex-card">
+      <div class="annex-card-top">
+        <span class="annex-emoji">${a.icon}</span>
+        <span class="annex-count">${a.controls} controls</span>
+      </div>
+      <div class="annex-ref">${a.ref}</div>
+      <div class="annex-name">${a.title}</div>
+      <div class="annex-hover-desc">${a.desc}</div>
+    </div>
+  `).join('');
+}
+
+function toggleClause(id) {
+  const card = document.getElementById('clause-' + id);
+  const c = CLAUSES.find(x => x.id === id);
+  if (openClause === id) {
+    card.classList.remove('open');
+    card.style.borderColor = '';
+    card.style.boxShadow = '';
+    openClause = null;
+  } else {
+    if (openClause) {
+      const prev = document.getElementById('clause-' + openClause);
+      prev.classList.remove('open');
+      prev.style.borderColor = '';
+      prev.style.boxShadow = '';
+    }
+    card.classList.add('open');
+    card.style.borderColor = c.color;
+    card.style.boxShadow = `0 4px 20px ${c.color}30`;
+    openClause = id;
+  }
+}
+
+// ════════════════════════════════ QUIZ ═══════════════════════════════════
+function renderQuiz() {
+  const container = document.getElementById('quiz-container');
+  if (quizState.finished) {
+    renderResults(container); return;
+  }
+  const q = QUIZ[quizState.current];
+  const pct = (quizState.current / QUIZ.length) * 100;
+  container.innerHTML = `
+    <div class="section-header">
+      <div class="section-tag">Test Your Knowledge</div>
+      <h2 class="section-title">ISO 27001 Quiz</h2>
+      <p class="section-desc">10 questions covering all major clauses and Annex A controls.</p>
+    </div>
+    <div class="quiz-wrap">
+      <div class="quiz-meta">
+        <span>Question ${quizState.current + 1} of ${QUIZ.length}</span>
+        <span class="quiz-score-label">Score: ${quizState.score}</span>
+      </div>
+      <div class="quiz-progress-bar-bg">
+        <div class="quiz-progress-bar" style="width:${pct}%"></div>
+      </div>
+      <div class="quiz-question-box">
+        <div class="quiz-q-tag">ISO 27001 Knowledge Check</div>
+        <div class="quiz-q-text">${q.q}</div>
+      </div>
+      <div class="quiz-options">
+        ${q.opts.map((opt,i) => `
+          <button class="quiz-opt" id="opt-${i}" onclick="selectOpt(${i})" ${quizState.answered?'disabled':''}>
+            <strong>${String.fromCharCode(65+i)}.</strong> ${opt}
+            ${quizState.answered && i===q.ans ? ' <span style="float:right">✓</span>' : ''}
+            ${quizState.answered && i===quizState.selected && i!==q.ans ? ' <span style="float:right">✗</span>' : ''}
+          </button>
+        `).join('')}
+      </div>
+      ${quizState.answered ? `
+        <div class="quiz-explanation ${quizState.selected===q.ans?'good':'bad'}">
+          <div class="quiz-exp-label">${quizState.selected===q.ans?'✓ Correct!':'✗ Not quite'}</div>
+          ${q.exp}
+        </div>
+        <button class="btn-primary" onclick="nextQuestion()">
+          ${quizState.current+1>=QUIZ.length ? 'See Results' : 'Next Question →'}
+        </button>
+      ` : ''}
+    </div>
+  `;
+  if (quizState.answered) {
+    q.opts.forEach((_,i) => {
+      const btn = document.getElementById('opt-'+i);
+      if (i === q.ans) btn.classList.add('correct');
+      else if (i === quizState.selected) btn.classList.add('wrong');
+    });
+  }
+}
+
+function selectOpt(i) {
+  if (quizState.answered) return;
+  quizState.selected = i;
+  quizState.answered = true;
+  const correct = i === QUIZ[quizState.current].ans;
+  if (correct) quizState.score++;
+  quizState.answers.push({ correct, selected: i });
+  renderQuiz();
+}
+
+function nextQuestion() {
+  if (quizState.current + 1 >= QUIZ.length) { quizState.finished = true; renderQuiz(); return; }
+  quizState.current++;
+  quizState.answered = false;
+  quizState.selected = null;
+  renderQuiz();
+}
+
+function renderResults(container) {
+  const pct = Math.round((quizState.score / QUIZ.length) * 100);
+  const grade = pct>=90?{label:"Expert",color:"#2A9D8F",icon:"🏆"}
+    :pct>=70?{label:"Proficient",color:"#F4A261",icon:"🎯"}
+    :pct>=50?{label:"Learning",color:"#6A4C93",icon:"📚"}
+    :{label:"Keep Studying",color:"#E63946",icon:"💪"};
+  container.innerHTML = `
+    <div class="quiz-results">
+      <div class="result-emoji">${grade.icon}</div>
+      <h2 class="result-title">${quizState.score}/${QUIZ.length} — ${grade.label}</h2>
+      <div class="result-pct" style="color:${grade.color}">${pct}%</div>
+      <div class="result-dots">
+        ${quizState.answers.map((a,i)=>`
+          <div class="result-dot" style="background:${a.correct?'#2A9D8F':'#E63946'}">${i+1}</div>
+        `).join('')}
+      </div>
+      <p class="result-msg">${pct>=70
+        ? "Great work! You have a solid grasp of ISO 27001 requirements."
+        : "Review the clauses you found tricky and try again. The Visual Map tab can help!"
+      }</p>
+      <button class="btn-primary" onclick="restartQuiz()" style="max-width:240px;margin:0 auto;display:block">Try Again</button>
+    </div>
+  `;
+}
+
+function restartQuiz() {
+  quizState = { current:0, score:0, answered:false, selected:null, answers:[], finished:false };
+  renderQuiz();
+}
+
+// ════════════════════════════════ SCENARIOS ══════════════════════════════
+function renderScenarios() {
+  const tabs = document.getElementById('scenario-tabs');
+  tabs.innerHTML = SCENARIOS.map((s,i) => `
+    <button class="scenario-tab ${i===currentScenario?'active':''}" onclick="switchScenario(${i})">
+      <span>${s.icon}</span>
+      <span>${s.title}</span>
+      <span class="diff-badge" style="background:${s.diffColor}">${s.diff}</span>
+    </button>
+  `).join('');
+  renderScenarioContent();
+}
+
+function switchScenario(i) {
+  currentScenario = i;
+  renderScenarios();
+}
+
+function renderScenarioContent() {
+  const s = SCENARIOS[currentScenario];
+  const content = document.getElementById('scenario-content');
+  content.innerHTML = `
+    <div class="scenario-header">
+      <div style="display:flex;align-items:center;gap:16px;margin-bottom:14px">
+        <span style="font-size:48px">${s.icon}</span>
+        <div>
+          <div class="scenario-meta">Scenario ${s.id}</div>
+          <h3 class="scenario-title">${s.title}</h3>
+        </div>
+      </div>
+      <p class="scenario-body">${s.situation}</p>
+    </div>
+    <div class="scenario-questions">
+      ${s.questions.map((q,i) => `
+        <div class="sq-card">
+          <div class="sq-top">
+            <div class="sq-head">
+              <div class="sq-num">${i+1}</div>
+              <div style="flex:1">
+                <div class="sq-q">${q.q}</div>
+                <span class="sq-hint">💡 Hint: ${q.hint}</span>
+                <div style="padding-left:0">
+                  <textarea class="sq-textarea" placeholder="Write your answer here before revealing the solution..."></textarea>
+                  <button class="btn-reveal" id="btn-${currentScenario}-${i}"
+                    style="background:#F4A261;color:#fff"
+                    onclick="toggleAnswer(${currentScenario},${i})">Reveal Answer</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="sq-answer" id="ans-${currentScenario}-${i}">
+            <div class="sq-answer-label">✓ Model Answer</div>
+            <div class="sq-answer-text">${q.ans}</div>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+
+function toggleAnswer(sIdx, qIdx) {
+  const ans = document.getElementById(`ans-${sIdx}-${qIdx}`);
+  const btn = document.getElementById(`btn-${sIdx}-${qIdx}`);
+  const showing = ans.classList.contains('show');
+  ans.classList.toggle('show');
+  btn.textContent = showing ? 'Reveal Answer' : 'Hide Answer';
+  btn.style.background = showing ? '#F4A261' : '#1a1a2e';
+}
+
+// ════════════════════════════════ EXPLORER ═══════════════════════════════
+function switchExpTab(tab) {
+  expTab = tab;
+  document.getElementById('exp-tab-clauses').classList.toggle('active', tab==='clauses');
+  document.getElementById('exp-tab-annex').classList.toggle('active', tab==='annex');
+  renderExplorer();
+}
+
+function runSearch() { renderExplorer(); }
+
+function renderExplorer() {
+  const q = (document.getElementById('search-input').value || '').toLowerCase();
+  const results = document.getElementById('explorer-results');
+
+  if (expTab === 'clauses') {
+    const filtered = CLAUSES.filter(c =>
+      c.title.toLowerCase().includes(q) ||
+      c.summary.toLowerCase().includes(q) ||
+      c.keyPoints.some(k => k.toLowerCase().includes(q)) ||
+      c.subclauses.some(s => s.toLowerCase().includes(q))
+    );
+    document.getElementById('exp-tab-clauses').textContent = `📖 Clauses (${filtered.length})`;
+    if (!filtered.length) {
+      results.innerHTML = '<div class="empty-state">No clauses match your search. Try a different term.</div>';
+      return;
+    }
+    results.innerHTML = `<div class="explorer-clauses">
+      ${filtered.map(c => `
+        <div class="exp-clause ${openExpClause===c.id?'open':''}" id="exp-clause-${c.id}"
+          onclick="toggleExpClause(${c.id})"
+          style="border-color:${openExpClause===c.id?c.color:'#e2e2ea'};background:${openExpClause===c.id?c.color+'08':'#fff'}">
+          <div class="exp-head">
+            <span class="exp-icon">${c.icon}</span>
+            <div class="exp-meta">
+              <div class="exp-num" style="color:${c.color}">Clause ${c.id}</div>
+              <div class="exp-name">${c.title}</div>
+              <div class="exp-sum">${c.summary}</div>
+            </div>
+            <span class="exp-chevron">${openExpClause===c.id?'▲':'▼'}</span>
+          </div>
+          <div class="exp-detail">
+            <div class="exp-grid2">
+              <div>
+                <div class="key-title">Key Requirements</div>
+                ${c.keyPoints.map(p=>`<div class="key-item"><span style="color:${c.color};flex-shrink:0">▶</span>${p}</div>`).join('')}
+              </div>
+              <div>
+                <div class="key-title">Plain English</div>
+                <div style="background:${c.color}12;border-radius:8px;padding:10px 12px;font-size:13px;color:#333;line-height:1.6">${c.plainEnglish}</div>
+              </div>
+            </div>
+            <div style="margin-top:14px">
+              <div class="key-title">Subclauses</div>
+              ${c.subclauses.map(s=>`<span class="subclause-tag" style="background:${c.color}20;color:${c.color}">${s}</span>`).join('')}
+            </div>
+          </div>
+        </div>
+      `).join('')}
+    </div>`;
+  } else {
+    const filtered = ANNEX_A.filter(a =>
+      a.title.toLowerCase().includes(q) ||
+      a.ref.toLowerCase().includes(q) ||
+      a.desc.toLowerCase().includes(q)
+    );
+    document.getElementById('exp-tab-annex').textContent = `🛡️ Annex A (${filtered.length})`;
+    if (!filtered.length) {
+      results.innerHTML = '<div class="empty-state">No Annex A domains match your search.</div>';
+      return;
+    }
+    results.innerHTML = `<div class="exp-annex-grid">
+      ${filtered.map(a => `
+        <div class="exp-annex-card">
+          <div class="exp-annex-head">
+            <div class="exp-annex-left">
+              <span class="exp-annex-emoji">${a.icon}</span>
+              <div>
+                <div class="exp-annex-ref">${a.ref}</div>
+                <div class="exp-annex-name">${a.title}</div>
+              </div>
+            </div>
+            <span class="exp-annex-badge">${a.controls} controls</span>
+          </div>
+          <div class="exp-annex-desc">${a.desc}</div>
+        </div>
+      `).join('')}
+    </div>`;
+  }
+}
+
+function toggleExpClause(id) {
+  openExpClause = openExpClause === id ? null : id;
+  renderExplorer();
+}
+
+// ══════════════════════════════════ INIT ══════════════════════════════════
+renderMap();
+renderQuiz();
+renderScenarios();
+renderExplorer();
+</script>
+</body>
+</html>

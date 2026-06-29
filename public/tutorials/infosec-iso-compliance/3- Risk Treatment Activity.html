@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Risk Treatment Activity — Cloud Infrastructure Assets</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --accent:#4f46e5;--dark:#1e1b4b;--teal:#0891b2;
+    --red:#dc2626;--amber:#d97706;--green:#059669;
+    --purple:#7c3aed;--blue:#2563eb;
+    --bg:#f5f3ff;--white:#fff;--border:#e0e7ff;
+    --text:#1e1b4b;--muted:#6b7280;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+  h1,h2,h3,h4{font-family:'Playfair Display',Georgia,serif;}
+
+  /* HEADER */
+  #header{background:var(--dark);padding:20px 24px 0;position:sticky;top:0;z-index:200;box-shadow:0 4px 24px rgba(0,0,0,.35);}
+  .hdr-top{display:flex;align-items:center;gap:14px;margin-bottom:18px;max-width:1100px;margin-left:auto;margin-right:auto;}
+  .hdr-icon{background:var(--accent);border-radius:10px;width:46px;height:46px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
+  .hdr-lbl{color:#a5b4fc;font-size:10px;letter-spacing:3px;font-weight:700;text-transform:uppercase;}
+  .hdr-title{color:#fff;font-size:18px;line-height:1.2;}
+  .tabs{display:flex;gap:4px;max-width:1100px;margin:0 auto;overflow-x:auto;}
+  .tb{background:transparent;color:#94a3b8;border:none;border-radius:8px 8px 0 0;padding:10px 14px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;transition:all .2s;font-family:'DM Sans',sans-serif;}
+  .tb:hover{color:#fff;background:rgba(255,255,255,.08);}
+  .tb.active{color:#fff;}
+
+  /* LAYOUT */
+  #content{max-width:1100px;margin:0 auto;padding:28px 20px 60px;}
+  .panel{display:none;}
+  .panel.active{display:block;}
+
+  /* DOC CHROME */
+  .doc{background:var(--white);border:2px solid var(--border);border-radius:16px;padding:32px 36px;margin-bottom:24px;}
+  .doc-hdr{border-bottom:3px solid var(--dark);padding-bottom:18px;margin-bottom:26px;}
+  .doc-badge-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:12px;}
+  .badge{display:inline-flex;align-items:center;gap:5px;border-radius:6px;padding:4px 12px;font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;}
+  .b-crit{background:#fecaca;color:#991b1b;}
+  .b-high{background:#fed7aa;color:#9a3412;}
+  .b-med{background:#fef08a;color:#854d0e;}
+  .b-low{background:#bbf7d0;color:#065f46;}
+  .b-treat-avoid{background:#fef2f2;color:#dc2626;border:1.5px solid #dc2626;}
+  .b-treat-mitigate{background:#dcfce7;color:#059669;border:1.5px solid #059669;}
+  .b-treat-transfer{background:#eff6ff;color:#2563eb;border:1.5px solid #2563eb;}
+  .b-treat-accept{background:#fef3c7;color:#d97706;border:1.5px solid #d97706;}
+  .doc-title{font-size:24px;color:var(--dark);margin-bottom:4px;}
+  .doc-sub{font-size:13px;color:var(--muted);}
+  .meta-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px;margin-top:14px;}
+  .meta-item{background:#f8f7ff;border-radius:8px;padding:8px 12px;}
+  .meta-k{font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#94a3b8;margin-bottom:2px;}
+  .meta-v{font-size:13px;font-weight:600;color:var(--dark);}
+
+  /* SECTIONS */
+  .sec{margin-bottom:30px;}
+  .sec-hdr{display:flex;align-items:center;gap:10px;margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid var(--border);}
+  .sec-num{background:var(--dark);color:#fff;border-radius:7px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;flex-shrink:0;}
+  .sec-title{font-size:18px;color:var(--dark);}
+  .sub-lbl{font-size:13px;font-weight:700;color:var(--dark);margin-bottom:5px;display:flex;align-items:center;gap:7px;}
+  .sub-lbl::before{content:'';width:4px;height:15px;background:var(--accent);border-radius:2px;display:inline-block;flex-shrink:0;}
+  .sub-txt{font-size:13.5px;color:#374151;line-height:1.75;padding-left:11px;}
+  .bl{padding-left:11px;}
+  .bl li{font-size:13.5px;color:#374151;line-height:1.7;margin-bottom:5px;list-style:none;display:flex;gap:9px;align-items:flex-start;}
+  .bl li::before{content:'▶';color:var(--accent);font-size:10px;flex-shrink:0;margin-top:5px;}
+  .hl{border-radius:10px;padding:12px 16px;margin:10px 0;}
+  .hl-lbl{font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px;}
+  .hl-txt{font-size:13px;line-height:1.65;}
+
+  /* TREATMENT STRATEGY BOX */
+  .treat-strategy{border-radius:12px;padding:20px 22px;margin-bottom:18px;border:2px solid transparent;}
+  .ts-head{display:flex;align-items:center;gap:12px;margin-bottom:12px;}
+  .ts-icon{font-size:30px;}
+  .ts-name{font-size:16px;font-weight:700;}
+  .ts-tag{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;opacity:.8;}
+  .ts-justification{font-size:13.5px;line-height:1.75;color:#374151;margin-bottom:10px;}
+
+  /* ACTION TABLE */
+  .action-tbl{width:100%;border-collapse:collapse;font-size:13px;margin:10px 0 16px;}
+  .action-tbl th{background:var(--dark);color:#fff;padding:8px 12px;text-align:left;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;}
+  .action-tbl td{padding:9px 12px;border-bottom:1px solid var(--border);vertical-align:top;line-height:1.55;color:#374151;}
+  .action-tbl tr:nth-child(even) td{background:#f8f7ff;}
+  .action-tbl tr:last-child td{border-bottom:none;}
+  .priority-pill{display:inline-block;border-radius:4px;padding:2px 7px;font-size:10px;font-weight:700;}
+  .pp-immed{background:#fecaca;color:#991b1b;}
+  .pp-short{background:#fed7aa;color:#9a3412;}
+  .pp-med{background:#fef08a;color:#854d0e;}
+
+  /* FRAMEWORK TAGS */
+  .fw-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;}
+  .fw-tag{background:#ede9fe;color:#4c1d95;border-radius:5px;padding:3px 9px;font-size:11px;font-weight:600;}
+
+  /* RESIDUAL RISK BOX */
+  .res-box{background:#fef3c7;border:2px solid #d97706;border-radius:10px;padding:14px 16px;margin-top:14px;}
+  .res-lbl{font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#92400e;margin-bottom:4px;}
+  .res-txt{font-size:13px;color:#b45309;line-height:1.6;}
+
+  /* COLLAB PANEL */
+  .collab-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:14px;margin-bottom:24px;}
+  .collab-card{background:var(--white);border:2px solid var(--border);border-radius:12px;padding:18px;cursor:pointer;transition:all .2s;}
+  .collab-card:hover{box-shadow:0 4px 16px rgba(79,70,229,.1);}
+  .collab-card.open{border-color:var(--accent);}
+  .cc-icon{font-size:26px;margin-bottom:8px;}
+  .cc-title{font-size:14px;font-weight:700;color:var(--dark);margin-bottom:5px;}
+  .cc-desc{font-size:13px;color:var(--muted);line-height:1.55;}
+  .cc-detail{display:none;margin-top:12px;padding-top:10px;border-top:1px solid #e5e7eb;}
+  .collab-card.open .cc-detail{display:block;}
+
+  /* SLIDE PANEL */
+  .slide{background:var(--dark);border-radius:16px;overflow:hidden;margin-bottom:20px;}
+  .slide-top{padding:28px 30px 20px;border-bottom:2px solid rgba(255,255,255,.1);}
+  .slide-asset-tag{font-size:10px;font-weight:800;letter-spacing:3px;text-transform:uppercase;margin-bottom:8px;}
+  .slide-title{font-size:22px;font-weight:700;color:#fff;margin-bottom:8px;}
+  .slide-subtitle{font-size:13px;color:#a5b4fc;line-height:1.5;}
+  .slide-body{padding:20px 30px 24px;}
+  .slide-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  .slide-box{background:rgba(255,255,255,.06);border-radius:10px;padding:14px;}
+  .slide-box-title{font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;}
+  .slide-box-content{font-size:12.5px;line-height:1.65;}
+  .slide-li{display:flex;gap:8px;margin-bottom:5px;color:#e0e7ff;font-size:12.5px;align-items:flex-start;}
+  .slide-li::before{content:'→';flex-shrink:0;color:#a5b4fc;}
+  .slide-treat-banner{border-radius:8px;padding:10px 14px;margin-bottom:12px;display:flex;align-items:center;gap:10px;}
+  .slide-score-row{display:flex;gap:10px;margin-top:10px;flex-wrap:wrap;}
+  .slide-score{border-radius:8px;padding:8px 14px;text-align:center;}
+
+  /* PRIORITY SECTION */
+  .priority-box{background:var(--white);border:2px solid var(--border);border-radius:14px;padding:22px;margin-bottom:20px;}
+  .priority-timeline{position:relative;padding-left:28px;margin-top:14px;}
+  .priority-timeline::before{content:'';position:absolute;left:8px;top:0;bottom:0;width:2px;background:var(--border);}
+  .pt-item{position:relative;margin-bottom:18px;}
+  .pt-dot{position:absolute;left:-24px;top:4px;width:14px;height:14px;border-radius:50%;border:2px solid #fff;}
+  .pt-date{font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;margin-bottom:2px;}
+  .pt-title{font-size:14px;font-weight:700;color:var(--dark);margin-bottom:3px;}
+  .pt-text{font-size:13px;color:var(--muted);line-height:1.55;}
+
+  .grp-lbl{display:flex;align-items:center;gap:14px;margin:24px 0 16px;}
+  .grp-line{flex:1;height:1px;background:var(--border);}
+  .grp-txt{font-size:11px;font-weight:800;letter-spacing:3px;text-transform:uppercase;color:#94a3b8;white-space:nowrap;}
+  .banner{border-radius:14px;padding:16px 20px;margin-bottom:20px;display:flex;align-items:flex-start;gap:12px;}
+  .bi{font-size:26px;flex-shrink:0;}
+  .bt{font-size:13px;font-weight:700;margin-bottom:3px;}
+  .bd{font-size:13px;line-height:1.65;}
+
+  /* TABS FOR SLIDE NAV */
+  .slide-nav{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;}
+  .sn-btn{padding:8px 14px;border-radius:8px;border:2px solid var(--border);background:var(--white);font-size:12px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s;}
+  .sn-btn.active{background:var(--dark);color:#fff;border-color:var(--dark);}
+
+  @media(max-width:640px){
+    .doc{padding:18px 14px;}
+    .slide-grid{grid-template-columns:1fr;}
+    .meta-grid{grid-template-columns:1fr 1fr;}
+    .tb{padding:10px 8px;font-size:11px;}
+    .hdr-title{font-size:14px;}
+  }
+</style>
+</head>
+<body>
+
+<div id="header">
+  <div class="hdr-top">
+    <div class="hdr-icon">🛡️</div>
+    <div>
+      <div class="hdr-lbl">Risk Treatment Activity — Collaborative Lab</div>
+      <h1 class="hdr-title">Cloud Infrastructure Risk Treatment Plans</h1>
+    </div>
+  </div>
+  <div class="tabs">
+    <button class="tb active" onclick="showTab('intro',this)" style="background:#4f46e5">📋 Overview</button>
+    <button class="tb" onclick="showTab('a1',this)" style="--ac:#dc2626">🔴 Asset 1 — Managed AD</button>
+    <button class="tb" onclick="showTab('a2',this)">🟠 Asset 2 — RDS</button>
+    <button class="tb" onclick="showTab('a3',this)">🟠 Asset 3 — EC2</button>
+    <button class="tb" onclick="showTab('a4',this)">🟡 Asset 4 — EFS</button>
+    <button class="tb" onclick="showTab('a5',this)">🟡 Asset 5 — Lambda</button>
+    <button class="tb" onclick="showTab('collab',this)">🤝 Collaborative Strategy</button>
+    <button class="tb" onclick="showTab('slides',this)">🎤 Presentation Slides</button>
+  </div>
+</div>
+
+<div id="content">
+
+<!-- ═══════════════════════════════ OVERVIEW ════════════════════════════ -->
+<div id="panel-intro" class="panel active">
+  <div class="doc">
+    <div class="doc-hdr">
+      <div class="doc-badge-row">
+        <span class="badge" style="background:#ede9fe;color:#4c1d95">📄 TreatmentPlans.docx Template</span>
+        <span class="badge" style="background:#dcfce7;color:#065f46">Sections 1–7 Completed</span>
+        <span class="badge" style="background:#fef3c7;color:#92400e">⚠ Focus: Treatment Approaches — Not Implementation Detail</span>
+      </div>
+      <h2 class="doc-title">Treatment Plan Implementation — Cloud Infrastructure Assets</h2>
+      <p class="doc-sub">Risk Treatment Activity · Collaborative Lab · Five Cloud Assets</p>
+      <div class="meta-grid">
+        <div class="meta-item"><div class="meta-k">Assets</div><div class="meta-v">5 cloud assets</div></div>
+        <div class="meta-item"><div class="meta-k">Critical Risks</div><div class="meta-v" style="color:#dc2626">1 (Managed AD)</div></div>
+        <div class="meta-item"><div class="meta-k">High Risks</div><div class="meta-v" style="color:#ea580c">2 (RDS, EC2)</div></div>
+        <div class="meta-item"><div class="meta-k">Medium Risks</div><div class="meta-v" style="color:#d97706">2 (EFS, Lambda)</div></div>
+        <div class="meta-item"><div class="meta-k">Framework</div><div class="meta-v">ISO 27001 + CSA + AWS WAF</div></div>
+        <div class="meta-item"><div class="meta-k">Treatment Types Used</div><div class="meta-v">Mitigate, Avoid, Transfer, Accept</div></div>
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-hdr"><div class="sec-num">1</div><h3 class="sec-title">Introduction</h3></div>
+      <div class="sub-lbl">Purpose</div>
+      <div class="sub-txt">This treatment plan documents the risk treatment strategies selected for five cloud infrastructure assets identified during the risk assessment phase. The purpose is to systematically address the identified risks using one of four treatment approaches — Avoid, Mitigate (Control), Transfer (Share), or Accept (Retain) — and to provide a structured plan for implementing the chosen strategy, including action items, timelines, risk ownership, and residual risk assessment.<br><br>This document aligns with ISO/IEC 27001:2022 Clause 6.1.3 (risk treatment), ISO 31000:2018, and the AWS Well-Architected Framework Security Pillar. Treatment strategies are also cross-referenced with CSA Cloud Controls Matrix (CCM) v4 where applicable.</div>
+      <div class="sub-lbl" style="margin-top:14px">Scope</div>
+      <div class="sub-txt">This treatment plan covers five AWS cloud infrastructure assets with identified risks ranging from Critical to Medium. The treatment plans focus on risk treatment approach and rationale — the specific technical implementation mechanisms will be addressed in the subsequent security hardening lab. Assets in scope:</div>
+      <ul class="bl" style="margin-top:10px">
+        <li><strong>Asset 1 — AWS Managed Microsoft AD</strong> <span class="badge b-crit">CRITICAL</span> Two-way trust with unpatched legacy domain controller; shared Domain Admin account</li>
+        <li><strong>Asset 2 — Amazon RDS</strong> <span class="badge b-high">HIGH</span> Public accessibility enabled; no encryption at rest; public subnet with no NACLs</li>
+        <li><strong>Asset 3 — Amazon EC2 Instances</strong> <span class="badge b-high">HIGH</span> End-of-life OS; Security Groups permitting all inbound on SSH/RDP from 0.0.0.0/0</li>
+        <li><strong>Asset 4 — Amazon EFS</strong> <span class="badge b-med">MEDIUM</span> No File System Policy; IAM authentication not enforced; encryption-in-transit not mandated</li>
+        <li><strong>Asset 5 — AWS Lambda Functions</strong> <span class="badge b-med">MEDIUM</span> AdministratorAccess policy attached to execution roles far exceeding task requirements</li>
+      </ul>
+    </div>
+
+    <div class="banner" style="background:#fef3c7">
+      <div class="bi">⚠️</div>
+      <div>
+        <div class="bt" style="color:#92400e">Critical vs Medium Prioritisation — Key Principle</div>
+        <div class="bd" style="color:#b45309">Critical and High risks (Assets 1–3) must be addressed before Medium risks (Assets 4–5) because they represent immediate existential threats to the organisation — total environment compromise, regulatory breach, and active exploitation via internet-exposed ports. Medium risks, while important, do not pose the same immediate danger and can be addressed on a scheduled timeline after Critical/High remediation is complete. See the Collaborative Strategy tab for the full prioritisation rationale.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════ ASSET 1 — MANAGED AD ════════════════════ -->
+<div id="panel-a1" class="panel">
+  <div class="doc">
+    <div class="doc-hdr">
+      <div class="doc-badge-row">
+        <span class="badge b-crit">🔴 CRITICAL RISK</span>
+        <span class="badge b-treat-mitigate">Strategy: MITIGATE + AVOID</span>
+        <span class="badge" style="background:#ede9fe;color:#4c1d95">Asset 1</span>
+      </div>
+      <h2 class="doc-title">AWS Managed Microsoft Active Directory</h2>
+      <p class="doc-sub">Two-way legacy trust relationship + shared Domain Admin account → Total Environment Compromise risk</p>
+      <div class="meta-grid">
+        <div class="meta-item"><div class="meta-k">Risk Level</div><div class="meta-v" style="color:#dc2626">CRITICAL</div></div>
+        <div class="meta-item"><div class="meta-k">Primary Strategy</div><div class="meta-v">Mitigate (Control)</div></div>
+        <div class="meta-item"><div class="meta-k">Secondary Strategy</div><div class="meta-v">Avoid (Trust Removal)</div></div>
+        <div class="meta-item"><div class="meta-k">Risk Owner</div><div class="meta-v">CISO / Cloud Security Lead</div></div>
+        <div class="meta-item"><div class="meta-k">Treatment Deadline</div><div class="meta-v" style="color:#dc2626">Immediate (≤72 hrs)</div></div>
+        <div class="meta-item"><div class="meta-k">ISO 27001 Controls</div><div class="meta-v">A.8.2, A.5.17, A.8.3</div></div>
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-hdr"><div class="sec-num">2</div><h3 class="sec-title">Identified Residual Risks</h3></div>
+      <ul class="bl">
+        <li><strong>Risk 1 — Legacy Trust Chain Compromise:</strong> The two-way trust relationship with an unpatched, legacy on-premises domain controller creates a bidirectional attack path. If the legacy controller is compromised (highly likely given it is unpatched), the attacker gains transitive access to the cloud-based Managed AD, and from there, to all resources in the domain — including production databases, EC2 instances, and file systems.</li>
+        <li><strong>Risk 2 — Credential Compromise via Shared Admin Account:</strong> All administrative actions using a single shared "Domain Admin" account means that a single stolen credential grants unrestricted administrative access to the entire AD environment. There is no way to attribute specific actions to individual administrators, making forensic investigation impossible and audit trails meaningless.</li>
+      </ul>
+    </div>
+
+    <div class="sec">
+      <div class="sec-hdr"><div class="sec-num">3</div><h3 class="sec-title">Treatment Plans</h3></div>
+
+      <div class="treat-strategy" style="background:#fff1f2;border-color:#dc2626">
+        <div class="ts-head">
+          <span class="ts-icon">🚫</span>
+          <div>
+            <div class="ts-name" style="color:#dc2626">Risk 1 Treatment: AVOID — Remove Two-Way Trust Relationship</div>
+            <div class="ts-tag" style="color:#dc2626">ISO 27001 A.5.19 Information Security in Supplier Relationships | CSA CCM IAM-02</div>
+          </div>
+        </div>
+        <div class="ts-justification"><strong>Justification:</strong> The Avoid strategy is the most appropriate treatment for the legacy trust relationship because the risk cannot be adequately mitigated while the trust exists — the unpatched legacy domain controller will remain a critical vulnerability regardless of compensating controls. Avoidance by removing the two-way trust eliminates the attack path entirely. The business need for the trust should be formally re-evaluated; if connectivity between on-premises and cloud identity is genuinely required, a one-way, read-only trust with a fully patched domain controller should replace it.</div>
+        <div class="fw-tags">
+          <span class="fw-tag">ISO 27001 A.5.19</span><span class="fw-tag">ISO 27001 A.8.22 — Network Segregation</span>
+          <span class="fw-tag">CSA CCM IAM-02</span><span class="fw-tag">AWS WAF SEC04 — Detect Events</span>
+        </div>
+      </div>
+
+      <div class="sub-lbl" style="margin-top:6px">Action Items — Risk 1 (Legacy Trust)</div>
+      <table class="action-tbl">
+        <thead><tr><th>Action</th><th>Priority</th><th>Timeline</th><th>Owner</th></tr></thead>
+        <tbody>
+          <tr><td>Formally document the business justification for the existing two-way trust — if no valid current business need exists, proceed directly to removal</td><td><span class="priority-pill pp-immed">Immediate</span></td><td>Within 24 hours</td><td>CISO</td></tr>
+          <tr><td>Suspend the two-way trust relationship — place it in a disabled state rather than deleting immediately to allow time to identify any dependent systems</td><td><span class="priority-pill pp-immed">Immediate</span></td><td>Within 48 hours</td><td>Cloud Security Lead</td></tr>
+          <tr><td>Audit all systems and applications that currently authenticate via the trust — identify any operational dependency before permanent removal</td><td><span class="priority-pill pp-immed">Immediate</span></td><td>Within 72 hours</td><td>Cloud Security Lead + AD Admin</td></tr>
+          <tr><td>Permanently remove the two-way trust. If one-way trust is genuinely required, establish a new one-way trust only after the legacy domain controller is fully patched and assessed</td><td><span class="priority-pill pp-short">Short-term</span></td><td>Within 1 week</td><td>AD Administrator</td></tr>
+          <tr><td>Initiate emergency patching programme for the legacy on-premises domain controller — if it cannot be patched, it should be decommissioned</td><td><span class="priority-pill pp-short">Short-term</span></td><td>Within 2 weeks</td><td>On-Prem IT Lead</td></tr>
+        </tbody>
+      </table>
+
+      <div class="treat-strategy" style="background:#dcfce7;border-color:#059669;margin-top:14px">
+        <div class="ts-head">
+          <span class="ts-icon">🛡️</span>
+          <div>
+            <div class="ts-name" style="color:#059669">Risk 2 Treatment: MITIGATE — Eliminate Shared Admin Account</div>
+            <div class="ts-tag" style="color:#059669">ISO 27001 A.8.2 Privileged Access | A.5.17 Authentication | CSA CCM IAM-09</div>
+          </div>
+        </div>
+        <div class="ts-justification"><strong>Justification:</strong> Mitigation through elimination of the shared "Domain Admin" account and implementation of individual privileged accounts with MFA is the most appropriate strategy for identity risk. Avoidance is not possible (AD administration requires privileged accounts), and acceptance is not appropriate at Critical risk level. Mitigation directly addresses the root cause (shared credential) and introduces auditability, individual accountability, and reduced blast radius if a single account is compromised.</div>
+        <div class="fw-tags">
+          <span class="fw-tag">ISO 27001 A.8.2 — Privileged Access Rights</span><span class="fw-tag">A.5.17 — Authentication Info</span>
+          <span class="fw-tag">CSA CCM IAM-09</span><span class="fw-tag">AWS WAF SEC02 — Strong Identity</span>
+        </div>
+      </div>
+
+      <div class="sub-lbl" style="margin-top:6px">Action Items — Risk 2 (Shared Admin Account)</div>
+      <table class="action-tbl">
+        <thead><tr><th>Action</th><th>Priority</th><th>Timeline</th><th>Owner</th></tr></thead>
+        <tbody>
+          <tr><td>Immediately rotate the shared Domain Admin password to prevent ongoing use — distribute temporary individual credentials to current admins</td><td><span class="priority-pill pp-immed">Immediate</span></td><td>Within 24 hours</td><td>CISO</td></tr>
+          <tr><td>Create individual named administrative accounts for each person requiring Domain Admin-level access — apply principle of least privilege where full Domain Admin is not required</td><td><span class="priority-pill pp-immed">Immediate</span></td><td>Within 48 hours</td><td>AD Administrator</td></tr>
+          <tr><td>Enforce MFA on all newly created privileged accounts before the shared account is disabled</td><td><span class="priority-pill pp-immed">Immediate</span></td><td>Within 72 hours</td><td>Cloud Security Lead</td></tr>
+          <tr><td>Disable the shared Domain Admin account — do not delete immediately to preserve audit trail access</td><td><span class="priority-pill pp-short">Short-term</span></td><td>Within 1 week</td><td>AD Administrator</td></tr>
+          <tr><td>Enable CloudTrail and AWS Directory Service event logging for all AD administrative actions — establish audit trail for all future privileged operations</td><td><span class="priority-pill pp-short">Short-term</span></td><td>Within 1 week</td><td>Cloud Security Lead</td></tr>
+          <tr><td>Implement quarterly privileged access review — ensure access is still required and role-appropriate for each privileged account holder</td><td><span class="priority-pill pp-med">Medium-term</span></td><td>Within 1 month</td><td>CISO</td></tr>
+        </tbody>
+      </table>
+
+      <div class="res-box">
+        <div class="res-lbl">Residual Risk After Treatment</div>
+        <div class="res-txt">After removing the legacy trust and eliminating the shared admin account: Likelihood reduced from Very High → Low (the primary attack vectors are removed). Consequence reduced from Critical → Moderate (individual account compromise could still enable limited AD actions, but blast radius is contained). Residual risk score: approximately Medium (6–8). Accepted by CISO with commitment to quarterly privileged access review and ongoing CloudTrail monitoring.</div>
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-hdr"><div class="sec-num">5</div><h3 class="sec-title">Responsibilities</h3></div>
+      <ul class="bl">
+        <li><strong>CISO:</strong> Overall accountability for the Critical risk treatment plan; approval of trust removal; residual risk acceptance</li>
+        <li><strong>Cloud Security Lead:</strong> Technical execution of trust suspension and account creation; MFA enforcement; CloudTrail configuration</li>
+        <li><strong>AD Administrator:</strong> Day-to-day execution of AD changes — account creation, trust modification, password rotation</li>
+        <li><strong>On-Premises IT Lead:</strong> Ownership of the legacy domain controller patching programme</li>
+        <li><strong>Stakeholders:</strong> Development teams and city operators who may use AD authentication — must be notified of account changes</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════ ASSET 2 — RDS ══════════════════════════ -->
+<div id="panel-a2" class="panel">
+  <div class="doc">
+    <div class="doc-hdr">
+      <div class="doc-badge-row">
+        <span class="badge b-high">🟠 HIGH RISK</span>
+        <span class="badge b-treat-mitigate">Strategy: MITIGATE</span>
+        <span class="badge" style="background:#ede9fe;color:#4c1d95">Asset 2</span>
+      </div>
+      <h2 class="doc-title">Amazon RDS — Production Database Instances</h2>
+      <p class="doc-sub">Public accessibility enabled · No KMS encryption at rest · Public subnet · No restrictive NACLs</p>
+      <div class="meta-grid">
+        <div class="meta-item"><div class="meta-k">Risk Level</div><div class="meta-v" style="color:#ea580c">HIGH</div></div>
+        <div class="meta-item"><div class="meta-k">Primary Strategy</div><div class="meta-v">Mitigate (Control)</div></div>
+        <div class="meta-item"><div class="meta-k">Risk Owner</div><div class="meta-v">Head of Cloud Operations</div></div>
+        <div class="meta-item"><div class="meta-k">Treatment Deadline</div><div class="meta-v" style="color:#ea580c">Within 7 days</div></div>
+        <div class="meta-item"><div class="meta-k">ISO 27001 Controls</div><div class="meta-v">A.8.24, A.8.20, A.8.22</div></div>
+        <div class="meta-item"><div class="meta-k">AWS WAF Pillar</div><div class="meta-v">SEC06 — Protect Data</div></div>
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-hdr"><div class="sec-num">2</div><h3 class="sec-title">Identified Residual Risks</h3></div>
+      <ul class="bl">
+        <li><strong>Risk 1 — Internet-Exposed Database:</strong> Public accessibility enabled with no restrictive NACLs means the RDS endpoint is directly reachable from the internet. Combined with likely default or weak credentials, this creates an Almost Certain likelihood of unauthorised access, data exfiltration, or ransomware deployment against production database data.</li>
+        <li><strong>Risk 2 — Unencrypted Data at Rest:</strong> Encryption at rest is not enabled via AWS KMS. If the underlying storage media is ever compromised — through snapshot exposure, storage volume reuse, or insider access — all production data is readable in plaintext without any additional decryption requirement.</li>
+      </ul>
+    </div>
+
+    <div class="sec">
+      <div class="sec-hdr"><div class="sec-num">3</div><h3 class="sec-title">Treatment Plan</h3></div>
+      <div class="treat-strategy" style="background:#dcfce7;border-color:#059669">
+        <div class="ts-head">
+          <span class="ts-icon">🛡️</span>
+          <div>
+            <div class="ts-name" style="color:#059669">MITIGATE — Remove Public Access + Encrypt at Rest + Restrict Network</div>
+            <div class="ts-tag" style="color:#059669">ISO 27001 A.8.24 Cryptography | A.8.20 Network Security | A.8.22 Network Segregation</div>
+          </div>
+        </div>
+        <div class="ts-justification"><strong>Justification:</strong> Mitigation is the appropriate strategy for RDS because the database is a core operational asset that cannot be avoided or transferred without significantly disrupting the application. Acceptance is not appropriate at High risk level for a production database holding city service data. Mitigation addresses all three root causes: public accessibility (network control), unencrypted data (cryptographic control), and permissive NACLs (network segmentation). Transfer (insurance) may be considered as a supplementary measure for residual financial exposure but does not address the technical vulnerability.</div>
+        <div class="fw-tags">
+          <span class="fw-tag">ISO 27001 A.8.24 — Cryptography</span><span class="fw-tag">A.8.20 — Network Security</span>
+          <span class="fw-tag">A.8.22 — Segregation of Networks</span><span class="fw-tag">CSA CCM DSP-04</span>
+          <span class="fw-tag">AWS WAF SEC06 — Protect Data at Rest and in Transit</span>
+        </div>
+      </div>
+      <table class="action-tbl">
+        <thead><tr><th>Action</th><th>Priority</th><th>Timeline</th><th>Owner</th></tr></thead>
+        <tbody>
+          <tr><td>Disable "Public Accessibility" on all RDS instances — restrict access to VPC-internal connections only. Developer remote access must use a bastion host or AWS Systems Manager rather than direct internet connectivity</td><td><span class="priority-pill pp-immed">Immediate</span></td><td>Within 24 hours</td><td>Head of Cloud Operations</td></tr>
+          <tr><td>Apply restrictive NACLs to the RDS subnet: deny all inbound traffic except from application-tier Security Group IDs; deny all inbound from 0.0.0.0/0</td><td><span class="priority-pill pp-immed">Immediate</span></td><td>Within 48 hours</td><td>Cloud Security Lead</td></tr>
+          <tr><td>Create a snapshot of all RDS instances before enabling encryption (encryption requires instance recreation or snapshot restore to a new encrypted instance)</td><td><span class="priority-pill pp-short">Short-term</span></td><td>Within 3 days</td><td>DBA / Cloud Operations</td></tr>
+          <tr><td>Enable AWS KMS encryption at rest on all RDS instances — create new encrypted instances from snapshots and verify data integrity before decommissioning unencrypted instances</td><td><span class="priority-pill pp-short">Short-term</span></td><td>Within 5 days</td><td>DBA / Cloud Operations</td></tr>
+          <tr><td>Move RDS instances from public subnet to private subnet — update application connection strings accordingly</td><td><span class="priority-pill pp-short">Short-term</span></td><td>Within 1 week</td><td>Head of Cloud Operations</td></tr>
+          <tr><td>Enable RDS Enhanced Monitoring and Performance Insights for ongoing anomaly detection; configure CloudWatch alarms for failed connection attempts</td><td><span class="priority-pill pp-med">Medium-term</span></td><td>Within 2 weeks</td><td>Cloud Security Lead</td></tr>
+        </tbody>
+      </table>
+      <div class="res-box">
+        <div class="res-lbl">Residual Risk After Treatment</div>
+        <div class="res-txt">After removing public access, encrypting at rest, and applying restrictive NACLs: the internet-facing attack surface is eliminated. Residual risk centres on potential compromise of application-tier credentials enabling access through legitimate pathways. Residual score: Low–Medium. Accepted by Head of Cloud Operations with quarterly access review and ongoing CloudWatch monitoring.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════ ASSET 3 — EC2 ══════════════════════════ -->
+<div id="panel-a3" class="panel">
+  <div class="doc">
+    <div class="doc-hdr">
+      <div class="doc-badge-row">
+        <span class="badge b-high">🟠 HIGH RISK</span>
+        <span class="badge b-treat-mitigate">Strategy: MITIGATE + AVOID</span>
+        <span class="badge" style="background:#ede9fe;color:#4c1d95">Asset 3</span>
+      </div>
+      <h2 class="doc-title">Amazon EC2 Instances</h2>
+      <p class="doc-sub">End-of-life operating systems · SSH (22) and RDP (3389) open to 0.0.0.0/0 · Persistent brute-force exposure</p>
+      <div class="meta-grid">
+        <div class="meta-item"><div class="meta-k">Risk Level</div><div class="meta-v" style="color:#ea580c">HIGH</div></div>
+        <div class="meta-item"><div class="meta-k">Primary Strategy</div><div class="meta-v">Mitigate (Control)</div></div>
+        <div class="meta-item"><div class="meta-k">EoL OS Strategy</div><div class="meta-v">Avoid (Decommission)</div></div>
+        <div class="meta-item"><div class="meta-k">Risk Owner</div><div class="meta-v">Head of Cloud Operations</div></div>
+        <div class="meta-item"><div class="meta-k">Treatment Deadline</div><div class="meta-v" style="color:#ea580c">Within 7 days</div></div>
+        <div class="meta-item"><div class="meta-k">ISO 27001 Controls</div><div class="meta-v">A.8.8, A.8.9, A.8.20</div></div>
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-hdr"><div class="sec-num">2</div><h3 class="sec-title">Identified Residual Risks</h3></div>
+      <ul class="bl">
+        <li><strong>Risk 1 — End-of-Life Operating Systems:</strong> EC2 instances running EoL OS (e.g. Windows Server 2012, Ubuntu 18.04) receive no vendor security patches. Known CVEs accumulate without remediation, providing attackers with a permanent, growing catalogue of exploitable vulnerabilities. This cannot be mitigated by network controls alone — the underlying OS is permanently vulnerable.</li>
+        <li><strong>Risk 2 — Internet-Exposed SSH and RDP:</strong> Security Groups permitting all inbound traffic from 0.0.0.0/0 on ports 22 and 3389 expose the instances to continuous automated brute-force attacks. Per NCSC honeypot data, exposed RDP without MFA is typically attacked within 24 hours of deployment.</li>
+      </ul>
+    </div>
+
+    <div class="sec">
+      <div class="sec-hdr"><div class="sec-num">3</div><h3 class="sec-title">Treatment Plans</h3></div>
+      <div class="treat-strategy" style="background:#fff1f2;border-color:#dc2626">
+        <div class="ts-head">
+          <span class="ts-icon">🚫</span>
+          <div>
+            <div class="ts-name" style="color:#dc2626">Risk 1 Treatment: AVOID — Decommission End-of-Life OS Instances</div>
+            <div class="ts-tag" style="color:#dc2626">ISO 27001 A.8.8 — Management of Technical Vulnerabilities | CSA CCM TVM-01</div>
+          </div>
+        </div>
+        <div class="ts-justification"><strong>Justification:</strong> Avoidance (decommissioning and replacing EoL instances) is the only technically sound strategy for end-of-life operating systems. Mitigation via compensating controls (additional firewall rules, WAF) can reduce exposure but cannot patch the underlying unpatched kernel and application vulnerabilities — the risk source itself remains. Transfer (insurance) does not address the technical vulnerability. Acceptance is inappropriate at High risk level. The instances must be replaced with supported OS versions on new AMIs. If the application workload cannot be migrated immediately, an Extended Security Updates (ESU) programme should be evaluated as a temporary bridge measure only.</div>
+        <div class="fw-tags">
+          <span class="fw-tag">ISO 27001 A.8.8 — Technical Vulnerability Management</span>
+          <span class="fw-tag">CSA CCM TVM-01</span><span class="fw-tag">AWS WAF SEC09 — Incident Response</span>
+          <span class="fw-tag">NCSC Vulnerability Management Guidance</span>
+        </div>
+      </div>
+
+      <div class="treat-strategy" style="background:#dcfce7;border-color:#059669;margin-top:10px">
+        <div class="ts-head">
+          <span class="ts-icon">🛡️</span>
+          <div>
+            <div class="ts-name" style="color:#059669">Risk 2 Treatment: MITIGATE — Restrict SSH/RDP + Eliminate Internet Exposure</div>
+            <div class="ts-tag" style="color:#059669">ISO 27001 A.8.20 Network Security | A.8.5 Secure Authentication | CSA CCM IAM-01</div>
+          </div>
+        </div>
+        <div class="ts-justification"><strong>Justification:</strong> Mitigation is the correct treatment for exposed SSH/RDP — the ports cannot be simply avoided (remote management access is operationally necessary) but the exposure can be dramatically reduced. Removing 0.0.0.0/0 rules and replacing direct SSH/RDP with AWS Systems Manager Session Manager (which requires no inbound ports) eliminates the internet-facing attack surface entirely while preserving administrative capability. This is the AWS Well-Architected Framework recommended approach for EC2 remote access.</div>
+        <div class="fw-tags">
+          <span class="fw-tag">ISO 27001 A.8.20 — Network Security</span>
+          <span class="fw-tag">A.8.5 — Secure Authentication</span>
+          <span class="fw-tag">CSA CCM IAM-01</span>
+          <span class="fw-tag">AWS WAF SEC07 — Reduce Attack Surface</span>
+        </div>
+      </div>
+
+      <table class="action-tbl">
+        <thead><tr><th>Action</th><th>Priority</th><th>Timeline</th><th>Owner</th></tr></thead>
+        <tbody>
+          <tr><td>Immediately remove Security Group rules allowing 0.0.0.0/0 inbound on ports 22 and 3389 — this eliminates the active brute-force exposure without operational impact</td><td><span class="priority-pill pp-immed">Immediate</span></td><td>Within 24 hours</td><td>Cloud Security Lead</td></tr>
+          <tr><td>Enable AWS Systems Manager (SSM) Agent on all EC2 instances — configure SSM Session Manager as the replacement for direct SSH/RDP access</td><td><span class="priority-pill pp-immed">Immediate</span></td><td>Within 48 hours</td><td>Head of Cloud Operations</td></tr>
+          <tr><td>Inventory all EoL OS instances — document OS version, patch level, running workloads, and business owner for each instance</td><td><span class="priority-pill pp-short">Short-term</span></td><td>Within 3 days</td><td>Cloud Operations Team</td></tr>
+          <tr><td>For each EoL instance: plan migration to a supported OS AMI — document the migration path, test environment, and rollback plan</td><td><span class="priority-pill pp-short">Short-term</span></td><td>Within 1 week</td><td>Head of Cloud Operations + Workload Owners</td></tr>
+          <tr><td>Execute OS migration for all EoL instances — replace with latest supported AMIs; validate application functionality post-migration</td><td><span class="priority-pill pp-med">Medium-term</span></td><td>Within 1 month</td><td>Cloud Operations Team</td></tr>
+          <tr><td>Decommission all remaining EoL instances after workload migration is confirmed; ensure no EoL AMIs remain in use or available for launch</td><td><span class="priority-pill pp-med">Medium-term</span></td><td>Within 6 weeks</td><td>Head of Cloud Operations</td></tr>
+        </tbody>
+      </table>
+
+      <div class="res-box">
+        <div class="res-lbl">Residual Risk After Treatment</div>
+        <div class="res-txt">After removing 0.0.0.0/0 Security Group rules and migrating to supported OS: the brute-force attack surface is eliminated and the patch vulnerability gap is closed. Residual risk: patched supported OS with SSM-only access has a Low vulnerability profile. Residual score: Low. Accepted by Head of Cloud Operations with monthly patch compliance reporting via AWS Systems Manager Patch Manager.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════ ASSET 4 — EFS ══════════════════════════ -->
+<div id="panel-a4" class="panel">
+  <div class="doc">
+    <div class="doc-hdr">
+      <div class="doc-badge-row">
+        <span class="badge b-med">🟡 MEDIUM RISK</span>
+        <span class="badge b-treat-mitigate">Strategy: MITIGATE</span>
+        <span class="badge" style="background:#ede9fe;color:#4c1d95">Asset 4</span>
+      </div>
+      <h2 class="doc-title">Amazon Elastic File System (EFS)</h2>
+      <p class="doc-sub">No File System Policy · Any VPC resource can mount · Encryption-in-transit not mandated</p>
+      <div class="meta-grid">
+        <div class="meta-item"><div class="meta-k">Risk Level</div><div class="meta-v" style="color:#d97706">MEDIUM</div></div>
+        <div class="meta-item"><div class="meta-k">Primary Strategy</div><div class="meta-v">Mitigate (Control)</div></div>
+        <div class="meta-item"><div class="meta-k">Risk Owner</div><div class="meta-v">Cloud Security Lead</div></div>
+        <div class="meta-item"><div class="meta-k">Treatment Deadline</div><div class="meta-v" style="color:#d97706">Within 30 days</div></div>
+        <div class="meta-item"><div class="meta-k">ISO 27001 Controls</div><div class="meta-v">A.8.3, A.8.24, A.5.15</div></div>
+        <div class="meta-item"><div class="meta-k">AWS WAF Pillar</div><div class="meta-v">SEC05, SEC06</div></div>
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-hdr"><div class="sec-num">2</div><h3 class="sec-title">Identified Residual Risks</h3></div>
+      <ul class="bl">
+        <li><strong>Risk 1 — Unrestricted VPC Mount Access:</strong> Without a File System Policy enforcing IAM authentication, any EC2 instance, Lambda function, or ECS container within the VPC can mount the EFS volume and read or write its contents. A compromised workload in the VPC (e.g. a Lambda function or EC2 instance) could access all EFS data without any additional authentication.</li>
+        <li><strong>Risk 2 — Unencrypted Data in Transit:</strong> Without mandatory encryption-in-transit at mount targets, data moving between EFS and EC2 instances over the internal VPC network is transmitted in plaintext. While internal network interception is less common than internet-based attacks, it is exploitable in lateral movement scenarios following an initial compromise.</li>
+      </ul>
+    </div>
+
+    <div class="sec">
+      <div class="sec-hdr"><div class="sec-num">3</div><h3 class="sec-title">Treatment Plan</h3></div>
+      <div class="treat-strategy" style="background:#dcfce7;border-color:#059669">
+        <div class="ts-head">
+          <span class="ts-icon">🛡️</span>
+          <div>
+            <div class="ts-name" style="color:#059669">MITIGATE — Enforce IAM Authentication + Mandatory Encryption-in-Transit</div>
+            <div class="ts-tag" style="color:#059669">ISO 27001 A.8.3 Access Restriction | A.8.24 Cryptography | A.5.15 Access Control</div>
+          </div>
+        </div>
+        <div class="ts-justification"><strong>Justification:</strong> Mitigation is the correct and sufficient treatment for Medium-risk EFS vulnerabilities. The risks are specific, well-bounded, and addressable through configuration changes without operational disruption. Avoidance (not using EFS) is disproportionate. Acceptance is not appropriate where a straightforward technical fix exists. Mitigation via a resource-based File System Policy enforcing IAM authentication, combined with mandatory TLS enforcement at mount targets, eliminates both identified risks without affecting legitimate workload access.</div>
+        <div class="fw-tags">
+          <span class="fw-tag">ISO 27001 A.8.3 — Information Access Restriction</span>
+          <span class="fw-tag">A.8.24 — Use of Cryptography</span>
+          <span class="fw-tag">A.5.15 — Access Control</span>
+          <span class="fw-tag">CSA CCM DSP-03</span>
+          <span class="fw-tag">AWS WAF SEC05 — Protect Networks</span>
+          <span class="fw-tag">AWS WAF SEC06 — Protect Data</span>
+        </div>
+      </div>
+      <table class="action-tbl">
+        <thead><tr><th>Action</th><th>Priority</th><th>Timeline</th><th>Owner</th></tr></thead>
+        <tbody>
+          <tr><td>Identify all current EFS clients (EC2 instances, Lambda functions, ECS tasks) that legitimately mount the file system — document which IAM roles each uses</td><td><span class="priority-pill pp-short">Short-term</span></td><td>Within 1 week</td><td>Cloud Security Lead</td></tr>
+          <tr><td>Draft and apply an EFS File System Policy — deny mount unless the requesting principal has the specific IAM permission (elasticfilesystem:ClientMount); deny all other access</td><td><span class="priority-pill pp-short">Short-term</span></td><td>Within 2 weeks</td><td>Cloud Security Lead</td></tr>
+          <tr><td>Add a condition to the File System Policy requiring "aws:SecureTransport": true — this mandates TLS for all mount connections, rejecting unencrypted mounts</td><td><span class="priority-pill pp-short">Short-term</span></td><td>Within 2 weeks</td><td>Cloud Security Lead</td></tr>
+          <tr><td>Update IAM roles for all legitimate EFS client workloads to include the elasticfilesystem:ClientMount permission — test mount connectivity from each workload before policy enforcement</td><td><span class="priority-pill pp-med">Medium-term</span></td><td>Within 3 weeks</td><td>Cloud Operations + Workload Owners</td></tr>
+          <tr><td>Enable EFS access logging via CloudTrail — configure alerts for unexpected mount attempts from unauthorised principals</td><td><span class="priority-pill pp-med">Medium-term</span></td><td>Within 1 month</td><td>Cloud Security Lead</td></tr>
+        </tbody>
+      </table>
+      <div class="res-box">
+        <div class="res-lbl">Residual Risk After Treatment</div>
+        <div class="res-txt">After enforcing IAM authentication and mandatory TLS: unauthorised mounts are blocked at the policy level, and transit data is encrypted. Residual risk: a compromised workload with legitimate EFS IAM permissions could still access the data — this is an inherent residual risk of shared file systems. Score: Low. Accepted by Cloud Security Lead with quarterly IAM permission audit for EFS client roles.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════ ASSET 5 — LAMBDA ═════════════════════════ -->
+<div id="panel-a5" class="panel">
+  <div class="doc">
+    <div class="doc-hdr">
+      <div class="doc-badge-row">
+        <span class="badge b-med">🟡 MEDIUM RISK</span>
+        <span class="badge b-treat-mitigate">Strategy: MITIGATE</span>
+        <span class="badge" style="background:#ede9fe;color:#4c1d95">Asset 5</span>
+      </div>
+      <h2 class="doc-title">AWS Lambda Functions</h2>
+      <p class="doc-sub">AdministratorAccess policy attached to execution roles · Far exceeds data processing task requirements</p>
+      <div class="meta-grid">
+        <div class="meta-item"><div class="meta-k">Risk Level</div><div class="meta-v" style="color:#d97706">MEDIUM</div></div>
+        <div class="meta-item"><div class="meta-k">Primary Strategy</div><div class="meta-v">Mitigate (Control)</div></div>
+        <div class="meta-item"><div class="meta-k">Risk Owner</div><div class="meta-v">Cloud Security Lead / DPO</div></div>
+        <div class="meta-item"><div class="meta-k">Treatment Deadline</div><div class="meta-v" style="color:#d97706">Within 30 days</div></div>
+        <div class="meta-item"><div class="meta-k">ISO 27001 Controls</div><div class="meta-v">A.8.2, A.5.15, A.8.3</div></div>
+        <div class="meta-item"><div class="meta-k">AWS WAF Pillar</div><div class="meta-v">SEC03 — Permissions</div></div>
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-hdr"><div class="sec-num">2</div><h3 class="sec-title">Identified Residual Risks</h3></div>
+      <ul class="bl">
+        <li><strong>Risk 1 — Excessive Permissions (Privilege Escalation Path):</strong> Lambda execution roles with AdministratorAccess can modify IAM policies, delete S3 buckets, terminate EC2 instances, and perform any other AWS action. If a Lambda function is compromised through code injection, event data manipulation, or a dependency vulnerability, the attacker immediately has full AWS account administrator access — the most severe possible blast radius in an AWS environment.</li>
+        <li><strong>Risk 2 — Violation of Least-Privilege Principle:</strong> Assigning AdministratorAccess to data processing functions violates a foundational security principle (ISO 27001 A.8.2, AWS WAF SEC03). Even without an active exploit, this configuration creates audit and compliance risk — demonstrating to ISO 27001 auditors or ICO investigators that appropriate access controls were not in place for functions handling personal or operational data.</li>
+      </ul>
+    </div>
+
+    <div class="sec">
+      <div class="sec-hdr"><div class="sec-num">3</div><h3 class="sec-title">Treatment Plan</h3></div>
+      <div class="treat-strategy" style="background:#dcfce7;border-color:#059669">
+        <div class="ts-head">
+          <span class="ts-icon">🛡️</span>
+          <div>
+            <div class="ts-name" style="color:#059669">MITIGATE — Replace AdministratorAccess with Least-Privilege Custom Policies</div>
+            <div class="ts-tag" style="color:#059669">ISO 27001 A.8.2 Privileged Access | A.5.15 Access Control | CSA CCM IAM-05</div>
+          </div>
+        </div>
+        <div class="ts-justification"><strong>Justification:</strong> Mitigation via least-privilege policy replacement is the clear and correct treatment for excessive Lambda permissions. Avoidance (not using Lambda) is operationally disruptive and disproportionate to the risk level (Medium). Acceptance violates the least-privilege principle and would be flagged in any ISO 27001 audit. Transfer does not address the technical vulnerability. Mitigation — creating task-specific IAM policies granting only the exact permissions each function needs — directly eliminates the over-permissioned risk without any operational impact to the functions themselves, since they only need the permissions they actually use.</div>
+        <div class="fw-tags">
+          <span class="fw-tag">ISO 27001 A.8.2 — Privileged Access Rights</span>
+          <span class="fw-tag">A.5.15 — Access Control</span>
+          <span class="fw-tag">A.8.3 — Information Access Restriction</span>
+          <span class="fw-tag">CSA CCM IAM-05</span>
+          <span class="fw-tag">AWS WAF SEC03 — Permissions</span>
+          <span class="fw-tag">AWS IAM Access Analyzer</span>
+        </div>
+      </div>
+      <table class="action-tbl">
+        <thead><tr><th>Action</th><th>Priority</th><th>Timeline</th><th>Owner</th></tr></thead>
+        <tbody>
+          <tr><td>For each Lambda function, use AWS IAM Access Analyzer and CloudTrail to identify which specific API actions the function actually calls in production — this provides the factual basis for the least-privilege policy</td><td><span class="priority-pill pp-short">Short-term</span></td><td>Within 1 week</td><td>Cloud Security Lead</td></tr>
+          <tr><td>For each function, create a custom IAM policy granting only the specific actions, on specific resources, that the function actually requires — no wildcards except where technically unavoidable</td><td><span class="priority-pill pp-short">Short-term</span></td><td>Within 2 weeks</td><td>Cloud Security Lead + Function Owners</td></tr>
+          <tr><td>Test each new least-privilege execution role in a staging environment — confirm the function operates correctly with reduced permissions before applying to production</td><td><span class="priority-pill pp-short">Short-term</span></td><td>Within 3 weeks</td><td>Function Owners / Dev Team</td></tr>
+          <tr><td>Detach the AdministratorAccess managed policy from all Lambda execution roles and attach the new least-privilege policies — deploy to production during a low-traffic window</td><td><span class="priority-pill pp-med">Medium-term</span></td><td>Within 1 month</td><td>Cloud Security Lead</td></tr>
+          <tr><td>Schedule a quarterly IAM permission review for all Lambda execution roles — use IAM Access Analyzer to identify any permissions that are no longer being used (permission drift)</td><td><span class="priority-pill pp-med">Medium-term</span></td><td>Ongoing (quarterly)</td><td>Cloud Security Lead</td></tr>
+        </tbody>
+      </table>
+      <div class="res-box">
+        <div class="res-lbl">Residual Risk After Treatment</div>
+        <div class="res-txt">After replacing AdministratorAccess with task-specific least-privilege policies: even a fully compromised Lambda function has access only to the specific resources required for its task. Residual blast radius is contained to the function's data scope. Residual score: Low. Accepted by Cloud Security Lead with quarterly Access Analyzer review and CloudTrail monitoring for unexpected API calls from Lambda execution roles.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════ COLLABORATIVE STRATEGY ═══════════════════ -->
+<div id="panel-collab" class="panel">
+  <div class="doc">
+    <div class="doc-hdr">
+      <div class="doc-badge-row">
+        <span class="badge" style="background:#dcfce7;color:#065f46">🤝 Collaborative Work</span>
+        <span class="badge" style="background:#ede9fe;color:#4c1d95">Sections 5, 6, 7 — All Assets</span>
+      </div>
+      <h2 class="doc-title">Collaborative Risk Treatment Strategy</h2>
+      <p class="doc-sub">Combined treatment timeline · Prioritisation rationale · Monitoring & evaluation · Contingency planning</p>
+    </div>
+
+    <div class="sec">
+      <div class="sec-hdr"><div class="sec-num">5</div><h3 class="sec-title">Responsibilities</h3></div>
+      <div class="sub-lbl">Assigned Roles</div>
+      <table class="action-tbl" style="margin-top:10px">
+        <thead><tr><th>Role</th><th>Assets</th><th>Responsibilities</th></tr></thead>
+        <tbody>
+          <tr><td style="font-weight:700">CISO</td><td>All (oversight)</td><td>Ultimate accountability for all treatment plans; residual risk acceptance authority; board-level reporting; Critical risk sign-off</td></tr>
+          <tr><td style="font-weight:700">Cloud Security Lead</td><td>Assets 1–5</td><td>Technical execution of Security Group changes, NACL configuration, EFS policy, Lambda IAM policies; CloudTrail setup; SSM configuration</td></tr>
+          <tr><td style="font-weight:700">Head of Cloud Operations</td><td>Assets 2, 3</td><td>RDS migration (public→private subnet); EC2 OS migration programme; operational impact assessment; developer communication</td></tr>
+          <tr><td style="font-weight:700">AD Administrator</td><td>Asset 1</td><td>Active Directory trust management; individual admin account creation; password rotation</td></tr>
+          <tr><td style="font-weight:700">Data Protection Officer (DPO)</td><td>Assets 2, 5</td><td>GDPR compliance assessment of encryption and access control decisions; DPIA review if processing changes</td></tr>
+          <tr><td style="font-weight:700">Workload / Function Owners</td><td>Assets 3, 4, 5</td><td>Validate that security changes do not break application functionality; participate in UAT after OS migration and IAM policy updates</td></tr>
+          <tr><td style="font-weight:700">On-Premises IT Lead</td><td>Asset 1</td><td>Legacy domain controller patching programme; trust dependency audit</td></tr>
+        </tbody>
+      </table>
+
+      <div class="sub-lbl" style="margin-top:18px">Stakeholder Involvement</div>
+      <ul class="bl">
+        <li><strong>City Government Partner:</strong> Must be notified of any changes that affect service availability — specifically EC2 OS migration (possible brief downtime) and RDS subnet migration. Service continuity obligations under the city contract require advance notice of planned maintenance.</li>
+        <li><strong>Development Teams:</strong> RDS connection string updates (public → private subnet) require application code changes. EC2 SSH replacement with SSM requires developer tooling updates. Lambda permission changes require staging environment validation.</li>
+        <li><strong>Internal Audit / Compliance:</strong> The ISO 27001 audit trail requires that all treatment plans are documented, approved, and evidence of implementation is retained. Internal audit should be engaged to review completed treatment plans against the original risk register.</li>
+      </ul>
+    </div>
+
+    <div class="sec">
+      <div class="sec-hdr"><div class="sec-num" style="font-size:12px">PRIORITY</div><h3 class="sec-title">Why Critical and High Risks Must Be Treated First</h3></div>
+      <div class="sub-txt" style="margin-bottom:14px">The following rationale justifies the prioritisation of Assets 1–3 (Critical/High) over Assets 4–5 (Medium) in the treatment timeline:</div>
+      <div class="priority-box">
+        <div class="priority-timeline">
+          <div class="pt-item">
+            <div class="pt-dot" style="background:#dc2626"></div>
+            <div class="pt-date" style="color:#dc2626">Immediate — Week 1</div>
+            <div class="pt-title">Asset 1: Managed AD (CRITICAL) — Trust Removal + Admin Account Elimination</div>
+            <div class="pt-text">A CRITICAL risk represents a threat of total environment compromise. If the legacy trust chain is exploited, all other assets become accessible regardless of their individual controls. The Managed AD compromise is the "master key" risk — it must be treated first because it undermines all other security measures. The shared Domain Admin account means a single stolen credential grants unrestricted control over the entire domain. These risks are actively exploitable with tools already deployed against internet-exposed infrastructure.</div>
+          </div>
+          <div class="pt-item">
+            <div class="pt-dot" style="background:#ea580c"></div>
+            <div class="pt-date" style="color:#ea580c">Short-term — Weeks 1–2</div>
+            <div class="pt-title">Assets 2 & 3: RDS + EC2 (HIGH) — Remove Internet Exposure</div>
+            <div class="pt-text">HIGH risks represent active, immediate threats with serious consequences. The internet-exposed RDS endpoint and the 0.0.0.0/0 SSH/RDP Security Groups are being continuously scanned and attacked right now — not theoretically. NCSC data confirms that exposed RDP without MFA is attacked within 24 hours. EoL OS instances have accumulating unpatched CVEs. These risks must be treated urgently because their likelihood of exploitation is very high and the consequence (data breach, ransomware, account takeover) is severe and directly impacts the city government partnership. The initial mitigations (removing 0.0.0.0/0 rules, disabling RDS public access) can be completed within 24–48 hours with minimal operational disruption.</div>
+          </div>
+          <div class="pt-item">
+            <div class="pt-dot" style="background:#d97706"></div>
+            <div class="pt-date" style="color:#d97706">Medium-term — Weeks 3–4</div>
+            <div class="pt-title">Assets 4 & 5: EFS + Lambda (MEDIUM) — Configuration Hardening</div>
+            <div class="pt-text">MEDIUM risks are important but do not represent immediate or near-certain exploitation. The EFS risk requires an attacker to already be inside the VPC with a compromised workload — it is a consequence-amplifier for a prior compromise, not an initial access vector. The Lambda over-permission risk requires an attacker to compromise a specific Lambda function's execution context. Both risks are real and must be treated, but they are lower probability in the near term and can be addressed once the higher-priority risks that create the conditions for their exploitation (network exposure, identity compromise) have been mitigated. Treating Medium risks while Critical/High risks remain unaddressed is resource misallocation.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-hdr"><div class="sec-num">6</div><h3 class="sec-title">Monitoring and Evaluation</h3></div>
+      <div class="sub-lbl">Performance Metrics</div>
+      <table class="action-tbl" style="margin-top:10px">
+        <thead><tr><th>Asset</th><th>Key Metric</th><th>Target</th><th>Monitoring Tool</th></tr></thead>
+        <tbody>
+          <tr><td>Asset 1 — Managed AD</td><td>Privileged account actions per named individual; MFA adoption rate</td><td>100% individual accounts; 100% MFA; 0 shared account usage</td><td>AWS CloudTrail; Directory Service event logs</td></tr>
+          <tr><td>Asset 2 — RDS</td><td>Failed connection attempts; public accessibility status; encryption status</td><td>0 public connections; 100% encrypted; ≤5 failed auth/hour</td><td>CloudWatch; AWS Config Rule</td></tr>
+          <tr><td>Asset 3 — EC2</td><td>% instances on supported OS; 0.0.0.0/0 rules in Security Groups</td><td>100% supported OS within 6 weeks; 0 open 22/3389 rules</td><td>AWS Config; Systems Manager Patch Manager</td></tr>
+          <tr><td>Asset 4 — EFS</td><td>Unauthorised mount attempts blocked; % connections using TLS</td><td>0 unauthorised mounts; 100% TLS-enforced mounts</td><td>CloudTrail; EFS access logs</td></tr>
+          <tr><td>Asset 5 — Lambda</td><td>% functions with AdministratorAccess removed; IAM access analyser findings</td><td>0 functions with AdministratorAccess; 0 overpermissioned findings</td><td>IAM Access Analyzer; CloudTrail</td></tr>
+        </tbody>
+      </table>
+
+      <div class="sub-lbl" style="margin-top:18px">Evaluation Methods</div>
+      <ul class="bl">
+        <li><strong>Weekly review (first month):</strong> Cloud Security Lead reviews CloudTrail logs and Config rule compliance for all five assets — confirms treatment actions have been implemented and are functioning as expected.</li>
+        <li><strong>Post-implementation penetration test:</strong> Targeted assessment of the five assets following completion of all treatment actions — confirms that identified vulnerabilities are no longer exploitable.</li>
+        <li><strong>Monthly metric review:</strong> Head of Cloud Operations and Cloud Security Lead review the performance metrics table above — escalate to CISO if any metric falls below target.</li>
+        <li><strong>Quarterly access review:</strong> IAM permissions review for all privileged roles (AD admins, Lambda execution roles, EFS client roles) — confirm least privilege is maintained and remove any permissions no longer required.</li>
+      </ul>
+    </div>
+
+    <div class="sec">
+      <div class="sec-hdr"><div class="sec-num">7</div><h3 class="sec-title">Risk Mitigation — Contingency Plans</h3></div>
+      <div class="sub-lbl">Contingency Plans</div>
+      <ul class="bl">
+        <li><strong>Asset 1 — Trust removal breaks dependent application:</strong> Suspend rather than delete the trust immediately; maintain a rollback capability for 48 hours. Engage application owner to identify and replace the trust dependency before permanent removal. Temporary workaround: application-specific service accounts with narrowly scoped credentials.</li>
+        <li><strong>Asset 2 — RDS migration causes application connectivity failure:</strong> Maintain a read-only snapshot of the public-access instance for 72 hours after migration. Developer bastion host is available as a fallback for legitimate remote DB access if SSM access cannot be configured in time.</li>
+        <li><strong>Asset 3 — EC2 OS migration breaks application workload:</strong> All OS migrations must have a tested rollback AMI. Production migration must follow staging environment validation. Migrations scheduled during maintenance windows with city government consent to minimise service impact.</li>
+        <li><strong>Asset 4 — EFS policy blocks legitimate workload:</strong> The File System Policy is additive — test in audit mode before enforcing. Maintain a list of all legitimate EFS client IAM roles and verify permissions before enforcement.</li>
+        <li><strong>Asset 5 — Lambda least-privilege policy causes function failure:</strong> Staging environment validation is mandatory before production deployment. Rollback plan: maintain the original AdministratorAccess role attachment as a disabled version for 30 days in case rapid rollback is needed.</li>
+      </ul>
+
+      <div class="sub-lbl" style="margin-top:16px">Risk Reassessment</div>
+      <div class="sub-txt">A formal risk reassessment (Report 2) will be conducted within two weeks of completing all treatment actions. The reassessment will: (1) re-score all 15 risks against the same 5-point Likelihood × Consequence scale; (2) document the reduction in risk scores as evidence of treatment effectiveness; (3) formally accept any residual risks above the acceptance threshold (Medium ≤6) with risk owner sign-off; (4) identify any new risks introduced by the treatment actions themselves (e.g. SSM as a new attack surface, new IAM roles created for individual admin access). The reassessment output becomes Report 2 in the RiskAnalysis.docx template, with Section 7 (Risk Treatment) fully populated.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════ PRESENTATION SLIDES ══════════════════════ -->
+<div id="panel-slides" class="panel">
+  <div class="section-header" style="text-align:center;margin-bottom:24px">
+    <div style="font-size:11px;letter-spacing:4px;color:#94a3b8;text-transform:uppercase;margin-bottom:8px">Presentation</div>
+    <h2 style="font-size:26px;color:var(--dark);margin-bottom:6px">1 Slide Per Asset — Class Presentation</h2>
+    <p style="color:var(--muted);font-size:14px;max-width:580px;margin:0 auto">Five slides covering the risk, treatment strategy, key actions, and residual risk for each asset.</p>
+  </div>
+  <div class="slide-nav" id="slide-nav"></div>
+  <div id="slide-content"></div>
+</div>
+
+</div><!-- /content -->
+
+<script>
+// ═══════════════════════════════ DATA ════════════════════════════════════
+
+const SLIDES = [
+  { num:1, asset:'AWS Managed Microsoft AD', icon:'🔑', riskLevel:'CRITICAL', riskColor:'#dc2626', riskBg:'#fecaca',
+    strategy:'AVOID + MITIGATE', stratColor:'#dc2626',
+    tagline:'Two-way legacy trust + shared Domain Admin = Total Environment Compromise',
+    vulns:['Two-way trust with unpatched, legacy on-premises domain controller','All admin actions via shared "Domain Admin" account — no individual accountability','Single credential compromise = unrestricted domain control'],
+    treatIcon:'🚫🛡️', treatLabel:'Avoid (Remove Trust) + Mitigate (Eliminate Shared Account)',
+    treatColor:'#dc2626',
+    treatPoints:['AVOID: Remove the two-way trust relationship — it creates a bidirectional attack path via the unpatched DC. Avoidance is the ONLY appropriate treatment because mitigating compensating controls cannot patch an unpatched OS.','MITIGATE: Create individual named admin accounts with MFA for each administrator. Disable the shared Domain Admin account. Enable CloudTrail audit logging for all AD actions.','If one-way trust is genuinely needed, re-establish it only after the legacy DC is fully patched.'],
+    whyFirst:'CRITICAL priority: if the legacy trust is exploited, all other assets become accessible regardless of their individual controls. This is the "master key" risk.',
+    residual:'After treatment: Likelihood Low (attack paths removed) × Consequence Moderate = Medium. Accepted by CISO.',
+    iso:['ISO 27001 A.8.2 — Privileged Access', 'A.5.17 — Authentication Information', 'CSA CCM IAM-09', 'AWS WAF SEC02'],
+    owner:'CISO / Cloud Security Lead'
+  },
+  { num:2, asset:'Amazon RDS — Production DB', icon:'🗄️', riskLevel:'HIGH', riskColor:'#ea580c', riskBg:'#fed7aa',
+    strategy:'MITIGATE', stratColor:'#059669',
+    tagline:'Internet-facing production DB + no encryption at rest = Data Breach & Ransomware Risk',
+    vulns:['Public Accessibility enabled — DB endpoint reachable from internet','No AWS KMS encryption at rest — data readable in plaintext if storage compromised','Deployed in public subnet with no restrictive NACLs'],
+    treatIcon:'🛡️', treatLabel:'Mitigate — Network Control + Cryptographic Control',
+    treatColor:'#059669',
+    treatPoints:['Disable Public Accessibility immediately — no production database should be internet-facing. Developers use bastion host or SSM for remote access.','Apply restrictive NACLs — deny all inbound except from application-tier Security Group ID.','Enable AWS KMS encryption at rest — snapshot then restore to new encrypted instance.','Move to private subnet — update application connection strings accordingly.'],
+    whyFirst:'HIGH priority: the RDS endpoint is being actively scanned and attacked right now. Combination of public access + no encryption = near-certain breach of production city data.',
+    residual:'After treatment: Likelihood Very Low (no public access) × Consequence Moderate = Low. Accepted by Head of Cloud Operations.',
+    iso:['ISO 27001 A.8.24 — Cryptography', 'A.8.20 — Network Security', 'A.8.22 — Segregation', 'CSA CCM DSP-04', 'AWS WAF SEC06'],
+    owner:'Head of Cloud Operations'
+  },
+  { num:3, asset:'Amazon EC2 Instances', icon:'🖥️', riskLevel:'HIGH', riskColor:'#ea580c', riskBg:'#fed7aa',
+    strategy:'AVOID + MITIGATE', stratColor:'#059669',
+    tagline:'EoL OS + open SSH/RDP from internet = Persistent Brute-Force & Unpatched CVE Risk',
+    vulns:['End-of-life OS — no vendor security patches, growing CVE catalogue','SSH (Port 22) and RDP (Port 3389) open to 0.0.0.0/0 — continuous brute-force attacks','Combination creates direct path: brute-force account then exploit unpatched OS'],
+    treatIcon:'🚫🛡️', treatLabel:'Avoid (Decommission EoL OS) + Mitigate (Remove Port Exposure)',
+    treatColor:'#059669',
+    treatPoints:['MITIGATE (immediate): Remove 0.0.0.0/0 Security Group rules on ports 22 and 3389 — achievable in minutes with no downtime. Replace direct SSH/RDP with AWS Systems Manager Session Manager (no inbound ports needed).','AVOID (short-term): EoL OS cannot be mitigated with network controls alone — the unpatched kernel remains permanently vulnerable. Migrate all workloads to current supported OS AMIs within 6 weeks.','Avoidance is chosen for EoL OS because there is no patch to apply — the risk source is permanent.'],
+    whyFirst:'HIGH priority: NCSC data shows exposed RDP without MFA is attacked within 24 hours. EoL OS means every known CVE from end-of-support is permanently exploitable.',
+    residual:'After treatment: Likelihood Very Low (SSM-only access, patched OS) × Consequence Low = Low. Accepted by Head of Cloud Operations.',
+    iso:['ISO 27001 A.8.8 — Vulnerability Mgmt', 'A.8.20 — Network Security', 'A.8.5 — Secure Auth', 'CSA CCM TVM-01', 'AWS WAF SEC07'],
+    owner:'Head of Cloud Operations / Cloud Security Lead'
+  },
+  { num:4, asset:'Amazon EFS', icon:'📁', riskLevel:'MEDIUM', riskColor:'#d97706', riskBg:'#fef08a',
+    strategy:'MITIGATE', stratColor:'#059669',
+    tagline:'No IAM auth on file system + no encryption-in-transit = Unrestricted VPC Mount Access',
+    vulns:['No File System Policy — any VPC resource can mount the EFS drive','IAM authentication not enforced — no identity-based access control','Encryption-in-transit not mandated — data in plaintext over internal network'],
+    treatIcon:'🛡️', treatLabel:'Mitigate — File System Policy + Mandatory TLS Enforcement',
+    treatColor:'#059669',
+    treatPoints:['Apply EFS File System Policy denying all mounts unless the IAM principal explicitly has elasticfilesystem:ClientMount permission.','Add aws:SecureTransport: true condition — rejects all unencrypted mount attempts.','Update IAM roles for all legitimate EFS clients to include the required mount permission.','Enable CloudTrail for EFS access logging — alert on unexpected mount attempts.'],
+    whyFirst:'MEDIUM priority: treated AFTER Assets 1–3 because exploitation requires an attacker to already be inside the VPC via a prior compromise. It is a consequence-amplifier, not an initial access vector.',
+    residual:'After treatment: Likelihood Low (policy-enforced access control) × Consequence Low-Moderate = Low. Accepted by Cloud Security Lead.',
+    iso:['ISO 27001 A.8.3 — Access Restriction', 'A.8.24 — Cryptography', 'A.5.15 — Access Control', 'CSA CCM DSP-03', 'AWS WAF SEC06'],
+    owner:'Cloud Security Lead'
+  },
+  { num:5, asset:'AWS Lambda Functions', icon:'⚡', riskLevel:'MEDIUM', riskColor:'#d97706', riskBg:'#fef08a',
+    strategy:'MITIGATE', stratColor:'#059669',
+    tagline:'AdministratorAccess on execution roles = Full AWS Account Takeover if Function Compromised',
+    vulns:['AdministratorAccess managed policy on all Lambda execution roles','Grants ability to modify IAM, delete S3 buckets, terminate EC2 — far exceeds data processing needs','Violated principle of least privilege — audit and compliance risk in addition to technical risk'],
+    treatIcon:'🛡️', treatLabel:'Mitigate — Least-Privilege Custom IAM Policies',
+    treatColor:'#059669',
+    treatPoints:['Use AWS IAM Access Analyzer to identify which API actions each Lambda function actually calls in production.','Create custom IAM policies granting only those specific actions on specific resources — no wildcards.','Replace AdministratorAccess with custom policies after staging environment validation.','Schedule quarterly Access Analyzer reviews to prevent future permission drift.'],
+    whyFirst:'MEDIUM priority: treated AFTER Assets 1–3 because exploitation requires compromising a specific Lambda function first. However, the blast radius if exploited is catastrophic — full AWS account access — which justifies treating alongside Asset 4.',
+    residual:'After treatment: Likelihood Low (function must first be compromised) × Consequence Low (contained blast radius) = Low. Accepted by Cloud Security Lead.',
+    iso:['ISO 27001 A.8.2 — Privileged Access', 'A.5.15 — Access Control', 'A.8.3 — Access Restriction', 'CSA CCM IAM-05', 'AWS WAF SEC03'],
+    owner:'Cloud Security Lead / DPO'
+  }
+];
+
+// ═══════════════════════════════ STATE ═══════════════════════════════════
+let openCollab = null;
+let currentSlide = 0;
+
+// ═══════════════════════════════ TABS ════════════════════════════════════
+function showTab(name, btn) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tb').forEach(b => { b.classList.remove('active'); b.style.background=''; });
+  document.getElementById('panel-' + name).classList.add('active');
+  btn.classList.add('active');
+  const colors = { intro:'#4f46e5', a1:'#dc2626', a2:'#ea580c', a3:'#ea580c', a4:'#d97706', a5:'#d97706', collab:'#059669', slides:'#7c3aed' };
+  btn.style.background = colors[name] || '#4f46e5';
+}
+
+// ══════════════════════════════ SLIDES ═══════════════════════════════════
+function renderSlides() {
+  document.getElementById('slide-nav').innerHTML = SLIDES.map((s,i) => `
+    <button class="sn-btn ${i===currentSlide?'active':''}" onclick="switchSlide(${i})">
+      ${s.icon} ${s.num}. ${s.asset.split(' — ')[0].replace('AWS ','').replace('Amazon ','')}
+      <span style="margin-left:6px;font-size:10px;border-radius:4px;padding:1px 6px;background:${s.riskBg};color:${s.riskColor}">${s.riskLevel}</span>
+    </button>`).join('');
+
+  const s = SLIDES[currentSlide];
+  document.getElementById('slide-content').innerHTML = `
+    <div class="slide">
+      <div class="slide-top">
+        <div class="slide-asset-tag" style="color:${s.riskColor}">Asset ${s.num} · ${s.riskLevel} Risk · Treatment: ${s.strategy}</div>
+        <h2 class="slide-title">${s.icon} ${s.asset}</h2>
+        <p class="slide-subtitle">${s.tagline}</p>
+        <div class="slide-score-row">
+          <div class="slide-score" style="background:${s.riskBg}"><span style="font-size:14px;font-weight:900;color:${s.riskColor}">${s.riskLevel}</span><br><span style="font-size:10px;color:${s.riskColor};font-weight:700">Risk Level</span></div>
+          <div class="slide-score" style="background:rgba(255,255,255,.08)"><span style="font-size:14px;font-weight:900;color:#a5b4fc">${s.strategy}</span><br><span style="font-size:10px;color:#a5b4fc;font-weight:700">Treatment</span></div>
+          <div class="slide-score" style="background:rgba(255,255,255,.08)"><span style="font-size:13px;font-weight:700;color:#e0e7ff">${s.owner.split(' /')[0]}</span><br><span style="font-size:10px;color:#94a3b8;font-weight:700">Risk Owner</span></div>
+        </div>
+      </div>
+      <div class="slide-body">
+        <div class="slide-grid">
+          <div>
+            <div class="slide-box" style="margin-bottom:12px">
+              <div class="slide-box-title" style="color:#f87171">⚠ Identified Vulnerabilities</div>
+              ${s.vulns.map(v => `<div class="slide-li">${v}</div>`).join('')}
+            </div>
+            <div class="slide-box">
+              <div class="slide-box-title" style="color:#94a3b8">📋 ISO 27001 / Framework Controls</div>
+              ${s.iso.map(c => `<div class="slide-li" style="color:#a5b4fc">${c}</div>`).join('')}
+            </div>
+          </div>
+          <div>
+            <div class="slide-treat-banner" style="background:${s.stratColor}22;border:1.5px solid ${s.stratColor}55">
+              <span style="font-size:24px">${s.treatIcon}</span>
+              <div>
+                <div style="font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:${s.stratColor}">Treatment Strategy</div>
+                <div style="font-size:13px;font-weight:700;color:#e0e7ff">${s.treatLabel}</div>
+              </div>
+            </div>
+            <div class="slide-box" style="margin-bottom:12px">
+              <div class="slide-box-title" style="color:#6ee7b7">✓ Treatment Actions</div>
+              ${s.treatPoints.map(p => `<div class="slide-li">${p}</div>`).join('')}
+            </div>
+            <div class="slide-box" style="background:rgba(253,224,71,.08)">
+              <div class="slide-box-title" style="color:#fde047">📊 Why This Priority?</div>
+              <div style="font-size:12px;color:#fef08a;line-height:1.6">${s.whyFirst}</div>
+              <div style="margin-top:8px;font-size:11.5px;color:#d1fae5;line-height:1.5"><strong style="color:#6ee7b7">Residual Risk:</strong> ${s.residual}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+}
+
+function switchSlide(i) { currentSlide = i; renderSlides(); }
+
+// ══════════════════════════════ INIT ═════════════════════════════════════
+renderSlides();
+</script>
+</body>
+</html>

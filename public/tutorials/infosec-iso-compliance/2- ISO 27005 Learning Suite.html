@@ -1,0 +1,1062 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ISO/IEC 27005 Learning Suite — Information Security Risk Management</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --emerald: #059669;
+    --dark: #0a2818;
+    --teal: #0D9488;
+    --red: #DC2626;
+    --amber: #D97706;
+    --blue: #2563EB;
+    --purple: #7C3AED;
+    --navy: #1e3a5f;
+    --bg: #f0fdf4;
+    --white: #ffffff;
+    --border: #d1fae5;
+    --text: #0a2818;
+    --muted: #6b7280;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+  h1,h2,h3 { font-family: 'Playfair Display', Georgia, serif; }
+
+  /* ── HEADER ── */
+  #header {
+    background: var(--dark);
+    padding: 20px 24px 0;
+    position: sticky; top: 0; z-index: 200;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.35);
+  }
+  .header-top { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; max-width: 980px; margin-left: auto; margin-right: auto; }
+  .header-icon { background: var(--emerald); border-radius: 10px; width: 46px; height: 46px; display:flex; align-items:center; justify-content:center; font-size:22px; flex-shrink:0; }
+  .header-label { color: #6ee7b7; font-size: 10px; letter-spacing: 3px; font-weight: 700; text-transform: uppercase; }
+  .header-title { color: #fff; font-size: 20px; line-height: 1.2; }
+  .tabs { display: flex; gap: 4px; max-width: 980px; margin: 0 auto; overflow-x: auto; }
+  .tab-btn {
+    background: transparent; color: #94a3b8; border: none;
+    border-radius: 8px 8px 0 0; padding: 10px 20px;
+    font-size: 13px; font-weight: 700; cursor: pointer;
+    white-space: nowrap; transition: all 0.2s;
+    font-family: 'DM Sans', sans-serif;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .tab-btn:hover { color: #fff; background: rgba(255,255,255,0.08); }
+  .tab-btn.active { background: var(--emerald); color: #fff; }
+
+  /* ── CONTENT ── */
+  #content { max-width: 980px; margin: 0 auto; padding: 28px 20px 60px; }
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  /* ── SECTION HEADER ── */
+  .section-header { text-align: center; margin-bottom: 32px; }
+  .section-tag { font-size: 11px; letter-spacing: 4px; color: #94a3b8; text-transform: uppercase; margin-bottom: 8px; }
+  .section-title { font-size: 28px; color: var(--dark); margin-bottom: 8px; }
+  .section-desc { color: var(--muted); font-size: 14px; max-width: 640px; margin: 0 auto; }
+
+  /* ── PROCESS CYCLE BAR ── */
+  .cycle-bar { display: flex; gap: 6px; margin-bottom: 32px; flex-wrap: wrap; }
+  .cycle-card {
+    flex: 1 1 130px; border-radius: 12px; padding: 14px 16px;
+    color: #fff; text-align: center;
+  }
+  .cycle-label { font-size: 14px; font-weight: 900; letter-spacing: 0.5px; }
+  .cycle-clause { font-size: 11px; opacity: 0.75; margin-top: 2px; }
+  .cycle-desc { font-size: 12px; margin-top: 5px; opacity: 0.9; }
+
+  /* ── CLAUSE CARDS ── */
+  .clauses-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 16px; margin-bottom: 36px; }
+  .clause-card {
+    background: var(--white); border: 2px solid var(--border);
+    border-radius: 14px; padding: 20px; cursor: pointer; transition: all 0.2s;
+  }
+  .clause-card:hover { box-shadow: 0 4px 20px rgba(5,150,105,0.12); transform: translateY(-1px); }
+  .clause-card.open { border-color: var(--accent); box-shadow: 0 4px 20px var(--accent-light); }
+  .clause-head { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+  .clause-icon { font-size: 28px; }
+  .clause-num { font-size: 10px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; }
+  .clause-name { font-size: 15px; font-weight: 700; color: var(--dark); line-height: 1.3; }
+  .clause-summary { font-size: 13px; color: var(--muted); line-height: 1.55; }
+  .clause-detail { margin-top: 16px; padding-top: 14px; border-top: 1px solid #e5e7eb; display: none; }
+  .clause-card.open .clause-detail { display: block; }
+  .plain-box { border-radius: 8px; padding: 10px 14px; margin-bottom: 12px; }
+  .plain-label { font-size: 10px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 5px; }
+  .plain-text { font-size: 13px; line-height: 1.6; color: #374151; }
+  .key-title { font-size: 10px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 7px; }
+  .key-item { display: flex; gap: 8px; font-size: 13px; color: #374151; margin-bottom: 5px; align-items: flex-start; line-height: 1.5; }
+  .subclause-tag {
+    font-size: 11px; border-radius: 5px; padding: 3px 9px;
+    font-weight: 600; display: inline-block; margin: 3px 3px 3px 0;
+  }
+
+  /* ── ANNEX BOX ── */
+  .annex-box { background: var(--dark); border-radius: 16px; padding: 28px; margin-bottom: 32px; }
+  .annex-title { color: #fff; font-size: 20px; margin-bottom: 6px; }
+  .annex-desc { color: #94a3b8; font-size: 13px; margin-bottom: 20px; }
+  .annex-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 10px; }
+  .annex-card {
+    background: #0d3320; border-radius: 9px; padding: 13px;
+    transition: all 0.2s; cursor: default;
+  }
+  .annex-card:hover { background: var(--emerald); }
+  .annex-card-top { display: flex; justify-content: space-between; align-items: center; }
+  .annex-emoji { font-size: 18px; }
+  .annex-count { font-size: 11px; color: #6ee7b7; font-weight: 700; }
+  .annex-card:hover .annex-count { color: #fff; }
+  .annex-ref { font-size: 10px; color: #94a3b8; margin-top: 5px; }
+  .annex-name { font-size: 13px; color: #fff; font-weight: 600; margin-top: 2px; line-height: 1.3; }
+  .annex-hover-desc { font-size: 11px; color: #d1fae5; margin-top: 7px; line-height: 1.4; display: none; }
+  .annex-card:hover .annex-hover-desc { display: block; }
+
+  /* ── RISK MATRIX ── */
+  .matrix-wrap { margin-bottom: 32px; }
+  .matrix-title { font-size: 16px; font-weight: 700; color: var(--dark); margin-bottom: 14px; text-align: center; }
+  .matrix-grid {
+    display: grid;
+    grid-template-columns: 60px repeat(5, 1fr);
+    gap: 3px;
+    max-width: 700px;
+    margin: 0 auto 20px;
+  }
+  .mx-header { background: var(--dark); color: #fff; text-align: center; padding: 8px 4px; font-size: 11px; font-weight: 700; border-radius: 5px; }
+  .mx-label { background: var(--dark); color: #fff; text-align: center; padding: 8px 4px; font-size: 11px; font-weight: 700; border-radius: 5px; display: flex; align-items: center; justify-content: center; writing-mode: initial; }
+  .mx-cell { border-radius: 5px; padding: 8px 4px; text-align: center; font-size: 11px; font-weight: 700; cursor: default; transition: transform 0.15s; }
+  .mx-cell:hover { transform: scale(1.06); }
+  .mx-low { background: #bbf7d0; color: #065f46; }
+  .mx-medium { background: #fef08a; color: #854d0e; }
+  .mx-high { background: #fed7aa; color: #9a3412; }
+  .mx-critical { background: #fecaca; color: #991b1b; }
+  .mx-legend { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 10px; }
+  .mx-legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted); }
+  .mx-legend-dot { width: 14px; height: 14px; border-radius: 3px; }
+
+  /* ── TREATMENT OPTIONS ── */
+  .treatment-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 14px; margin-bottom: 32px; }
+  .treatment-card { border-radius: 12px; padding: 18px; border: 2px solid transparent; transition: all 0.2s; }
+  .treatment-card:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
+  .treat-icon { font-size: 30px; margin-bottom: 8px; }
+  .treat-name { font-size: 14px; font-weight: 700; margin-bottom: 5px; }
+  .treat-desc { font-size: 13px; line-height: 1.55; }
+  .treat-example { font-size: 12px; margin-top: 8px; font-style: italic; opacity: 0.85; }
+
+  /* ── QUIZ ── */
+  .quiz-wrap { max-width: 640px; margin: 0 auto; }
+  .quiz-progress-bar-bg { height: 6px; background: #d1fae5; border-radius: 3px; margin-bottom: 28px; }
+  .quiz-progress-bar { height: 6px; background: var(--emerald); border-radius: 3px; transition: width 0.4s; }
+  .quiz-meta { display: flex; justify-content: space-between; font-size: 13px; color: #94a3b8; margin-bottom: 14px; }
+  .quiz-score-label { color: var(--teal); font-weight: 700; }
+  .quiz-question-box { background: var(--dark); border-radius: 16px; padding: 28px; margin-bottom: 20px; }
+  .quiz-q-tag { color: #6ee7b7; font-size: 11px; letter-spacing: 2px; font-weight: 700; text-transform: uppercase; margin-bottom: 10px; }
+  .quiz-q-text { color: #fff; font-size: 17px; line-height: 1.6; font-family: 'Playfair Display', serif; }
+  .quiz-options { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
+  .quiz-opt {
+    background: var(--white); border: 2px solid var(--border);
+    border-radius: 10px; padding: 14px 18px;
+    text-align: left; cursor: pointer; font-size: 14px;
+    line-height: 1.5; transition: all 0.2s; color: var(--text);
+    font-family: 'DM Sans', sans-serif; width: 100%;
+  }
+  .quiz-opt:hover:not(:disabled) { border-color: var(--emerald); background: #f0fdf4; }
+  .quiz-opt.correct { border-color: var(--teal); background: #f0fdfa; color: #134e4a; }
+  .quiz-opt.wrong { border-color: var(--red); background: #fff1f2; color: #991b1b; }
+  .quiz-opt:disabled { cursor: default; }
+  .quiz-explanation { border-radius: 10px; padding: 16px; margin-bottom: 20px; font-size: 13px; line-height: 1.6; }
+  .quiz-explanation.good { background: #f0fdfa; border: 1px solid var(--teal); color: #134e4a; }
+  .quiz-explanation.bad { background: #fff1f2; border: 1px solid var(--red); color: #991b1b; }
+  .quiz-exp-label { font-weight: 700; font-size: 13px; margin-bottom: 5px; }
+  .btn-primary {
+    background: var(--emerald); color: #fff; border: none;
+    border-radius: 10px; padding: 13px 28px; font-size: 15px;
+    font-weight: 700; cursor: pointer; width: 100%;
+    font-family: 'DM Sans', sans-serif; transition: opacity 0.2s;
+  }
+  .btn-primary:hover { opacity: 0.88; }
+  .quiz-results { text-align: center; padding: 40px 20px; }
+  .result-emoji { font-size: 64px; margin-bottom: 16px; }
+  .result-title { font-size: 28px; color: var(--dark); margin-bottom: 6px; }
+  .result-pct { font-size: 52px; font-weight: 900; margin: 10px 0; }
+  .result-dots { display: flex; justify-content: center; gap: 8px; margin: 20px 0 28px; flex-wrap: wrap; }
+  .result-dot { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 13px; font-weight: 700; }
+  .result-msg { font-size: 14px; color: var(--muted); max-width: 400px; margin: 0 auto 28px; }
+
+  /* ── SCENARIOS ── */
+  .scenario-tabs { display: flex; gap: 10px; margin-bottom: 24px; flex-wrap: wrap; }
+  .scenario-tab {
+    padding: 10px 16px; border-radius: 10px; border: 2px solid var(--border);
+    background: var(--white); color: #555; font-weight: 700; cursor: pointer;
+    font-size: 13px; display: flex; align-items: center; gap: 8px;
+    font-family: 'DM Sans', sans-serif; transition: all 0.2s;
+  }
+  .scenario-tab.active { background: var(--dark); color: #fff; border-color: var(--dark); }
+  .diff-badge { font-size: 10px; border-radius: 4px; padding: 2px 7px; color: #fff; font-weight: 700; }
+  .scenario-header { background: var(--dark); border-radius: 16px; padding: 28px; margin-bottom: 24px; }
+  .scenario-meta { color: #6ee7b7; font-size: 10px; letter-spacing: 2px; font-weight: 700; text-transform: uppercase; margin-bottom: 6px; }
+  .scenario-title { color: #fff; font-size: 22px; margin-bottom: 14px; }
+  .scenario-body { color: #d1fae5; font-size: 15px; line-height: 1.7; }
+  .scenario-questions { display: flex; flex-direction: column; gap: 16px; }
+  .sq-card { border: 2px solid var(--border); border-radius: 12px; overflow: hidden; }
+  .sq-top { padding: 18px 20px; background: var(--white); }
+  .sq-head { display: flex; gap: 12px; align-items: flex-start; }
+  .sq-num { background: var(--emerald); color: #fff; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; flex-shrink: 0; margin-top: 2px; }
+  .sq-q { font-weight: 600; color: var(--dark); font-size: 15px; line-height: 1.5; margin-bottom: 8px; }
+  .sq-hint { font-size: 12px; color: #64748b; background: #f1f5f9; border-radius: 6px; padding: 6px 10px; display: inline-block; }
+  .sq-textarea { width: 100%; min-height: 70px; padding: 10px 12px; border-radius: 8px; border: 1px solid #d1d5db; font-size: 13px; font-family: 'DM Sans', sans-serif; resize: vertical; color: #374151; margin-top: 14px; }
+  .btn-reveal { margin-top: 8px; border: none; border-radius: 8px; padding: 8px 16px; font-size: 13px; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.2s; }
+  .sq-answer { background: #f0fdfa; border-top: 2px solid var(--teal); padding: 16px 20px 16px 60px; display: none; }
+  .sq-answer.show { display: block; }
+  .sq-answer-label { font-size: 10px; color: var(--teal); font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+  .sq-answer-text { font-size: 14px; color: #134e4a; line-height: 1.6; }
+
+  /* ── EXPLORER ── */
+  .search-wrap { position: relative; margin-bottom: 24px; }
+  .search-icon { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); font-size: 18px; }
+  .search-input { width: 100%; padding: 14px 16px 14px 48px; font-size: 15px; border-radius: 12px; border: 2px solid var(--border); outline: none; font-family: 'DM Sans', sans-serif; transition: border-color 0.2s; background: var(--white); }
+  .search-input:focus { border-color: var(--emerald); }
+  .explorer-tabs { display: flex; gap: 8px; margin-bottom: 20px; }
+  .exp-tab { padding: 9px 20px; border-radius: 8px; border: 2px solid var(--border); background: var(--white); font-weight: 700; cursor: pointer; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; font-family: 'DM Sans', sans-serif; transition: all 0.2s; }
+  .exp-tab.active { background: var(--emerald); color: #fff; border-color: var(--emerald); }
+  .explorer-clauses { display: flex; flex-direction: column; gap: 12px; }
+  .exp-clause { border: 2px solid var(--border); border-radius: 12px; padding: 20px; cursor: pointer; background: var(--white); transition: all 0.2s; }
+  .exp-clause:hover { border-color: var(--emerald); }
+  .exp-head { display: flex; align-items: center; gap: 14px; }
+  .exp-icon { font-size: 32px; }
+  .exp-meta { flex: 1; }
+  .exp-num { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
+  .exp-name { font-size: 16px; font-weight: 700; color: var(--dark); }
+  .exp-sum { font-size: 13px; color: var(--muted); margin-top: 4px; }
+  .exp-chevron { font-size: 18px; color: #cbd5e1; }
+  .exp-detail { display: none; margin-top: 16px; padding-top: 14px; border-top: 1px solid #e5e7eb; }
+  .exp-clause.open .exp-detail { display: block; }
+  .exp-grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .exp-annex-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 14px; }
+  .exp-annex-card { border: 2px solid var(--border); border-radius: 12px; padding: 18px; background: var(--white); transition: all 0.2s; }
+  .exp-annex-card:hover { border-color: var(--emerald); }
+  .exp-annex-head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
+  .exp-annex-left { display: flex; gap: 10px; align-items: center; }
+  .exp-annex-emoji { font-size: 24px; }
+  .exp-annex-ref { font-size: 10px; color: var(--emerald); font-weight: 700; }
+  .exp-annex-name { font-size: 14px; font-weight: 700; color: var(--dark); }
+  .exp-annex-badge { font-size: 11px; background: var(--dark); color: #fff; border-radius: 6px; padding: 3px 8px; font-weight: 700; white-space: nowrap; }
+  .exp-annex-desc { font-size: 13px; color: var(--muted); line-height: 1.5; }
+  .empty-state { text-align: center; padding: 40px; color: #94a3b8; font-size: 15px; }
+
+  /* ── INFO BANNER ── */
+  .info-banner { border-radius: 14px; padding: 20px 24px; margin-bottom: 28px; display: flex; align-items: flex-start; gap: 16px; }
+  .info-banner-icon { font-size: 32px; flex-shrink: 0; }
+  .info-banner-title { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+  .info-banner-text { font-size: 13px; line-height: 1.6; }
+
+  /* ── DIVIDER ── */
+  .group-label { display: flex; align-items: center; gap: 14px; margin: 28px 0 18px; }
+  .group-label-line { flex: 1; height: 1px; background: var(--border); }
+  .group-label-text { font-size: 11px; font-weight: 800; letter-spacing: 3px; text-transform: uppercase; color: #94a3b8; white-space: nowrap; }
+
+  @media (max-width: 640px) {
+    .clauses-grid { grid-template-columns: 1fr; }
+    .exp-grid2 { grid-template-columns: 1fr; }
+    .annex-grid { grid-template-columns: 1fr 1fr; }
+    .header-title { font-size: 16px; }
+    .tab-btn { padding: 10px 12px; font-size: 12px; }
+    .treatment-grid { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div id="header">
+  <div class="header-top">
+    <div class="header-icon">🎯</div>
+    <div>
+      <div class="header-label">Interactive Learning Suite</div>
+      <h1 class="header-title">ISO/IEC 27005:2022 — Information Security Risk Management</h1>
+    </div>
+  </div>
+  <div class="tabs">
+    <button class="tab-btn active" onclick="showTab('map',this)">🗺️ Visual Map</button>
+    <button class="tab-btn" onclick="showTab('quiz',this)">🧠 Quiz</button>
+    <button class="tab-btn" onclick="showTab('scenarios',this)">🎭 Scenarios</button>
+    <button class="tab-btn" onclick="showTab('explorer',this)">🔍 Explorer</button>
+  </div>
+</div>
+
+<div id="content">
+
+<!-- ══════════════════════════════ MAP PANEL ══════════════════════════════ -->
+<div id="panel-map" class="panel active">
+  <div class="section-header">
+    <div class="section-tag">The Standard at a Glance</div>
+    <h2 class="section-title">ISO/IEC 27005 Visual Map</h2>
+    <p class="section-desc">The risk management process that underpins ISO 27001. Click any clause to expand details.</p>
+  </div>
+
+  <div class="info-banner" style="background:#dcfce7">
+    <div class="info-banner-icon">🔗</div>
+    <div>
+      <div class="info-banner-title" style="color:#065f46">ISO 27005 and ISO 27001 — The Relationship</div>
+      <div class="info-banner-text" style="color:#166534">ISO 27001 clauses 6.1.2 and 8.2 require a risk assessment process — ISO/IEC 27005 provides the methodology to fulfil that requirement. It is not a certification standard itself but the operational risk management engine behind a conformant ISMS. The 2022 revision aligns closely with ISO 31000 terminology and introduces explicit scenario-based and asset-based approaches.</div>
+    </div>
+  </div>
+
+  <div class="cycle-bar">
+    <div class="cycle-card" style="background:#059669">
+      <div class="cycle-label">Context</div>
+      <div class="cycle-clause">Clauses 5 & 6</div>
+      <div class="cycle-desc">Scope, criteria & organisation</div>
+    </div>
+    <div class="cycle-card" style="background:#0D9488">
+      <div class="cycle-label">Assessment</div>
+      <div class="cycle-clause">Clause 7</div>
+      <div class="cycle-desc">Identification, analysis & evaluation</div>
+    </div>
+    <div class="cycle-card" style="background:#2563EB">
+      <div class="cycle-label">Treatment</div>
+      <div class="cycle-clause">Clause 8</div>
+      <div class="cycle-desc">Options, plan & residual risk</div>
+    </div>
+    <div class="cycle-card" style="background:#7C3AED">
+      <div class="cycle-label">Acceptance</div>
+      <div class="cycle-clause">Clause 9</div>
+      <div class="cycle-desc">Accepting residual risk</div>
+    </div>
+    <div class="cycle-card" style="background:#D97706">
+      <div class="cycle-label">Monitor & Review</div>
+      <div class="cycle-clause">Clause 10</div>
+      <div class="cycle-desc">Ongoing surveillance</div>
+    </div>
+    <div class="cycle-card" style="background:#DC2626">
+      <div class="cycle-label">Communication</div>
+      <div class="cycle-clause">Clause 11</div>
+      <div class="cycle-desc">Stakeholder engagement</div>
+    </div>
+  </div>
+
+  <div class="clauses-grid" id="clauses-grid"></div>
+
+  <div class="group-label">
+    <div class="group-label-line"></div>
+    <div class="group-label-text">Risk Treatment Options</div>
+    <div class="group-label-line"></div>
+  </div>
+  <div class="treatment-grid" id="treatment-grid"></div>
+
+  <div class="group-label">
+    <div class="group-label-line"></div>
+    <div class="group-label-text">Risk Matrix — Likelihood × Impact</div>
+    <div class="group-label-line"></div>
+  </div>
+  <div class="matrix-wrap">
+    <div class="matrix-title">Standard 5×5 Risk Matrix (illustrative — calibrate to organisational context)</div>
+    <div class="matrix-grid" id="risk-matrix"></div>
+    <div class="mx-legend">
+      <div class="mx-legend-item"><div class="mx-legend-dot" style="background:#bbf7d0"></div>Low (1–4)</div>
+      <div class="mx-legend-item"><div class="mx-legend-dot" style="background:#fef08a"></div>Medium (5–9)</div>
+      <div class="mx-legend-item"><div class="mx-legend-dot" style="background:#fed7aa"></div>High (10–16)</div>
+      <div class="mx-legend-item"><div class="mx-legend-dot" style="background:#fecaca"></div>Critical (17–25)</div>
+    </div>
+  </div>
+
+  <div class="annex-box">
+    <h3 class="annex-title">Informative Annexes — Reference Techniques</h3>
+    <p class="annex-desc">ISO/IEC 27005 includes seven informative annexes providing practical techniques and worked examples. These support but do not prescribe specific methodologies.</p>
+    <div class="annex-grid" id="annex-grid"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════ QUIZ PANEL ═══════════════════════════ -->
+<div id="panel-quiz" class="panel">
+  <div id="quiz-container"></div>
+</div>
+
+<!-- ══════════════════════════ SCENARIOS PANEL ══════════════════════════ -->
+<div id="panel-scenarios" class="panel">
+  <div class="section-header">
+    <div class="section-tag">Real-World Risk Management Application</div>
+    <h2 class="section-title">Scenario Worksheets</h2>
+    <p class="section-desc">Read the scenario, write your answer, then reveal the model solution.</p>
+  </div>
+  <div class="scenario-tabs" id="scenario-tabs"></div>
+  <div id="scenario-content"></div>
+</div>
+
+<!-- ══════════════════════════ EXPLORER PANEL ═══════════════════════════ -->
+<div id="panel-explorer" class="panel">
+  <div class="section-header">
+    <div class="section-tag">Navigate the Standard</div>
+    <h2 class="section-title">Clause Explorer</h2>
+    <p class="section-desc">Search any risk management topic to find the relevant clause or annex technique.</p>
+  </div>
+  <div class="search-wrap">
+    <span class="search-icon">🔍</span>
+    <input class="search-input" id="search-input" placeholder="Search: 'threat', 'likelihood', 'treatment', 'residual', 'asset', 'scenario'..." oninput="runSearch()">
+  </div>
+  <div class="explorer-tabs">
+    <button class="exp-tab active" id="exp-tab-clauses" onclick="switchExpTab('clauses')">📖 Clauses</button>
+    <button class="exp-tab" id="exp-tab-annex" onclick="switchExpTab('annex')">📎 Annexes</button>
+  </div>
+  <div id="explorer-results"></div>
+</div>
+
+</div><!-- /content -->
+
+<script>
+// ═══════════════════════════════ DATA ════════════════════════════════════
+
+const CLAUSES = [
+  { id: 4, title: "Context of the Organisation", color: "#059669", icon: "🏢",
+    summary: "Understand the internal and external factors that shape risk management. Define the scope and establish the information security risk management process.",
+    keyPoints: [
+      "Identify internal context: governance, objectives, key assets, culture, contractual obligations",
+      "Identify external context: legal/regulatory environment, market position, relationships with external parties",
+      "Scope of the risk management process must be explicitly defined and documented",
+      "The risk management process must be appropriate to the organisation and its ISMS"
+    ],
+    plainEnglish: "Before you can manage risks you must understand your environment. Who are your stakeholders? What laws apply? What does your organisation value most? The answers shape every subsequent risk decision.",
+    subclauses: ["4.1 Understanding the organisation", "4.2 Interested parties", "4.3 Defining the scope", "4.4 Information security risk management process"]
+  },
+  { id: 5, title: "Information Security Risk Management Process", color: "#0D9488", icon: "🔄",
+    summary: "Establishes the iterative, cyclical nature of ISO 27005 risk management. The process must be planned, executed, monitored and improved continuously.",
+    keyPoints: [
+      "Risk management is not a one-off activity — it is an ongoing iterative process",
+      "All process activities must be documented and records retained",
+      "The process integrates directly with the ISMS required by ISO 27001",
+      "Two parallel threads run throughout: communication/consultation and monitoring/review"
+    ],
+    plainEnglish: "Risk management is a loop, not a checklist. You assess, treat, accept, monitor — then loop back when things change. The standard's cyclical structure reflects the reality that threats, assets, and business context evolve constantly.",
+    subclauses: ["5.1 Process overview", "5.2 Iterative approach", "5.3 Documentation requirements"]
+  },
+  { id: 6, title: "Risk Assessment Criteria", color: "#2563EB", icon: "📐",
+    summary: "Before assessing risks, the organisation must establish the criteria by which risks will be measured, evaluated, and accepted. Criteria must align with organisational objectives and risk appetite.",
+    keyPoints: [
+      "Risk acceptance criteria: the threshold above which risks require treatment",
+      "Risk evaluation criteria: how the organisation determines risk significance",
+      "Impact criteria: what constitutes low, medium, high, or critical consequences",
+      "Likelihood criteria: how probability is defined and calibrated (qualitative or quantitative)",
+      "Criteria must be reviewed and updated when the business context changes"
+    ],
+    plainEnglish: "You must decide what 'risky' means before you start measuring risk. If you don't define your criteria first, every rating becomes a subjective guess. Good criteria are specific, documented, and tied to real business consequences.",
+    subclauses: ["6.1 General", "6.2 Risk acceptance criteria", "6.3 Information security risk assessment criteria"]
+  },
+  { id: 7, title: "Information Security Risk Assessment", color: "#7C3AED", icon: "🔬",
+    summary: "The core of the standard. Risk identification, analysis, and evaluation are carried out to produce a prioritised list of risks requiring decisions. Two main approaches: asset-based and scenario-based.",
+    keyPoints: [
+      "Identification: identify risks, their sources, owners, assets, threats, vulnerabilities, and potential consequences",
+      "Analysis: determine likelihood and impact — qualitative, quantitative, or semi-quantitative",
+      "Evaluation: compare risk levels against criteria and prioritise for treatment",
+      "Asset-based approach: start with assets → identify threats and vulnerabilities",
+      "Scenario-based approach (new in 2022): start with threat scenarios → trace to consequences",
+      "Both approaches are valid — choose based on organisational context and available data"
+    ],
+    plainEnglish: "This is the heart of 27005. You find the risks (identify), work out how bad and how likely they are (analyse), then decide which ones demand action (evaluate). The 2022 edition explicitly supports starting with realistic attack scenarios rather than cataloguing every asset.",
+    subclauses: ["7.1 Overview", "7.2 Risk identification", "7.2.1 Asset identification", "7.2.2 Threat identification", "7.2.3 Existing controls review", "7.2.4 Vulnerability identification", "7.2.5 Consequence identification", "7.3 Risk analysis", "7.3.1 Methodologies", "7.3.2 Consequence assessment", "7.3.3 Likelihood assessment", "7.3.4 Risk level determination", "7.4 Risk evaluation"]
+  },
+  { id: 8, title: "Information Security Risk Treatment", color: "#D97706", icon: "🛠️",
+    summary: "Having evaluated risks, the organisation selects treatment options, implements controls, and documents residual risk. A Risk Treatment Plan (RTP) is the key output.",
+    keyPoints: [
+      "Four treatment options: Modify (reduce), Retain (accept), Avoid (eliminate), Share (transfer)",
+      "Controls selected must be proportionate to the level of risk",
+      "Residual risk is the risk remaining after treatment — it must be explicitly acknowledged",
+      "Treatment plan documents: selected options, controls, responsibilities, timelines, and KPIs",
+      "Links directly to ISO 27001 Annex A controls and the Statement of Applicability (SoA)",
+      "A second iteration of risk assessment may be needed to evaluate residual risk level"
+    ],
+    plainEnglish: "Once you know your risks, decide what to do about them. You can reduce the risk with controls, accept it, stop the activity that creates it, or pay someone else to carry it (insurance, outsourcing). Whatever you choose, document the residual risk that remains.",
+    subclauses: ["8.1 General", "8.2 Risk treatment options", "8.3 Risk treatment plan", "8.4 Residual risk"]
+  },
+  { id: 9, title: "Information Security Risk Acceptance", color: "#DC2626", icon: "✅",
+    summary: "Residual risk — the risk remaining after treatment — must be formally accepted by appropriate management authority. This is an explicit governance step, not implied consent.",
+    keyPoints: [
+      "Risk owners must formally accept residual risk — passive non-objection is not acceptance",
+      "Where residual risk exceeds acceptance criteria, management must make an explicit documented decision",
+      "Risk acceptance records must be retained for audit purposes",
+      "Accepted risks must be monitored — circumstances that increase them must trigger reassessment",
+      "Acceptance does not mean indifference — it means conscious acknowledgement of the residual exposure"
+    ],
+    plainEnglish: "Someone with authority must sign off on every residual risk. 'We didn't get round to it' is not risk acceptance. This clause ensures that management consciously owns the risk position and that the decision is on record.",
+    subclauses: ["9.1 Preparing for risk acceptance", "9.2 Residual risk acceptance decision"]
+  },
+  { id: 10, title: "Information Security Risk Monitoring and Review", color: "#059669", icon: "📊",
+    summary: "Risk management does not end with treatment. The risk landscape changes and the organisation must monitor controls, detect new risks, and re-evaluate existing ones on a scheduled basis.",
+    keyPoints: [
+      "Monitor implemented controls for effectiveness — controls can fail or become ineffective over time",
+      "Monitor for new threats, vulnerabilities, and changes in asset value or business context",
+      "Conduct periodic risk reviews — frequency should match the rate of environmental change",
+      "Trigger events (incidents, system changes, new legislation) should prompt unscheduled reviews",
+      "Monitoring results feed back into the next assessment iteration",
+      "Record and report monitoring outcomes to management"
+    ],
+    plainEnglish: "The threat landscape doesn't stand still and neither should your risk register. Monitor whether your controls are still working, watch for new threats, and re-run the assessment when something significant changes — a merger, a new regulation, a major incident.",
+    subclauses: ["10.1 Monitoring and review of risk factors", "10.2 Risk management process monitoring, review and improvement"]
+  },
+  { id: 11, title: "Communication and Consultation", color: "#0D9488", icon: "💬",
+    summary: "Risk-related information must flow between the organisation and its stakeholders throughout the entire process. Communication is not an end-of-process report — it runs in parallel with every step.",
+    keyPoints: [
+      "Establish a communication and consultation plan at the outset of the risk management process",
+      "Internal stakeholders: CISO, risk owners, department heads, board, IT teams",
+      "External stakeholders: regulators, customers, suppliers, auditors, insurers",
+      "Communications must convey risks, decisions, and rationale in terms relevant to the audience",
+      "Consultation ensures that risk owners contribute to and validate assessments affecting their areas",
+      "Different audiences need different levels of detail and technical depth"
+    ],
+    plainEnglish: "Risk management only works if the right people know what the risks are and what's being done about them. The CISO needs different information than the board, and both need different information than the insurance team. Plan your communication strategy before you start, not after.",
+    subclauses: ["11.1 General", "11.2 Communication of information security risks", "11.3 Consultation"]
+  }
+];
+
+const ANNEXES = [
+  { ref: "Annex A", title: "Asset-Based Risk Assessment Approach", icon: "📦",
+    desc: "Worked guidance on the asset-centric approach: catalogue assets, identify threats and vulnerabilities per asset, assess impact on CIA, derive risk levels. Most established methodology, well-suited to mature organisations with complete asset registers." },
+  { ref: "Annex B", title: "Scenario-Based Risk Assessment Approach", icon: "🎬",
+    desc: "New in the 2022 edition. Guidance on starting from realistic threat scenarios (e.g. ransomware, supply chain compromise) rather than asset catalogues. Better aligned to threat intelligence and red team methodologies. Particularly useful for organisations without complete asset inventories." },
+  { ref: "Annex C", title: "Threat Taxonomy and Examples", icon: "⚡",
+    desc: "Illustrative catalogue of threat categories: deliberate (attack), accidental (human error), environmental (natural disasters). Includes worked examples of threat-vulnerability-consequence chains. Not exhaustive — organisations should supplement with sector-specific threat intelligence." },
+  { ref: "Annex D", title: "Vulnerability Examples", icon: "🕳️",
+    desc: "Examples of vulnerabilities across categories: technical (unpatched systems, misconfiguration), organisational (no security policy, inadequate training), physical (unsecured server rooms), procedural (no change management process). Maps vulnerabilities to asset types and threat categories." },
+  { ref: "Annex E", title: "Information Security Risk Assessment Techniques", icon: "🔧",
+    desc: "Overview of specific risk assessment techniques including: FMEA (Failure Mode & Effects Analysis), Fault Tree Analysis, STRIDE threat modelling, MEHARI, CRAMM, and semi-quantitative scoring methods. Describes conditions under which each technique is most appropriate." },
+  { ref: "Annex F", title: "Constraints on Risk Treatment", icon: "🚧",
+    desc: "Practical guidance on constraints that limit treatment options: budget, time, technical feasibility, legal restrictions, contractual obligations, and cultural factors. Helps practitioners justify why certain risks cannot be fully mitigated even when the risk level is high." },
+  { ref: "Annex G", title: "Differences from Previous Edition (2018)", icon: "📝",
+    desc: "Documents the key changes from ISO/IEC 27005:2018 to the 2022 revision. Key differences: explicit scenario-based approach added (Annex B), alignment with ISO 31000:2018 terminology, clearer treatment of risk criteria, updated annexes on vulnerabilities and threats." }
+];
+
+const TREATMENT_OPTIONS = [
+  { icon: "🛡️", name: "Modify", color: "#059669", bg: "#dcfce7", borderColor: "#059669",
+    desc: "Apply controls to reduce the likelihood of the threat occurring, the impact if it does, or both. The most common treatment option — corresponds to selecting ISO 27001 Annex A controls.",
+    example: "Patching a vulnerable system, implementing MFA, encrypting data at rest."
+  },
+  { icon: "🤝", name: "Share", color: "#2563EB", bg: "#eff6ff", borderColor: "#2563EB",
+    desc: "Transfer the financial or operational consequences of the risk to a third party through insurance, outsourcing, or contractual indemnity. The risk still exists — only the consequences are shared.",
+    example: "Cyber insurance policy, outsourcing data processing to a certified processor, contractual liability caps with cloud providers."
+  },
+  { icon: "🚫", name: "Avoid", color: "#DC2626", bg: "#fff1f2", borderColor: "#DC2626",
+    desc: "Eliminate the risk by ceasing or not starting the activity that creates it. The most effective option but often commercially costly. Appropriate where no treatment can reduce risk to an acceptable level.",
+    example: "Deciding not to collect a category of sensitive data, shutting down a legacy system with unacceptable vulnerabilities."
+  },
+  { icon: "✅", name: "Retain", color: "#D97706", bg: "#fef3c7", borderColor: "#D97706",
+    desc: "Consciously accept the risk without additional treatment. Appropriate when the risk is within acceptance criteria, when treatment costs exceed potential impact, or when no effective treatment exists.",
+    example: "Accepting residual risk after implementing controls where the remaining likelihood is very low. Documented in the risk register with management sign-off."
+  }
+];
+
+const QUIZ = [
+  { q: "Which clause of ISO/IEC 27005 requires the organisation to establish risk acceptance criteria before conducting a risk assessment?",
+    opts: ["Clause 7 — Risk Assessment", "Clause 6 — Risk Assessment Criteria", "Clause 8 — Risk Treatment", "Clause 9 — Risk Acceptance"],
+    ans: 1,
+    exp: "Clause 6 requires the organisation to establish criteria for risk evaluation, risk acceptance, and impact/likelihood before starting the assessment. Without pre-defined criteria, risk ratings are subjective and inconsistent."
+  },
+  { q: "ISO/IEC 27005:2022 added an explicit new approach to risk assessment not formally included in the 2018 edition. What is it?",
+    opts: ["Quantitative risk analysis using financial loss modelling", "Scenario-based risk assessment", "Threat intelligence feeds integration", "Monte Carlo simulation for likelihood estimation"],
+    ans: 1,
+    exp: "The 2022 revision explicitly introduced the scenario-based approach (Annex B) as an alternative to the traditional asset-based approach. It starts from realistic threat scenarios (e.g. ransomware attack, supply chain compromise) rather than from an asset catalogue."
+  },
+  { q: "A company implements MFA to reduce the likelihood of account takeover. After implementation, a residual risk remains. What must happen next under ISO/IEC 27005?",
+    opts: ["The risk is now closed — no further action required", "Residual risk must be formally accepted by an appropriate risk owner", "The residual risk must be reduced to zero before closure", "The risk is automatically accepted if controls are implemented"],
+    ans: 1,
+    exp: "Clause 9 requires explicit documented risk acceptance of residual risk by an appropriate management authority. Implementing controls does not automatically close a risk — the remaining exposure must be consciously acknowledged and signed off."
+  },
+  { q: "What is the key difference between risk 'sharing' and risk 'avoidance' as treatment options?",
+    opts: ["Sharing requires regulatory approval; avoidance does not", "Avoidance eliminates the risk-creating activity; sharing transfers only the financial consequences while the risk persists", "Sharing is only applicable to financial risks; avoidance applies to all risk types", "Avoidance is always more expensive than sharing"],
+    ans: 1,
+    exp: "Avoidance eliminates the risk by stopping the activity that creates it. Sharing (e.g. cyber insurance, outsourcing) transfers only the financial or operational consequences to a third party — the underlying risk still exists and must still be monitored."
+  },
+  { q: "Under Clause 10, what events should trigger an unscheduled risk review outside the normal periodic cycle?",
+    opts: ["A change in the CISO's role", "Only externally imposed regulatory requirements", "Significant incidents, major system changes, new legislation, or changes in business context", "Publication of a new version of ISO 27005"],
+    ans: 2,
+    exp: "Clause 10 identifies trigger events that should prompt unscheduled reviews: security incidents, significant changes to IT systems or business processes, new or changed legal/regulatory requirements, and changes in the threat landscape or business context."
+  },
+  { q: "The asset-based and scenario-based approaches in ISO/IEC 27005:2022 differ in their starting point. Which statement correctly describes the asset-based approach?",
+    opts: ["Start with realistic attack scenarios and trace them to impacted assets and consequences", "Start with threat intelligence feeds and map to mitigating controls", "Start with asset identification, then determine threats and vulnerabilities for each asset", "Start with Annex A controls and identify which assets they protect"],
+    ans: 2,
+    exp: "The asset-based approach begins by cataloguing information assets, then for each asset identifies applicable threats and vulnerabilities, assesses the potential impact on confidentiality, integrity, and availability, and determines the risk level. The scenario-based approach inverts this by starting from threat scenarios."
+  },
+  { q: "How does ISO/IEC 27005 relate to the Statement of Applicability (SoA) required by ISO/IEC 27001?",
+    opts: ["ISO 27005 replaces the SoA requirement entirely", "The risk treatment plan from ISO 27005 clause 8 feeds directly into the control selection justifications in the SoA", "The SoA is only relevant for ISO 27001 audits and has no connection to ISO 27005", "ISO 27005 requires a separate risk treatment register that is independent of the SoA"],
+    ans: 1,
+    exp: "The risk treatment decisions made under ISO 27005 clause 8 directly inform the SoA required by ISO 27001 clause 6.1.3. Controls selected from Annex A (or elsewhere) to treat risks are justified in the SoA, along with reasons for including or excluding each control."
+  },
+  { q: "Under Clause 11, communication and consultation in risk management is described as:",
+    opts: ["A one-time reporting activity at the end of the risk assessment", "An activity that runs in parallel with every stage of the risk management process", "Primarily the responsibility of external auditors", "Optional for internal risks that do not involve third parties"],
+    ans: 1,
+    exp: "Clause 11 makes clear that communication and consultation is not a final report — it is a parallel thread that runs throughout all stages of the process. A communication and consultation plan should be established at the outset to ensure stakeholders are engaged at every step."
+  },
+  { q: "What distinguishes qualitative from quantitative risk analysis under Clause 7.3?",
+    opts: ["Qualitative analysis always produces more accurate results than quantitative", "Quantitative analysis assigns numerical values (financial loss, probability percentages); qualitative uses descriptive scales (High/Medium/Low)", "Qualitative analysis requires more data than quantitative", "Quantitative analysis is required by ISO 27005 for all risks above medium level"],
+    ans: 1,
+    exp: "Clause 7.3 describes both approaches. Quantitative analysis assigns numerical or monetary values to likelihood and impact, producing risk values that can be directly compared. Qualitative analysis uses descriptive scales (e.g. Rare/Unlikely/Possible/Likely/Almost Certain × Minor/Moderate/Major/Critical). Semi-quantitative methods combine both. ISO 27005 does not mandate any one approach."
+  },
+  { q: "A risk has been assessed at a 'High' level. The organisation applies encryption and access controls, reducing it to 'Low'. What is the 'Low' risk called, and what must the organisation do with it?",
+    opts: ["Inherent risk — it must be re-assessed from scratch", "Residual risk — it must be formally accepted by a risk owner and documented", "Treated risk — it can be removed from the risk register", "Transferred risk — it must be assigned to a third party"],
+    ans: 1,
+    exp: "The risk remaining after treatment is called residual risk. Under clause 8.4 and clause 9, residual risk must be formally accepted by the appropriate risk owner and documented in the risk register. It continues to be monitored under clause 10 to ensure the controls remain effective."
+  }
+];
+
+const SCENARIOS = [
+  { id: 1, title: "The Ransomware Risk Assessment", icon: "🔒", diff: "Medium", diffColor: "#D97706",
+    situation: "A mid-sized logistics company is preparing its first ISO 27001 ISMS. The IT manager has asked you to perform a risk assessment on their core operations system — an on-premise ERP platform used by 300 staff. The platform has not been patched in 18 months, staff have local admin rights, and there is no network segmentation between the ERP and general office network. A competitor in the same sector suffered a ransomware attack last month.",
+    questions: [
+      { q: "Using the asset-based approach, identify the key asset, the most significant threat, and the primary vulnerability.",
+        hint: "Think about what the ERP platform contains and what 18-month patch gap means",
+        ans: "Asset: the ERP platform and its data (business-critical operational data, customer records, financial data). Threat: ransomware deployment by a malicious actor (external attacker or phishing-initiated insider action). Primary vulnerability: unpatched software (18-month gap) combined with excessive user privileges (local admin rights) and no network segmentation — these three vulnerabilities compound each other's impact."
+      },
+      { q: "Using the scenario-based approach instead, describe the threat scenario and trace it through to its consequences.",
+        hint: "Start from the attacker's perspective — what happens step by step?",
+        ans: "Threat scenario: 'Ransomware deployment via phishing email leading to full ERP encryption.' Scenario chain: (1) Phishing email targets a staff member → (2) Staff member with local admin rights executes malicious attachment → (3) Malware escalates privileges (exploiting unpatched vulnerability) → (4) Malware laterally traverses to ERP via unsegmented network → (5) ERP data encrypted; operations halt. Consequences: operational downtime (logistics routes unavailable), financial loss, regulatory exposure (if personal data involved), reputational damage with customers."
+      },
+      { q: "Propose a risk treatment plan with at least three controls and identify the residual risk after treatment.",
+        hint: "Think modify, share, avoid, retain — and what risk remains even after controls",
+        ans: "Treatment option: Modify. Controls: (1) Emergency patching programme — all critical patches applied within 30 days (reduces vulnerability exploitation likelihood significantly). (2) Remove local admin rights and implement least-privilege access — limits malware's ability to escalate and spread. (3) Network segmentation — isolate ERP on a separate VLAN with firewall rules restricting lateral movement. Supplementary: (4) Share — cyber insurance policy for residual financial exposure. Residual risk after treatment: a residual threat remains (sophisticated attackers can still target the organisation; phishing cannot be eliminated entirely). Residual risk level should be assessed as Low-Medium and formally accepted by the Operations Director as risk owner."
+      }
+    ]
+  },
+  { id: 2, title: "The Cloud Migration Risk Evaluation", icon: "☁️", diff: "Hard", diffColor: "#DC2626",
+    situation: "A financial services firm plans to migrate its customer data platform to a major public cloud provider. The platform processes personal and financial data for 80,000 retail customers. The CISO must present a risk assessment to the board before sign-off. The firm currently holds ISO 27001 certification. Cloud hosting has not previously been in scope.",
+    questions: [
+      { q: "What risk criteria (Clause 6) must be updated before this risk assessment can begin?",
+        hint: "The risk environment has fundamentally changed — what does that mean for your measurement framework?",
+        ans: "Several risk criteria elements require updating: (1) Impact criteria must be reviewed — regulatory fines under UK GDPR (up to 4% global turnover) and FCA requirements add new financial impact dimensions not present in the on-premise environment. (2) Risk acceptance criteria may need to be lowered — financial services regulators (FCA, PRA) have heightened expectations for cloud resilience. (3) Likelihood criteria must incorporate new threat vectors specific to cloud: misconfiguration, supply chain attacks on the CSP, and insider threats from CSP staff. (4) Scope must be explicitly updated in the ISMS documentation to include the cloud environment."
+      },
+      { q: "Identify three risks specific to cloud migration that would not appear in an on-premise risk assessment.",
+        hint: "Think about what's different: jurisdiction, shared infrastructure, control gaps",
+        ans: "(1) Data residency and jurisdictional risk: customer data processed in cloud regions may be subject to foreign law (e.g. US CLOUD Act if using a US-headquartered provider), creating compliance risk under UK GDPR's international transfer provisions. (2) Shared responsibility gap risk: in a cloud model, the boundary between CSP responsibilities and firm responsibilities is defined contractually — a misunderstanding of this boundary (e.g. assuming the CSP manages OS patching when the firm is responsible) creates control gaps. This risk does not exist in a purely on-premise environment. (3) Supply chain / sub-processor cascade risk: the CSP may use sub-processors for services (CDN, analytics, support tooling) that process customer data. A breach at a sub-processor creates risk exposure that the firm cannot directly control or monitor."
+      },
+      { q: "How should residual cloud risks be communicated to the board under Clause 11, and what format is appropriate?",
+        hint: "The board are not technical — but they are the risk acceptors",
+        ans: "Clause 11 requires communications to be tailored to the audience. For board communication: (1) Avoid technical jargon — express risks in financial, regulatory, and reputational terms the board can assess (e.g. 'a data breach affecting 80,000 customers carries a maximum regulatory fine of £X and estimated customer notification costs of £Y'). (2) Present residual risks clearly against the firm's stated risk appetite — has the migration pushed the risk profile above or below the board's accepted threshold? (3) Include a treatment summary — what controls are in place, what remains residual, and what the firm's monitoring posture will be post-migration. (4) Make the acceptance decision explicit — the board must formally accept the residual risk. A risk dashboard format with a RAG summary and supporting annexes for technical detail is appropriate."
+      }
+    ]
+  },
+  { id: 3, title: "The Insider Threat — Risk Monitoring Failure", icon: "👤", diff: "Medium", diffColor: "#D97706",
+    situation: "An NHS trust completed a risk assessment 18 months ago. At the time, the risk of unauthorised access to patient records by internal staff was rated Medium and treated with role-based access controls (RBAC) and quarterly access reviews. Six months ago, the trust merged with a neighbouring trust, doubling the number of staff. No additional risk review was triggered by the merger. An internal audit has now found that 400 access accounts from the merged trust were never properly configured under the new RBAC model.",
+    questions: [
+      { q: "Under Clause 10, what monitoring and review failure occurred and what should have triggered a review?",
+        hint: "Think about what changed and what Clause 10 says about trigger events",
+        ans: "Clause 10.1 requires monitoring of risk factors and Clause 10.2 requires the risk management process to be reviewed when significant changes occur. The merger was precisely the kind of trigger event that should have prompted an immediate unscheduled review. A merger that doubles staff count fundamentally changes: (1) the number of individuals with potential access to patient records, (2) the effectiveness of existing RBAC configurations, and (3) the likelihood rating for insider access risk. The 18-month-old risk register became materially inaccurate from the date of merger. The failure was not having a process to identify and respond to this trigger event — the trust treated risk management as a periodic tick-box rather than an ongoing process."
+      },
+      { q: "Re-assess the insider access risk using the updated context. How has the likelihood and impact changed?",
+        hint: "400 unconfigured accounts is a concrete vulnerability — what does that mean for likelihood?",
+        ans: "Updated risk analysis: Likelihood has increased from Low-Medium to High. Reasoning: 400 accounts with potentially excessive access rights represents a significant concrete vulnerability. Even if individual staff members have no malicious intent, the probability of accidental or inappropriate access to patient records has materially increased. The access review control (quarterly reviews) has also partially failed — the merger gap was not caught for six months. Impact remains Critical — patient record breaches under UK GDPR carry regulatory fines, ICO investigation, and severe reputational damage for an NHS trust. Revised risk level: High-Critical. This exceeds the original risk acceptance criteria and requires immediate treatment."
+      },
+      { q: "Draft the key elements of a revised Risk Treatment Plan (Clause 8) for this risk.",
+        hint: "Treatment plan needs: options selected, controls, owners, timelines, and residual risk",
+        ans: "Risk Treatment Plan elements: (1) Treatment option: Modify. (2) Immediate control — within 30 days: conduct emergency access review for all 400 affected accounts; disable or reconfigure accounts that do not conform to the trust's RBAC model. Responsible: IT Security Manager. (3) Medium-term control — within 90 days: implement automated user provisioning that enforces RBAC at account creation; remove manual configuration dependency that created the gap. (4) Process control: update the ISMS risk management procedure to include an explicit list of organisational trigger events (mergers, acquisitions, system changes, staff reductions >20%) that mandate an immediate risk review. (5) Monitoring: increase access review frequency from quarterly to monthly for patient record systems. (6) Residual risk: after controls implemented, residual risk assessed as Low-Medium. Risk to be formally accepted by the Chief Information Officer and NHS Trust Board."
+      }
+    ]
+  },
+  { id: 4, title: "The Risk Acceptance Dilemma", icon: "📋", diff: "Easy", diffColor: "#059669",
+    situation: "A retail organisation's risk register contains a risk: 'Exploitation of unpatched vulnerabilities in legacy point-of-sale (POS) terminals.' The risk is rated High. The IT team has determined that patching the POS terminals is technically infeasible without replacing all hardware — an investment of £600,000. The finance director wants to simply 'accept' the risk to avoid the cost. The CISO is uncomfortable with this decision.",
+    questions: [
+      { q: "Under ISO/IEC 27005 Clause 9, is the finance director's proposed approach a valid risk acceptance? What conditions must be met?",
+        hint: "Acceptance is legitimate but not unconditional — what does Clause 9 require?",
+        ans: "Clause 9 does permit risk retention (acceptance) as a valid treatment option — including where the cost of treatment exceeds the risk's expected impact or where treatment is technically infeasible. However, valid risk acceptance requires: (1) A formal, documented decision — not informal agreement or avoidance of the decision. (2) The decision must be made by an appropriate risk owner with the authority to accept that level of risk — the finance director alone may not have this authority if the risk is High; it may require board-level sign-off. (3) The accepted risk must be explicitly entered in the risk register with the rationale documented. (4) Monitoring obligations continue — the risk must be periodically reviewed and if circumstances change (e.g. active exploitation of this vulnerability type in the wild), the decision must be revisited. The CISO's discomfort is well-founded if these conditions are not met."
+      },
+      { q: "Are there alternative treatment options that could reduce the risk without the full £600,000 hardware replacement?",
+        hint: "Think about all four treatment options — can any reduce the risk without full patching?",
+        ans: "Yes — several partial treatment options could reduce the risk level before acceptance is considered: (1) Modify (compensating controls): network segmentation to isolate POS terminals from the broader network, reducing the blast radius if a terminal is compromised; intrusion detection/monitoring on POS network traffic to detect exploitation attempts; disabling unnecessary services on the POS terminals. (2) Share: cyber insurance that specifically covers PCI DSS breach scenarios and card data theft from POS systems. (3) Avoid (partial): accelerate the hardware replacement programme for the highest-risk terminals (e.g. those processing the highest transaction volumes) even if full replacement is deferred. These measures may reduce the risk from High to Medium — which may fall within acceptance criteria — at a fraction of the £600,000 cost."
+      },
+      { q: "How should the CISO present this risk to the board under Clause 11 to ensure an informed acceptance decision?",
+        hint: "The board needs business consequences not technical details",
+        ans: "Clause 11 communication for risk acceptance at board level should: (1) Translate the technical risk into business language — 'unpatched POS terminals' becomes 'if our payment systems are compromised, the consequences could include: PCI DSS non-compliance and card scheme fines (estimated £X–Y range), customer card data theft affecting up to Z transactions per day, reputational damage, and ICO investigation under UK GDPR if cardholder data is involved.' (2) Present the options: (a) full treatment (£600k hardware replacement, risk reduced to Low), (b) partial treatment (compensating controls + insurance, risk reduced to Medium, estimated cost £X), (c) acceptance without treatment (High risk retained, documented rationale required). (3) Be explicit about what 'acceptance' means — not that the risk disappears, but that the board consciously owns the exposure. (4) Recommend a monitoring commitment: regular review of threat intelligence for active exploitation of this vulnerability class."
+      }
+    ]
+  }
+];
+
+// ═══════════════════════════════ RISK MATRIX DATA ════════════════════════
+
+const MATRIX_LABELS = { rows: ['Very High (5)', 'High (4)', 'Medium (3)', 'Low (2)', 'Very Low (1)'], cols: ['Very Low (1)', 'Low (2)', 'Medium (3)', 'High (4)', 'Very High (5)'] };
+
+function getRiskClass(val) {
+  if (val >= 17) return 'mx-critical';
+  if (val >= 10) return 'mx-high';
+  if (val >= 5)  return 'mx-medium';
+  return 'mx-low';
+}
+
+// ═══════════════════════════════ STATE ═══════════════════════════════════
+let openClause = null;
+let openExpClause = null;
+let currentScenario = 0;
+let expTab = 'clauses';
+let quizState = { current: 0, score: 0, answered: false, selected: null, answers: [], finished: false };
+
+// ═══════════════════════════════ TABS ════════════════════════════════════
+function showTab(name, btn) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('panel-' + name).classList.add('active');
+  btn.classList.add('active');
+  if (name === 'explorer') renderExplorer();
+}
+
+// ═══════════════════════════════ MAP ═════════════════════════════════════
+function renderMap() {
+  // Clause cards
+  const grid = document.getElementById('clauses-grid');
+  grid.innerHTML = CLAUSES.map(c => `
+    <div class="clause-card" id="clause-${c.id}" onclick="toggleClause(${c.id})"
+      style="--accent:${c.color}; --accent-light:${c.color}22">
+      <div class="clause-head">
+        <span class="clause-icon">${c.icon}</span>
+        <div>
+          <div class="clause-num" style="color:${c.color}">Clause ${c.id}</div>
+          <div class="clause-name">${c.title}</div>
+        </div>
+      </div>
+      <div class="clause-summary">${c.summary}</div>
+      <div class="clause-detail">
+        <div class="plain-box" style="background:${c.color}15">
+          <div class="plain-label" style="color:${c.color}">💬 In Plain English</div>
+          <div class="plain-text">${c.plainEnglish}</div>
+        </div>
+        <div class="key-title">Key Requirements</div>
+        ${c.keyPoints.map(p => `<div class="key-item"><span style="color:${c.color};flex-shrink:0">▶</span>${p}</div>`).join('')}
+        <div class="key-title" style="margin-top:12px">Subclauses</div>
+        ${c.subclauses.map(s => `<span class="subclause-tag" style="background:${c.color}20;color:${c.color}">${s}</span>`).join('')}
+      </div>
+    </div>
+  `).join('');
+
+  // Treatment options
+  const tg = document.getElementById('treatment-grid');
+  tg.innerHTML = TREATMENT_OPTIONS.map(t => `
+    <div class="treatment-card" style="background:${t.bg};border-color:${t.borderColor}30">
+      <div class="treat-icon">${t.icon}</div>
+      <div class="treat-name" style="color:${t.color}">${t.name}</div>
+      <div class="treat-desc" style="color:${t.color}cc">${t.desc}</div>
+      <div class="treat-example" style="color:${t.color}99">e.g. ${t.example}</div>
+    </div>
+  `).join('');
+
+  // Risk matrix
+  const mx = document.getElementById('risk-matrix');
+  let cells = '<div class="mx-header" style="background:transparent"></div>';
+  MATRIX_LABELS.cols.forEach(c => { cells += `<div class="mx-header">${c}</div>`; });
+  MATRIX_LABELS.rows.forEach((row, ri) => {
+    const impact = 5 - ri;
+    cells += `<div class="mx-label">${row}</div>`;
+    MATRIX_LABELS.cols.forEach((col, ci) => {
+      const likelihood = ci + 1;
+      const val = impact * likelihood;
+      cells += `<div class="mx-cell ${getRiskClass(val)}">${val}</div>`;
+    });
+  });
+  mx.innerHTML = cells;
+
+  // Annexes
+  const ag = document.getElementById('annex-grid');
+  ag.innerHTML = ANNEXES.map(a => `
+    <div class="annex-card">
+      <div class="annex-card-top">
+        <span class="annex-emoji">${a.icon}</span>
+        <span class="annex-count">Informative</span>
+      </div>
+      <div class="annex-ref">${a.ref}</div>
+      <div class="annex-name">${a.title}</div>
+      <div class="annex-hover-desc">${a.desc}</div>
+    </div>
+  `).join('');
+}
+
+function toggleClause(id) {
+  const card = document.getElementById('clause-' + id);
+  const c = CLAUSES.find(x => x.id === id);
+  if (openClause === id) {
+    card.classList.remove('open');
+    card.style.borderColor = '';
+    card.style.boxShadow = '';
+    openClause = null;
+  } else {
+    if (openClause) {
+      const prev = document.getElementById('clause-' + openClause);
+      prev.classList.remove('open');
+      prev.style.borderColor = '';
+      prev.style.boxShadow = '';
+    }
+    card.classList.add('open');
+    card.style.borderColor = c.color;
+    card.style.boxShadow = `0 4px 20px ${c.color}30`;
+    openClause = id;
+  }
+}
+
+// ═══════════════════════════════ QUIZ ════════════════════════════════════
+function renderQuiz() {
+  const container = document.getElementById('quiz-container');
+  if (quizState.finished) { renderResults(container); return; }
+  const q = QUIZ[quizState.current];
+  const pct = (quizState.current / QUIZ.length) * 100;
+  container.innerHTML = `
+    <div class="section-header">
+      <div class="section-tag">Test Your Knowledge</div>
+      <h2 class="section-title">ISO/IEC 27005 Quiz</h2>
+      <p class="section-desc">10 questions covering all major risk management clauses, treatment options, and annex approaches.</p>
+    </div>
+    <div class="quiz-wrap">
+      <div class="quiz-meta">
+        <span>Question ${quizState.current + 1} of ${QUIZ.length}</span>
+        <span class="quiz-score-label">Score: ${quizState.score}</span>
+      </div>
+      <div class="quiz-progress-bar-bg">
+        <div class="quiz-progress-bar" style="width:${pct}%"></div>
+      </div>
+      <div class="quiz-question-box">
+        <div class="quiz-q-tag">ISO/IEC 27005 Risk Management Knowledge Check</div>
+        <div class="quiz-q-text">${q.q}</div>
+      </div>
+      <div class="quiz-options">
+        ${q.opts.map((opt, i) => `
+          <button class="quiz-opt" id="opt-${i}" onclick="selectOpt(${i})" ${quizState.answered ? 'disabled' : ''}>
+            <strong>${String.fromCharCode(65 + i)}.</strong> ${opt}
+            ${quizState.answered && i === q.ans ? ' <span style="float:right">✓</span>' : ''}
+            ${quizState.answered && i === quizState.selected && i !== q.ans ? ' <span style="float:right">✗</span>' : ''}
+          </button>
+        `).join('')}
+      </div>
+      ${quizState.answered ? `
+        <div class="quiz-explanation ${quizState.selected === q.ans ? 'good' : 'bad'}">
+          <div class="quiz-exp-label">${quizState.selected === q.ans ? '✓ Correct!' : '✗ Not quite'}</div>
+          ${q.exp}
+        </div>
+        <button class="btn-primary" onclick="nextQuestion()">
+          ${quizState.current + 1 >= QUIZ.length ? 'See Results' : 'Next Question →'}
+        </button>
+      ` : ''}
+    </div>
+  `;
+  if (quizState.answered) {
+    q.opts.forEach((_, i) => {
+      const btn = document.getElementById('opt-' + i);
+      if (i === q.ans) btn.classList.add('correct');
+      else if (i === quizState.selected) btn.classList.add('wrong');
+    });
+  }
+}
+
+function selectOpt(i) {
+  if (quizState.answered) return;
+  quizState.selected = i;
+  quizState.answered = true;
+  const correct = i === QUIZ[quizState.current].ans;
+  if (correct) quizState.score++;
+  quizState.answers.push({ correct, selected: i });
+  renderQuiz();
+}
+
+function nextQuestion() {
+  if (quizState.current + 1 >= QUIZ.length) { quizState.finished = true; renderQuiz(); return; }
+  quizState.current++;
+  quizState.answered = false;
+  quizState.selected = null;
+  renderQuiz();
+}
+
+function renderResults(container) {
+  const pct = Math.round((quizState.score / QUIZ.length) * 100);
+  const grade = pct >= 90 ? { label: 'Risk Expert', color: '#059669', icon: '🏆' }
+    : pct >= 70 ? { label: 'Proficient', color: '#D97706', icon: '🎯' }
+    : pct >= 50 ? { label: 'Learning', color: '#7C3AED', icon: '📚' }
+    : { label: 'Keep Studying', color: '#DC2626', icon: '💪' };
+  container.innerHTML = `
+    <div class="quiz-results">
+      <div class="result-emoji">${grade.icon}</div>
+      <h2 class="result-title">${quizState.score}/${QUIZ.length} — ${grade.label}</h2>
+      <div class="result-pct" style="color:${grade.color}">${pct}%</div>
+      <div class="result-dots">
+        ${quizState.answers.map((a, i) => `
+          <div class="result-dot" style="background:${a.correct ? '#059669' : '#DC2626'}">${i + 1}</div>
+        `).join('')}
+      </div>
+      <p class="result-msg">${pct >= 70
+        ? 'Great work! You have a solid grasp of ISO/IEC 27005 risk management principles.'
+        : 'Review the clauses you found tricky and try again. The Visual Map tab shows plain-English summaries for every clause!'
+      }</p>
+      <button class="btn-primary" onclick="restartQuiz()" style="max-width:240px;margin:0 auto;display:block">Try Again</button>
+    </div>
+  `;
+}
+
+function restartQuiz() {
+  quizState = { current: 0, score: 0, answered: false, selected: null, answers: [], finished: false };
+  renderQuiz();
+}
+
+// ═══════════════════════════════ SCENARIOS ═══════════════════════════════
+function renderScenarios() {
+  const tabs = document.getElementById('scenario-tabs');
+  tabs.innerHTML = SCENARIOS.map((s, i) => `
+    <button class="scenario-tab ${i === currentScenario ? 'active' : ''}" onclick="switchScenario(${i})">
+      <span>${s.icon}</span>
+      <span>${s.title}</span>
+      <span class="diff-badge" style="background:${s.diffColor}">${s.diff}</span>
+    </button>
+  `).join('');
+  renderScenarioContent();
+}
+
+function switchScenario(i) {
+  currentScenario = i;
+  renderScenarios();
+}
+
+function renderScenarioContent() {
+  const s = SCENARIOS[currentScenario];
+  const content = document.getElementById('scenario-content');
+  content.innerHTML = `
+    <div class="scenario-header">
+      <div style="display:flex;align-items:center;gap:16px;margin-bottom:14px">
+        <span style="font-size:48px">${s.icon}</span>
+        <div>
+          <div class="scenario-meta">Scenario ${s.id}</div>
+          <h3 class="scenario-title">${s.title}</h3>
+        </div>
+      </div>
+      <p class="scenario-body">${s.situation}</p>
+    </div>
+    <div class="scenario-questions">
+      ${s.questions.map((q, i) => `
+        <div class="sq-card">
+          <div class="sq-top">
+            <div class="sq-head">
+              <div class="sq-num">${i + 1}</div>
+              <div style="flex:1">
+                <div class="sq-q">${q.q}</div>
+                <span class="sq-hint">💡 Hint: ${q.hint}</span>
+                <div>
+                  <textarea class="sq-textarea" placeholder="Write your answer here before revealing the solution..."></textarea>
+                  <button class="btn-reveal" id="btn-${currentScenario}-${i}"
+                    style="background:#059669;color:#fff"
+                    onclick="toggleAnswer(${currentScenario},${i})">Reveal Answer</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="sq-answer" id="ans-${currentScenario}-${i}">
+            <div class="sq-answer-label">✓ Model Answer</div>
+            <div class="sq-answer-text">${q.ans}</div>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+
+function toggleAnswer(sIdx, qIdx) {
+  const ans = document.getElementById(`ans-${sIdx}-${qIdx}`);
+  const btn = document.getElementById(`btn-${sIdx}-${qIdx}`);
+  const showing = ans.classList.contains('show');
+  ans.classList.toggle('show');
+  btn.textContent = showing ? 'Reveal Answer' : 'Hide Answer';
+  btn.style.background = showing ? '#059669' : '#0a2818';
+}
+
+// ═══════════════════════════════ EXPLORER ════════════════════════════════
+function switchExpTab(tab) {
+  expTab = tab;
+  document.getElementById('exp-tab-clauses').classList.toggle('active', tab === 'clauses');
+  document.getElementById('exp-tab-annex').classList.toggle('active', tab === 'annex');
+  renderExplorer();
+}
+
+function runSearch() { renderExplorer(); }
+
+function renderExplorer() {
+  const q = (document.getElementById('search-input').value || '').toLowerCase();
+  const results = document.getElementById('explorer-results');
+
+  if (expTab === 'clauses') {
+    const filtered = CLAUSES.filter(c =>
+      c.title.toLowerCase().includes(q) ||
+      c.summary.toLowerCase().includes(q) ||
+      c.keyPoints.some(k => k.toLowerCase().includes(q)) ||
+      c.subclauses.some(s => s.toLowerCase().includes(q)) ||
+      c.plainEnglish.toLowerCase().includes(q)
+    );
+    document.getElementById('exp-tab-clauses').textContent = `📖 Clauses (${filtered.length})`;
+    if (!filtered.length) {
+      results.innerHTML = '<div class="empty-state">No clauses match your search. Try a different term.</div>';
+      return;
+    }
+    results.innerHTML = `<div class="explorer-clauses">
+      ${filtered.map(c => `
+        <div class="exp-clause ${openExpClause === c.id ? 'open' : ''}" id="exp-clause-${c.id}"
+          onclick="toggleExpClause(${c.id})"
+          style="border-color:${openExpClause === c.id ? c.color : '#d1fae5'};background:${openExpClause === c.id ? c.color + '08' : '#fff'}">
+          <div class="exp-head">
+            <span class="exp-icon">${c.icon}</span>
+            <div class="exp-meta">
+              <div class="exp-num" style="color:${c.color}">Clause ${c.id}</div>
+              <div class="exp-name">${c.title}</div>
+              <div class="exp-sum">${c.summary}</div>
+            </div>
+            <span class="exp-chevron">${openExpClause === c.id ? '▲' : '▼'}</span>
+          </div>
+          <div class="exp-detail">
+            <div class="exp-grid2">
+              <div>
+                <div class="key-title">Key Requirements</div>
+                ${c.keyPoints.map(p => `<div class="key-item"><span style="color:${c.color};flex-shrink:0">▶</span>${p}</div>`).join('')}
+              </div>
+              <div>
+                <div class="key-title">Plain English</div>
+                <div style="background:${c.color}12;border-radius:8px;padding:10px 12px;font-size:13px;color:#374151;line-height:1.6">${c.plainEnglish}</div>
+              </div>
+            </div>
+            <div style="margin-top:14px">
+              <div class="key-title">Subclauses</div>
+              ${c.subclauses.map(s => `<span class="subclause-tag" style="background:${c.color}20;color:${c.color}">${s}</span>`).join('')}
+            </div>
+          </div>
+        </div>
+      `).join('')}
+    </div>`;
+  } else {
+    const filtered = ANNEXES.filter(a =>
+      a.title.toLowerCase().includes(q) ||
+      a.ref.toLowerCase().includes(q) ||
+      a.desc.toLowerCase().includes(q)
+    );
+    document.getElementById('exp-tab-annex').textContent = `📎 Annexes (${filtered.length})`;
+    if (!filtered.length) {
+      results.innerHTML = '<div class="empty-state">No annexes match your search.</div>';
+      return;
+    }
+    results.innerHTML = `<div class="exp-annex-grid">
+      ${filtered.map(a => `
+        <div class="exp-annex-card">
+          <div class="exp-annex-head">
+            <div class="exp-annex-left">
+              <span class="exp-annex-emoji">${a.icon}</span>
+              <div>
+                <div class="exp-annex-ref">${a.ref}</div>
+                <div class="exp-annex-name">${a.title}</div>
+              </div>
+            </div>
+            <span class="exp-annex-badge">Informative</span>
+          </div>
+          <div class="exp-annex-desc">${a.desc}</div>
+        </div>
+      `).join('')}
+    </div>`;
+  }
+}
+
+function toggleExpClause(id) {
+  openExpClause = openExpClause === id ? null : id;
+  renderExplorer();
+}
+
+// ═══════════════════════════════ INIT ════════════════════════════════════
+renderMap();
+renderQuiz();
+renderScenarios();
+renderExplorer();
+</script>
+</body>
+</html>

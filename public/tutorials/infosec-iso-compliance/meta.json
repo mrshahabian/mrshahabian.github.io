@@ -1,0 +1,11 @@
+{
+  "title": "Information Security & ISO Compliance",
+  "description": "Interactive learning suites for information security management and compliance: ISO/IEC 27001 (ISMS), ISO/IEC 27005 (risk management), ISO/IEC 27017 (cloud security), a hands-on risk-treatment activity, and UK cyber law & compliance.",
+  "order": 2,
+  "books": [
+    { "title": "ISO/IEC 27001 — Information security management systems", "url": "https://www.iso.org/standard/27001" },
+    { "title": "ISO/IEC 27005 — Information security risk management", "url": "https://www.iso.org/standard/80585.html" },
+    { "title": "ISO/IEC 27017 — Cloud security controls", "url": "https://www.iso.org/standard/43757.html" },
+    { "title": "UK National Cyber Security Centre (NCSC)", "url": "https://www.ncsc.gov.uk/" }
+  ]
+}

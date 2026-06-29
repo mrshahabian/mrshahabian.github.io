@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UK Cyber Law & Cloud Compliance — Workshop Report</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --indigo: #4F46E5;
+    --dark: #1e1b4b;
+    --teal: #0D9488;
+    --red: #DC2626;
+    --amber: #D97706;
+    --purple: #7C3AED;
+    --blue: #2563EB;
+    --green: #16A34A;
+    --bg: #f5f3ff;
+    --white: #ffffff;
+    --border: #e0deff;
+    --text: #1e1b4b;
+    --muted: #6b7280;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+  h1,h2,h3 { font-family: 'Playfair Display', Georgia, serif; }
+
+  #header {
+    background: var(--dark);
+    padding: 20px 24px 0;
+    position: sticky; top: 0; z-index: 200;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.35);
+  }
+  .header-top { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; max-width: 980px; margin-left: auto; margin-right: auto; }
+  .header-icon { background: var(--indigo); border-radius: 10px; width: 46px; height: 46px; display:flex; align-items:center; justify-content:center; font-size:22px; flex-shrink:0; }
+  .header-label { color: #a5b4fc; font-size: 10px; letter-spacing: 3px; font-weight: 700; text-transform: uppercase; }
+  .header-title { color: #fff; font-size: 20px; line-height: 1.2; }
+  .tabs { display: flex; gap: 4px; max-width: 980px; margin: 0 auto; overflow-x: auto; }
+  .tab-btn {
+    background: transparent; color: #94a3b8; border: none;
+    border-radius: 8px 8px 0 0; padding: 10px 18px;
+    font-size: 13px; font-weight: 700; cursor: pointer;
+    white-space: nowrap; transition: all 0.2s;
+    font-family: 'DM Sans', sans-serif;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .tab-btn:hover { color: #fff; background: rgba(255,255,255,0.08); }
+  .tab-btn.active { background: var(--indigo); color: #fff; }
+
+  #content { max-width: 980px; margin: 0 auto; padding: 28px 20px 60px; }
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  .section-header { text-align: center; margin-bottom: 32px; }
+  .section-tag { font-size: 11px; letter-spacing: 4px; color: #94a3b8; text-transform: uppercase; margin-bottom: 8px; }
+  .section-title { font-size: 28px; color: var(--dark); margin-bottom: 8px; }
+  .section-desc { color: var(--muted); font-size: 14px; max-width: 640px; margin: 0 auto; }
+
+  /* OFFENCE CARDS */
+  .offence-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 16px; margin-bottom: 32px; }
+  .offence-card {
+    background: var(--white); border: 2px solid var(--border);
+    border-radius: 14px; padding: 20px; cursor: pointer; transition: all 0.2s;
+  }
+  .offence-card:hover { box-shadow: 0 4px 20px rgba(79,70,229,0.12); transform: translateY(-1px); }
+  .offence-card.open { border-color: var(--card-color); box-shadow: 0 4px 20px rgba(79,70,229,0.18); }
+  .offence-head { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+  .offence-icon { font-size: 28px; }
+  .offence-ref { font-size: 10px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; }
+  .offence-name { font-size: 15px; font-weight: 700; color: var(--dark); line-height: 1.3; }
+  .offence-summary { font-size: 13px; color: var(--muted); line-height: 1.55; }
+  .offence-detail { margin-top: 16px; padding-top: 14px; border-top: 1px solid #eee; display: none; }
+  .offence-card.open .offence-detail { display: block; }
+  .sentence-badge { display: inline-block; border-radius: 6px; padding: 4px 12px; font-size: 12px; font-weight: 700; margin-bottom: 12px; }
+  .detail-section { margin-bottom: 14px; }
+  .detail-label { font-size: 10px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px; }
+  .detail-item { display: flex; gap: 8px; font-size: 13px; color: #374151; margin-bottom: 5px; align-items: flex-start; line-height: 1.5; }
+  .plain-box { border-radius: 8px; padding: 10px 14px; margin-bottom: 12px; }
+  .plain-text { font-size: 13px; line-height: 1.6; color: #374151; }
+
+  /* DIVIDER LABEL */
+  .group-label {
+    display: flex; align-items: center; gap: 14px; margin: 28px 0 18px;
+  }
+  .group-label-line { flex: 1; height: 1px; background: var(--border); }
+  .group-label-text { font-size: 11px; font-weight: 800; letter-spacing: 3px; text-transform: uppercase; color: #94a3b8; white-space: nowrap; }
+
+  /* IAM CARDS */
+  .iam-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 16px; }
+  .iam-card {
+    background: var(--white); border: 2px solid var(--border);
+    border-radius: 14px; padding: 20px; cursor: pointer; transition: all 0.2s;
+  }
+  .iam-card:hover { box-shadow: 0 4px 20px rgba(79,70,229,0.12); transform: translateY(-1px); }
+  .iam-card.open { border-color: var(--card-color); box-shadow: 0 4px 20px rgba(79,70,229,0.18); }
+  .iam-head { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+  .iam-detail { margin-top: 16px; padding-top: 14px; border-top: 1px solid #eee; display: none; }
+  .iam-card.open .iam-detail { display: block; }
+  .legal-link { border-radius: 6px; padding: 4px 10px; font-size: 11px; font-weight: 700; display: inline-block; margin: 2px 2px 2px 0; }
+  .iam-name { font-size: 15px; font-weight: 700; color: var(--dark); }
+  .iam-summary { font-size: 13px; color: var(--muted); line-height: 1.55; }
+
+  /* DUAA TIMELINE */
+  .timeline { position: relative; padding-left: 28px; margin-bottom: 32px; }
+  .timeline::before { content:''; position:absolute; left:8px; top:0; bottom:0; width:2px; background: var(--border); }
+  .timeline-item { position: relative; margin-bottom: 22px; }
+  .timeline-dot { position: absolute; left: -24px; top: 4px; width: 14px; height: 14px; border-radius: 50%; border: 2px solid var(--white); }
+  .timeline-date { font-size: 10px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 3px; }
+  .timeline-title { font-size: 15px; font-weight: 700; color: var(--dark); margin-bottom: 4px; }
+  .timeline-text { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+  .duaa-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; }
+  .duaa-card {
+    background: var(--white); border: 2px solid var(--border);
+    border-radius: 14px; padding: 18px; transition: all 0.2s; cursor: pointer;
+  }
+  .duaa-card:hover { box-shadow: 0 4px 18px rgba(79,70,229,0.1); }
+  .duaa-card.open { border-color: var(--card-color); }
+  .duaa-icon { font-size: 26px; margin-bottom: 8px; }
+  .duaa-name { font-size: 14px; font-weight: 700; color: var(--dark); margin-bottom: 6px; }
+  .duaa-desc { font-size: 13px; color: var(--muted); line-height: 1.55; }
+  .duaa-detail { margin-top: 14px; padding-top: 12px; border-top: 1px solid #eee; display: none; font-size: 13px; color: #374151; line-height: 1.6; }
+  .duaa-card.open .duaa-detail { display: block; }
+  .status-pill { display: inline-block; border-radius: 20px; padding: 3px 10px; font-size: 11px; font-weight: 700; margin-bottom: 8px; }
+
+  /* CLOUD TABLE */
+  .cloud-table-wrap { overflow-x: auto; margin-bottom: 32px; }
+  table.cloud-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  table.cloud-table th {
+    background: var(--dark); color: #fff;
+    padding: 10px 14px; text-align: left; font-size: 11px;
+    font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+  }
+  table.cloud-table td { padding: 10px 14px; border-bottom: 1px solid var(--border); vertical-align: top; line-height: 1.55; }
+  table.cloud-table tr:last-child td { border-bottom: none; }
+  table.cloud-table tr:nth-child(even) td { background: #f8f7ff; }
+  .law-tag { display: inline-block; border-radius: 4px; padding: 2px 7px; font-size: 10px; font-weight: 700; margin: 1px; }
+
+  /* QUIZ */
+  .quiz-wrap { max-width: 640px; margin: 0 auto; }
+  .quiz-progress-bar-bg { height: 6px; background: #e0deff; border-radius: 3px; margin-bottom: 28px; }
+  .quiz-progress-bar { height: 6px; background: var(--indigo); border-radius: 3px; transition: width 0.4s; }
+  .quiz-meta { display: flex; justify-content: space-between; font-size: 13px; color: #94a3b8; margin-bottom: 14px; }
+  .quiz-score-label { color: var(--teal); font-weight: 700; }
+  .quiz-question-box { background: var(--dark); border-radius: 16px; padding: 28px; margin-bottom: 20px; }
+  .quiz-q-tag { color: #a5b4fc; font-size: 11px; letter-spacing: 2px; font-weight: 700; text-transform: uppercase; margin-bottom: 10px; }
+  .quiz-q-text { color: #fff; font-size: 17px; line-height: 1.6; font-family: 'Playfair Display', serif; }
+  .quiz-options { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
+  .quiz-opt {
+    background: var(--white); border: 2px solid var(--border);
+    border-radius: 10px; padding: 14px 18px;
+    text-align: left; cursor: pointer; font-size: 14px;
+    line-height: 1.5; transition: all 0.2s; color: var(--text);
+    font-family: 'DM Sans', sans-serif; width: 100%;
+  }
+  .quiz-opt:hover:not(:disabled) { border-color: var(--indigo); background: #f5f3ff; }
+  .quiz-opt.correct { border-color: var(--teal); background: #f0fdfa; color: #134e4a; }
+  .quiz-opt.wrong { border-color: var(--red); background: #fff1f2; color: #991b1b; }
+  .quiz-opt:disabled { cursor: default; }
+  .quiz-explanation { border-radius: 10px; padding: 16px; margin-bottom: 20px; font-size: 13px; line-height: 1.6; }
+  .quiz-explanation.good { background: #f0fdfa; border: 1px solid var(--teal); color: #134e4a; }
+  .quiz-explanation.bad { background: #fff1f2; border: 1px solid var(--red); color: #991b1b; }
+  .quiz-exp-label { font-weight: 700; font-size: 13px; margin-bottom: 5px; }
+  .btn-primary {
+    background: var(--indigo); color: #fff; border: none;
+    border-radius: 10px; padding: 13px 28px; font-size: 15px;
+    font-weight: 700; cursor: pointer; width: 100%;
+    font-family: 'DM Sans', sans-serif; transition: opacity 0.2s;
+  }
+  .btn-primary:hover { opacity: 0.88; }
+  .quiz-results { text-align: center; padding: 40px 20px; }
+  .result-emoji { font-size: 64px; margin-bottom: 16px; }
+  .result-title { font-size: 28px; color: var(--dark); margin-bottom: 6px; }
+  .result-pct { font-size: 52px; font-weight: 900; margin: 10px 0; }
+  .result-dots { display: flex; justify-content: center; gap: 8px; margin: 20px 0 28px; flex-wrap: wrap; }
+  .result-dot { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 13px; font-weight: 700; }
+  .result-msg { font-size: 14px; color: var(--muted); max-width: 400px; margin: 0 auto 28px; }
+
+  .info-banner {
+    border-radius: 12px; padding: 16px 20px; margin-bottom: 24px;
+    display: flex; align-items: flex-start; gap: 14px;
+  }
+  .info-banner-icon { font-size: 24px; flex-shrink: 0; margin-top: 2px; }
+  .info-banner-title { font-size: 14px; font-weight: 700; margin-bottom: 3px; }
+  .info-banner-text { font-size: 13px; line-height: 1.6; }
+
+  @media (max-width: 640px) {
+    .offence-grid, .iam-grid, .duaa-grid { grid-template-columns: 1fr; }
+    .header-title { font-size: 16px; }
+    .tab-btn { padding: 10px 10px; font-size: 11px; }
+  }
+</style>
+</head>
+<body>
+
+<div id="header">
+  <div class="header-top">
+    <div class="header-icon">⚖️</div>
+    <div>
+      <div class="header-label">Interactive Workshop Report</div>
+      <h1 class="header-title">UK Cyber Law, IAM & Cloud Compliance</h1>
+    </div>
+  </div>
+  <div class="tabs">
+    <button class="tab-btn active" onclick="showTab('offences',this)">⚖️ Part 1 — CMA & DPA Offences</button>
+    <button class="tab-btn" onclick="showTab('iam',this)">🔐 Part 2 — IAM Strategies</button>
+    <button class="tab-btn" onclick="showTab('duaa',this)">📜 Part 3 — DUAA 2025</button>
+    <button class="tab-btn" onclick="showTab('cloud',this)">☁️ Part 4 — Cloud Compliance</button>
+    <button class="tab-btn" onclick="showTab('quiz',this)">🧠 Quiz</button>
+  </div>
+</div>
+
+<div id="content">
+
+<!-- ══════════════════════════════════════════ PART 1 — OFFENCES -->
+<div id="panel-offences" class="panel active">
+  <div class="section-header">
+    <div class="section-tag">Criminal Law Framework</div>
+    <h2 class="section-title">CMA 1990 & DPA 2018 Offences</h2>
+    <p class="section-desc">Click any card to expand prosecution elements, sentencing, and key notes.</p>
+  </div>
+
+  <div class="info-banner" style="background:#ede9fe">
+    <div class="info-banner-icon">🏛️</div>
+    <div>
+      <div class="info-banner-title" style="color:#4c1d95">Computer Misuse Act 1990 — Overview</div>
+      <div class="info-banner-text" style="color:#5b21b6">Five offence tiers address unauthorised access through to acts endangering national security. The Serious Crime Act 2015 introduced S.3ZA (life imprisonment) and S.3A (articles for use in offences). Sentences have risen substantially since the original 1990 Act.</div>
+    </div>
+  </div>
+
+  <div class="group-label">
+    <div class="group-label-line"></div>
+    <div class="group-label-text">Computer Misuse Act 1990 — Five Offences</div>
+    <div class="group-label-line"></div>
+  </div>
+
+  <div class="offence-grid" id="cma-grid"></div>
+
+  <div class="group-label">
+    <div class="group-label-line"></div>
+    <div class="group-label-text">Data Protection Act 2018 — Criminal Offences</div>
+    <div class="group-label-line"></div>
+  </div>
+
+  <div class="info-banner" style="background:#fef3c7">
+    <div class="info-banner-icon">⚠️</div>
+    <div>
+      <div class="info-banner-title" style="color:#92400e">DPA 2018 Offences — Financial Penalties Only</div>
+      <div class="info-banner-text" style="color:#b45309">DPA 2018 criminal offences (S.170, S.171, S.173) carry no custodial sentences — courts impose financial penalties only, though amounts are unlimited on conviction on indictment. The ICO also has a civil enforcement tier for organisations (up to £17.5m or 4% global turnover under UK GDPR).</div>
+    </div>
+  </div>
+
+  <div class="offence-grid" id="dpa-grid"></div>
+
+  <div class="group-label">
+    <div class="group-label-line"></div>
+    <div class="group-label-text">ICO Civil Enforcement — Organisational Penalties</div>
+    <div class="group-label-line"></div>
+  </div>
+
+  <div id="ico-grid" style="margin-bottom:12px"></div>
+</div>
+
+<!-- ══════════════════════════════════════════ PART 2 — IAM -->
+<div id="panel-iam" class="panel">
+  <div class="section-header">
+    <div class="section-tag">Identity & Access Management</div>
+    <h2 class="section-title">IAM Strategies & Legal Mapping</h2>
+    <p class="section-desc">Each IAM strategy links to specific CMA and DPA obligations. Click to expand legal mappings and implementation notes.</p>
+  </div>
+
+  <div class="info-banner" style="background:#ecfdf5">
+    <div class="info-banner-icon">🔗</div>
+    <div>
+      <div class="info-banner-title" style="color:#065f46">Why IAM = Legal Compliance</div>
+      <div class="info-banner-text" style="color:#047857">The CMA turns on whether access was "authorised" — IAM controls define and enforce that boundary. The DPA 2018 S.170 offence of unlawfully obtaining personal data is mitigated by IAM limiting who can access what. Both frameworks reward organisations with mature IAM when assessing culpability and proportionality of penalties.</div>
+    </div>
+  </div>
+
+  <div class="iam-grid" id="iam-grid"></div>
+</div>
+
+<!-- ══════════════════════════════════════════ PART 3 — DUAA -->
+<div id="panel-duaa" class="panel">
+  <div class="section-header">
+    <div class="section-tag">Data (Use and Access) Act 2025</div>
+    <h2 class="section-title">DUAA 2025 — Key Changes</h2>
+    <p class="section-desc">Amends but does not replace UK GDPR, DPA 2018, and PECR. Phased implementation June 2025 — June 2026.</p>
+  </div>
+
+  <div class="info-banner" style="background:#ede9fe">
+    <div class="info-banner-icon">📋</div>
+    <div>
+      <div class="info-banner-title" style="color:#4c1d95">What the DUAA Does and Does Not Do</div>
+      <div class="info-banner-text" style="color:#5b21b6">The DUAA amends the existing UK data protection framework — it does not create a standalone new regime. UK GDPR and the DPA 2018 remain in force. Many provisions require secondary legislation or ICO guidance before they take full effect, and as of mid-2025 significant supporting guidance remains outstanding, giving some organisations limited preparation time.</div>
+    </div>
+  </div>
+
+  <div class="group-label">
+    <div class="group-label-line"></div>
+    <div class="group-label-text">Implementation Timeline</div>
+    <div class="group-label-line"></div>
+  </div>
+
+  <div class="timeline" id="duaa-timeline"></div>
+
+  <div class="group-label">
+    <div class="group-label-line"></div>
+    <div class="group-label-text">Key Changes — Click to Expand</div>
+    <div class="group-label-line"></div>
+  </div>
+
+  <div class="duaa-grid" id="duaa-grid"></div>
+</div>
+
+<!-- ══════════════════════════════════════════ PART 4 — CLOUD -->
+<div id="panel-cloud" class="panel">
+  <div class="section-header">
+    <div class="section-tag">Cloud Infrastructure & Data Law</div>
+    <h2 class="section-title">Cloud Compliance Mapping</h2>
+    <p class="section-desc">Design decisions mapped to GDPR, PECR, and CMA obligations.</p>
+  </div>
+
+  <div class="info-banner" style="background:#e0f2fe">
+    <div class="info-banner-icon">☁️</div>
+    <div>
+      <div class="info-banner-title" style="color:#0c4a6e">Cloud Raises Every Legal Issue Simultaneously</div>
+      <div class="info-banner-text" style="color:#075985">Moving to the cloud does not reduce legal obligations — it multiplies them. Data residency triggers GDPR jurisdiction issues. Shared infrastructure raises CMA authorisation questions. Third-party processors require Article 28 contracts. Cookies and analytics remain subject to PECR regardless of cloud architecture.</div>
+    </div>
+  </div>
+
+  <div class="cloud-table-wrap">
+    <table class="cloud-table" id="cloud-table">
+      <thead>
+        <tr>
+          <th style="width:22%">Design Decision</th>
+          <th style="width:15%">Applicable Law(s)</th>
+          <th style="width:35%">Obligation / Risk</th>
+          <th style="width:28%">Practical Requirement</th>
+        </tr>
+      </thead>
+      <tbody id="cloud-tbody"></tbody>
+    </table>
+  </div>
+
+  <div class="group-label">
+    <div class="group-label-line"></div>
+    <div class="group-label-text">Key Cloud Compliance Principles</div>
+    <div class="group-label-line"></div>
+  </div>
+
+  <div class="duaa-grid" id="cloud-principles-grid"></div>
+</div>
+
+<!-- ══════════════════════════════════════════ QUIZ -->
+<div id="panel-quiz" class="panel">
+  <div id="quiz-container"></div>
+</div>
+
+</div>
+
+<script>
+// ═══════════════════════════════ DATA ════════════════════════════════════
+
+const CMA_OFFENCES = [
+  { id:'s1', ref:'CMA S.1', icon:'🔓', color:'#7C3AED',
+    name:'Unauthorised Access to Computer Material',
+    summary:'The entry-level offence. Covers any access to a program or data without authorisation, even if no damage is caused.',
+    sentence:'Up to 2 years imprisonment (12 months if used as a way-in to S.2 or S.3 offence) + unlimited fine',
+    sentenceColor:'#7C3AED', sentenceBg:'#ede9fe',
+    elements:[
+      'D causes a computer to perform any function',
+      'The access secured is unauthorised',
+      'D knows at the time that it is unauthorised'
+    ],
+    notes:'No intent to commit further offences is needed. Accessing another employee\'s emails without permission can constitute a S.1 offence even if nothing is done with the data.',
+    cmaLink:'Actus reus is the access itself. Mens rea is knowledge of lack of authorisation — recklessness is insufficient.',
+    example:'Employee logs into a colleague\'s account without permission to read their messages.'
+  },
+  { id:'s2', ref:'CMA S.2', icon:'🎯', color:'#DC2626',
+    name:'Unauthorised Access with Intent to Commit Further Offences',
+    summary:'S.1 access committed with intent to facilitate a further serious offence (e.g. fraud, blackmail). The further offence need not be committed.',
+    sentence:'Up to 5 years imprisonment + unlimited fine',
+    sentenceColor:'#DC2626', sentenceBg:'#fff1f2',
+    elements:[
+      'Commits a S.1 offence',
+      'At the time intends to commit or facilitate a serious offence',
+      'The intended further offence carries 5+ years imprisonment'
+    ],
+    notes:'The further offence does not need to be completed — the intent at the time of unauthorised access suffices. A conditional intent is sufficient.',
+    cmaLink:'Bridges CMA with other serious criminal statutes. Commonly charged alongside fraud, blackmail, and theft offences.',
+    example:'Hacker accesses a bank\'s system intending to transfer funds fraudulently.'
+  },
+  { id:'s3', ref:'CMA S.3', icon:'💥', color:'#D97706',
+    name:'Unauthorised Acts Causing or Creating Risk of Serious Damage',
+    summary:'Intentional or reckless unauthorised acts that impair computer operation, prevent or hinder access to programs or data, or cause a computer to act contrary to its owner\'s wishes.',
+    sentence:'Up to 10 years imprisonment + unlimited fine (14 years if economic impact or environment at risk)',
+    sentenceColor:'#D97706', sentenceBg:'#fef3c7',
+    elements:[
+      'D does any unauthorised act in relation to a computer',
+      'At the time of the act D knows it is unauthorised',
+      'D intends to impair computer operation / hinder access / alter/erase data, or is reckless as to this'
+    ],
+    notes:'Recklessness is sufficient — does not require intent. Deploying malware, ransomware, or a DDoS attack falls squarely within this section.',
+    cmaLink:'Covers the damage element absent from S.1. Introduced by the Police & Justice Act 2006 to replace the narrower original S.3.',
+    example:'Deploying ransomware that encrypts corporate servers.'
+  },
+  { id:'s3za', ref:'CMA S.3ZA', icon:'☠️', color:'#1e1b4b',
+    name:'Unauthorised Acts Causing Serious Damage (Aggravated)',
+    summary:'Aggravated form of S.3 where the act causes serious damage to human welfare, the environment, the economy, or national security. Introduced by the Serious Crime Act 2015.',
+    sentence:'Up to 14 years imprisonment normally; up to LIFE where human welfare or national security at risk',
+    sentenceColor:'#1e1b4b', sentenceBg:'#e0deff',
+    elements:[
+      'Commits an unauthorised act under S.3',
+      'The act causes or creates significant risk of',
+      'Serious damage to: (a) human welfare, (b) environment, (c) economy, or (d) national security'
+    ],
+    notes:'The most serious CMA offence. Life imprisonment reflects the potential for catastrophic harm from cyber attacks on critical national infrastructure. Prosecutors must prove the causal link between the act and the category of serious damage.',
+    cmaLink:'Specifically targets attacks on critical national infrastructure (CNI) — power grids, water systems, hospitals, financial markets.',
+    example:'Cyber attack disabling a national power grid or hospital systems causing patient deaths.'
+  },
+  { id:'s3a', ref:'CMA S.3A', icon:'🛠️', color:'#0D9488',
+    name:'Making, Supplying or Obtaining Articles for Use in CMA Offences',
+    summary:'Criminalises the creation, adaptation, supply, or possession of tools designed or intended for use in S.1, S.3 or S.3ZA offences. Known as the "hacker tools" offence.',
+    sentence:'Up to 2 years imprisonment + unlimited fine',
+    sentenceColor:'#0D9488', sentenceBg:'#f0fdfa',
+    elements:[
+      'Makes, adapts, supplies, or offers to supply any article',
+      'Intending it to be used to commit or assist a CMA offence, OR',
+      'Believing it is likely to be used to commit or assist a CMA offence'
+    ],
+    notes:'A significant defence exists for dual-use security tools: where the article is made/supplied for legitimate security research or testing and the defendant does not intend it to be used for unauthorised access. Possession for personal use may also be caught.',
+    cmaLink:'Targets the malware economy — selling exploit kits, RATs, DDoS-for-hire services. The "believing it is likely to be used" limb is broad.',
+    example:'Selling a remote access trojan (RAT) on a dark web forum.'
+  }
+];
+
+const DPA_OFFENCES = [
+  { id:'s170', ref:'DPA S.170', icon:'📋', color:'#2563EB',
+    name:'Unlawful Obtaining etc. of Personal Data',
+    summary:'Offence of knowingly or recklessly obtaining, disclosing, procuring the disclosure of, or retaining personal data without the controller\'s consent.',
+    sentence:'Financial penalty only — unlimited fine on indictment; summary conviction up to statutory maximum',
+    sentenceColor:'#2563EB', sentenceBg:'#eff6ff',
+    elements:[
+      'D knowingly or recklessly obtains, discloses, procures disclosure of, or retains personal data',
+      'Without the consent of the controller',
+      'No statutory defence of journalism, research, or public interest applies'
+    ],
+    notes:'No custodial sentence available. Key defences include: (a) acting with reasonable belief of legal authority; (b) acting in the reasonable belief the controller would have consented; (c) public interest justification. Former employees downloading customer databases before leaving are a frequent target.',
+    cmaLink:'Complements CMA S.1 — a system may be accessed without CMA liability if authorised, but S.170 may still apply if personal data is exfiltrated without the controller\'s consent.',
+    example:'Ex-employee downloads customer database before leaving to take to a competitor.'
+  },
+  { id:'s171', ref:'DPA S.171', icon:'🔬', color:'#7C3AED',
+    name:'Re-identification of De-identified Personal Data',
+    summary:'Offence of knowingly or recklessly re-identifying personal data that has been de-identified by a controller, without the controller\'s consent.',
+    sentence:'Financial penalty only — unlimited fine on indictment',
+    sentenceColor:'#7C3AED', sentenceBg:'#ede9fe',
+    elements:[
+      'Personal data has been de-identified by a controller',
+      'D knowingly or recklessly re-identifies that data',
+      'Without the consent of the controller responsible for de-identifying it'
+    ],
+    notes:'Targets "linkage attacks" on anonymised datasets. Important for AI/ML practitioners working with anonymised training data. The same public interest defences apply as for S.170.',
+    cmaLink:'Increasingly relevant as datasets published as "open data" or "anonymised" are shown to be re-identifiable through combination with other datasets.',
+    example:'Researcher re-identifies anonymised NHS patient records by cross-referencing with publicly available datasets.'
+  },
+  { id:'s173', ref:'DPA S.173', icon:'🚧', color:'#D97706',
+    name:'Alteration of Personal Data to Prevent Disclosure',
+    summary:'Offence of altering, defacing, blocking, erasing, destroying or concealing personal data with the intent of preventing its disclosure in response to a SAR or regulatory request.',
+    sentence:'Financial penalty only — unlimited fine on indictment',
+    sentenceColor:'#D97706', sentenceBg:'#fef3c7',
+    elements:[
+      'D has received a SAR, regulatory order, or court order requiring disclosure of personal data',
+      'D alters, defaces, blocks, erases, destroys or conceals the data',
+      'With the intent of preventing disclosure'
+    ],
+    notes:'This is the data equivalent of perverting the course of justice. The intent element is crucial — accidental loss under normal retention policies does not constitute the offence. Also applies to prevention of ICO investigations.',
+    cmaLink:'Often charged alongside obstruction of justice or contempt proceedings where data destruction is discovered during regulatory investigations.',
+    example:'HR manager deletes personnel records after receiving a SAR from a dismissed employee.'
+  }
+];
+
+const ICO_DATA = [
+  { tier:'Standard tier', max:'£17.5 million or 4% global annual turnover (whichever is higher)', applies:'UK GDPR / DPA 2018 serious infringements — lawful basis failures, security breaches, unlawful international transfers', color:'#DC2626', bg:'#fff1f2' },
+  { tier:'Lower tier', max:'£8.7 million or 2% global annual turnover', applies:'Less serious technical infringements — record-keeping failures, failure to notify the ICO of a breach', color:'#D97706', bg:'#fef3c7' },
+  { tier:'PECR fines (post-DUAA)', max:'UK GDPR levels — £17.5m / 4% (raised by DUAA 2025)', applies:'Unlawful direct marketing, cookie consent failures, unsolicited communications', color:'#7C3AED', bg:'#ede9fe' }
+];
+
+const IAM_STRATEGIES = [
+  { id:'rbac', icon:'🏷️', color:'#4F46E5',
+    name:'Role-Based Access Control (RBAC)',
+    summary:'Access rights are assigned to roles rather than individuals. Users inherit permissions through their role assignment. The principle of least privilege limits each role to only what is needed.',
+    howItWorks:'Roles are defined based on job function (e.g. "payroll admin", "read-only analyst"). Users are assigned to roles. Permissions attach to roles, not users. When a user\'s role changes, permissions update automatically.',
+    cmaLink:'RBAC defines the boundary of "authorisation" under CMA S.1. An employee who accesses data outside their role — even using valid credentials — may commit a S.1 offence if the role definition makes clear that access is not permitted.',
+    dpaLink:'Limits who can access personal data, reducing the pool of persons who could commit DPA S.170 offences. Supports UK GDPR Article 25 (data protection by design) and Article 32 (appropriate technical measures).',
+    tools:'Active Directory / Entra ID, AWS IAM, Azure RBAC, Okta, SailPoint'
+  },
+  { id:'mfa', icon:'📱', color:'#0D9488',
+    name:'Multi-Factor Authentication (MFA)',
+    summary:'Requires two or more verification factors: something you know (password), something you have (token/phone), something you are (biometric). Dramatically reduces account takeover risk.',
+    howItWorks:'After entering a password, the user must provide a second factor — typically a TOTP code, push notification, FIDO2 hardware key, or biometric. Adaptive MFA can step up requirements based on risk signals (location, device, time).',
+    cmaLink:'MFA strengthens the "authorisation" barrier under CMA. An attacker who bypasses MFA through SIM-swapping or phishing still commits an unauthorised access offence — the intent to access without legitimate authorisation is present.',
+    dpaLink:'UK GDPR Article 32 requires "appropriate technical and organisational measures". ICO guidance identifies MFA as a baseline measure for systems containing personal data. Absence of MFA is treated as an aggravating factor in breach penalty decisions.',
+    tools:'Microsoft Authenticator, Google Authenticator, Duo, YubiKey, FIDO2 platform authenticators'
+  },
+  { id:'pam', icon:'🔑', color:'#7C3AED',
+    name:'Privileged Access Management (PAM)',
+    summary:'Specialised controls for high-privilege accounts (domain admins, DBA credentials, root accounts). These accounts can cause the most damage if compromised and are the primary target of attackers.',
+    howItWorks:'PAM vaults privileged credentials — users check out credentials for a session and they are automatically rotated after. Just-in-time (JIT) access means privilege is granted only for the duration of a specific task. All privileged sessions are recorded.',
+    cmaLink:'PAM session recording creates contemporaneous evidence of authorised vs. unauthorised use of admin accounts. In S.3 prosecutions, session logs prove intent. PAM\'s JIT model limits the window during which a compromised credential enables damage.',
+    dpaLink:'Privileged accounts are the highest-risk vector for S.170 exfiltration. PAM creates an audit trail demonstrating that the controller exercised appropriate technical measures — relevant to both ICO investigation and Article 82 civil claims.',
+    tools:'CyberArk, BeyondTrust, Thycotic, HashiCorp Vault, Azure PIM'
+  },
+  { id:'jml', icon:'👤', color:'#2563EB',
+    name:'Joiners, Movers & Leavers (JML) Process',
+    summary:'Structured lifecycle management of user accounts from onboarding (joiner) through role changes (mover) to departure (leaver). Timely deprovisioning is the single highest-impact preventive control for insider threat.',
+    howItWorks:'HR systems trigger automated provisioning on hire and deprovisioning on departure. Movers trigger access reviews. Dormant accounts are detected and disabled. Regular access certification campaigns review whether role assignments remain appropriate.',
+    cmaLink:'Under CMA S.1, a former employee who uses their old credentials to access systems they previously used is committing an unauthorised access offence — their authorisation terminated with employment. However, the organisation\'s failure to deprovision does not negate the offence.',
+    dpaLink:'S.170 prosecutions frequently involve departing employees who download personal data before their access is revoked. Timely deprovisioning is an essential technical measure. Access certification supports compliance with the data minimisation and storage limitation principles.',
+    tools:'Workday / ServiceNow HR integration, Microsoft Identity Governance, SailPoint, Saviynt'
+  },
+  { id:'ueba', icon:'📊', color:'#DC2626',
+    name:'User & Entity Behaviour Analytics (UEBA)',
+    summary:'Machine learning-driven detection of anomalous user behaviour — bulk downloads, after-hours access, unusual data movements — that may indicate insider threat, compromised accounts, or data exfiltration.',
+    howItWorks:'UEBA builds a baseline of normal behaviour per user and entity. Deviations (e.g. an analyst downloading 10,000 records at midnight) generate risk scores and alerts. Integrates with SIEM for investigation workflow.',
+    cmaLink:'UEBA evidence is frequently adduced in CMA prosecutions to prove intent and the unauthorised nature of access. Logs showing anomalous behaviour at the time of the alleged offence establish the prosecution\'s case on both actus reus (access) and mens rea (knowledge of lack of authorisation).',
+    dpaLink:'Under UK GDPR Article 32, organisations must implement processes to regularly test and evaluate the effectiveness of technical measures. UEBA is a monitoring control that demonstrates this. ICO breach investigations increasingly look for evidence of monitoring capability.',
+    tools:'Microsoft Sentinel, Splunk UBA, Varonis, Securonix, Exabeam'
+  }
+];
+
+const DUAA_TIMELINE = [
+  { date:'June 2025', title:'Royal Assent', color:'#4F46E5', text:'Data (Use and Access) Act 2025 receives Royal Assent. Core framework provisions take effect. PECR fine levels raised to UK GDPR equivalents from this date.' },
+  { date:'Late 2025', title:'Recognised Legitimate Interests', color:'#0D9488', text:'New Recognised Legitimate Interests (RLI) lawful basis available. List published in secondary legislation. ICO guidance expected. Initial list expected to include fraud prevention, network security, and internal admin.' },
+  { date:'Early 2026', title:'ADM & AI rules', color:'#7C3AED', text:'Simplified automated decision-making (ADM) rules come into force. New framework designed to support AI deployment by relaxing solely-automated decision prohibition in commercial contexts while maintaining meaningful human oversight rights.' },
+  { date:'June 2026', title:'Full implementation', color:'#D97706', text:'All DUAA provisions phased in. Children\'s Code formally codified in primary legislation. Information Commission (replacing ICO) fully operational under new governance structure. ICO guidance corpus expected to be substantially complete.' }
+];
+
+const DUAA_CHANGES = [
+  { id:'rli', icon:'✅', color:'#0D9488',
+    name:'Recognised Legitimate Interests (RLI)',
+    status:'In force June 2025', statusColor:'#0D9488', statusBg:'#f0fdfa',
+    desc:'A new category of lawful basis under UK GDPR that removes the need for a balancing test for certain specified activities. Unlike the existing "legitimate interests" basis, RLI processing is pre-approved by Parliament via secondary legislation.',
+    detail:'Expected initial list: fraud prevention, network and information security, internal admin, and emergency response. Significant for organisations that currently rely on uncertain LIA (Legitimate Interests Assessment) for core operational activities. Does NOT remove the need to inform data subjects or respect their rights — only removes the balancing test. ICO guidance on the boundary between RLI and standard LI is outstanding.'
+  },
+  { id:'adm', icon:'🤖', color:'#7C3AED',
+    name:'Simplified ADM / AI Rules',
+    status:'In force early 2026', statusColor:'#7C3AED', statusBg:'#ede9fe',
+    desc:'Reforms UK GDPR Article 22 (solely automated decision-making). The binary prohibition on solely automated decisions with legal/significant effects is replaced with a more nuanced framework supporting AI deployment.',
+    detail:'Key changes: (1) "Solely automated" threshold clarified — a human in the loop does not automatically disapply the provision if their review is not meaningful. (2) New right to contest automated decisions with broader scope than current "right to explanation". (3) Separate rules for public authorities processing using ADM. Designed to make the UK more attractive for AI product development while maintaining meaningful safeguards.'
+  },
+  { id:'pecr', icon:'📧', color:'#DC2626',
+    name:'PECR Fine Levels Raised',
+    status:'In force June 2025', statusColor:'#DC2626', statusBg:'#fff1f2',
+    desc:'PECR (Privacy and Electronic Communications Regulations 2003) fines raised from the previous £500,000 maximum to full UK GDPR levels — up to £17.5m or 4% of global annual turnover.',
+    detail:'This is the most immediate practical change for organisations using email/SMS marketing, analytics cookies, and tracking technologies. The ICO has signalled increased enforcement activity against cookie consent failures. PECR still requires separate consent analysis under ePrivacy rules — UK GDPR lawful basis alone is insufficient for cookie placement.'
+  },
+  { id:'children', icon:'🧒', color:'#2563EB',
+    name:'Children\'s Code Codified',
+    status:'In force June 2026', statusColor:'#2563EB', statusBg:'#eff6ff',
+    desc:'The Age Appropriate Design Code (Children\'s Code) is formally codified in primary legislation under the DUAA, giving it increased legal weight and permanence.',
+    detail:'Key obligations under the codified Code: (1) Default high privacy settings for services likely accessed by under-18s. (2) No profiling of children by default. (3) No use of nudge techniques to encourage children to share more data or weaken privacy settings. (4) Geolocation disabled by default. (5) No sharing of personal data as a condition of accessing a service unless strictly necessary. Operators of online services should review their age verification and default settings.'
+  },
+  { id:'dvs', icon:'🆔', color:'#D97706',
+    name:'Digital Verification Services (DVS)',
+    status:'In force late 2025', statusColor:'#D97706', statusBg:'#fef3c7',
+    desc:'Creates a new Trust Framework for Digital Verification Services — certified providers of identity verification that can be used across sectors (employment checks, right to rent, financial services KYC).',
+    detail:'The DVS register allows organisations to rely on certified third-party identity verification. Key benefit: organisations using a registered DVS can rely on the verification without needing to re-verify the underlying documentation. Reduces friction for onboarding while maintaining identity assurance. The ICO will accredit DVS providers against published standards.'
+  },
+  { id:'guidance', icon:'⏳', color:'#6b7280',
+    name:'Outstanding ICO Guidance',
+    status:'Expected 2025–2026', statusColor:'#6b7280', statusBg:'#f9fafb',
+    desc:'A significant body of ICO guidance required to give practical effect to DUAA changes has not yet been published. This leaves organisations with genuine uncertainty on several key provisions.',
+    detail:'Key guidance still outstanding as of mid-2025: (1) Detailed RLI list and boundary with standard LI. (2) ADM/AI framework operational guidance. (3) DVS accreditation standards. (4) Updated direct marketing guidance under elevated PECR fines. Organisations should monitor the ICO website and consider building flexible compliance frameworks that can accommodate guidance when published rather than committing to rigid interpretations.'
+  }
+];
+
+const CLOUD_ROWS = [
+  { decision:'Data residency (EU vs. UK vs. US storage)', laws:['UK GDPR','DPA 2018'], risk:'Post-Brexit, UK → EEA transfers use UK Adequacy Regulations. UK → US requires SCCs or binding corporate rules. No adequacy decision for US. Data stored in US is accessible under US law (CLOUD Act).', requirement:'Document transfer mechanism in Article 30 register. Implement SCCs or IDTA for UK→third country transfers. Consider data sovereignty requirements before selecting cloud region.' },
+  { decision:'Appointing a cloud provider as data processor', laws:['UK GDPR Art.28'], risk:'Failure to have a compliant Article 28 processor agreement means the controller is in breach even if the processor\'s practices are adequate. The controller remains liable for processor breaches.', requirement:'Mandatory written processor agreement covering: subject matter, duration, nature, purpose, types of data, controller instructions, processor obligations (security, sub-processors, audit rights, deletion on termination).' },
+  { decision:'Sub-processors (CDN, logging, analytics tools)', laws:['UK GDPR Art.28(2)'], risk:'Every sub-processor the cloud provider uses that processes personal data must be notified to and authorised by the controller. Surprise additions can constitute a breach.', requirement:'Require CSP to maintain and update a list of sub-processors. Obtain prior specific or general written authorisation. Right to object must be contractually preserved.' },
+  { decision:'Penetration testing & security assessments', laws:['CMA S.1','CMA S.3'], risk:'Pen testing a cloud environment you do not own, or testing beyond your contracted scope, may constitute an S.1 offence even if done in good faith.', requirement:'Obtain written authorisation from the CSP explicitly scoping the test. Check CSP\'s own pen testing policy (AWS, Azure, GCP all require notification). Scope agreement must cover IP ranges, test types, and timeframes.' },
+  { decision:'Cookies & analytics (GA, Hotjar, etc.)', laws:['PECR','UK GDPR'], risk:'PECR requires prior informed consent for all non-strictly-necessary cookies regardless of cloud architecture. DUAA has raised PECR fines to £17.5m / 4% turnover.', requirement:'Deploy a compliant Consent Management Platform (CMP). Analytics cookies require opt-in. Consent must be freely given, specific, informed, and unambiguous. Pre-ticked boxes and cookie walls are non-compliant.' },
+  { decision:'Encryption key management', laws:['UK GDPR Art.32','ISO 27001','ISO 27017'], risk:'If the CSP holds both encrypted data and encryption keys, a breach of the CSP exposes plaintext data. Regulatory fines under Article 32 are reduced where appropriate encryption was in place.', requirement:'Customer-managed encryption keys (CMEK) wherever feasible. Key management service separate from storage service. Document encryption at rest and in transit. ISO 27017 CLD.10 requires CSC not to permit CSP to manage keys when own KMS is deployed.' },
+  { decision:'Logging & SIEM', laws:['UK GDPR Art.32','NIS2 (preparedness)','CMA evidence'], risk:'Absence of logging prevents both detection of and evidence-gathering for security incidents, including CMA offences. ICO treats absence of monitoring capability as an aggravating factor.', requirement:'Enable CSP-native audit logging (CloudTrail, Azure Monitor, GCP Audit Logs). Retain logs for minimum 12 months (longer for regulated sectors). Feed into SIEM. Logs are evidence in both ICO investigations and CMA prosecutions.' },
+  { decision:'Incident response & breach notification', laws:['UK GDPR Art.33-34','DPA 2018 S.108'], risk:'Failure to notify the ICO within 72 hours of becoming aware of a personal data breach is a separate infringement from the breach itself. Notification of affected individuals required where high risk.', requirement:'Document incident response procedure referencing cloud environments. Identify who in the CSP relationship reports to the ICO — the controller is responsible, not the processor. Test the notification procedure. Cloud-specific tabletop exercise recommended annually.' }
+];
+
+const CLOUD_PRINCIPLES = [
+  { id:'p1', icon:'🏛️', color:'#4F46E5',
+    name:'Controller vs. Processor Distinction',
+    desc:'In a cloud relationship, the organisation deploying the service is typically the controller and the CSP is the processor. The controller always bears primary legal responsibility under UK GDPR — processor status does not reduce the controller\'s exposure.',
+    detail:'Where a CSP also collects data for its own purposes (e.g. service improvement, aggregated analytics), it acts as a separate controller for those purposes. Joint controller arrangements under Article 26 should be considered and documented for shared processing activities.'
+  },
+  { id:'p2', icon:'🔐', color:'#0D9488',
+    name:'Security by Design (Art. 25 & 32)',
+    desc:'Cloud architecture decisions must embed privacy and security from the design stage, not retrofit. Default settings must afford the highest practicable level of protection.',
+    detail:'Article 25: data minimisation, pseudonymisation, and access restrictions must be defaults. Article 32: technical and organisational measures proportionate to risk. Both articles apply to the architecture of cloud deployments — choosing a public bucket is an Article 32 risk decision.'
+  },
+  { id:'p3', icon:'⚖️', color:'#DC2626',
+    name:'Compliance Cannot Be Outsourced',
+    desc:'ISO 27017 and UK GDPR both make clear: using a compliant CSP does not transfer the organisation\'s legal obligations. Certifications (ISO 27001, SOC 2, Cyber Essentials Plus) are evidence of controls, not legal indemnities.',
+    detail:'Controller liability under Article 82 UK GDPR includes compensation to data subjects for damage caused by processing in breach of the regulation. A certified processor\'s breach does not extinguish the controller\'s liability to the data subject — only the controller\'s right of recourse against the processor.'
+  },
+  { id:'p4', icon:'🌍', color:'#7C3AED',
+    name:'Jurisdiction & Data Sovereignty',
+    desc:'Data stored in a cloud region is subject to the laws of that jurisdiction. US cloud regions are subject to the CLOUD Act. EU regions are subject to GDPR and national law. Multi-region architectures may simultaneously trigger multiple jurisdictions.',
+    detail:'Consider: (1) Where data is stored at rest. (2) Where data is processed (including replication and backup regions). (3) Where the CSP\'s staff who can access the data are located. (4) What legal process the CSP would honour. All relevant to UK GDPR international transfer rules and data sovereignty requirements in regulated sectors.'
+  }
+];
+
+const QUIZ = [
+  { q:'Under the CMA 1990, what is the maximum sentence for a S.3ZA offence where the act endangers human welfare or national security?',
+    opts:['10 years imprisonment','14 years imprisonment','Life imprisonment','5 years imprisonment'], ans:2,
+    exp:'S.3ZA (inserted by the Serious Crime Act 2015) carries up to 14 years for serious damage, but where the act causes or creates a significant risk of serious damage to human welfare or national security, the maximum is life imprisonment.' },
+  { q:'An employee leaves the company but uses their still-active credentials two weeks later to download the customer database. Which offences are potentially committed?',
+    opts:['DPA S.170 only — no CMA offence as they once had legitimate access','CMA S.1 and DPA S.170','CMA S.3 and DPA S.171','No offence — they had previously authorised access'], ans:1,
+    exp:'CMA S.1 applies because the employee\'s authorisation terminated with their employment — any subsequent access is unauthorised. DPA S.170 applies because they obtained personal data without the controller\'s consent. Both offences are commonly charged together in this scenario.' },
+  { q:'A security researcher creates a port scanner for their own penetration testing work and sells a copy to a colleague. Under CMA S.3A, which element is key to determining criminal liability?',
+    opts:['Whether the tool is technically sophisticated','Whether the researcher holds a CREST or CEH certification','Whether the researcher believed the tool was likely to be used for unauthorised access','Whether the sale price was commercial or nominal'], ans:2,
+    exp:'CMA S.3A requires either intent that the article be used for a CMA offence, or belief that it is likely to be so used. Dual-use security tools are not automatically criminal — the prosecution must prove the requisite belief or intent. Legitimate penetration testing defences exist.' },
+  { q:'The DUAA 2025 raises PECR fines to which new maximum?',
+    opts:['£500,000 (unchanged)','£1 million','£17.5 million or 4% of global annual turnover','£10 million or 2% of global annual turnover'], ans:2,
+    exp:'The DUAA 2025 raises PECR fines from the previous £500,000 maximum to full UK GDPR levels — £17.5 million or 4% of global annual turnover, whichever is higher. This took effect from June 2025.' },
+  { q:'An organisation wishes to conduct a penetration test of its systems hosted on AWS. Which legal issue must be addressed before testing?',
+    opts:['File a disclosure report with the NCSC','Obtain written authorisation from AWS scoped to the test','Register the test with the ICO under Article 35 DPIA requirements','Notify the FCA if the organisation is financial services regulated'], ans:1,
+    exp:'Penetration testing cloud infrastructure without the CSP\'s authorisation may constitute an unauthorised access offence under CMA S.1. AWS, Azure, and GCP all require customers to notify and obtain authorisation before conducting penetration tests. The written scope must cover IP ranges, test types, and timeframes.' },
+  { q:'Under the DUAA 2025, what does the new Recognised Legitimate Interests (RLI) lawful basis remove?',
+    opts:['The need to inform data subjects of processing','Data subject rights to object and erasure','The need to conduct a Legitimate Interests Assessment balancing test for specified activities','The requirement for a lawful basis altogether for low-risk processing'], ans:2,
+    exp:'RLI removes the need for a balancing test (Legitimate Interests Assessment) for activities specified in secondary legislation. It does not remove the need to inform data subjects, respect their rights, or provide transparency. It is a streamlined form of legitimate interests for pre-approved categories.' },
+  { q:'A UK company using a US-based cloud provider stores personal data of UK residents in a US data centre. What UK GDPR mechanism is required?',
+    opts:['No mechanism needed — UK has adequacy decisions for all major cloud providers','An Article 28 processor agreement alone is sufficient','A transfer mechanism such as International Data Transfer Addendum (IDTA) or SCCs','Explicit consent from each data subject for the US transfer'], ans:2,
+    exp:'The US does not currently have a UK adequacy decision. UK → US transfers therefore require a transfer mechanism. The standard mechanism is the UK International Data Transfer Addendum (IDTA) to the EU SCCs, or an approved IBCR. An Article 28 agreement is required regardless but does not constitute a transfer mechanism.' },
+  { q:'Under DPA 2018 S.173, what is the key mental element that distinguishes criminal destruction of personal data from legitimate document retention/deletion?',
+    opts:['Whether the deletion was done by automated process or manually','Whether the data was personal data or sensitive personal data','Intent to prevent disclosure in response to a SAR or regulatory request','Whether the controller had a documented retention policy'], ans:2,
+    exp:'S.173 requires the intent to prevent disclosure — it does not criminalise routine data retention or deletion under normal policies. The offence is constituted where data is destroyed specifically to frustrate a Subject Access Request, ICO investigation, or court order. Accidental loss or deletion under pre-existing schedules does not meet this threshold.' },
+  { q:'Which IAM control most directly defines the boundary of "authorisation" for CMA S.1 purposes?',
+    opts:['Multi-Factor Authentication','User and Entity Behaviour Analytics (UEBA)','Role-Based Access Control (RBAC)','Privileged Access Management (PAM) session recording'], ans:2,
+    exp:'RBAC defines what each user is authorised to access based on their role. When a user accesses data or systems outside their RBAC permissions — even with valid credentials — they are acting beyond their authorisation. RBAC policies and audit logs are used in CMA S.1 prosecutions to establish the scope of authorised access.' },
+  { q:'Under UK GDPR Article 28, which of the following must a processor agreement with a cloud service provider include?',
+    opts:['A fixed term of 24 months for the processing relationship','The controller\'s right to audit the processor and require deletion of data on termination','A warranty that the processor holds ISO 27001 certification','The names of all natural persons who will access the data'] , ans:1,
+    exp:'Article 28(3) requires processor agreements to include specific obligations including: the right to audit, instructions on deletion or return of data on termination, confidentiality obligations on processing staff, security obligations, and restrictions on engaging sub-processors. ISO certification is good evidence of Article 32 compliance but is not a legal requirement.' }
+];
+
+// ════════════════════════ STATE ════════════════════════
+let openOffence = null;
+let openIAM = null;
+let openDUAA = null;
+let openCloud = null;
+let quizState = { current:0, score:0, answered:false, selected:null, answers:[], finished:false };
+
+// ════════════════════════ TABS ════════════════════════
+function showTab(name, btn) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('panel-' + name).classList.add('active');
+  btn.classList.add('active');
+}
+
+// ════════════════════════ PART 1 ════════════════════
+function renderOffences() {
+  const cmaGrid = document.getElementById('cma-grid');
+  cmaGrid.innerHTML = CMA_OFFENCES.map(o => `
+    <div class="offence-card ${openOffence===o.id?'open':''}" id="ocard-${o.id}"
+      onclick="toggleOffence('${o.id}')"
+      style="--card-color:${o.color};border-color:${openOffence===o.id?o.color:'#e0deff'}">
+      <div class="offence-head">
+        <span class="offence-icon">${o.icon}</span>
+        <div>
+          <div class="offence-ref" style="color:${o.color}">${o.ref}</div>
+          <div class="offence-name">${o.name}</div>
+        </div>
+      </div>
+      <div class="offence-summary">${o.summary}</div>
+      <div class="offence-detail">
+        <span class="sentence-badge" style="color:${o.sentenceColor};background:${o.sentenceBg}">⚖️ ${o.sentence}</span>
+        <div class="detail-section">
+          <div class="detail-label" style="color:${o.color}">Elements prosecution must prove</div>
+          ${o.elements.map(e=>`<div class="detail-item"><span style="color:${o.color};flex-shrink:0">▶</span>${e}</div>`).join('')}
+        </div>
+        <div class="plain-box" style="background:${o.sentenceBg}">
+          <div class="detail-label" style="color:${o.sentenceColor}">Key legal note</div>
+          <div class="plain-text">${o.cmaLink}</div>
+        </div>
+        <div class="detail-section">
+          <div class="detail-label" style="color:#94a3b8">Example</div>
+          <div class="plain-text" style="font-style:italic;color:#6b7280">${o.example}</div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+
+  const dpaGrid = document.getElementById('dpa-grid');
+  dpaGrid.innerHTML = DPA_OFFENCES.map(o => `
+    <div class="offence-card ${openOffence===o.id?'open':''}" id="ocard-${o.id}"
+      onclick="toggleOffence('${o.id}')"
+      style="--card-color:${o.color};border-color:${openOffence===o.id?o.color:'#e0deff'}">
+      <div class="offence-head">
+        <span class="offence-icon">${o.icon}</span>
+        <div>
+          <div class="offence-ref" style="color:${o.color}">${o.ref}</div>
+          <div class="offence-name">${o.name}</div>
+        </div>
+      </div>
+      <div class="offence-summary">${o.summary}</div>
+      <div class="offence-detail">
+        <span class="sentence-badge" style="color:${o.sentenceColor};background:${o.sentenceBg}">💰 ${o.sentence}</span>
+        <div class="detail-section">
+          <div class="detail-label" style="color:${o.color}">Elements prosecution must prove</div>
+          ${o.elements.map(e=>`<div class="detail-item"><span style="color:${o.color};flex-shrink:0">▶</span>${e}</div>`).join('')}
+        </div>
+        <div class="plain-box" style="background:${o.sentenceBg}">
+          <div class="detail-label" style="color:${o.sentenceColor}">Interaction with CMA</div>
+          <div class="plain-text">${o.cmaLink}</div>
+        </div>
+        <div class="detail-section">
+          <div class="detail-label" style="color:#94a3b8">Practical example</div>
+          <div class="plain-text" style="font-style:italic;color:#6b7280">${o.example}</div>
+        </div>
+        <div class="detail-section">
+          <div class="detail-label" style="color:#94a3b8">Additional notes</div>
+          <div class="plain-text">${o.notes}</div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+
+  const icoGrid = document.getElementById('ico-grid');
+  icoGrid.innerHTML = `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px">` +
+    ICO_DATA.map(t => `
+      <div style="background:${t.bg};border:2px solid ${t.color}33;border-radius:12px;padding:16px">
+        <div style="font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:${t.color};margin-bottom:6px">${t.tier}</div>
+        <div style="font-size:16px;font-weight:700;color:${t.color};margin-bottom:8px">${t.max}</div>
+        <div style="font-size:13px;color:#4b5563;line-height:1.5">${t.applies}</div>
+      </div>
+    `).join('') + `</div>`;
+}
+
+function toggleOffence(id) {
+  openOffence = openOffence === id ? null : id;
+  renderOffences();
+}
+
+// ════════════════════════ PART 2 ════════════════════
+function renderIAM() {
+  const grid = document.getElementById('iam-grid');
+  grid.innerHTML = IAM_STRATEGIES.map(s => `
+    <div class="iam-card ${openIAM===s.id?'open':''}" id="iam-${s.id}"
+      onclick="toggleIAM('${s.id}')"
+      style="--card-color:${s.color};border-color:${openIAM===s.id?s.color:'#e0deff'}">
+      <div class="iam-head">
+        <span class="offence-icon">${s.icon}</span>
+        <div>
+          <div class="offence-ref" style="color:${s.color}">IAM Control</div>
+          <div class="iam-name">${s.name}</div>
+        </div>
+      </div>
+      <div class="iam-summary">${s.summary}</div>
+      <div class="iam-detail">
+        <div class="detail-section">
+          <div class="detail-label" style="color:${s.color}">How it works</div>
+          <div class="plain-text">${s.howItWorks}</div>
+        </div>
+        <div class="detail-section" style="margin-top:12px">
+          <div class="detail-label" style="color:#DC2626">CMA linkage</div>
+          <div class="plain-box" style="background:#fff1f2;border-left:3px solid #DC2626;border-radius:0 6px 6px 0">
+            <div class="plain-text">${s.cmaLink}</div>
+          </div>
+        </div>
+        <div class="detail-section" style="margin-top:8px">
+          <div class="detail-label" style="color:#2563EB">DPA / UK GDPR linkage</div>
+          <div class="plain-box" style="background:#eff6ff;border-left:3px solid #2563EB;border-radius:0 6px 6px 0">
+            <div class="plain-text">${s.dpaLink}</div>
+          </div>
+        </div>
+        <div style="margin-top:10px">
+          <div class="detail-label" style="color:#94a3b8">Common tools</div>
+          <div style="font-size:12px;color:#6b7280;font-style:italic">${s.tools}</div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function toggleIAM(id) {
+  openIAM = openIAM === id ? null : id;
+  renderIAM();
+}
+
+// ════════════════════════ PART 3 ════════════════════
+function renderDUAA() {
+  const tl = document.getElementById('duaa-timeline');
+  tl.innerHTML = DUAA_TIMELINE.map(t => `
+    <div class="timeline-item">
+      <div class="timeline-dot" style="background:${t.color}"></div>
+      <div class="timeline-date" style="color:${t.color}">${t.date}</div>
+      <div class="timeline-title">${t.title}</div>
+      <div class="timeline-text">${t.text}</div>
+    </div>
+  `).join('');
+
+  const grid = document.getElementById('duaa-grid');
+  grid.innerHTML = DUAA_CHANGES.map(d => `
+    <div class="duaa-card ${openDUAA===d.id?'open':''}" id="duaa-${d.id}"
+      onclick="toggleDUAA('${d.id}')"
+      style="--card-color:${d.color};border-color:${openDUAA===d.id?d.color:'#e0deff'}">
+      <div class="duaa-icon">${d.icon}</div>
+      <span class="status-pill" style="color:${d.statusColor};background:${d.statusBg}">${d.status}</span>
+      <div class="duaa-name">${d.name}</div>
+      <div class="duaa-desc">${d.desc}</div>
+      <div class="duaa-detail">${d.detail}</div>
+    </div>
+  `).join('');
+}
+
+function toggleDUAA(id) {
+  openDUAA = openDUAA === id ? null : id;
+  renderDUAA();
+}
+
+// ════════════════════════ PART 4 ════════════════════
+function renderCloud() {
+  const lawColors = { 'UK GDPR':'#2563EB', 'DPA 2018':'#7C3AED', 'CMA S.1':'#DC2626', 'CMA S.3':'#D97706', 'PECR':'#0D9488', 'UK GDPR Art.28':'#2563EB', 'UK GDPR Art.28(2)':'#2563EB', 'UK GDPR Art.32':'#4F46E5', 'UK GDPR Art.33-34':'#4F46E5', 'DPA 2018 S.108':'#7C3AED', 'NIS2 (preparedness)':'#16A34A', 'ISO 27001':'#64748b', 'ISO 27017':'#64748b' };
+  const lawBgs = { 'UK GDPR':'#eff6ff', 'DPA 2018':'#ede9fe', 'CMA S.1':'#fff1f2', 'CMA S.3':'#fef3c7', 'PECR':'#f0fdfa', 'UK GDPR Art.28':'#eff6ff', 'UK GDPR Art.28(2)':'#eff6ff', 'UK GDPR Art.32':'#ede9fe', 'UK GDPR Art.33-34':'#ede9fe', 'DPA 2018 S.108':'#ede9fe', 'NIS2 (preparedness)':'#f0fdf4', 'ISO 27001':'#f1f5f9', 'ISO 27017':'#f1f5f9' };
+
+  const tbody = document.getElementById('cloud-tbody');
+  tbody.innerHTML = CLOUD_ROWS.map(r => `
+    <tr>
+      <td style="font-weight:700;color:#1e1b4b;font-size:13px">${r.decision}</td>
+      <td>${r.laws.map(l=>`<span class="law-tag" style="color:${lawColors[l]||'#4F46E5'};background:${lawBgs[l]||'#ede9fe'}">${l}</span>`).join('')}</td>
+      <td style="color:#374151">${r.risk}</td>
+      <td style="color:#374151">${r.requirement}</td>
+    </tr>
+  `).join('');
+
+  const pg = document.getElementById('cloud-principles-grid');
+  pg.innerHTML = CLOUD_PRINCIPLES.map(p => `
+    <div class="duaa-card ${openCloud===p.id?'open':''}" id="cp-${p.id}"
+      onclick="toggleCloud('${p.id}')"
+      style="--card-color:${p.color};border-color:${openCloud===p.id?p.color:'#e0deff'}">
+      <div class="duaa-icon">${p.icon}</div>
+      <div class="duaa-name">${p.name}</div>
+      <div class="duaa-desc">${p.desc}</div>
+      <div class="duaa-detail">${p.detail}</div>
+    </div>
+  `).join('');
+}
+
+function toggleCloud(id) {
+  openCloud = openCloud === id ? null : id;
+  renderCloud();
+}
+
+// ════════════════════════ QUIZ ════════════════════════
+function renderQuiz() {
+  const container = document.getElementById('quiz-container');
+  if (quizState.finished) { renderResults(container); return; }
+  const q = QUIZ[quizState.current];
+  const pct = (quizState.current / QUIZ.length) * 100;
+  container.innerHTML = `
+    <div class="section-header">
+      <div class="section-tag">Test Your Knowledge</div>
+      <h2 class="section-title">UK Cyber Law & Compliance Quiz</h2>
+      <p class="section-desc">10 questions covering CMA offences, DPA 2018, IAM strategies, DUAA 2025, and cloud compliance.</p>
+    </div>
+    <div class="quiz-wrap">
+      <div class="quiz-meta">
+        <span>Question ${quizState.current + 1} of ${QUIZ.length}</span>
+        <span class="quiz-score-label">Score: ${quizState.score}</span>
+      </div>
+      <div class="quiz-progress-bar-bg">
+        <div class="quiz-progress-bar" style="width:${pct}%"></div>
+      </div>
+      <div class="quiz-question-box">
+        <div class="quiz-q-tag">UK Cyber Law Knowledge Check</div>
+        <div class="quiz-q-text">${q.q}</div>
+      </div>
+      <div class="quiz-options">
+        ${q.opts.map((opt,i) => `
+          <button class="quiz-opt" id="opt-${i}" onclick="selectOpt(${i})" ${quizState.answered?'disabled':''}>
+            <strong>${String.fromCharCode(65+i)}.</strong> ${opt}
+            ${quizState.answered && i===q.ans ? ' <span style="float:right">✓</span>' : ''}
+            ${quizState.answered && i===quizState.selected && i!==q.ans ? ' <span style="float:right">✗</span>' : ''}
+          </button>
+        `).join('')}
+      </div>
+      ${quizState.answered ? `
+        <div class="quiz-explanation ${quizState.selected===q.ans?'good':'bad'}">
+          <div class="quiz-exp-label">${quizState.selected===q.ans?'✓ Correct!':'✗ Not quite'}</div>
+          ${q.exp}
+        </div>
+        <button class="btn-primary" onclick="nextQuestion()">
+          ${quizState.current+1>=QUIZ.length ? 'See Results' : 'Next Question →'}
+        </button>
+      ` : ''}
+    </div>
+  `;
+  if (quizState.answered) {
+    q.opts.forEach((_,i) => {
+      const btn = document.getElementById('opt-'+i);
+      if (i === q.ans) btn.classList.add('correct');
+      else if (i === quizState.selected) btn.classList.add('wrong');
+    });
+  }
+}
+
+function selectOpt(i) {
+  if (quizState.answered) return;
+  quizState.selected = i;
+  quizState.answered = true;
+  if (i === QUIZ[quizState.current].ans) quizState.score++;
+  quizState.answers.push({ correct: i===QUIZ[quizState.current].ans, selected:i });
+  renderQuiz();
+}
+
+function nextQuestion() {
+  if (quizState.current + 1 >= QUIZ.length) { quizState.finished = true; renderQuiz(); return; }
+  quizState.current++;
+  quizState.answered = false;
+  quizState.selected = null;
+  renderQuiz();
+}
+
+function renderResults(container) {
+  const pct = Math.round((quizState.score / QUIZ.length) * 100);
+  const grade = pct>=90?{label:'Legal Expert',color:'#0D9488',icon:'🏆'}
+    :pct>=70?{label:'Proficient',color:'#D97706',icon:'🎯'}
+    :pct>=50?{label:'Learning',color:'#7C3AED',icon:'📚'}
+    :{label:'Keep Studying',color:'#DC2626',icon:'💪'};
+  container.innerHTML = `
+    <div class="quiz-results">
+      <div class="result-emoji">${grade.icon}</div>
+      <h2 class="result-title">${quizState.score}/${QUIZ.length} — ${grade.label}</h2>
+      <div class="result-pct" style="color:${grade.color}">${pct}%</div>
+      <div class="result-dots">
+        ${quizState.answers.map((a,i)=>`<div class="result-dot" style="background:${a.correct?'#0D9488':'#DC2626'}">${i+1}</div>`).join('')}
+      </div>
+      <p class="result-msg">${pct>=70
+        ? 'Great work! You have a solid understanding of UK cyber law and cloud compliance requirements.'
+        : 'Review the sections you found tricky — each tab contains the detailed guidance you need. Try again!'
+      }</p>
+      <button class="btn-primary" onclick="restartQuiz()" style="max-width:240px;margin:0 auto;display:block">Try Again</button>
+    </div>
+  `;
+}
+
+function restartQuiz() {
+  quizState = { current:0, score:0, answered:false, selected:null, answers:[], finished:false };
+  renderQuiz();
+}
+
+// ════════════════════════ INIT ════════════════════════
+renderOffences();
+renderIAM();
+renderDUAA();
+renderCloud();
+renderQuiz();
+</script>
+</body>
+</html>

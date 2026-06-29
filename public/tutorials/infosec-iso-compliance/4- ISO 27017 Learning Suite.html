@@ -1,0 +1,1041 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ISO/IEC 27017 Learning Suite — Cloud Security Controls</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sky: #0EA5E9;
+    --dark: #0f172a;
+    --teal: #0D9488;
+    --red: #EF4444;
+    --amber: #F59E0B;
+    --purple: #7C3AED;
+    --blue: #3B82F6;
+    --navy: #1e3a5f;
+    --cloud: #38BDF8;
+    --bg: #f0f6ff;
+    --white: #ffffff;
+    --border: #dde8f5;
+    --text: #0f172a;
+    --muted: #64748b;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+  h1,h2,h3 { font-family: 'Playfair Display', Georgia, serif; }
+
+  /* HEADER */
+  #header {
+    background: var(--dark);
+    padding: 20px 24px 0;
+    position: sticky; top: 0; z-index: 200;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.35);
+  }
+  .header-top { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; max-width: 960px; margin-left: auto; margin-right: auto; }
+  .header-icon { background: var(--sky); border-radius: 10px; width: 46px; height: 46px; display:flex; align-items:center; justify-content:center; font-size:22px; flex-shrink:0; }
+  .header-label { color: var(--sky); font-size: 10px; letter-spacing: 3px; font-weight: 700; text-transform: uppercase; }
+  .header-title { color: #fff; font-size: 20px; line-height: 1.2; }
+  .tabs { display: flex; gap: 4px; max-width: 960px; margin: 0 auto; overflow-x: auto; }
+  .tab-btn {
+    background: transparent; color: #94a3b8; border: none;
+    border-radius: 8px 8px 0 0; padding: 10px 20px;
+    font-size: 13px; font-weight: 700; cursor: pointer;
+    white-space: nowrap; transition: all 0.2s;
+    font-family: 'DM Sans', sans-serif;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .tab-btn:hover { color: #fff; background: rgba(255,255,255,0.08); }
+  .tab-btn.active { background: var(--sky); color: #fff; }
+
+  /* CONTENT */
+  #content { max-width: 960px; margin: 0 auto; padding: 28px 20px 60px; }
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  /* SECTION HEADER */
+  .section-header { text-align: center; margin-bottom: 32px; }
+  .section-tag { font-size: 11px; letter-spacing: 4px; color: #94a3b8; text-transform: uppercase; margin-bottom: 8px; }
+  .section-title { font-size: 28px; color: var(--dark); margin-bottom: 8px; }
+  .section-desc { color: var(--muted); font-size: 14px; }
+
+  /* CLOUD MODEL BAR */
+  .model-bar { display: flex; gap: 6px; margin-bottom: 32px; flex-wrap: wrap; }
+  .model-card {
+    flex: 1 1 120px; border-radius: 12px; padding: 14px 16px;
+    color: #fff; text-align: center;
+  }
+  .model-label { font-size: 16px; font-weight: 900; letter-spacing: 1px; }
+  .model-sub { font-size: 11px; opacity: 0.75; margin-top: 2px; }
+  .model-desc { font-size: 12px; margin-top: 5px; opacity: 0.9; }
+
+  /* DOMAIN CARDS */
+  .clauses-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; margin-bottom: 36px; }
+  .clause-card {
+    background: var(--white); border: 2px solid var(--border);
+    border-radius: 14px; padding: 20px; cursor: pointer; transition: all 0.2s;
+  }
+  .clause-card:hover { box-shadow: 0 4px 20px rgba(14,165,233,0.13); transform: translateY(-1px); }
+  .clause-card.open { border-color: var(--accent); box-shadow: 0 4px 20px var(--accent-light); }
+  .clause-head { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+  .clause-icon { font-size: 28px; }
+  .clause-num { font-size: 10px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; }
+  .clause-name { font-size: 15px; font-weight: 700; color: var(--dark); }
+  .clause-summary { font-size: 13px; color: var(--muted); line-height: 1.55; }
+  .clause-detail { margin-top: 16px; padding-top: 14px; border-top: 1px solid #eee; display: none; }
+  .clause-card.open .clause-detail { display: block; }
+  .plain-box { border-radius: 8px; padding: 10px 14px; margin-bottom: 12px; }
+  .plain-label { font-size: 10px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 5px; }
+  .plain-text { font-size: 13px; line-height: 1.6; color: #334155; }
+  .key-title { font-size: 10px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 7px; }
+  .key-item { display: flex; gap: 8px; font-size: 13px; color: #334155; margin-bottom: 5px; align-items: flex-start; }
+  .subclause-tag {
+    font-size: 11px; border-radius: 5px; padding: 3px 9px;
+    font-weight: 600; display: inline-block; margin: 3px 3px 3px 0;
+  }
+  .role-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; }
+  .role-box { border-radius: 8px; padding: 10px 12px; font-size: 12px; line-height: 1.6; }
+  .role-label { font-size: 10px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 5px; }
+
+  /* ANNEX A (Cloud Extended Controls) */
+  .annex-box { background: var(--dark); border-radius: 16px; padding: 28px; }
+  .annex-title { color: #fff; font-size: 20px; margin-bottom: 6px; }
+  .annex-desc { color: #94a3b8; font-size: 13px; margin-bottom: 20px; }
+  .annex-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; }
+  .annex-card {
+    background: #1e3a5f; border-radius: 9px; padding: 13px;
+    transition: all 0.2s; cursor: default;
+  }
+  .annex-card:hover { background: var(--sky); }
+  .annex-card-top { display: flex; justify-content: space-between; align-items: center; }
+  .annex-emoji { font-size: 18px; }
+  .annex-count { font-size: 11px; color: var(--sky); font-weight: 700; }
+  .annex-card:hover .annex-count { color: #fff; }
+  .annex-ref { font-size: 10px; color: #94a3b8; margin-top: 5px; }
+  .annex-name { font-size: 13px; color: #fff; font-weight: 600; margin-top: 2px; line-height: 1.3; }
+  .annex-hover-desc { font-size: 11px; color: #e0f2fe; margin-top: 7px; line-height: 1.4; display: none; }
+  .annex-card:hover .annex-hover-desc { display: block; }
+
+  /* QUIZ */
+  .quiz-wrap { max-width: 640px; margin: 0 auto; }
+  .quiz-progress-bar-bg { height: 6px; background: #dde8f5; border-radius: 3px; margin-bottom: 28px; }
+  .quiz-progress-bar { height: 6px; background: var(--sky); border-radius: 3px; transition: width 0.4s; }
+  .quiz-meta { display: flex; justify-content: space-between; font-size: 13px; color: #94a3b8; margin-bottom: 14px; }
+  .quiz-score-label { color: var(--teal); font-weight: 700; }
+  .quiz-question-box { background: var(--dark); border-radius: 16px; padding: 28px; margin-bottom: 20px; }
+  .quiz-q-tag { color: var(--sky); font-size: 11px; letter-spacing: 2px; font-weight: 700; text-transform: uppercase; margin-bottom: 10px; }
+  .quiz-q-text { color: #fff; font-size: 17px; line-height: 1.6; font-family: 'Playfair Display', serif; }
+  .quiz-options { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
+  .quiz-opt {
+    background: var(--white); border: 2px solid var(--border);
+    border-radius: 10px; padding: 14px 18px;
+    text-align: left; cursor: pointer; font-size: 14px;
+    line-height: 1.5; transition: all 0.2s; color: var(--text);
+    font-family: 'DM Sans', sans-serif; width: 100%;
+  }
+  .quiz-opt:hover:not(:disabled) { border-color: var(--sky); background: #f0f9ff; }
+  .quiz-opt.correct { border-color: var(--teal); background: #f0fdfa; color: #134e4a; }
+  .quiz-opt.wrong { border-color: var(--red); background: #fff1f2; color: #991b1b; }
+  .quiz-opt:disabled { cursor: default; }
+  .quiz-explanation {
+    border-radius: 10px; padding: 16px; margin-bottom: 20px;
+    font-size: 13px; line-height: 1.6;
+  }
+  .quiz-explanation.good { background: #f0fdfa; border: 1px solid var(--teal); color: #134e4a; }
+  .quiz-explanation.bad { background: #fff1f2; border: 1px solid var(--red); color: #991b1b; }
+  .quiz-exp-label { font-weight: 700; font-size: 13px; margin-bottom: 5px; }
+  .btn-primary {
+    background: var(--sky); color: #fff; border: none;
+    border-radius: 10px; padding: 13px 28px; font-size: 15px;
+    font-weight: 700; cursor: pointer; width: 100%;
+    font-family: 'DM Sans', sans-serif; transition: opacity 0.2s;
+  }
+  .btn-primary:hover { opacity: 0.88; }
+  .quiz-results { text-align: center; padding: 40px 20px; }
+  .result-emoji { font-size: 64px; margin-bottom: 16px; }
+  .result-title { font-size: 28px; color: var(--dark); margin-bottom: 6px; }
+  .result-pct { font-size: 52px; font-weight: 900; margin: 10px 0; }
+  .result-dots { display: flex; justify-content: center; gap: 8px; margin: 20px 0 28px; flex-wrap: wrap; }
+  .result-dot {
+    width: 36px; height: 36px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-size: 13px; font-weight: 700;
+  }
+  .result-msg { font-size: 14px; color: var(--muted); max-width: 380px; margin: 0 auto 28px; }
+
+  /* SCENARIOS */
+  .scenario-tabs { display: flex; gap: 10px; margin-bottom: 24px; flex-wrap: wrap; }
+  .scenario-tab {
+    padding: 10px 16px; border-radius: 10px; border: 2px solid var(--border);
+    background: var(--white); color: #555; font-weight: 700; cursor: pointer;
+    font-size: 13px; display: flex; align-items: center; gap: 8px;
+    font-family: 'DM Sans', sans-serif; transition: all 0.2s;
+  }
+  .scenario-tab.active { background: var(--dark); color: #fff; border-color: var(--dark); }
+  .diff-badge { font-size: 10px; border-radius: 4px; padding: 2px 7px; color: #fff; font-weight: 700; }
+  .scenario-header { background: var(--dark); border-radius: 16px; padding: 28px; margin-bottom: 24px; }
+  .scenario-meta { color: var(--sky); font-size: 10px; letter-spacing: 2px; font-weight: 700; text-transform: uppercase; margin-bottom: 6px; }
+  .scenario-title { color: #fff; font-size: 22px; margin-bottom: 14px; }
+  .scenario-body { color: #cbd5e1; font-size: 15px; line-height: 1.7; }
+  .scenario-questions { display: flex; flex-direction: column; gap: 16px; }
+  .sq-card { border: 2px solid var(--border); border-radius: 12px; overflow: hidden; }
+  .sq-top { padding: 18px 20px; background: var(--white); }
+  .sq-head { display: flex; gap: 12px; align-items: flex-start; }
+  .sq-num {
+    background: var(--sky); color: #fff; border-radius: 50%;
+    width: 28px; height: 28px; display: flex; align-items: center;
+    justify-content: center; font-size: 13px; font-weight: 700; flex-shrink: 0; margin-top: 2px;
+  }
+  .sq-q { font-weight: 600; color: var(--dark); font-size: 15px; line-height: 1.5; margin-bottom: 8px; }
+  .sq-hint { font-size: 12px; color: #64748b; background: #f1f5f9; border-radius: 6px; padding: 6px 10px; display: inline-block; }
+  .sq-textarea {
+    width: 100%; min-height: 70px; padding: 10px 12px;
+    border-radius: 8px; border: 1px solid #ddd; font-size: 13px;
+    font-family: 'DM Sans', sans-serif; resize: vertical; color: #334155;
+    margin-top: 14px;
+  }
+  .btn-reveal {
+    margin-top: 8px; border: none; border-radius: 8px;
+    padding: 8px 16px; font-size: 13px; font-weight: 700; cursor: pointer;
+    font-family: 'DM Sans', sans-serif; transition: all 0.2s;
+  }
+  .sq-answer { background: #f0fdfa; border-top: 2px solid var(--teal); padding: 16px 20px 16px 60px; display: none; }
+  .sq-answer.show { display: block; }
+  .sq-answer-label { font-size: 10px; color: var(--teal); font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+  .sq-answer-text { font-size: 14px; color: #134e4a; line-height: 1.6; }
+
+  /* EXPLORER */
+  .search-wrap { position: relative; margin-bottom: 24px; }
+  .search-icon { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); font-size: 18px; }
+  .search-input {
+    width: 100%; padding: 14px 16px 14px 48px; font-size: 15px;
+    border-radius: 12px; border: 2px solid var(--border); outline: none;
+    font-family: 'DM Sans', sans-serif; transition: border-color 0.2s;
+    background: var(--white);
+  }
+  .search-input:focus { border-color: var(--sky); }
+  .explorer-tabs { display: flex; gap: 8px; margin-bottom: 20px; }
+  .exp-tab {
+    padding: 9px 20px; border-radius: 8px; border: 2px solid var(--border);
+    background: var(--white); font-weight: 700; cursor: pointer; font-size: 13px;
+    text-transform: uppercase; letter-spacing: 1px; font-family: 'DM Sans', sans-serif;
+    transition: all 0.2s;
+  }
+  .exp-tab.active { background: var(--sky); color: #fff; border-color: var(--sky); }
+  .explorer-clauses { display: flex; flex-direction: column; gap: 12px; }
+  .exp-clause {
+    border: 2px solid var(--border); border-radius: 12px;
+    padding: 20px; cursor: pointer; background: var(--white); transition: all 0.2s;
+  }
+  .exp-clause:hover { border-color: var(--sky); }
+  .exp-head { display: flex; align-items: center; gap: 14px; }
+  .exp-icon { font-size: 32px; }
+  .exp-meta { flex: 1; }
+  .exp-num { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
+  .exp-name { font-size: 16px; font-weight: 700; color: var(--dark); }
+  .exp-sum { font-size: 13px; color: var(--muted); margin-top: 4px; }
+  .exp-chevron { font-size: 18px; color: #cbd5e1; }
+  .exp-detail { display: none; margin-top: 16px; padding-top: 14px; border-top: 1px solid #e2e8f0; }
+  .exp-clause.open .exp-detail { display: block; }
+  .exp-grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .exp-annex-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 14px; }
+  .exp-annex-card {
+    border: 2px solid var(--border); border-radius: 12px; padding: 18px;
+    background: var(--white); transition: all 0.2s;
+  }
+  .exp-annex-card:hover { border-color: var(--sky); }
+  .exp-annex-head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
+  .exp-annex-left { display: flex; gap: 10px; align-items: center; }
+  .exp-annex-emoji { font-size: 24px; }
+  .exp-annex-ref { font-size: 10px; color: var(--sky); font-weight: 700; }
+  .exp-annex-name { font-size: 14px; font-weight: 700; color: var(--dark); }
+  .exp-annex-badge { font-size: 11px; background: var(--dark); color: #fff; border-radius: 6px; padding: 3px 8px; font-weight: 700; white-space: nowrap; }
+  .exp-annex-desc { font-size: 13px; color: var(--muted); line-height: 1.5; }
+  .empty-state { text-align: center; padding: 40px; color: #94a3b8; font-size: 15px; }
+
+  /* SHARED RESPONSIBILITY BANNER */
+  .resp-banner {
+    background: linear-gradient(135deg, #0EA5E9 0%, #0D9488 100%);
+    border-radius: 14px; padding: 20px 24px; margin-bottom: 28px;
+    display: flex; align-items: center; gap: 16px; color: #fff;
+  }
+  .resp-banner-icon { font-size: 36px; flex-shrink: 0; }
+  .resp-banner-title { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+  .resp-banner-text { font-size: 13px; opacity: 0.9; line-height: 1.5; }
+
+  @media (max-width: 600px) {
+    .clauses-grid { grid-template-columns: 1fr; }
+    .exp-grid2 { grid-template-columns: 1fr; }
+    .annex-grid { grid-template-columns: 1fr 1fr; }
+    .header-title { font-size: 16px; }
+    .tab-btn { padding: 10px 12px; font-size: 12px; }
+    .role-row { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div id="header">
+  <div class="header-top">
+    <div class="header-icon">☁️</div>
+    <div>
+      <div class="header-label">Interactive Learning Suite</div>
+      <h1 class="header-title">ISO/IEC 27017:2015 — Cloud Security Controls</h1>
+    </div>
+  </div>
+  <div class="tabs">
+    <button class="tab-btn active" onclick="showTab('map',this)">🗺️ Visual Map</button>
+    <button class="tab-btn" onclick="showTab('quiz',this)">🧠 Quiz</button>
+    <button class="tab-btn" onclick="showTab('scenarios',this)">🎭 Scenarios</button>
+    <button class="tab-btn" onclick="showTab('explorer',this)">🔍 Explorer</button>
+  </div>
+</div>
+
+<div id="content">
+
+<!-- ═══════════════════════════════════════════════════════════ MAP PANEL -->
+<div id="panel-map" class="panel active">
+  <div class="section-header">
+    <div class="section-tag">The Standard at a Glance</div>
+    <h2 class="section-title">ISO/IEC 27017 Visual Map</h2>
+    <p class="section-desc">Cloud-specific security controls layered on top of ISO/IEC 27002. Click any domain to expand details.</p>
+  </div>
+
+  <div class="resp-banner">
+    <div class="resp-banner-icon">🤝</div>
+    <div>
+      <div class="resp-banner-title">Shared Responsibility Model</div>
+      <div class="resp-banner-text">ISO/IEC 27017 provides separate guidance for <strong>Cloud Service Customers (CSC)</strong> and <strong>Cloud Service Providers (CSP)</strong> across every control domain. Both parties share accountability for cloud security — the standard clarifies who does what.</div>
+    </div>
+  </div>
+
+  <div class="model-bar">
+    <div class="model-card" style="background:#0EA5E9">
+      <div class="model-label">IaaS</div>
+      <div class="model-sub">Infrastructure as a Service</div>
+      <div class="model-desc">CSC manages OS, apps & data</div>
+    </div>
+    <div class="model-card" style="background:#0D9488">
+      <div class="model-label">PaaS</div>
+      <div class="model-sub">Platform as a Service</div>
+      <div class="model-desc">CSC manages apps & data only</div>
+    </div>
+    <div class="model-card" style="background:#7C3AED">
+      <div class="model-label">SaaS</div>
+      <div class="model-sub">Software as a Service</div>
+      <div class="model-desc">CSP manages nearly everything</div>
+    </div>
+    <div class="model-card" style="background:#1e3a5f">
+      <div class="model-label">Annex A</div>
+      <div class="model-sub">Extended Controls (CLD.*)</div>
+      <div class="model-desc">7 cloud-only control additions</div>
+    </div>
+  </div>
+
+  <div class="clauses-grid" id="clauses-grid"></div>
+
+  <div class="annex-box">
+    <h3 class="annex-title">Annex A — Cloud Service Extended Control Set (CLD.*)</h3>
+    <p class="annex-desc">These 7 additional controls go beyond ISO/IEC 27002 and address cloud-specific risks. Include in your Statement of Applicability if pursuing ISO 27001 compliance with cloud services.</p>
+    <div class="annex-grid" id="annex-grid"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ QUIZ PANEL -->
+<div id="panel-quiz" class="panel">
+  <div id="quiz-container"></div>
+</div>
+
+<!-- ═════════════════════════════════════════════════════ SCENARIOS PANEL -->
+<div id="panel-scenarios" class="panel">
+  <div class="section-header">
+    <div class="section-tag">Real-World Cloud Security Application</div>
+    <h2 class="section-title">Scenario Worksheets</h2>
+    <p class="section-desc">Read the cloud security scenario, write your answer, then reveal the model solution.</p>
+  </div>
+  <div class="scenario-tabs" id="scenario-tabs"></div>
+  <div id="scenario-content"></div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════ EXPLORER PANEL -->
+<div id="panel-explorer" class="panel">
+  <div class="section-header">
+    <div class="section-tag">Navigate the Standard</div>
+    <h2 class="section-title">Domain Explorer</h2>
+    <p class="section-desc">Search any cloud security topic to find relevant domains and Annex A controls instantly.</p>
+  </div>
+  <div class="search-wrap">
+    <span class="search-icon">🔍</span>
+    <input class="search-input" id="search-input" placeholder="Search: 'encryption', 'multi-tenancy', 'backup', 'access control', 'incident'..." oninput="runSearch()">
+  </div>
+  <div class="explorer-tabs">
+    <button class="exp-tab active" id="exp-tab-clauses" onclick="switchExpTab('clauses')">📖 Domains</button>
+    <button class="exp-tab" id="exp-tab-annex" onclick="switchExpTab('annex')">☁️ Annex A (CLD)</button>
+  </div>
+  <div id="explorer-results"></div>
+</div>
+
+</div><!-- /content -->
+
+<script>
+// ══════════════════════════════════ DATA ══════════════════════════════════
+
+const CLAUSES = [
+  { id:5, title:"Information Security Policies", color:"#0EA5E9", icon:"📋",
+    summary:"Cloud-specific policies must cover multi-tenancy, insider risk, virtualization security, and data lifecycle for both CSC and CSP.",
+    keyPoints:[
+      "CSC: create a cloud-specific topic policy within their overall security policy",
+      "CSC: consider data access by CSP, multi-tenant risks, and geographic data locations",
+      "CSP: augment policy to address insider risks, virtualization security, and breach notification",
+      "CSP: define lifecycle management of cloud service customer accounts"
+    ],
+    plainEnglish:"Your existing security policy needs a cloud chapter. If you're a customer, know where your data lives and who can touch it. If you're a provider, your policy must address how you protect each customer's environment from others.",
+    cscGuidance:"Define a cloud-computing topic-specific policy. Account for data stored/managed by CSP, multi-tenant virtual environments, geographic locations where data may be stored.",
+    cspGuidance:"Augment policy to address insider risks, multi-tenancy & isolation, strong authentication for admin access, virtualization security, and breach communication guidelines.",
+    subclauses:["5.1.1 Policies for information security","5.1.2 Review of policies"]
+  },
+  { id:6, title:"Organisation of Information Security", color:"#3B82F6", icon:"🏗️",
+    summary:"Roles, responsibilities, and accountability must be clearly allocated between CSC and CSP, documented in agreements.",
+    keyPoints:[
+      "CSC and CSP must agree and document allocation of security roles in a formal agreement",
+      "CSP must disclose geographic locations where customer data may be stored",
+      "CSC is accountable for the decision to use the service; CSP is accountable for agreed security",
+      "Data ownership, backup responsibilities, and recovery roles must be clearly defined to avoid gaps"
+    ],
+    plainEnglish:"Write down who is responsible for what. Ambiguity about data ownership or backup duties creates dangerous gaps — especially across jurisdictions. The customer always remains accountable for the decision to use the cloud.",
+    cscGuidance:"Agree allocation of roles with CSP in writing. Identify authorities relevant to combined cloud operations. Know which jurisdictions govern stored data.",
+    cspGuidance:"Document and communicate information security capabilities and responsibilities. Disclose geographic storage locations. Clarify asset ownership and backup roles to prevent responsibility gaps.",
+    subclauses:["6.1.1 Security roles & responsibilities","6.1.3 Contact with authorities","6.1.4 Special interest groups","6.2.1 Mobile device policy"]
+  },
+  { id:7, title:"Human Resource Security", color:"#7C3AED", icon:"👥",
+    summary:"Training programmes must include cloud-specific risks. CSP staff must be trained on proper handling of customer data.",
+    keyPoints:[
+      "CSC: include cloud standards, procedures, and legal considerations in awareness training",
+      "CSC: train on system and network risks specific to cloud service usage",
+      "CSP: train employees on appropriate handling of cloud service customer data",
+      "CSP: ensure contractors receive equivalent training on data confidentiality and regulatory limits"
+    ],
+    plainEnglish:"Everyone touching the cloud environment needs cloud-specific training. Providers must ensure their staff treat customer data as confidential and know the legal limits on using it.",
+    cscGuidance:"Extend training programmes for cloud admins, integrators, and users to cover cloud security risks, relevant regulations, and acceptable use procedures.",
+    cspGuidance:"Train employees and contractors on handling customer data and cloud service derived data, including confidentiality obligations and regulatory restrictions on use.",
+    subclauses:["7.2.2 Information security awareness & training"]
+  },
+  { id:8, title:"Asset Management", color:"#F59E0B", icon:"📦",
+    summary:"Customer data and cloud-derived data must be inventoried. Asset ownership varies by cloud service type (IaaS/PaaS/SaaS).",
+    keyPoints:[
+      "CSC: asset inventory must include all information stored in the cloud with the cloud service identified",
+      "CSP: inventory must explicitly list customer data AND cloud service derived data as separate asset categories",
+      "Asset ownership varies: application software belongs to CSC in IaaS/PaaS, but to CSP in SaaS",
+      "CSP must document and disclose labelling functionality available to customers"
+    ],
+    plainEnglish:"Know what assets exist in your cloud environment and who owns them. In IaaS you own your apps; in SaaS the provider owns the app. Both sides must track data separately — including the metadata and derived data the service generates.",
+    cscGuidance:"Record cloud-hosted assets with the cloud service identified. Label information per your own procedures using any CSP-provided labelling capabilities.",
+    cspGuidance:"Inventory must explicitly identify customer data and derived data. Disclose what labelling functionality the service offers. Understand ownership rules differ by service type.",
+    subclauses:["8.1.1 Inventory of assets","8.1.2 Ownership of assets","8.2.2 Labelling of information"]
+  },
+  { id:9, title:"Access Control", color:"#EF4444", icon:"🔐",
+    summary:"Multi-factor authentication for admin access, virtual environment segregation, and user access provisioning are critical cloud controls.",
+    keyPoints:[
+      "CSC: use MFA for authenticating cloud service administrators to admin capabilities",
+      "CSP: provide MFA capability or enable third-party MFA for customer administrators",
+      "CSP: provide user registration, access provisioning, and access rights management functions",
+      "CSP: support third-party identity and access management (IAM) including single sign-on (SSO)",
+      "CSC: ensure access restrictions are enforceable within the cloud service"
+    ],
+    plainEnglish:"Admin access to cloud services needs multi-factor authentication. Providers must give customers the tools to manage their own users. In multi-tenant environments, one customer must never be able to see or touch another's data.",
+    cscGuidance:"Use MFA for cloud admin access. Verify the CSP's secret authentication management meets your requirements. Ensure access restrictions on the service are enforceable.",
+    cspGuidance:"Provide MFA capability for customer admins. Offer user registration, access provisioning, and rights management functions. Support third-party IAM and SSO technologies.",
+    subclauses:["9.1.2 Access to network services","9.2.1 User registration & deregistration","9.2.2 User access provisioning","9.2.3 Privileged access rights","9.2.4 Secret authentication info","9.4.1 Information access restriction","9.4.4 Privileged utility programs"]
+  },
+  { id:10, title:"Cryptography", color:"#0D9488", icon:"🔑",
+    summary:"Cryptographic controls must be applied to cloud data at rest and in transit. Key management responsibilities must be clearly defined.",
+    keyPoints:[
+      "CSC: implement cryptographic controls justified by risk analysis, of sufficient strength",
+      "CSC: verify CSP cryptography meets policy requirements and covers data at rest AND in transit",
+      "CSC: do not allow CSP to store/manage encryption keys when using own key management",
+      "CSP: disclose how and when it uses cryptography to protect customer information"
+    ],
+    plainEnglish:"If you encrypt your cloud data, you manage the keys — don't let the cloud provider hold them too. Make sure encryption covers data both moving through the network and sitting in storage.",
+    cscGuidance:"Implement cryptographic controls based on risk. Review CSP's encryption capabilities for compatibility, policy alignment, and coverage of data at rest and in transit. Never allow CSP to manage keys if you run your own key management.",
+    cspGuidance:"Disclose when and how cryptography protects customer data. Provide information to help customers apply their own cryptographic protection on top of the service.",
+    subclauses:["10.1.1 Policy on cryptographic controls","10.1.2 Key management"]
+  },
+  { id:11, title:"Physical & Environmental Security", color:"#64748b", icon:"🏢",
+    summary:"CSP must ensure secure disposal and reuse of physical resources. CSC should confirm disposal policies are in place.",
+    keyPoints:[
+      "CSC: request confirmation that CSP has policies for secure disposal or reuse of resources",
+      "CSP: ensure timely secure disposal/reuse of equipment, data storage, files and memory",
+      "Additional information on secure disposal is available in ISO/IEC 27040 (storage security)"
+    ],
+    plainEnglish:"When cloud hardware is decommissioned, customer data must be wiped securely. Ask your provider for their disposal policy — this is your data even when it sits on their hardware.",
+    cscGuidance:"Request written confirmation that the CSP has documented policies for secure disposal or reuse of all resources including storage media.",
+    cspGuidance:"Arrange timely secure disposal or reuse of equipment, data storage, files, and memory. Refer to ISO/IEC 27040 for storage security guidance.",
+    subclauses:["11.2.7 Secure disposal or reuse of equipment"]
+  },
+  { id:12, title:"Operations Security", color:"#F59E0B", icon:"💻",
+    summary:"Change management, capacity management, backup specifications, event logging, and vulnerability management all have cloud-specific requirements.",
+    keyPoints:[
+      "CSP must notify CSC of changes that could adversely affect the service (categories, timing, technical description)",
+      "CSP must monitor total resource capacity; CSC must monitor usage and forecast needs",
+      "CSP must provide backup specifications including scope, schedule, encryption, retention, and restoration timescales",
+      "CSC must define event logging requirements; CSP must provide logging capabilities",
+      "CSP must provide information on technical vulnerability management for cloud services"
+    ],
+    plainEnglish:"The provider must tell you before making changes that affect your service. Backups are your responsibility unless the provider explicitly offers them — and even then you need to verify the specs. Make sure logging is set up for your environment, not just theirs.",
+    cscGuidance:"Factor CSP changes into your own change management. Verify backup capabilities meet your requirements — you're responsible if the CSP doesn't offer them. Define event logging requirements. Request vulnerability management info from CSP.",
+    cspGuidance:"Provide advance notice of service-affecting changes. Monitor total resource capacity. Provide full backup specifications. Provide logging capabilities to customers. Disclose vulnerability management practices.",
+    subclauses:["12.1.2 Change management","12.1.3 Capacity management","12.3.1 Information backup","12.4.1 Event logging","12.4.3 Admin & operator logs","12.4.4 Clock synchronisation","12.6.1 Technical vulnerability management"]
+  },
+  { id:13, title:"Communications Security", color:"#0EA5E9", icon:"🌐",
+    summary:"Network segregation between tenants is mandatory. Virtual network configurations must be consistent with physical network security policy.",
+    keyPoints:[
+      "CSC: define requirements for network segregation to achieve tenant isolation and verify CSP meets them",
+      "CSP: enforce segregation between tenants in multi-tenant environments",
+      "CSP: enforce segregation between CSP's internal admin environment and customer cloud environments",
+      "CSP: ensure virtual network configuration matches the physical network security policy"
+    ],
+    plainEnglish:"In a shared cloud, your traffic must be completely isolated from other customers' traffic. The provider must enforce this both at the network level and between their own admin systems and yours. Laws may require this segregation.",
+    cscGuidance:"Define tenant isolation requirements and verify the CSP meets them. Consider laws and regulations requiring network segregation.",
+    cspGuidance:"Enforce segregation between tenants and between internal admin and customer environments. Define a virtual network security policy consistent with physical network policy.",
+    subclauses:["13.1.3 Segregation in networks"]
+  },
+  { id:14, title:"System Acquisition, Development & Maintenance", color:"#7C3AED", icon:"🔧",
+    summary:"CSC should evaluate whether CSP's security capabilities meet requirements. CSP should disclose secure development practices.",
+    keyPoints:[
+      "CSC: determine information security requirements then evaluate whether CSP can meet them",
+      "CSC: request information on CSP's security capabilities (without disclosing exploitable details)",
+      "CSP: disclose use of secure development procedures to the extent compatible with disclosure policy",
+      "Secure development practices are especially critical for SaaS offerings"
+    ],
+    plainEnglish:"Before buying a cloud service, check if it meets your security requirements. Ask the provider what their secure development process looks like — this matters most for SaaS where you're running on their code.",
+    cscGuidance:"Evaluate security capabilities against your requirements before committing. Request information on the CSP's secure development practices.",
+    cspGuidance:"Provide security capability information without disclosing exploitable details. Share secure development practices to the extent compatible with disclosure policy. Critical for SaaS.",
+    subclauses:["14.1.1 Security requirements analysis","14.2.1 Secure development policy"]
+  },
+  { id:15, title:"Supplier Relationships", color:"#EF4444", icon:"🤝",
+    summary:"Cloud providers are a specific type of supplier. CSC must include CSP in supplier policy. Supply chains must maintain security levels.",
+    keyPoints:[
+      "CSC: treat the CSP as a type of supplier in supplier relationship security policy",
+      "CSC: confirm security roles and responsibilities in the service agreement (malware, backup, auth, auditing, etc.)",
+      "CSP: specify security measures in agreements to prevent misunderstandings",
+      "CSP using peer cloud services: maintain or exceed security levels to own customers"
+    ],
+    plainEnglish:"Your cloud provider is a supplier. Put them in your supplier security policy and make sure the contract spells out who is responsible for each security task. If your provider uses other cloud providers, that security chain must hold too.",
+    cscGuidance:"Include CSP in supplier information security policy. Confirm security responsibilities in the agreement: malware, backup, cryptography, vulnerability management, incident management, auditing, evidence collection, authentication.",
+    cspGuidance:"Specify security measures in service agreements. If using peer cloud services, ensure security levels to own customers are maintained or exceeded. Pass security objectives down the supply chain.",
+    subclauses:["15.1.1 Info security policy for supplier relationships","15.1.2 Security within supplier agreements","15.1.3 ICT supply chain"]
+  },
+  { id:16, title:"Information Security Incident Management", color:"#EF4444", icon:"🚨",
+    summary:"CSP must define scope, disclosure level, timeframes, and procedures for reporting security incidents to customers.",
+    keyPoints:[
+      "CSP: define scope of incidents it will report to CSC, disclosure level, notification timeframes, and procedures",
+      "CSP: provide mechanisms for CSC to report incidents, CSP to report to CSC, and CSC to track status",
+      "Either party may detect the incident — the detecting party must report immediately to the other",
+      "CSC and CSP must agree on procedures for responding to requests for digital evidence"
+    ],
+    plainEnglish:"When a security incident happens in the cloud, both sides have reporting obligations. The provider must tell customers about incidents affecting them within agreed timeframes. Both sides need to agree upfront on how digital evidence will be handled.",
+    cscGuidance:"Verify responsibility allocation meets your requirements. Request CSP documentation covering incident scope, disclosure levels, notification timeframes, contact information, and available remedies.",
+    cspGuidance:"Define and provide incident management documentation to customers. Provide mechanisms for bidirectional incident reporting and status tracking. The detecting party must report to the other immediately.",
+    subclauses:["16.1.1 Responsibilities & procedures","16.1.2 Reporting security events","16.1.7 Collection of evidence"]
+  },
+  { id:17, title:"Business Continuity Management", color:"#3B82F6", icon:"♻️",
+    summary:"Information security continuity and redundancy planning applies directly to cloud service resilience requirements.",
+    keyPoints:[
+      "ISO/IEC 27002 continuity controls apply fully to cloud environments",
+      "Availability requirements must be defined in SLAs and service agreements",
+      "Redundancy of processing facilities must be tested and verified"
+    ],
+    plainEnglish:"Business continuity planning must include cloud services. Your cloud SLA should define availability commitments. Plan for what happens if the cloud service goes down and test your recovery procedures.",
+    cscGuidance:"Apply ISO/IEC 27002 continuity controls to cloud service usage. Include CSP availability commitments in SLA. Test recovery procedures including cloud-based backups.",
+    cspGuidance:"Define and document availability commitments in service agreements. Implement and test redundancy of information processing facilities. Apply continuity controls per ISO/IEC 27002.",
+    subclauses:["17.1.1 Planning continuity","17.1.2 Implementing continuity","17.2.1 Availability of processing facilities"]
+  },
+  { id:18, title:"Compliance", color:"#0D9488", icon:"⚖️",
+    summary:"Legal jurisdiction may differ between CSP and CSC. Compliance responsibility always remains with the customer and cannot be transferred.",
+    keyPoints:[
+      "CSC: relevant laws may be those of jurisdictions governing the CSP, not just the CSC's own",
+      "CSC: request evidence of CSP compliance (e.g. third-party audit certifications)",
+      "CSP: inform CSC of legal jurisdictions governing the service",
+      "Compliance responsibility cannot be transferred to the CSP — the customer always remains responsible",
+      "Licensing: elastic cloud scaling may exceed licensed processor core counts — verify licences"
+    ],
+    plainEnglish:"If your cloud data sits in another country, that country's laws may apply to it. Ask your provider for compliance certifications. Remember — even if the provider is compliant, you are still responsible for your own compliance. Certifications help but don't transfer liability.",
+    cscGuidance:"Consider jurisdictions governing the CSP. Request third-party audit evidence of compliance. Verify cryptographic controls comply with applicable regulations. Note: compliance cannot be delegated to the CSP.",
+    cspGuidance:"Disclose legal jurisdictions governing the service. Provide compliance evidence to customers. Identify own legal requirements including PII encryption obligations. Establish an IP rights complaint process.",
+    subclauses:["18.1.1 Applicable legislation","18.1.2 Intellectual property rights","18.1.3 Protection of records","18.1.5 Regulation of cryptographic controls","18.2.1 Independent review"]
+  }
+];
+
+const ANNEX_A = [
+  { ref:"CLD.6.3.1", title:"Shared Roles & Responsibilities", controls:1, icon:"🤝",
+    desc:"Responsibilities for shared information security roles must be allocated, documented, communicated, and implemented by both CSC and CSP. The CSP must document its capabilities and the responsibilities the CSC must manage." },
+  { ref:"CLD.8.1.5", title:"Removal of Cloud Service Customer Assets", controls:1, icon:"📤",
+    desc:"Upon termination of the cloud service agreement, all CSC assets must be removed and returned if necessary in a timely manner. The CSP must document the termination process including deletion of all copies." },
+  { ref:"CLD.9.5.1", title:"Segregation in Virtual Computing Environments", controls:1, icon:"🧱",
+    desc:"A CSC's virtual environment must be protected from other customers and unauthorized persons. CSP must enforce logical segregation of customer data, virtualised apps, OS, storage, and networks in multi-tenant environments." },
+  { ref:"CLD.9.5.2", title:"Virtual Machine Hardening", controls:1, icon:"🖥️",
+    desc:"Virtual machines must be hardened to meet business needs. Only required ports, protocols, and services should be enabled. Appropriate technical measures (anti-malware, logging) must be in place for each VM." },
+  { ref:"CLD.12.1.5", title:"Administrator's Operational Security", controls:1, icon:"🛡️",
+    desc:"Procedures for administrative operations in cloud environments must be defined, documented, and monitored. Critical operations (provisioning, deletion, backup, restoration) must have supervisory oversight to prevent serious incidents." },
+  { ref:"CLD.12.4.5", title:"Monitoring of Cloud Services", controls:1, icon:"📡",
+    desc:"The CSC must have capability to monitor specified aspects of cloud service operation. CSP must provide monitoring capabilities scoped to the customer's own instances only, with appropriate access controls." },
+  { ref:"CLD.13.1.4", title:"Alignment of Security for Virtual & Physical Networks", controls:1, icon:"🌐",
+    desc:"Upon configuration of virtual networks, consistency between virtual and physical network configurations must be verified based on the CSP's network security policy. Inconsistency can cause outages or defective access control." }
+];
+
+const QUIZ = [
+  { q:"Under ISO/IEC 27017, who remains responsible for compliance with legal and regulatory requirements even when using a cloud service?",
+    opts:["The Cloud Service Provider","Shared equally between CSC and CSP","The Cloud Service Customer","The certification body"], ans:2,
+    exp:"Clause 18.1 makes clear that compliance requirements, whether legal or contractual, remain the responsibility of the cloud service customer. Compliance responsibilities cannot be transferred to the cloud service provider." },
+  { q:"Which ISO/IEC 27017 Annex A (CLD) control requires that a virtual machine's environment be protected from other cloud service customers?",
+    opts:["CLD.6.3.1 Shared Roles","CLD.9.5.1 Segregation in Virtual Computing Environments","CLD.13.1.4 Virtual Network Alignment","CLD.12.1.5 Administrator Operational Security"], ans:1,
+    exp:"CLD.9.5.1 specifically controls that a CSC's virtual environment running on a cloud service must be protected from other cloud service customers and unauthorized persons." },
+  { q:"A cloud service customer is setting up access for cloud administrators. What does ISO/IEC 27017 clause 9.2.3 require?",
+    opts:["Single-factor password authentication is sufficient","Multi-factor authentication for cloud service administrators","The CSP must manage all admin credentials","Admin access must be reviewed quarterly"], ans:1,
+    exp:"Clause 9.2.3 requires the CSC to use sufficient authentication techniques — specifically multi-factor authentication — for authenticating cloud service administrators to the administrative capabilities of a cloud service." },
+  { q:"When a cloud service provider makes changes that could adversely affect the cloud service, what must they do under clause 12.1.2?",
+    opts:["Implement the change and log it in their internal system","Make changes only during agreed maintenance windows","Inform the CSC with categories, dates, technical description, and start/completion notifications","Submit changes to the CSC for approval before implementation"], ans:2,
+    exp:"Clause 12.1.2 requires CSPs to provide advance information about service-affecting changes, including: categories of changes, planned date/time, technical description, and notification of start and completion." },
+  { q:"Under clause 10.1.2, when should a cloud service customer NOT permit the cloud service provider to manage their encryption keys?",
+    opts:["When data is classified as public","When the CSC employs its own key management or a separate key management service","When data is stored outside the EU","When the cloud service is IaaS"], ans:1,
+    exp:"Clause 10.1.2 explicitly states that the CSC should not permit the CSP to store and manage encryption keys for cryptographic operations when the CSC employs its own key management or a separate and distinct key management service." },
+  { q:"Which Annex A control introduced by ISO/IEC 27017 addresses the risk of critical administrative operations causing serious cloud security incidents?",
+    opts:["CLD.9.5.2 Virtual Machine Hardening","CLD.12.4.5 Monitoring of Cloud Services","CLD.12.1.5 Administrator's Operational Security","CLD.8.1.5 Removal of Customer Assets"], ans:2,
+    exp:"CLD.12.1.5 requires that procedures for administrative operations in cloud environments are defined, documented, and monitored. A supervisor must monitor critical operations such as provisioning, deletion, backup, and restoration." },
+  { q:"Under clause 12.3.1 on information backup, who is responsible for implementing backup capabilities when the CSP does not provide them?",
+    opts:["The CSP must always provide backup capabilities","The cloud service customer is responsible","Backup responsibility is shared equally","A third-party backup provider must be appointed"], ans:1,
+    exp:"Clause 12.3.1 states clearly: 'The cloud service customer is responsible for implementing backup capabilities when the cloud service provider does not provide them.'" },
+  { q:"What does ISO/IEC 27017 clause 6.1.3 require the Cloud Service Provider to disclose to the customer?",
+    opts:["A list of all its employees with data access","The geographical locations where customer data may be stored","The source code of the cloud platform","Its internal vulnerability assessment results"], ans:1,
+    exp:"Clause 6.1.3 requires the CSP to inform the CSC of the geographical locations of the CSP's organisation and the countries where the CSP can store the cloud service customer data — helping customers determine supervisory authorities and jurisdictions." },
+  { q:"A company is terminating its cloud service contract. Which CLD control governs the return and removal of its assets?",
+    opts:["CLD.6.3.1 Shared Roles","CLD.13.1.4 Virtual Network Alignment","CLD.8.1.5 Removal of Cloud Service Customer Assets","CLD.12.4.5 Monitoring of Cloud Services"], ans:2,
+    exp:"CLD.8.1.5 requires that CSC assets on the CSP's premises must be removed and returned if necessary in a timely manner upon termination of the cloud service agreement. The CSP must document the process and schedule." },
+  { q:"Under ISO/IEC 27017 clause 18.1.1, why must a cloud service customer consider the legal jurisdictions of the CSP's country?",
+    opts:["To determine which language service agreements must be written in","Because the CSP's country laws may apply to data stored or processed there","To comply with import/export regulations on software","Because the CSP is responsible for all compliance in their jurisdiction"], ans:1,
+    exp:"Clause 18.1.1 states that relevant laws can be those of jurisdictions governing the CSP, not just the CSC's own jurisdiction. This is especially important where processing, storage, and communications are geographically distributed." }
+];
+
+const SCENARIOS = [
+  { id:1, title:"The Multi-Tenant Data Leak", icon:"🧱", diff:"Medium", diffColor:"#F59E0B",
+    situation:"A large fintech company uses a public cloud platform to run its customer analytics service. A configuration error by the cloud provider means one tenant's database queries are inadvertently returning rows from another tenant's dataset. The issue is discovered three days later by the affected customer, not by the provider.",
+    questions:[
+      { q:"Which ISO/IEC 27017 Annex A control was most clearly violated by the cloud provider?",
+        hint:"Think about virtual environment isolation between tenants",
+        ans:"CLD.9.5.1 (Segregation in Virtual Computing Environments) — the CSP is required to enforce appropriate logical segregation of customer data, virtualised applications, operating systems, storage, and network between tenants in multi-tenant environments." },
+      { q:"What clause 13 obligation did the CSP fail to meet?",
+        hint:"Think about network and data segregation in cloud environments",
+        ans:"Clause 13.1.3 (Segregation in networks) — the CSP must enforce segregation between tenants in a multi-tenant environment and help customers verify the segregation implemented. The configuration error broke this isolation." },
+      { q:"Under clause 16.1.2, what obligations did the CSP fail to fulfil when the incident was discovered by the customer rather than the provider?",
+        hint:"Think about who should detect and report incidents",
+        ans:"Clause 16.1.2 requires the CSP to provide mechanisms for reporting incidents to CSCs and to report security events it detects to affected customers. The provider failed to detect the incident itself and had no mechanism to proactively notify the affected tenant. The detecting party must report to the other immediately." }
+    ]
+  },
+  { id:2, title:"The Cloud Exit Dispute", icon:"📤", diff:"Easy", diffColor:"#0D9488",
+    situation:"A healthcare organisation decides not to renew its SaaS contract. The provider takes 90 days to return data exports and states that all server-side copies were deleted — but provides no written evidence. The organisation's compliance officer is worried about audit trails and residual data.",
+    questions:[
+      { q:"Which CLD Annex A control specifically covers this termination situation?",
+        hint:"Think about what happens to data when a cloud contract ends",
+        ans:"CLD.8.1.5 (Removal of Cloud Service Customer Assets) — assets must be removed and returned in a timely manner upon termination. The CSP must provide documented evidence of the process, schedule, and deletion of all copies." },
+      { q:"What should the CSC have required in the original service agreement to prevent this situation?",
+        hint:"Contracts and supplier agreements",
+        ans:"Under clause 15.1.2 (Addressing security within supplier agreements), the CSC should have required the contract to specify the asset return and removal process, timeline, the assets to be returned/removed, and confirmation of deletion. Clause 6.1.1 also requires ownership of assets and backup/recovery responsibilities to be defined and documented in the agreement." },
+      { q:"Under clause 18.1.3 (Protection of Records), what should the CSP have provided?",
+        hint:"Think about audit trails and evidence",
+        ans:"Clause 18.1.3 requires the CSP to provide information to the CSC about the protection of records gathered and stored by the CSP relating to the use of cloud services. The CSP should have provided documented evidence of deletion procedures and audit logs confirming that all copies were destroyed." }
+    ]
+  },
+  { id:3, title:"The Ransomware via Cloud Admin Portal", icon:"☁️", diff:"Hard", diffColor:"#EF4444",
+    situation:"An attacker compromises the credentials of a cloud administrator at a retail company using a credential-stuffing attack. The admin account was protected only by a password. The attacker gains access to the cloud management console and deletes 40 virtual servers and 12 storage buckets. There were no monitoring alerts. Backups existed but had never been tested and cannot be restored.",
+    questions:[
+      { q:"List THREE ISO/IEC 27017 controls that directly failed in this scenario.",
+        hint:"Think about admin authentication, monitoring, and backup testing",
+        ans:"1) Clause 9.2.3 — Management of privileged access rights: the CSC should have used MFA for cloud service administrators. 2) CLD.12.4.5 — Monitoring of Cloud Services: the CSC should have had monitoring capabilities to detect unusual admin activity. 3) Clause 12.3.1 — Information backup: backups must be tested; untested backups that cannot be restored do not meet the control." },
+      { q:"What does CLD.12.1.5 say about the kind of administrative operation the attacker performed?",
+        hint:"Deletion of virtualised devices",
+        ans:"CLD.12.1.5 (Administrator's Operational Security) requires procedures for critical operations — explicitly including installation, changes, and deletion of virtualised devices such as servers, networks, and storage — to be defined, documented, and monitored, with a supervisor monitoring these operations. None of this was in place." },
+      { q:"After recovery, what obligations does the CSP have under clause 16.1.2 and what must the CSC do under clause 15.1.2?",
+        hint:"Incident reporting and supplier agreements",
+        ans:"Under clause 16.1.2, the CSP must provide a mechanism for the CSC to track the status of the reported incident and must report any aspects detected on the CSP's infrastructure. Under clause 15.1.2, the CSC should review its service agreement to confirm that incident management responsibilities, including notification timeframes and remedies for data loss, are clearly specified — and update the agreement if not." }
+    ]
+  },
+  { id:4, title:"The Global SaaS Procurement", icon:"🌍", diff:"Medium", diffColor:"#F59E0B",
+    situation:"A UK-based financial services firm is evaluating a US-based SaaS CRM provider for its customer data. The provider stores data in US and Singapore data centres. The firm's data protection officer is concerned about GDPR compliance, encryption practices, and audit rights.",
+    questions:[
+      { q:"Under clause 18.1.1, what must the cloud service provider disclose and what must the CSC investigate?",
+        hint:"Jurisdictions and geographic data locations",
+        ans:"The CSP must inform the CSC of the legal jurisdictions governing the cloud service (US and Singapore law). The CSC must consider that those jurisdictions' laws apply in addition to its own (UK GDPR/Data Protection Act). The CSC should request evidence of compliance with relevant regulations, such as third-party audit certifications (SOC 2, ISO 27001)." },
+      { q:"What does clause 10.1.1 require the CSC to verify about the SaaS provider's encryption?",
+        hint:"Check that cryptographic controls cover data at rest and in transit",
+        ans:"Clause 10.1.1 requires the CSC to review information supplied by the CSP to confirm whether cryptographic capabilities: (a) meet the CSC's policy requirements, (b) are compatible with other cryptographic protections used by the CSC, and (c) apply to data at rest AND in transit to, from, and within the cloud service." },
+      { q:"Under clause 18.2.1 (Independent Review), what should the CSP provide if individual customer audits are impractical?",
+        hint:"Third-party evidence of controls",
+        ans:"Clause 18.2.1 requires the CSP to provide independent evidence that information security is implemented in accordance with its policies and procedures. A relevant independent audit (e.g. ISO 27001 certification, SOC 2 Type II report) is an acceptable method. This should be made available to prospective CSCs before entering a contract." }
+    ]
+  }
+];
+
+// ══════════════════════════════════ STATE ═════════════════════════════════
+let quizState = { current:0, score:0, answered:false, selected:null, answers:[], finished:false };
+let currentScenario = 0;
+let expTab = 'clauses';
+let openClause = null;
+let openExpClause = null;
+
+// ══════════════════════════════════ TABS ══════════════════════════════════
+function showTab(name, btn) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('panel-' + name).classList.add('active');
+  btn.classList.add('active');
+  if (name === 'explorer') renderExplorer();
+}
+
+// ════════════════════════════════ MAP ════════════════════════════════════
+function renderMap() {
+  const grid = document.getElementById('clauses-grid');
+  grid.innerHTML = CLAUSES.map(c => `
+    <div class="clause-card" id="clause-${c.id}" onclick="toggleClause(${c.id})" style="--accent:${c.color}; --accent-light:${c.color}22; --accent-light-bg:${c.color}08">
+      <div class="clause-head">
+        <span class="clause-icon">${c.icon}</span>
+        <div>
+          <div class="clause-num" style="color:${c.color}">Clause ${c.id}</div>
+          <div class="clause-name">${c.title}</div>
+        </div>
+      </div>
+      <div class="clause-summary">${c.summary}</div>
+      <div class="clause-detail">
+        <div class="plain-box" style="background:${c.color}15">
+          <div class="plain-label" style="color:${c.color}">💬 In Plain English</div>
+          <div class="plain-text">${c.plainEnglish}</div>
+        </div>
+        <div class="role-row">
+          <div class="role-box" style="background:#e0f2fe">
+            <div class="role-label" style="color:#0369a1">🏢 Cloud Service Customer</div>
+            <div style="font-size:12px;color:#1e3a5f;line-height:1.6">${c.cscGuidance}</div>
+          </div>
+          <div class="role-box" style="background:#f0fdf4">
+            <div class="role-label" style="color:#166534">☁️ Cloud Service Provider</div>
+            <div style="font-size:12px;color:#14532d;line-height:1.6">${c.cspGuidance}</div>
+          </div>
+        </div>
+        <div class="key-title" style="margin-top:12px">Key Points</div>
+        ${c.keyPoints.map(p=>`<div class="key-item"><span style="color:${c.color};flex-shrink:0">▶</span>${p}</div>`).join('')}
+        <div class="key-title" style="margin-top:12px">Subclauses</div>
+        ${c.subclauses.map(s=>`<span class="subclause-tag" style="background:${c.color}20;color:${c.color}">${s}</span>`).join('')}
+      </div>
+    </div>
+  `).join('');
+
+  const ag = document.getElementById('annex-grid');
+  ag.innerHTML = ANNEX_A.map(a => `
+    <div class="annex-card">
+      <div class="annex-card-top">
+        <span class="annex-emoji">${a.icon}</span>
+        <span class="annex-count">Extended control</span>
+      </div>
+      <div class="annex-ref">${a.ref}</div>
+      <div class="annex-name">${a.title}</div>
+      <div class="annex-hover-desc">${a.desc}</div>
+    </div>
+  `).join('');
+}
+
+function toggleClause(id) {
+  const card = document.getElementById('clause-' + id);
+  const c = CLAUSES.find(x => x.id === id);
+  if (openClause === id) {
+    card.classList.remove('open');
+    card.style.borderColor = '';
+    card.style.boxShadow = '';
+    openClause = null;
+  } else {
+    if (openClause) {
+      const prev = document.getElementById('clause-' + openClause);
+      prev.classList.remove('open');
+      prev.style.borderColor = '';
+      prev.style.boxShadow = '';
+    }
+    card.classList.add('open');
+    card.style.borderColor = c.color;
+    card.style.boxShadow = `0 4px 20px ${c.color}30`;
+    openClause = id;
+  }
+}
+
+// ════════════════════════════════ QUIZ ═══════════════════════════════════
+function renderQuiz() {
+  const container = document.getElementById('quiz-container');
+  if (quizState.finished) { renderResults(container); return; }
+  const q = QUIZ[quizState.current];
+  const pct = (quizState.current / QUIZ.length) * 100;
+  container.innerHTML = `
+    <div class="section-header">
+      <div class="section-tag">Test Your Knowledge</div>
+      <h2 class="section-title">ISO/IEC 27017 Quiz</h2>
+      <p class="section-desc">10 questions covering cloud security controls, shared responsibilities, and Annex A.</p>
+    </div>
+    <div class="quiz-wrap">
+      <div class="quiz-meta">
+        <span>Question ${quizState.current + 1} of ${QUIZ.length}</span>
+        <span class="quiz-score-label">Score: ${quizState.score}</span>
+      </div>
+      <div class="quiz-progress-bar-bg">
+        <div class="quiz-progress-bar" style="width:${pct}%"></div>
+      </div>
+      <div class="quiz-question-box">
+        <div class="quiz-q-tag">ISO/IEC 27017 — Cloud Security Knowledge Check</div>
+        <div class="quiz-q-text">${q.q}</div>
+      </div>
+      <div class="quiz-options">
+        ${q.opts.map((opt,i) => `
+          <button class="quiz-opt" id="opt-${i}" onclick="selectOpt(${i})" ${quizState.answered?'disabled':''}>
+            <strong>${String.fromCharCode(65+i)}.</strong> ${opt}
+            ${quizState.answered && i===q.ans ? ' <span style="float:right">✓</span>' : ''}
+            ${quizState.answered && i===quizState.selected && i!==q.ans ? ' <span style="float:right">✗</span>' : ''}
+          </button>
+        `).join('')}
+      </div>
+      ${quizState.answered ? `
+        <div class="quiz-explanation ${quizState.selected===q.ans?'good':'bad'}">
+          <div class="quiz-exp-label">${quizState.selected===q.ans?'✓ Correct!':'✗ Not quite'}</div>
+          ${q.exp}
+        </div>
+        <button class="btn-primary" onclick="nextQuestion()">
+          ${quizState.current+1>=QUIZ.length ? 'See Results' : 'Next Question →'}
+        </button>
+      ` : ''}
+    </div>
+  `;
+  if (quizState.answered) {
+    q.opts.forEach((_,i) => {
+      const btn = document.getElementById('opt-'+i);
+      if (i === q.ans) btn.classList.add('correct');
+      else if (i === quizState.selected) btn.classList.add('wrong');
+    });
+  }
+}
+
+function selectOpt(i) {
+  if (quizState.answered) return;
+  quizState.selected = i;
+  quizState.answered = true;
+  const correct = i === QUIZ[quizState.current].ans;
+  if (correct) quizState.score++;
+  quizState.answers.push({ correct, selected: i });
+  renderQuiz();
+}
+
+function nextQuestion() {
+  if (quizState.current + 1 >= QUIZ.length) { quizState.finished = true; renderQuiz(); return; }
+  quizState.current++;
+  quizState.answered = false;
+  quizState.selected = null;
+  renderQuiz();
+}
+
+function renderResults(container) {
+  const pct = Math.round((quizState.score / QUIZ.length) * 100);
+  const grade = pct>=90?{label:"Cloud Security Expert",color:"#0D9488",icon:"🏆"}
+    :pct>=70?{label:"Proficient",color:"#F59E0B",icon:"🎯"}
+    :pct>=50?{label:"Learning",color:"#7C3AED",icon:"📚"}
+    :{label:"Keep Studying",color:"#EF4444",icon:"💪"};
+  container.innerHTML = `
+    <div class="quiz-results">
+      <div class="result-emoji">${grade.icon}</div>
+      <h2 class="result-title">${quizState.score}/${QUIZ.length} — ${grade.label}</h2>
+      <div class="result-pct" style="color:${grade.color}">${pct}%</div>
+      <div class="result-dots">
+        ${quizState.answers.map((a,i)=>`
+          <div class="result-dot" style="background:${a.correct?'#0D9488':'#EF4444'}">${i+1}</div>
+        `).join('')}
+      </div>
+      <p class="result-msg">${pct>=70
+        ? "Great work! You have a solid grasp of ISO/IEC 27017 cloud security controls."
+        : "Review the domains you found tricky and try again. The Visual Map tab shows CSC vs CSP guidance side by side!"
+      }</p>
+      <button class="btn-primary" onclick="restartQuiz()" style="max-width:240px;margin:0 auto;display:block">Try Again</button>
+    </div>
+  `;
+}
+
+function restartQuiz() {
+  quizState = { current:0, score:0, answered:false, selected:null, answers:[], finished:false };
+  renderQuiz();
+}
+
+// ════════════════════════════════ SCENARIOS ══════════════════════════════
+function renderScenarios() {
+  const tabs = document.getElementById('scenario-tabs');
+  tabs.innerHTML = SCENARIOS.map((s,i) => `
+    <button class="scenario-tab ${i===currentScenario?'active':''}" onclick="switchScenario(${i})">
+      <span>${s.icon}</span>
+      <span>${s.title}</span>
+      <span class="diff-badge" style="background:${s.diffColor}">${s.diff}</span>
+    </button>
+  `).join('');
+  renderScenarioContent();
+}
+
+function switchScenario(i) {
+  currentScenario = i;
+  renderScenarios();
+}
+
+function renderScenarioContent() {
+  const s = SCENARIOS[currentScenario];
+  const content = document.getElementById('scenario-content');
+  content.innerHTML = `
+    <div class="scenario-header">
+      <div style="display:flex;align-items:center;gap:16px;margin-bottom:14px">
+        <span style="font-size:48px">${s.icon}</span>
+        <div>
+          <div class="scenario-meta">Scenario ${s.id}</div>
+          <h3 class="scenario-title">${s.title}</h3>
+        </div>
+      </div>
+      <p class="scenario-body">${s.situation}</p>
+    </div>
+    <div class="scenario-questions">
+      ${s.questions.map((q,i) => `
+        <div class="sq-card">
+          <div class="sq-top">
+            <div class="sq-head">
+              <div class="sq-num">${i+1}</div>
+              <div style="flex:1">
+                <div class="sq-q">${q.q}</div>
+                <span class="sq-hint">💡 Hint: ${q.hint}</span>
+                <div style="padding-left:0">
+                  <textarea class="sq-textarea" placeholder="Write your answer here before revealing the solution..."></textarea>
+                  <button class="btn-reveal" id="btn-${currentScenario}-${i}"
+                    style="background:#0EA5E9;color:#fff"
+                    onclick="toggleAnswer(${currentScenario},${i})">Reveal Answer</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="sq-answer" id="ans-${currentScenario}-${i}">
+            <div class="sq-answer-label">✓ Model Answer</div>
+            <div class="sq-answer-text">${q.ans}</div>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+
+function toggleAnswer(sIdx, qIdx) {
+  const ans = document.getElementById(`ans-${sIdx}-${qIdx}`);
+  const btn = document.getElementById(`btn-${sIdx}-${qIdx}`);
+  const showing = ans.classList.contains('show');
+  ans.classList.toggle('show');
+  btn.textContent = showing ? 'Reveal Answer' : 'Hide Answer';
+  btn.style.background = showing ? '#0EA5E9' : '#0f172a';
+}
+
+// ════════════════════════════════ EXPLORER ═══════════════════════════════
+function switchExpTab(tab) {
+  expTab = tab;
+  document.getElementById('exp-tab-clauses').classList.toggle('active', tab==='clauses');
+  document.getElementById('exp-tab-annex').classList.toggle('active', tab==='annex');
+  renderExplorer();
+}
+
+function runSearch() { renderExplorer(); }
+
+function renderExplorer() {
+  const q = (document.getElementById('search-input').value || '').toLowerCase();
+  const results = document.getElementById('explorer-results');
+
+  if (expTab === 'clauses') {
+    const filtered = CLAUSES.filter(c =>
+      c.title.toLowerCase().includes(q) ||
+      c.summary.toLowerCase().includes(q) ||
+      c.keyPoints.some(k => k.toLowerCase().includes(q)) ||
+      c.subclauses.some(s => s.toLowerCase().includes(q)) ||
+      c.plainEnglish.toLowerCase().includes(q)
+    );
+    document.getElementById('exp-tab-clauses').textContent = `📖 Domains (${filtered.length})`;
+    if (!filtered.length) {
+      results.innerHTML = '<div class="empty-state">No domains match your search. Try a different term.</div>';
+      return;
+    }
+    results.innerHTML = `<div class="explorer-clauses">
+      ${filtered.map(c => `
+        <div class="exp-clause ${openExpClause===c.id?'open':''}" id="exp-clause-${c.id}"
+          onclick="toggleExpClause(${c.id})"
+          style="border-color:${openExpClause===c.id?c.color:'#dde8f5'};background:${openExpClause===c.id?c.color+'08':'#fff'}">
+          <div class="exp-head">
+            <span class="exp-icon">${c.icon}</span>
+            <div class="exp-meta">
+              <div class="exp-num" style="color:${c.color}">Clause ${c.id}</div>
+              <div class="exp-name">${c.title}</div>
+              <div class="exp-sum">${c.summary}</div>
+            </div>
+            <span class="exp-chevron">${openExpClause===c.id?'▲':'▼'}</span>
+          </div>
+          <div class="exp-detail">
+            <div class="exp-grid2">
+              <div>
+                <div class="key-title">Key Points</div>
+                ${c.keyPoints.map(p=>`<div class="key-item"><span style="color:${c.color};flex-shrink:0">▶</span>${p}</div>`).join('')}
+              </div>
+              <div>
+                <div class="key-title">Plain English</div>
+                <div style="background:${c.color}12;border-radius:8px;padding:10px 12px;font-size:13px;color:#334155;line-height:1.6">${c.plainEnglish}</div>
+              </div>
+            </div>
+            <div style="margin-top:14px">
+              <div class="key-title">Subclauses</div>
+              ${c.subclauses.map(s=>`<span class="subclause-tag" style="background:${c.color}20;color:${c.color}">${s}</span>`).join('')}
+            </div>
+          </div>
+        </div>
+      `).join('')}
+    </div>`;
+  } else {
+    const filtered = ANNEX_A.filter(a =>
+      a.title.toLowerCase().includes(q) ||
+      a.ref.toLowerCase().includes(q) ||
+      a.desc.toLowerCase().includes(q)
+    );
+    document.getElementById('exp-tab-annex').textContent = `☁️ Annex A CLD (${filtered.length})`;
+    if (!filtered.length) {
+      results.innerHTML = '<div class="empty-state">No Annex A CLD controls match your search.</div>';
+      return;
+    }
+    results.innerHTML = `<div class="exp-annex-grid">
+      ${filtered.map(a => `
+        <div class="exp-annex-card">
+          <div class="exp-annex-head">
+            <div class="exp-annex-left">
+              <span class="exp-annex-emoji">${a.icon}</span>
+              <div>
+                <div class="exp-annex-ref">${a.ref}</div>
+                <div class="exp-annex-name">${a.title}</div>
+              </div>
+            </div>
+            <span class="exp-annex-badge">Extended</span>
+          </div>
+          <div class="exp-annex-desc">${a.desc}</div>
+        </div>
+      `).join('')}
+    </div>`;
+  }
+}
+
+function toggleExpClause(id) {
+  openExpClause = openExpClause === id ? null : id;
+  renderExplorer();
+}
+
+// ══════════════════════════════════ INIT ══════════════════════════════════
+renderMap();
+renderQuiz();
+renderScenarios();
+renderExplorer();
+</script>
+</body>
+</html>
