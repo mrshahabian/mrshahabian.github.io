@@ -1,0 +1,73 @@
+---
+import { getSections, getLesson } from '../../../utils/tutorials';
+
+export function getStaticPaths() {
+	return getSections().flatMap((s) =>
+		s.subsections.map((sub) => ({ params: { section: s.slug, lesson: sub.slug } }))
+	);
+}
+
+const { section, lesson } = Astro.params;
+const data = getLesson(section!, lesson!);
+if (!data) return Astro.redirect('/tutorials');
+
+const { sub, prev, next } = data;
+const courseHref = `/tutorials/${section}`;
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width,initial-scale=1" />
+		<meta name="robots" content="noindex,nofollow" />
+		<title>{sub.name} — {data.section.title}</title>
+		<style>
+			:root { --accent: #1d4ed8; }
+			* { margin: 0; padding: 0; box-sizing: border-box; }
+			html, body { height: 100%; }
+			body { display: flex; flex-direction: column; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0f172a; }
+			.bar {
+				flex: 0 0 auto; display: flex; align-items: center; gap: .5rem;
+				padding: .5rem .75rem; background: #0f172a; color: #fff;
+				border-bottom: 1px solid rgba(255,255,255,.08); flex-wrap: wrap;
+			}
+			.bar a, .bar span.title { font-size: .85rem; font-weight: 600; text-decoration: none; }
+			.bar a { color: #fff; padding: .4rem .7rem; border-radius: 8px; background: rgba(255,255,255,.08); white-space: nowrap; }
+			.bar a:hover { background: rgba(255,255,255,.16); }
+			.bar a.home { background: var(--accent); }
+			.bar a.disabled { opacity: .35; pointer-events: none; }
+			.bar .title { color: rgba(255,255,255,.75); margin: 0 .25rem; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+			.spacer { flex: 1 1 auto; }
+			iframe { flex: 1 1 auto; width: 100%; border: 0; background: #eef2fc; }
+		</style>
+		<script>
+			(function () {
+				var s = function (e) { e.preventDefault(); e.stopPropagation(); return false; };
+				['contextmenu', 'dragstart', 'copy', 'cut'].forEach(function (t) { window.addEventListener(t, s, true); });
+				window.addEventListener('keydown', function (e) {
+					var k = (e.key || '').toLowerCase();
+					if ((e.ctrlKey || e.metaKey) && (k === 's' || k === 'u' || k === 'p')) return s(e);
+					if (k === 'f12') return s(e);
+					if ((e.ctrlKey || e.metaKey) && e.shiftKey && (k === 'i' || k === 'j' || k === 'c')) return s(e);
+				}, true);
+			})();
+		</script>
+	</head>
+	<body>
+		<div class="bar">
+			<a href={courseHref}>&#8592; {data.section.title}</a>
+			<a href="/tutorials">Tutorials</a>
+			<a class="home" href="/">Home</a>
+			<span class="title">{sub.name}</span>
+			<span class="spacer"></span>
+			{prev ? <a href={`/tutorials/${section}/${prev.slug}`}>&#8592; Prev</a> : <a class="disabled" href="#">&#8592; Prev</a>}
+			{next ? <a href={`/tutorials/${section}/${next.slug}`}>Next &#8594;</a> : <a class="disabled" href="#">Next &#8594;</a>}
+		</div>
+		<iframe
+			title={sub.name}
+			srcdoc={data.html}
+			sandbox="allow-scripts allow-same-origin allow-popups allow-forms allow-modals allow-pointer-lock allow-presentation"
+		></iframe>
+	</body>
+</html>

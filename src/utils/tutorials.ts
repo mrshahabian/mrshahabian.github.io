@@ -5,14 +5,18 @@ import path from 'node:path';
 // Each sub-directory is a "topic" (a Tutorials section). Inside it:
 //   - meta.json        -> { title, description, order, videos:[{title,url}], books:[{title,url}] }
 //   - README.html      -> optional free-form landing body (rendered as-is)
-//   - *.html           -> subsections (lesson pages). A leading "NN - " sets ordering.
+//   - *.html           -> lessons. A leading "NN - " sets ordering.
 //   - any other file   -> a downloadable resource (drawing, sample, slides, ...)
-// Everything is dynamic: add a file to a folder and it shows up. No code changes needed.
+//
+// Lessons are NOT linked as raw files. They are shown through a viewer route
+// (/tutorials/<topic>/<lesson-slug>) that embeds the lesson in a sandboxed iframe,
+// and the raw .html is removed from the deployed output (see scripts/protect-lessons.mjs),
+// so there is no standalone file to download at a guessable URL.
 
 const ROOT = path.resolve('public/tutorials');
 
 export type Link = { title: string; url: string };
-export type Subsection = { name: string; file: string; url: string; order: number };
+export type Subsection = { name: string; file: string; slug: string; href: string; order: number };
 export type Resource = { name: string; file: string; url: string; size: number };
 export type Section = {
   slug: string;
@@ -40,11 +44,15 @@ function fromSlug(slug: string): string {
   return slug.replace(/[-_]+/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
 }
 
+function slugify(s: string): string {
+  return s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || 'lesson';
+}
+
 function fileUrl(slug: string, file: string): string {
   return `/tutorials/${encodeURIComponent(slug)}/${encodeURIComponent(file)}`;
 }
 
-function humanSize(bytes: number): string {
+export function formatSize(bytes: number): string {
   if (!bytes) return '';
   const units = ['B', 'KB', 'MB', 'GB'];
   let i = 0, n = bytes;
@@ -52,9 +60,13 @@ function humanSize(bytes: number): string {
   return `${n.toFixed(n < 10 && i > 0 ? 1 : 0)} ${units[i]}`;
 }
 
-export function formatSize(bytes: number): string {
-  return humanSize(bytes);
-}
+// In-frame deterrents injected into the lesson HTML that we embed via iframe srcdoc.
+const FRAME_DETERRENT = `<style>*{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}input,textarea,[contenteditable]{-webkit-user-select:text;user-select:text}</style>
+<script>(function(){var s=function(e){e.preventDefault();e.stopPropagation();return false;};
+['contextmenu','dragstart','selectstart','copy','cut'].forEach(function(t){window.addEventListener(t,s,true);});
+window.addEventListener('keydown',function(e){var k=(e.key||'').toLowerCase();
+if((e.ctrlKey||e.metaKey)&&(k==='s'||k==='u'||k==='p')){return s(e);}if(k==='f12'){return s(e);}
+if((e.ctrlKey||e.metaKey)&&e.shiftKey&&(k==='i'||k==='j'||k==='c')){return s(e);}},true);})();</script>`;
 
 export function getSections(): Section[] {
   if (!fs.existsSync(ROOT)) return [];
@@ -78,6 +90,7 @@ export function getSections(): Section[] {
     let bodyHtml = '';
     const subsections: Subsection[] = [];
     const resources: Resource[] = [];
+    const usedSlugs = new Set<string>();
 
     for (const e of entries) {
       const lower = e.name.toLowerCase();
@@ -85,7 +98,10 @@ export function getSections(): Section[] {
       if (isBody(e.name)) { bodyHtml = fs.readFileSync(path.join(dirPath, e.name), 'utf-8'); continue; }
       if (lower.endsWith('.html')) {
         const { name, order } = fromFilename(e.name);
-        subsections.push({ name, file: e.name, url: fileUrl(slug, e.name), order });
+        let ls = slugify(name); let n = 2;
+        while (usedSlugs.has(ls)) ls = `${slugify(name)}-${n++}`;
+        usedSlugs.add(ls);
+        subsections.push({ name, file: e.name, slug: ls, href: `/tutorials/${slug}/${ls}`, order });
       } else if (!/\.(md|markdown)$/i.test(e.name)) {
         let size = 0;
         try { size = fs.statSync(path.join(dirPath, e.name)).size; } catch {}
@@ -115,4 +131,35 @@ export function getSections(): Section[] {
 
 export function getSection(slug: string): Section | undefined {
   return getSections().find((s) => s.slug === slug);
+}
+
+export type Lesson = {
+  section: Section;
+  sub: Subsection;
+  index: number;
+  prev: Subsection | null;
+  next: Subsection | null;
+  html: string;
+};
+
+export function getLesson(sectionSlug: string, lessonSlug: string): Lesson | undefined {
+  const section = getSection(sectionSlug);
+  if (!section) return undefined;
+  const index = section.subsections.findIndex((s) => s.slug === lessonSlug);
+  if (index < 0) return undefined;
+  const sub = section.subsections[index];
+
+  let html = fs.readFileSync(path.join(ROOT, sectionSlug, sub.file), 'utf-8');
+  if (/<head[^>]*>/i.test(html)) html = html.replace(/<head([^>]*)>/i, `<head$1>\n${FRAME_DETERRENT}`);
+  else if (/<html[^>]*>/i.test(html)) html = html.replace(/<html([^>]*)>/i, `<html$1>\n${FRAME_DETERRENT}`);
+  else html = FRAME_DETERRENT + '\n' + html;
+
+  return {
+    section,
+    sub,
+    index,
+    prev: index > 0 ? section.subsections[index - 1] : null,
+    next: index < section.subsections.length - 1 ? section.subsections[index + 1] : null,
+    html,
+  };
 }
