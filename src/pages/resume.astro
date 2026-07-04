@@ -2,21 +2,50 @@
 import BaseHead from '../components/BaseHead.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import { SITE_TITLE } from '../consts';
 ---
 
 <!doctype html>
 <html lang="en">
 	<head>
-		<BaseHead title="Resume" description="Download my resume/CV" />
+		<BaseHead title={`Resume - ${SITE_TITLE}`} description="Resume and professional profiles for Reza Shahabian — AI Engineer (Agentic AI, LLMs, Multimodal ML)." />
 	</head>
 	<body>
 		<Header />
-		<main>
-			<h1>Resume</h1>
-            <p>The downloadable PDF will be available here once uploaded.</p>
+		<main style="max-width: 54rem; margin: 0 auto; padding: 2rem 1rem;">
+			<h1 style="margin-bottom: .5rem;">Resume</h1>
+			<p style="font-size: 1.15rem; color: rgb(var(--gray-dark)); margin-top: 0;">
+				<strong>Reza Shahabian</strong> — AI Engineer · Agentic AI, LLMs &amp; Multimodal ML · PhD, Computer Science
+			</p>
+
+			<div style="display:flex; gap:2rem; flex-wrap:wrap; margin:1.5rem 0; padding:1.25rem; background:rgba(var(--accent),0.06); border-radius:12px;">
+				<div><div style="font-size:1.6rem; font-weight:700; color:var(--accent);">20+</div><div style="font-size:.85rem; color:rgb(var(--gray));">Publications</div></div>
+				<div><div style="font-size:1.6rem; font-weight:700; color:var(--accent);">67</div><div style="font-size:.85rem; color:rgb(var(--gray));">Citations</div></div>
+				<div><div style="font-size:1.6rem; font-weight:700; color:var(--accent);">5</div><div style="font-size:.85rem; color:rgb(var(--gray));">h-index</div></div>
+				<div><div style="font-size:1.6rem; font-weight:700; color:var(--accent);">60+</div><div style="font-size:.85rem; color:rgb(var(--gray));">Data centres delivered</div></div>
+			</div>
+
+			<p style="line-height:1.7; color:rgb(var(--gray-dark));">
+				AI engineer building agentic, multimodal AI systems end-to-end — from data and models to
+				evaluation and real-time deployment. PhD in Computer Science, with a prior track record of
+				shipping production hardware–software systems and leading cross-functional teams. UK-based,
+				<strong>no visa sponsorship required</strong> (Global Talent).
+			</p>
+
+			<h2 style="margin-top:2rem;">Profiles &amp; contact</h2>
+			<ul style="line-height:2; font-size:1.05rem;">
+				<li><a href="https://www.linkedin.com/in/mrshahabian/">LinkedIn</a> — career history and recommendations</li>
+				<li><a href="https://scholar.google.com/citations?user=EWEbqssAAAAJ&hl=en">Google Scholar</a> — full publication list and citations</li>
+				<li><a href="https://github.com/mrshahabian">GitHub</a> — code, agentic-AI projects, and demos</li>
+				<li><a href="mailto:shahabian.reza@gmail.com">shahabian.reza@gmail.com</a> — email</li>
+			</ul>
+
+			<p style="margin-top:1.5rem; color:rgb(var(--gray));">
+				A downloadable PDF CV is available on request. See
+				<a href="/#experience">Experience</a>, <a href="/#publications">Publications</a>, and
+				<a href="/projects">Projects</a> for full detail.
+			</p>
 		</main>
 		<Footer />
 	</body>
 </html>
-
-

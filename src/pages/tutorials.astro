@@ -2,30 +2,52 @@
 import BaseHead from '../components/BaseHead.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
-import { getCollection } from 'astro:content';
-const items = await getCollection('tutorials');
+import { SITE_TITLE } from '../consts';
+import { getSections } from '../utils/tutorials';
+
+const sections = getSections();
 ---
 
 <!doctype html>
 <html lang="en">
 	<head>
-		<BaseHead title="Tutorials" description="Educational tutorials, videos, and code notebooks" />
+		<BaseHead title={`Tutorials - ${SITE_TITLE}`} description="Teaching materials and interactive tutorials — AWS, AI, robotics and more." />
 	</head>
 	<body>
 		<Header />
-		<main>
-			<h1>Tutorials</h1>
-			<ul>
-				{items.map((t) => (
-					<li>
-						<strong>{t.data.title}</strong> — {t.data.description}
-					</li>
-				))}
-			</ul>
+		<main style="max-width: 64rem; margin: 0 auto; padding: 2rem 1rem;">
+			<h1 style="margin-bottom: .5rem;">Tutorials</h1>
+			<p style="font-size: 1.1rem; color: rgb(var(--gray-dark)); margin-top: 0;">
+				Teaching materials and interactive lessons I use and share. Pick a topic to start.
+			</p>
+
+			{sections.length === 0 ? (
+				<p style="color: rgb(var(--gray)); margin-top: 2rem;">No topics published yet — check back soon.</p>
+			) : (
+				<div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; margin-top: 2rem;">
+					{sections.map((s) => (
+						<a href={`/tutorials/${s.slug}`} style="text-decoration:none; color:inherit;">
+							<article class="card clickable reveal" style="height:100%;">
+								<h2 style="margin:0 0 .5rem 0; font-size:1.3rem;">{s.title}</h2>
+								{s.description && (
+									<p style="margin:.25rem 0 .75rem 0; font-size:.95rem; color:rgb(var(--gray));">{s.description}</p>
+								)}
+								<p style="margin:0; font-size:.85rem; color:var(--accent); font-weight:600;">
+									{s.subsections.length} lesson{s.subsections.length === 1 ? '' : 's'}
+									{s.resources.length > 0 && ` · ${s.resources.length} resource${s.resources.length === 1 ? '' : 's'}`}
+								</p>
+							</article>
+						</a>
+					))}
+				</div>
+			)}
 		</main>
+		<script>
+			const obs = new IntersectionObserver((entries) => {
+				for (const e of entries) if (e.isIntersecting) e.target.classList.add('visible');
+			}, { threshold: 0.1 });
+			document.querySelectorAll('.reveal').forEach((el) => obs.observe(el));
+		</script>
 		<Footer />
 	</body>
 </html>
-
-
-
