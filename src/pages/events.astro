@@ -1,5 +1,6 @@
 ---
 import { getCollection, render } from 'astro:content';
+import { Image } from 'astro:assets';
 import BaseHead from '../components/BaseHead.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
@@ -144,6 +145,13 @@ const renderedEvents = await Promise.all(
 			.registration-link:hover {
 				opacity: 0.85;
 			}
+			.event-hero-image {
+				width: 100%;
+				height: auto;
+				border-radius: 12px;
+				margin-bottom: 1.5rem;
+				box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+			}
 		</style>
 	</head>
 	<body>
@@ -162,6 +170,9 @@ const renderedEvents = await Promise.all(
 				{renderedEvents.map(({ event, Content }) => (
 					<article class={`event-section${event.data.highlight ? ' highlight' : ''}`} id={event.id}>
 						<div class="event-header">
+							{event.data.heroImage && (
+								<Image class="event-hero-image" width={960} height={540} src={event.data.heroImage} alt={event.data.title} />
+							)}
 							<h2>{event.data.title}</h2>
 							
 							<div class="event-meta">

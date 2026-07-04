@@ -103,7 +103,7 @@ const tutorials = defineCollection({
 // Events / Workshops
 const events = defineCollection({
   loader: glob({ base: './src/content/events', pattern: '**/*.{md,mdx}' }),
-  schema: () =>
+  schema: ({ image }) =>
     z.object({
       title: z.string(),
       description: z.string(),
@@ -111,6 +111,7 @@ const events = defineCollection({
       location: z.string().optional(),
       registrationUrl: z.string().url().optional(),
       highlight: z.boolean().optional(),
+      heroImage: image().optional(),
     }),
 });
 

@@ -4,6 +4,7 @@ description: "Building interdisciplinary bridges through assistive technologies,
 date: "1-4 July 2026"
 location: "University of London, London, UK"
 highlight: true
+heroImage: "./icsr-2026-special-session.jpg"
 ---
 
 ## 18th International Conference on Social Robotics
@@ -25,6 +26,17 @@ highlight: true
 - **Gabriella Lakatos**  
 
 *All organisers are affiliated with the Robotics Research Group, University of Hertfordshire, UK.*
+
+---
+
+### My Contributions
+
+I chaired the **Social Assistive Robotics in Art and Health** session, and contributed to four papers presented at this special session:
+
+- 📄 **Vision–Language Model for Fall Detection in Socially Assistive Robotics: Zero-Shot Prompting and Few-Shot Calibration** — Shahabian Alashti, M. et al.
+- 📄 **From Pilot Data to Protocol: Sample-Size Guidance for Multimodal Intent Detection in Assistive Wearable Robotics** — Shahabian Alashti, M. et al.
+- 📄 **EMG-Based Lower Limb Activity Recognition for Exoskeleton-Assisted and Unassisted Locomotion Using Deep Learning** — Alingal Meethal, S. et al.
+- 📄 **Pexformer: Robust Indoor Human Localisation via Patch-Level Tokenisation and Semi-Permeable Attention** — Zhang, B. et al.
 
 ---
 
