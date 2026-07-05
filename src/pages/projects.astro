@@ -239,6 +239,14 @@ const renderedProjects = await Promise.all(
 											Paper
 										</a>
 									)}
+									{project.data.links.video && (
+										<a href={project.data.links.video} target="_blank" rel="noopener noreferrer">
+											<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+												<polygon points="5 3 19 12 5 21 5 3"></polygon>
+											</svg>
+											Watch Demo
+										</a>
+									)}
 								</div>
 							)}
 						</div>
