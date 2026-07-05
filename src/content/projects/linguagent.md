@@ -3,7 +3,7 @@ title: "Linguagent — Adaptive AI Tutor for Language & Any Subject"
 description: "A personalized, adaptive learning tutor built as a team of specialist AI agents on Google ADK and Gemini, assessing learners against the CEFR standard (or a mastery scale for any subject) and tutoring them with feedback grounded in real rubrics."
 tags: ["AI Agents", "Google ADK", "Gemini", "Vertex AI", "EdTech", "Adaptive Learning", "Multi-Agent Systems", "RAG", "A2A", "MCP"]
 year: "2026"
-role: "Founder & Creator"
+role: "Creator — Independent Project (designed, built & shipped end-to-end)"
 links:
   demo: "https://linguagent.com/"
   video: "https://youtu.be/kny7JoG8efA?si=wAgz1XUiOhQ2oyW5"
