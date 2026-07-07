@@ -54,12 +54,18 @@ If there's no `meta.json`, the title is derived from the folder name and the res
 
 ## Download protection
 
-- Lessons are **not** served as standalone files. At build time the raw `.html` is
-  removed from the deployed output and each lesson is shown only through its viewer
-  page (sandboxed iframe), so there's no file at a guessable URL to right-click-save
-  or open directly. Right-click / save / copy shortcuts are also disabled inside lessons.
-- This stops casual downloading but is **not a hard lock** — a determined user can still
-  recover content via browser DevTools. To truly keep the public out (Level 3), gate the
-  site behind authentication, e.g. **Cloudflare Access** on `mrshahabian.com` (free tier):
-  Cloudflare dashboard → Zero Trust → Access → Applications → add a self-hosted app for
-  `mrshahabian.com/tutorials/*` with an email-OTP policy. (Not set up yet — ask when ready.)
+- Lessons are **not** served as standalone files. Raw `.html` is removed from the
+  deployed output; each lesson is shown only through its viewer page.
+- The viewer does **not** contain readable lesson HTML. The lesson travels as an
+  encoded payload, decoded at runtime and rendered through a short-lived blob URL,
+  and only when the page is served from an allowed host (`mrshahabian.com`,
+  `mrshahabian.github.io`, localhost for dev). A saved copy of the page — via
+  Save Link As, Save Page As, or re-hosting the file — shows a "view on the live
+  website" notice instead of the lesson. Right-click / save / copy shortcuts are
+  also disabled in the viewer and inside lessons.
+- Remaining limit: content someone is *currently viewing* can still be extracted
+  with browser DevTools — true of any website. The only way to stop that for the
+  public is authentication (Level 3), e.g. **Cloudflare Access** on
+  `mrshahabian.com` (free tier): Cloudflare dashboard → Zero Trust → Access →
+  Applications → self-hosted app for `mrshahabian.com/tutorials/*` with an
+  email-OTP policy. (Not set up yet — ask when ready.)

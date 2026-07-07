@@ -13,6 +13,12 @@ if (!data) return Astro.redirect('/tutorials');
 
 const { sub, prev, next } = data;
 const courseHref = `/tutorials/${section}`;
+
+// The lesson is NOT shipped as readable HTML. It travels as a base64 payload,
+// decoded at runtime and rendered via a blob URL, and only when the page is
+// served from an allowed host. A saved copy of this page (Save Link As /
+// Save Page As) shows a notice instead of the lesson.
+const payload = Buffer.from(data.html, 'utf-8').toString('base64');
 ---
 
 <!doctype html>
@@ -40,19 +46,12 @@ const courseHref = `/tutorials/${section}`;
 			.bar .title { color: rgba(255,255,255,.75); margin: 0 .25rem; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 			.spacer { flex: 1 1 auto; }
 			iframe { flex: 1 1 auto; width: 100%; border: 0; background: #eef2fc; }
+			.notice {
+				flex: 1 1 auto; display: none; align-items: center; justify-content: center;
+				text-align: center; color: #cbd5e1; padding: 2rem; line-height: 1.7;
+			}
+			.notice a { color: #93c5fd; }
 		</style>
-		<script>
-			(function () {
-				var s = function (e) { e.preventDefault(); e.stopPropagation(); return false; };
-				['contextmenu', 'dragstart', 'copy', 'cut'].forEach(function (t) { window.addEventListener(t, s, true); });
-				window.addEventListener('keydown', function (e) {
-					var k = (e.key || '').toLowerCase();
-					if ((e.ctrlKey || e.metaKey) && (k === 's' || k === 'u' || k === 'p')) return s(e);
-					if (k === 'f12') return s(e);
-					if ((e.ctrlKey || e.metaKey) && e.shiftKey && (k === 'i' || k === 'j' || k === 'c')) return s(e);
-				}, true);
-			})();
-		</script>
 	</head>
 	<body>
 		<div class="bar">
@@ -64,10 +63,51 @@ const courseHref = `/tutorials/${section}`;
 			{prev ? <a href={`/tutorials/${section}/${prev.slug}`}>&#8592; Prev</a> : <a class="disabled" href="#">&#8592; Prev</a>}
 			{next ? <a href={`/tutorials/${section}/${next.slug}`}>Next &#8594;</a> : <a class="disabled" href="#">Next &#8594;</a>}
 		</div>
+		<div class="notice" id="notice">
+			<p>
+				This lesson can only be viewed on the live website.<br />
+				Please open it at <a href={`https://mrshahabian.com${courseHref}`}>mrshahabian.com</a>.
+			</p>
+		</div>
 		<iframe
+			id="lesson-frame"
 			title={sub.name}
-			srcdoc={data.html}
 			sandbox="allow-scripts allow-same-origin allow-popups allow-forms allow-modals allow-pointer-lock allow-presentation"
 		></iframe>
+		<script define:vars={{ payload }}>
+			(function () {
+				// Viewer-level deterrents
+				var stop = function (e) { e.preventDefault(); e.stopPropagation(); return false; };
+				['contextmenu', 'dragstart', 'copy', 'cut'].forEach(function (t) { window.addEventListener(t, stop, true); });
+				window.addEventListener('keydown', function (e) {
+					var k = (e.key || '').toLowerCase();
+					if ((e.ctrlKey || e.metaKey) && (k === 's' || k === 'u' || k === 'p')) return stop(e);
+					if (k === 'f12') return stop(e);
+					if ((e.ctrlKey || e.metaKey) && e.shiftKey && (k === 'i' || k === 'j' || k === 'c')) return stop(e);
+				}, true);
+
+				// Domain lock: render only when served from the real site (or local dev).
+				var ALLOWED = ['mrshahabian.com', 'www.mrshahabian.com', 'mrshahabian.github.io', 'localhost', '127.0.0.1'];
+				var frame = document.getElementById('lesson-frame');
+				var notice = document.getElementById('notice');
+				if (ALLOWED.indexOf(location.hostname) === -1) {
+					frame.style.display = 'none';
+					notice.style.display = 'flex';
+					return;
+				}
+				try {
+					var bin = atob(payload);
+					var bytes = new Uint8Array(bin.length);
+					for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+					var html = new TextDecoder('utf-8').decode(bytes);
+					var url = URL.createObjectURL(new Blob([html], { type: 'text/html' }));
+					frame.src = url;
+					frame.addEventListener('load', function () { setTimeout(function () { URL.revokeObjectURL(url); }, 5000); }, { once: true });
+				} catch (err) {
+					frame.style.display = 'none';
+					notice.style.display = 'flex';
+				}
+			})();
+		</script>
 	</body>
 </html>
