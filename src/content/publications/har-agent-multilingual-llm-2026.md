@@ -1,10 +1,11 @@
 ---
 title: "HAR-Agent: Multilingual Multimodal Activity Recognition via Knowledge-Distilled LLM Reasoning"
-authors: ["Khashayar Ghamati", "Mohamad Reza Shahabian Alashti", "A. Fallahirahmatabadi", "Abolfazl Zaraki"]
-venue: "Preprint (2026)"
+authors: ["Khashayar Ghamati", "Mohammad Reza Shahabian Alashti", "Ali Fallahirahmatabadi", "Abolfazl Zaraki"]
+venue: "IEEE Trans. Multimedia (submitted)"
 year: "2026"
-url: "https://www.authorea.com/"
-abstract: "HAR-Agent is an agentic, LLM-centred architecture for multilingual multimodal human activity recognition. It integrates vision, speech-to-text, and pose information into a unified reasoning workflow and uses knowledge distillation to make LLM reasoning practical for activity recognition. The approach emphasises interpretable, tool-integrated evaluation across languages and modalities."
+abstract: "Building intelligent agents capable of understanding human activities requires reasoning modules that can interpret complex visual and auditory observations. We present HAR-Agent, a multilingual multimodal human activity recognition system whose core contribution is a methodology for developing domain-adapted LLM reasoning through fine-tuning on real-world activity data and compressing it via knowledge distillation for deployment. Using the RHM-HAR dataset (6,701 robot-mounted video clips; 14 activity classes) for adaptation, we instruction-tune a 72B-parameter teacher (Qwen2.5-72B-Instruct) and compare instruction tuning (IT) to supervised fine-tuning (SFT) across 17 model configurations (1.5B–72B). IT outperforms SFT at every scale (17–28 point advantage), and distilled students down to 1.5B parameters enable inference on consumer hardware. We evaluate in-domain on the held-out RHM-HAR validation split and cross-domain on Toyota Smarthome to quantify transfer beyond the training distribution. The architecture unifies vision (LLaVA), audio (Whisper), and direct text pathways into a common textual representation consumed by the reasoning module. On a controlled multilingual audio benchmark spanning five language variants, the audio pathway achieves 89.2% accuracy with sub-second latency. We further introduce deployment-centric metrics to quantify knowledge transfer and hardware accessibility."
 ---
 
-Preprint (Authorea, 2026). An agentic AI approach that combines multimodal perception with knowledge-distilled LLM reasoning for multilingual human activity recognition.
+Submitted to IEEE Transactions on Multimedia (2026), currently under review.
+
+HAR-Agent turns a large multimodal reasoning model into something deployable: a 72B-parameter teacher is instruction-tuned on real-world activity data and distilled across 17 model configurations, with students as small as 1.5B parameters running on consumer hardware. Vision (LLaVA), audio (Whisper), and text pathways are unified into a common textual representation, and a five-language audio benchmark (Chinese, Spanish, Farsi, US/UK English) validates the multilingual pathway at 89.2% accuracy with sub-second latency. The paper also introduces deployment-centric metrics for knowledge transfer and hardware accessibility.
