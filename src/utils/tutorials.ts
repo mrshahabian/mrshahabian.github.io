@@ -1,11 +1,14 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { bundleDc, isDcLesson } from './dc-bundle';
 
 // Reads teaching content from `public/tutorials/<topic>/` at build time.
 // Each sub-directory is a "topic" (a Tutorials section). Inside it:
 //   - meta.json        -> { title, description, order, videos:[{title,url}], books:[{title,url}] }
 //   - README.html      -> optional free-form landing body (rendered as-is)
 //   - *.html           -> lessons. A leading "NN - " sets ordering.
+//   - *.dc.html        -> raw dc-runtime lesson exports (need support.js); bundled into
+//                         self-contained pages at build time (see dc-bundle.ts)
 //   - any other file   -> a downloadable resource (drawing, sample, slides, ...)
 //
 // Lessons are NOT linked as raw files. They are shown through a viewer route
@@ -34,7 +37,7 @@ const isHidden = (n: string) => n.startsWith('.') || n.startsWith('_');
 const isBody = (n: string) => /^(readme|index)\.html$/i.test(n);
 
 function fromFilename(filename: string): { name: string; order: number } {
-  const base = filename.replace(/\.[^.]+$/, '');
+  const base = filename.replace(/\.dc\.html$/i, '').replace(/\.[^.]+$/, '');
   const m = base.match(/^\s*(\d+)\s*[-_.)]\s+(.+)$/); // "01 - Name", "1) Name", "02_Name"
   if (m) return { name: m[2].trim(), order: parseInt(m[1], 10) };
   return { name: base.trim(), order: 9999 };
@@ -67,6 +70,12 @@ const FRAME_DETERRENT = `<style>*{-webkit-user-select:none;user-select:none;-web
 window.addEventListener('keydown',function(e){var k=(e.key||'').toLowerCase();
 if((e.ctrlKey||e.metaKey)&&(k==='s'||k==='u'||k==='p')){return s(e);}if(k==='f12'){return s(e);}
 if((e.ctrlKey||e.metaKey)&&e.shiftKey&&(k==='i'||k==='j'||k==='c')){return s(e);}},true);})();</script>`;
+
+function withDeterrent(html: string): string {
+  if (/<head[^>]*>/i.test(html)) return html.replace(/<head([^>]*)>/i, `<head$1>\n${FRAME_DETERRENT}`);
+  if (/<html[^>]*>/i.test(html)) return html.replace(/<html([^>]*)>/i, `<html$1>\n${FRAME_DETERRENT}`);
+  return FRAME_DETERRENT + '\n' + html;
+}
 
 export function getSections(): Section[] {
   if (!fs.existsSync(ROOT)) return [];
@@ -150,9 +159,11 @@ export function getLesson(sectionSlug: string, lessonSlug: string): Lesson | und
   const sub = section.subsections[index];
 
   let html = fs.readFileSync(path.join(ROOT, sectionSlug, sub.file), 'utf-8');
-  if (/<head[^>]*>/i.test(html)) html = html.replace(/<head([^>]*)>/i, `<head$1>\n${FRAME_DETERRENT}`);
-  else if (/<html[^>]*>/i.test(html)) html = html.replace(/<html([^>]*)>/i, `<html$1>\n${FRAME_DETERRENT}`);
-  else html = FRAME_DETERRENT + '\n' + html;
+  // Raw dc exports are wrapped into a self-contained bundled page first. The
+  // deterrent goes inside the lesson template too, so it survives the
+  // document swap the bundle bootstrap performs on load.
+  if (isDcLesson(sub.file)) html = bundleDc(withDeterrent(html), { title: sub.name });
+  html = withDeterrent(html);
 
   return {
     section,

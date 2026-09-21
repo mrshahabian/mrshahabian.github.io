@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{background:#edf5f2;font-family:'Figtree',system-ui,sans-serif;color:#1d2b2a;-webkit-font-smoothing:antialiased}
+  a{color:#0e8f74}
+  a:hover{color:#0a6b57}
+  @keyframes floatA{0%,100%{transform:translateY(0) translateX(0)}50%{transform:translateY(-22px) translateX(10px)}}
+  @keyframes floatB{0%,100%{transform:translateY(0)}50%{transform:translateY(26px)}}
+  ::-webkit-scrollbar{width:10px;height:10px}
+  ::-webkit-scrollbar-thumb{background:#c2dcd4;border-radius:8px}
+</style>
+</helmet>
+<div style="min-height:100vh;position:relative;overflow-x:hidden;display:flex;flex-direction:column;align-items:center">
+
+  <div style="position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden">
+    <div style="position:absolute;top:12%;left:6%;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#ffffff,#d3ece3);opacity:.55;filter:blur(2px);animation:floatA 13s ease-in-out infinite"></div>
+    <div style="position:absolute;top:58%;left:80%;width:280px;height:280px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#ffffff,#fdeed6);opacity:.45;filter:blur(2px);animation:floatB 17s ease-in-out infinite"></div>
+  </div>
+
+  <div style="position:sticky;top:0;z-index:30;width:100%;display:flex;justify-content:center;background:rgba(237,245,242,.85);backdrop-filter:blur(10px);border-bottom:1px solid #d5e6e0">
+    <div style="width:100%;max-width:1180px;display:flex;align-items:center;gap:20px;padding:14px 24px">
+      <div style="display:flex;align-items:center;gap:10px;font-family:'Bricolage Grotesque';font-weight:800;font-size:18px;color:#1d2b2a;white-space:nowrap">
+        <span style="font-size:22px">📡</span><span>Edge Computing</span>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;gap:6px;min-width:0">
+        <div style="height:8px;border-radius:99px;background:#d3e3de;overflow:hidden">
+          <div style="height:100%;border-radius:99px;transition:width .45s cubic-bezier(.22,.9,.3,1);width:{{ progressPct }};background:{{ accent }}"></div>
+        </div>
+        <div style="display:flex;gap:5px;flex-wrap:wrap">
+          <sc-for list="{{ chapters }}" as="c" hint-placeholder-count="19">
+            <button onClick="{{ c.onClick }}" title="{{ c.label }}" style="width:18px;height:18px;border:none;border-radius:50%;cursor:pointer;padding:0;font-size:9px;font-weight:700;color:#fff;line-height:18px;transition:transform .15s;background:{{ c.bg }}" style-hover="transform:scale(1.25)">{{ c.num }}</button>
+          </sc-for>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;white-space:nowrap">
+        <button onClick="{{ toggleGlossary }}" style="display:flex;align-items:center;gap:6px;background:#fff;border:1px solid #d5e6e0;border-radius:11px;padding:9px 14px;font-family:'Figtree';font-weight:600;font-size:14px;color:#33534c;cursor:pointer" style-hover="border-color:#0e8f74;color:#0e8f74">📖 Glossary</button>
+        <button onClick="{{ togglePlay }}" style="display:flex;align-items:center;gap:7px;background:{{ accent }};border:none;border-radius:11px;padding:10px 16px;font-family:'Bricolage Grotesque';font-weight:700;font-size:14px;color:#fff;cursor:pointer" style-hover="filter:brightness(1.06)">{{ playLabel }}</button>
+      </div>
+    </div>
+  </div>
+
+  <div style="width:100%;max-width:1180px;padding:30px 24px 16px;z-index:5">
+    <div style="position:relative;width:100%;background:#fff;border-radius:30px;box-shadow:0 24px 60px -28px rgba(20,70,60,.32),0 2px 0 #ffffff inset;padding:52px 56px;min-height:580px;overflow:hidden">
+
+      <section data-scene data-screen-label="Welcome" style="{{ sc0 }}">
+        <div style="position:absolute;top:0;right:8%;font-size:40px;animation:floatA 9s ease-in-out infinite">🐄</div>
+        <div style="position:absolute;bottom:6%;left:6%;font-size:34px;animation:floatB 11s ease-in-out infinite">🌫️</div>
+        <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.22em;text-transform:uppercase;font-weight:700;color:#0e8f74">Interactive Lesson</div>
+        <h1 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:54px;line-height:1.02;margin:0;max-width:18ch;letter-spacing:-.02em">Edge, Fog &amp; <span style="background:linear-gradient(120deg,#0e8f74,#ec7211);-webkit-background-clip:text;background-clip:text;color:transparent">Mist Computing</span></h1>
+        <p style="font-size:20px;line-height:1.55;color:#4c6660;max-width:70ch;margin:0">Compute is moving back out of the data centre. Learn where the edge actually sits, the frameworks that describe it — and work a real smart-farm scenario that cuts data transmission by 99%.</p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:4px">
+          <span style="background:#e4f3ee;border:1px solid #c2e4da;border-radius:99px;padding:8px 16px;font-weight:600;font-size:15px;color:#0e8f74">⏱️ ~34 min</span>
+          <span style="background:#eaf1fd;border:1px solid #cfdffa;border-radius:99px;padding:8px 16px;font-weight:600;font-size:15px;color:#2e7fd4">📑 19 chapters</span>
+          <span style="background:#fdeeed;border:1px solid #ffd9d5;border-radius:99px;padding:8px 16px;font-weight:600;font-size:15px;color:#e0564a">🧠 3 quizzes</span>
+          <span style="background:#fef4e8;border:1px solid #ffe6c2;border-radius:99px;padding:8px 16px;font-weight:600;font-size:15px;color:#d98a18">🐄 Smart-farm case study</span>
+        </div>
+        <div style="display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-top:14px">
+          <button onClick="{{ startLesson }}" style="background:#0e8f74;color:#fff;border:none;border-radius:15px;padding:18px 34px;font-family:'Bricolage Grotesque';font-weight:700;font-size:18px;cursor:pointer;box-shadow:0 12px 24px -8px rgba(14,143,116,.6)" style-hover="transform:translateY(-2px)">Start lesson →</button>
+          <button onClick="{{ playFromStart }}" style="background:#fff;color:#0e8f74;border:2px solid #b5ded2;border-radius:15px;padding:16px 30px;font-family:'Bricolage Grotesque';font-weight:700;font-size:18px;cursor:pointer" style-hover="border-color:#0e8f74;background:#f4fbf8">▶ Play as video</button>
+        </div>
+        <div style="margin-top:18px;display:flex;align-items:center;gap:10px;background:#f3f9f7;border:1px solid #dcebe6;border-radius:99px;padding:8px 8px 8px 18px">
+          <span style="font-size:14px;color:#6a857f">Prepared by</span>
+          <span style="background:#1d2b2a;color:#fff;border-radius:99px;padding:7px 16px;font-weight:700;font-size:14px;font-family:'Bricolage Grotesque'">Reza Shahabian</span>
+        </div>
+      </section>
+
+      <section data-scene data-screen-label="What is edge computing" style="{{ sc1 }}">
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#2e7fd4">Chapter 01 · The definition</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:40px;line-height:1.04;margin:0;letter-spacing:-.01em">What is edge computing?</h2>
+          <p style="font-size:17.5px;line-height:1.55;color:#4c6660;margin:0;max-width:86ch">Edge computing <b>decentralises</b> compute, storage and network resources — bringing processing closer to data sources and end users, and reducing reliance on centralised cloud data centres.</p>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px">
+          <div style="background:#eef4fd;border:2px solid #cfdffa;border-radius:18px;padding:22px;display:flex;flex-direction:column;gap:9px">
+            <div style="font-size:26px">🏢</div>
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:17px;color:#2e7fd4">Infrastructure Edge</div>
+            <p style="margin:0;font-size:14.5px;line-height:1.55;color:#3c4a58">Micro data centres near last mile networks — real racks, run by service providers or enterprises.</p>
+          </div>
+          <div style="background:#f5f2fe;border:2px solid #ded3fb;border-radius:18px;padding:22px;display:flex;flex-direction:column;gap:9px">
+            <div style="font-size:26px">📱</div>
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:17px;color:#7a5cf0">Device Edge</div>
+            <p style="margin:0;font-size:14.5px;line-height:1.55;color:#3c4a58">Smart devices with local compute — phones, IoT sensors, autonomous systems. Limited power, often mobile.</p>
+          </div>
+        </div>
+        <div style="background:#f3f9f7;border:1px solid #dcebe6;border-radius:14px;padding:13px 20px;font-size:14px;color:#33534c">🛣️ The <b>last mile network</b> is the separation point between the two — remember this, it comes up in the first quiz.</div>
+      </section>
+
+      <section data-scene data-screen-label="Why it matters" style="{{ sc2 }}">
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#0e8f74">Chapter 02 · Five drivers</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:38px;line-height:1.04;margin:0;letter-spacing:-.01em">Why edge computing matters</h2>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:9px">
+          <sc-for list="{{ whyPoints }}" as="w" hint-placeholder-count="5">
+            <div style="display:flex;gap:13px;align-items:flex-start;background:#f6faf9;border:1px solid #dcebe6;border-radius:13px;padding:13px 17px">
+              <div style="font-size:21px;flex-shrink:0">{{ w.icon }}</div>
+              <div><span style="font-family:'Bricolage Grotesque';font-weight:800;font-size:15px;color:{{ w.c }}">{{ w.t }}</span><span style="font-size:14.5px;line-height:1.5;color:#3c4a58"> — {{ w.d }}</span></div>
+            </div>
+          </sc-for>
+        </div>
+      </section>
+
+      <section data-scene data-screen-label="Limits of cloud-centric IoT" style="{{ sc3 }}">
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#e0564a">Chapter 03 · Where "send it all to the cloud" breaks</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:38px;line-height:1.04;margin:0;letter-spacing:-.01em">Limitations of cloud-centric IoT</h2>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:13px">
+          <sc-for list="{{ limits }}" as="l" hint-placeholder-count="5">
+            <div style="background:#fdf6f4;border:1px solid #fadfd8;border-radius:15px;padding:16px;display:flex;gap:12px;align-items:flex-start">
+              <div style="font-size:20px;flex-shrink:0">{{ l.icon }}</div>
+              <div><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:14.5px;color:#c2453a">{{ l.t }}</div><div style="font-size:13.5px;line-height:1.5;color:#3c4a58;margin-top:3px">{{ l.d }}</div></div>
+            </div>
+          </sc-for>
+        </div>
+        <div style="background:#f3f9f7;border:1px solid #dcebe6;border-radius:14px;padding:13px 20px;font-size:14px;color:#33534c">🐄 Every one of these shows up in the smart-farm case study coming in chapter 8 — watch for them.</div>
+      </section>
+
+      <section data-scene data-screen-label="The three acts of the internet" style="{{ sc4 }}">
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#7a5cf0">Chapter 04 · Where we are in the story</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:38px;line-height:1.04;margin:0;letter-spacing:-.01em">The three acts of the internet</h2>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px">
+          <sc-for list="{{ acts }}" as="a" hint-placeholder-count="3">
+            <div style="background:#f6faf9;border:2px solid #dcebe6;border-radius:18px;padding:20px;display:flex;flex-direction:column;gap:8px">
+              <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:17px;color:{{ a.c }}">{{ a.t }}</div>
+              <div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#8ba39e">{{ a.years }}</div>
+              <div style="font-size:14px;line-height:1.5;color:#3c4a58">{{ a.d }}</div>
+            </div>
+          </sc-for>
+        </div>
+        <div style="background:#e9f6f1;border:1px solid #c2e4da;border-radius:14px;padding:14px 20px;font-size:14.5px;color:#33534c">📖 Framing from Buyya, Srirama &amp; Chang (2019), <i>Fog and Edge Computing: Principles and Paradigms</i>, and Ranganath (2022).</div>
+      </section>
+
+      <section data-scene data-screen-label="Quick check 1" style="{{ sc5 }}">
+        <div style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#d98a18">🧠 Knowledge check</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:31px;line-height:1.2;margin:0;max-width:36ch">{{ q1.question }}</h2>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:800px;width:100%;margin:0 auto">
+          <sc-for list="{{ q1.options }}" as="o" hint-placeholder-count="4">
+            <button onClick="{{ o.onClick }}" style="display:flex;align-items:center;justify-content:space-between;gap:10px;text-align:left;border-radius:15px;padding:18px 20px;font-family:'Figtree';font-weight:600;font-size:16px;cursor:pointer;transition:all .15s;border:2px solid {{ o.border }};background:{{ o.bg }};color:{{ o.fg }}"><span>{{ o.label }}</span><span style="font-weight:800;font-size:18px">{{ o.mark }}</span></button>
+          </sc-for>
+        </div>
+        <sc-if value="{{ q1.answered }}" hint-placeholder-val="{{ false }}">
+          <div style="max-width:800px;width:100%;margin:0 auto;border-radius:16px;padding:18px 22px;background:{{ q1.bannerBg }}">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:17px;color:{{ q1.bannerFg }};margin-bottom:5px">{{ q1.banner }}</div>
+            <div style="font-size:16px;line-height:1.55;color:#33534c">{{ q1.explanation }}</div>
+          </div>
+        </sc-if>
+      </section>
+
+      <section data-scene data-screen-label="Cloud fog and mist" style="{{ sc6 }}">
+        <div style="display:flex;flex-direction:column;gap:5px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#0e8f74">🎯 Try it · Three layers of one architecture</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:33px;line-height:1.05;margin:0">Cloud, fog &amp; mist</h2>
+          <p style="font-size:14.5px;color:#4c6660;margin:0"><b>Tap each layer</b> — each card also shows its role in the smart farm.</p>
+        </div>
+        <div style="background:#1d2b2a;border-radius:18px;padding:20px;display:flex;flex-direction:column;gap:7px;align-items:center">
+          <div style="background:#2e7fd4;color:#fff;border-radius:12px;padding:11px 26px;font-family:'Bricolage Grotesque';font-weight:800;font-size:13px">☁️ CLOUD — central region</div>
+          <div style="color:#8fb8ac;font-size:13px">↕ occasional, small, actionable</div>
+          <div style="background:#0e8f74;color:#fff;border-radius:12px;padding:11px 26px;font-family:'Bricolage Grotesque';font-weight:800;font-size:13px">🌫️ FOG — local premises</div>
+          <div style="color:#8fb8ac;font-size:13px">↕ short-range, continuous</div>
+          <div style="background:#7a5cf0;color:#fff;border-radius:12px;padding:11px 26px;font-family:'Bricolage Grotesque';font-weight:800;font-size:13px">💧 MIST — on the device</div>
+        </div>
+        <div style="display:flex;gap:9px;flex-wrap:wrap">
+          <sc-for list="{{ layerList }}" as="L" hint-placeholder-count="3">
+            <button onClick="{{ L.onClick }}" style="flex:1;min-width:160px;display:flex;align-items:center;justify-content:center;gap:8px;border-radius:12px;padding:12px 16px;cursor:pointer;transition:all .15s;border:2px solid {{ L.border }};background:{{ L.bg }};color:{{ L.fg }}"><span style="font-size:17px">{{ L.icon }}</span><span style="font-family:'Bricolage Grotesque';font-weight:800;font-size:13.5px">{{ L.name }}</span></button>
+          </sc-for>
+        </div>
+        <div style="background:#f6faf9;border:2px solid #dcebe6;border-radius:18px;padding:22px;display:flex;flex-direction:column;gap:11px;min-height:190px">
+          <div style="display:flex;align-items:baseline;gap:12px;flex-wrap:wrap"><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:22px;color:{{ layerInfo.color }}">{{ layerInfo.icon }} {{ layerInfo.name }}</div><div style="background:{{ layerInfo.color }};color:#fff;border-radius:99px;padding:4px 12px;font-weight:700;font-size:11.5px;font-family:'Bricolage Grotesque'">{{ layerInfo.where }}</div></div>
+          <p style="margin:0;font-size:15.5px;line-height:1.6;color:#3c4a58">{{ layerInfo.desc }}</p>
+          <div style="display:flex;gap:7px;flex-wrap:wrap">
+            <sc-for list="{{ layerTraits }}" as="t" hint-placeholder-count="3"><span style="background:#fff;border:1px solid #dcebe6;border-radius:99px;padding:6px 13px;font-weight:600;font-size:12.5px;color:#3c4a58">{{ t.t }}</span></sc-for>
+          </div>
+          <div style="background:#fff7ef;border:1px solid #ffe0c2;border-radius:12px;padding:12px 16px;font-size:14px;line-height:1.5;color:#8a5f21">🐄 <b>On the farm:</b> {{ layerInfo.farm }}</div>
+        </div>
+      </section>
+
+      <section data-scene data-screen-label="Case study the problem" style="{{ sc7 }}">
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#e0564a">Chapter 07 · Case study, part one</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:38px;line-height:1.04;margin:0;letter-spacing:-.01em">🐄 The connected herd problem</h2>
+          <p style="font-size:17px;line-height:1.55;color:#4c6660;margin:0;max-width:86ch">A dairy farm wants to spot lameness and illness early using wearable sensors. Here is why the obvious cloud-first design fails.</p>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <sc-for list="{{ problemPoints }}" as="p" hint-placeholder-count="5">
+            <div style="display:flex;gap:13px;align-items:flex-start;background:#fdf6f4;border:1px solid #fadfd8;border-radius:14px;padding:14px 18px">
+              <div style="width:40px;height:40px;flex-shrink:0;border-radius:11px;background:{{ p.c }};display:flex;align-items:center;justify-content:center;font-size:20px">{{ p.icon }}</div>
+              <div><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:15px;color:{{ p.c }}">{{ p.t }}</div><div style="font-size:14.5px;line-height:1.5;color:#3c4a58;margin-top:2px">{{ p.d }}</div></div>
+            </div>
+          </sc-for>
+        </div>
+      </section>
+
+      <section data-scene data-screen-label="Case study the solution" style="{{ sc8 }}">
+        <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:14px;flex-wrap:wrap">
+          <div style="display:flex;flex-direction:column;gap:4px">
+            <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#0e8f74">🎯 Try it · Case study, part two</div>
+            <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:33px;line-height:1.05;margin:0">The fog &amp; mist solution</h2>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:14px;color:#0e8f74;background:#e4f3ee;border-radius:10px;padding:10px 14px">{{ farmNum }}</div>
+            <button onClick="{{ farmPrev }}" style="background:#fff;border:1px solid #d5e6e0;border-radius:10px;padding:10px 15px;font-family:'Figtree';font-weight:600;font-size:13.5px;color:#4c6660;cursor:pointer">◀</button>
+            <button onClick="{{ farmNext }}" style="background:#0e8f74;border:none;border-radius:10px;padding:10px 17px;font-family:'Bricolage Grotesque';font-weight:700;font-size:13.5px;color:#fff;cursor:pointer">Next ▶</button>
+            <button onClick="{{ farmReset }}" style="background:#fff;border:1px solid #d5e6e0;border-radius:10px;padding:10px 14px;font-family:'Figtree';font-weight:600;font-size:13.5px;color:#4c6660;cursor:pointer">↺</button>
+          </div>
+        </div>
+        <div style="background:#f6faf9;border:2px solid #dcebe6;border-radius:16px;padding:16px;display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:4px;border-radius:12px;padding:12px 20px;transition:all .25s;background:{{ mistBg }};color:{{ mistFg }}"><span style="font-size:22px">💧</span><span style="font-family:'Bricolage Grotesque';font-weight:800;font-size:11.5px">MIST · collar</span></div>
+          <span style="color:#a9c4bc;font-size:17px">→</span>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:4px;border-radius:12px;padding:12px 20px;transition:all .25s;background:{{ fogBg }};color:{{ fogFg }}"><span style="font-size:22px">🌫️</span><span style="font-family:'Bricolage Grotesque';font-weight:800;font-size:11.5px">FOG · barn</span></div>
+          <span style="color:#a9c4bc;font-size:17px">→</span>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:4px;border-radius:12px;padding:12px 20px;transition:all .25s;background:{{ cloudBg }};color:{{ cloudFg }}"><span style="font-size:22px">☁️</span><span style="font-family:'Bricolage Grotesque';font-weight:800;font-size:11.5px">CLOUD · AWS</span></div>
+        </div>
+        <div style="display:grid;grid-template-columns:.88fr 1.12fr;gap:16px;align-items:start">
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <sc-for list="{{ farmList }}" as="f" hint-placeholder-count="6">
+              <div style="display:flex;gap:9px;align-items:center;border-radius:11px;padding:10px 13px;border:1.5px solid {{ f.border }};background:{{ f.bg }};color:{{ f.fg }}"><span style="width:20px;height:20px;flex-shrink:0;border-radius:50%;background:rgba(0,0,0,.12);display:flex;align-items:center;justify-content:center;font-family:'Bricolage Grotesque';font-weight:800;font-size:10.5px">{{ f.num }}</span><span style="font-size:12.5px;font-weight:700">{{ f.t }}</span></div>
+            </sc-for>
+          </div>
+          <div style="background:#fff;border:2px solid #dcebe6;border-radius:18px;padding:24px;display:flex;flex-direction:column;gap:11px;min-height:200px;justify-content:center">
+            <div style="font-size:36px">{{ farmIcon }}</div>
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:21px;color:{{ farmColor }}">{{ farmTitle }}</div>
+            <p style="margin:0;font-size:16px;line-height:1.6;color:#3c4a58">{{ farmDesc }}</p>
+          </div>
+        </div>
+      </section>
+
+      <section data-scene data-screen-label="Data reduction calculator" style="{{ sc9 }}">
+        <div style="display:flex;flex-direction:column;gap:5px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#ec7211">🎯 Try it · Put numbers on it</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:33px;line-height:1.05;margin:0">Data reduction calculator</h2>
+          <p style="font-size:14.5px;color:#4c6660;margin:0"><b>Pick a herd size.</b> Two tags per cow, one reading per second, ~20 bytes each. The fog node uploads only alerts (~3% of the herd per day) plus one small hourly summary per cow.</p>
+        </div>
+        <div style="display:flex;gap:7px;flex-wrap:wrap">
+          <sc-for list="{{ cowList }}" as="c" hint-placeholder-count="4">
+            <button onClick="{{ c.onClick }}" style="border-radius:10px;padding:10px 16px;font-family:'Bricolage Grotesque';font-weight:800;font-size:13px;cursor:pointer;transition:all .15s;border:2px solid {{ c.border }};background:{{ c.bg }};color:{{ c.fg }}">{{ c.label }}</button>
+          </sc-for>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+          <div style="background:#fdf2f0;border:2px solid #f8d6d0;border-radius:18px;padding:20px;display:flex;flex-direction:column;gap:9px">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:15px;color:#c2453a">☁️ Cloud-only: send everything</div>
+            <div><div style="font-size:11px;font-weight:800;letter-spacing:.06em;color:#8ba39e">READINGS PER DAY</div><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:28px;color:#c2453a">{{ rawReadings }}</div></div>
+            <div><div style="font-size:11px;font-weight:800;letter-spacing:.06em;color:#8ba39e">UPLOADED PER DAY</div><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:24px;color:#c2453a">{{ rawMB }}</div></div>
+            <div style="font-size:12.5px;color:#8a4a40">From {{ tagCount }} tags across {{ cowCount }} cows — continuously, over rural broadband.</div>
+          </div>
+          <div style="background:#e9f6f1;border:2px solid #c2e4da;border-radius:18px;padding:20px;display:flex;flex-direction:column;gap:9px">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:15px;color:#0a6b50">🌫️ Fog design: alerts + summaries</div>
+            <div><div style="font-size:11px;font-weight:800;letter-spacing:.06em;color:#8ba39e">ALERTS PER DAY</div><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:28px;color:#0a6b50">{{ alertCount }}</div></div>
+            <div><div style="font-size:11px;font-weight:800;letter-spacing:.06em;color:#8ba39e">UPLOADED PER DAY</div><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:24px;color:#0a6b50">{{ alertKB }}</div></div>
+            <div style="font-size:12.5px;color:#0a6b50">Alerts plus {{ summaryCount }} hourly per-cow summaries. Raw accelerometer data never leaves the barn.</div>
+          </div>
+        </div>
+        <div style="background:#1d2b2a;border-radius:18px;padding:22px;display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap">
+          <div style="font-size:11px;font-weight:800;letter-spacing:.07em;color:#8fb8ac">DATA TRANSMISSION REDUCED BY</div>
+          <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:42px;color:#19c39a">{{ reductionPct }}</div>
+        </div>
+        <div style="background:#f3f9f7;border:1px solid #dcebe6;border-radius:13px;padding:12px 18px;font-size:13.5px;color:#4c6660">💡 Notice the reduction barely changes with herd size — the saving comes from <b>what</b> you send, not how much you have.</div>
+      </section>
+
+      <section data-scene data-screen-label="Infrastructure vs device edge" style="{{ sc10 }}">
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#2e7fd4">Chapter 10 · Two sides of one line</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:38px;line-height:1.04;margin:0;letter-spacing:-.01em">Infrastructure Edge vs Device Edge</h2>
+        </div>
+        <div style="background:#1d2b2a;border-radius:18px;padding:20px;display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap">
+          <div style="background:#2e7fd4;color:#fff;border-radius:12px;padding:13px 20px;text-align:center"><div style="font-size:20px">🏢</div><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:12px;margin-top:3px">IEDC</div></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:3px"><div style="height:3px;width:80px;background:#ec7211;border-radius:2px"></div><div style="font-size:9.5px;font-weight:800;color:#ec7211;letter-spacing:.05em">LAST MILE</div></div>
+          <div style="background:#7a5cf0;color:#fff;border-radius:12px;padding:13px 20px;text-align:center"><div style="font-size:20px">📱</div><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:12px;margin-top:3px">DEVICE</div></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px">
+          <div style="background:#eef4fd;border:2px solid #cfdffa;border-radius:18px;padding:20px;display:flex;flex-direction:column;gap:9px">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:16px;color:#2e7fd4">🏢 Infrastructure Edge (IEDC)</div>
+            <div style="display:flex;flex-direction:column;gap:6px;font-size:13.5px;color:#3c4a58">
+              <div>• Micro data centres near last mile networks</div>
+              <div>• Supports low-latency, high-throughput workloads</div>
+              <div>• Typically managed by service providers or enterprises</div>
+            </div>
+          </div>
+          <div style="background:#f5f2fe;border:2px solid #ded3fb;border-radius:18px;padding:20px;display:flex;flex-direction:column;gap:9px">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:16px;color:#7a5cf0">📱 Device Edge</div>
+            <div style="display:flex;flex-direction:column;gap:6px;font-size:13.5px;color:#3c4a58">
+              <div>• Smartphones, IoT devices, autonomous systems</div>
+              <div>• Limited compute, storage and power</div>
+              <div>• Often battery-powered and mobile</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section data-scene data-screen-label="Edge types by latency" style="{{ sc11 }}">
+        <div style="display:flex;flex-direction:column;gap:5px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#7a5cf0">🎯 Try it · The latency ladder</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:33px;line-height:1.05;margin:0">Types of edge, by latency</h2>
+          <p style="font-size:14.5px;color:#4c6660;margin:0">Bars show relative round-trip distance. <b>Tap a tier.</b></p>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:7px">
+          <sc-for list="{{ etypeList }}" as="E" hint-placeholder-count="5">
+            <button onClick="{{ E.onClick }}" style="display:grid;grid-template-columns:180px 84px 1fr;gap:12px;align-items:center;border-radius:12px;padding:11px 15px;cursor:pointer;transition:all .15s;text-align:left;border:2px solid {{ E.border }};background:{{ E.bg }};color:{{ E.fg }}">
+              <span style="font-family:'Bricolage Grotesque';font-weight:800;font-size:13px">{{ E.name }}</span>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;font-weight:600">{{ E.latency }}</span>
+              <span style="height:9px;border-radius:99px;background:#e8f1ee;display:block;overflow:hidden"><span style="display:block;height:100%;border-radius:99px;width:{{ E.barW }};background:{{ E.barBg }}"></span></span>
+            </button>
+          </sc-for>
+        </div>
+        <div style="background:#f5f2fe;border:2px solid #ded3fb;border-radius:18px;padding:22px;display:flex;flex-direction:column;gap:10px;min-height:140px;justify-content:center">
+          <div style="display:flex;align-items:baseline;gap:12px;flex-wrap:wrap"><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:21px;color:{{ etypeInfo.color }}">{{ etypeInfo.name }}</div><div style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;color:#6a857f">{{ etypeInfo.latency }}</div></div>
+          <p style="margin:0;font-size:15.5px;line-height:1.6;color:#3c4a58">{{ etypeInfo.d }}</p>
+          <div style="background:#fff;border:1px solid #ded3fb;border-radius:12px;padding:12px 16px;font-size:14px;color:#5a4a8f">💡 <b>Example:</b> {{ etypeInfo.ex }}</div>
+        </div>
+      </section>
+
+      <section data-scene data-screen-label="Quick check 2" style="{{ sc12 }}">
+        <div style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#d98a18">🧠 Knowledge check</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:30px;line-height:1.2;margin:0;max-width:38ch">{{ q2.question }}</h2>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:840px;width:100%;margin:0 auto">
+          <sc-for list="{{ q2.options }}" as="o" hint-placeholder-count="4">
+            <button onClick="{{ o.onClick }}" style="display:flex;align-items:center;justify-content:space-between;gap:10px;text-align:left;border-radius:15px;padding:18px 20px;font-family:'Figtree';font-weight:600;font-size:15px;cursor:pointer;transition:all .15s;border:2px solid {{ o.border }};background:{{ o.bg }};color:{{ o.fg }}"><span>{{ o.label }}</span><span style="font-weight:800;font-size:18px">{{ o.mark }}</span></button>
+          </sc-for>
+        </div>
+        <sc-if value="{{ q2.answered }}" hint-placeholder-val="{{ false }}">
+          <div style="max-width:840px;width:100%;margin:0 auto;border-radius:16px;padding:18px 22px;background:{{ q2.bannerBg }}">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:17px;color:{{ q2.bannerFg }};margin-bottom:5px">{{ q2.banner }}</div>
+            <div style="font-size:16px;line-height:1.55;color:#33534c">{{ q2.explanation }}</div>
+          </div>
+        </sc-if>
+      </section>
+
+      <section data-scene data-screen-label="SCALE" style="{{ sc13 }}">
+        <div style="display:flex;flex-direction:column;gap:5px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#0e8f74">🎯 Try it · The benefits framework</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:33px;line-height:1.05;margin:0">SCALE — what FEC gives you</h2>
+          <p style="font-size:14.5px;color:#4c6660;margin:0">SCALE explains the <b>benefits</b> Fog and Edge Computing brings to IoT and distributed systems. <b>Tap a letter.</b></p>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <sc-for list="{{ scaleList }}" as="S" hint-placeholder-count="5">
+            <button onClick="{{ S.onClick }}" style="flex:1;min-width:120px;display:flex;flex-direction:column;align-items:center;gap:3px;border-radius:12px;padding:13px 10px;cursor:pointer;transition:all .15s;border:2px solid {{ S.border }};background:{{ S.bg }};color:{{ S.fg }}"><span style="font-family:'Bricolage Grotesque';font-weight:800;font-size:22px">{{ S.letter }}</span><span style="font-family:'Bricolage Grotesque';font-weight:800;font-size:11.5px">{{ S.name }}</span></button>
+          </sc-for>
+        </div>
+        <div style="background:#e9f6f1;border:2px solid #c2e4da;border-radius:18px;padding:24px;display:flex;flex-direction:column;gap:12px;min-height:180px;justify-content:center">
+          <div style="display:flex;align-items:center;gap:13px"><div style="width:50px;height:50px;border-radius:13px;background:{{ scaleInfo.color }};display:flex;align-items:center;justify-content:center;font-family:'Bricolage Grotesque';font-weight:800;font-size:25px;color:#fff">{{ scaleInfo.letter }}</div><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:23px;color:{{ scaleInfo.color }}">{{ scaleInfo.name }}</div></div>
+          <p style="margin:0;font-size:16px;line-height:1.6;color:#3c4a58">{{ scaleInfo.d }}</p>
+          <div style="background:#fff;border:1px solid #c2e4da;border-radius:12px;padding:12px 16px;font-size:14px;color:#0a6b50">🐄 <b>On the farm:</b> {{ scaleInfo.farm }}</div>
+        </div>
+      </section>
+
+      <section data-scene data-screen-label="SCANC" style="{{ sc14 }}">
+        <div style="display:flex;flex-direction:column;gap:5px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#2e7fd4">🎯 Try it · The capabilities framework</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:33px;line-height:1.05;margin:0">SCANC — how FEC delivers it</h2>
+          <p style="font-size:14.5px;color:#4c6660;margin:0">SCANC outlines the <b>technical capabilities</b> that enable SCALE's benefits. <b>Tap a letter.</b></p>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <sc-for list="{{ scancList }}" as="S" hint-placeholder-count="5">
+            <button onClick="{{ S.onClick }}" style="flex:1;min-width:120px;display:flex;flex-direction:column;align-items:center;gap:3px;border-radius:12px;padding:13px 10px;cursor:pointer;transition:all .15s;border:2px solid {{ S.border }};background:{{ S.bg }};color:{{ S.fg }}"><span style="font-family:'Bricolage Grotesque';font-weight:800;font-size:22px">{{ S.letter }}</span><span style="font-family:'Bricolage Grotesque';font-weight:800;font-size:11.5px">{{ S.name }}</span></button>
+          </sc-for>
+        </div>
+        <div style="background:#eef4fd;border:2px solid #cfdffa;border-radius:18px;padding:24px;display:flex;flex-direction:column;gap:12px;min-height:180px;justify-content:center">
+          <div style="display:flex;align-items:center;gap:13px"><div style="width:50px;height:50px;border-radius:13px;background:{{ scancInfo.color }};display:flex;align-items:center;justify-content:center;font-family:'Bricolage Grotesque';font-weight:800;font-size:25px;color:#fff">{{ scancInfo.letter }}</div><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:23px;color:{{ scancInfo.color }}">{{ scancInfo.name }}</div></div>
+          <p style="margin:0;font-size:16px;line-height:1.6;color:#3c4a58">{{ scancInfo.d }}</p>
+          <div style="background:#fff;border:1px solid #cfdffa;border-radius:12px;padding:12px 16px;font-size:14px;color:#22598f">🐄 <b>On the farm:</b> {{ scancInfo.farm }}</div>
+        </div>
+      </section>
+
+      <section data-scene data-screen-label="Design and interconnection" style="{{ sc15 }}">
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#ec7211">Chapter 15 · Building the edge network</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:35px;line-height:1.04;margin:0;letter-spacing:-.01em">Design &amp; interconnection</h2>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <sc-for list="{{ designPoints }}" as="d" hint-placeholder-count="5">
+            <div style="display:flex;gap:12px;align-items:flex-start;background:#f6faf9;border:1px solid #dcebe6;border-radius:13px;padding:12px 16px">
+              <div style="font-size:20px;flex-shrink:0">{{ d.icon }}</div>
+              <div><span style="font-family:'Bricolage Grotesque';font-weight:800;font-size:14px;color:{{ d.c }}">{{ d.t }}</span><span style="font-size:13.5px;line-height:1.5;color:#3c4a58"> — {{ d.d }}</span></div>
+            </div>
+          </sc-for>
+        </div>
+        <div style="border:1px solid #dcebe6;border-radius:16px;overflow:hidden">
+          <div style="display:grid;grid-template-columns:.8fr 1.1fr 1.1fr;background:#1d2b2a;padding:11px 14px;gap:10px">
+            <div style="font-size:10.5px;font-weight:800;letter-spacing:.06em;color:#8fb8ac">FEATURE</div>
+            <div style="font-size:10.5px;font-weight:800;letter-spacing:.06em;color:#8fb8ac">INTERNET EXCHANGE (IX)</div>
+            <div style="font-size:10.5px;font-weight:800;letter-spacing:.06em;color:#19c39a">EDGE EXCHANGE (EX)</div>
+          </div>
+          <sc-for list="{{ ixRows }}" as="r" hint-placeholder-count="4">
+            <div style="display:grid;grid-template-columns:.8fr 1.1fr 1.1fr;gap:10px;padding:11px 14px;border-top:1px solid #eef3f1">
+              <div style="font-size:13px;font-weight:700;color:#6a857f">{{ r.f }}</div>
+              <div style="font-size:13.5px;color:#3c4a58">{{ r.ix }}</div>
+              <div style="font-size:13.5px;color:#0a6b50;font-weight:600">{{ r.ex }}</div>
+            </div>
+          </sc-for>
+        </div>
+      </section>
+
+      <section data-scene data-screen-label="Sort it out" style="{{ sc16 }}">
+        <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap">
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#0e8f74">🎯 Try it · Which layer?</div>
+            <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:33px;line-height:1.05;margin:0">Mist, fog or cloud?</h2>
+            <p style="font-size:15px;color:#4c6660;margin:0"><b>Tap a job</b>, then <b>tap the layer</b> that should do it.</p>
+          </div>
+          <div style="display:flex;gap:10px">
+            <sc-if value="{{ dragChecked }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;align-items:center;border-radius:12px;padding:11px 18px;font-family:'Bricolage Grotesque';font-weight:800;font-size:16px;background:{{ dragScoreBg }};color:{{ dragScoreFg }}">{{ dragScore }}</div>
+            </sc-if>
+            <button onClick="{{ resetDrag }}" style="background:#fff;border:1px solid #d5e6e0;border-radius:12px;padding:11px 18px;font-family:'Figtree';font-weight:600;font-size:14px;color:#4c6660;cursor:pointer">↺ Reset</button>
+            <button onClick="{{ checkDrag }}" style="background:#0e8f74;border:none;border-radius:12px;padding:11px 20px;font-family:'Bricolage Grotesque';font-weight:700;font-size:15px;color:#fff;cursor:pointer">Check answers</button>
+          </div>
+        </div>
+        <div style="min-height:54px;background:#f2f7f5;border:2px dashed #c6ddd6;border-radius:16px;padding:12px;display:flex;flex-wrap:wrap;gap:10px;align-items:center">
+          <span style="font-size:13px;font-weight:700;color:#8ba39e;padding:0 6px">TRAY:</span>
+          <sc-for list="{{ dragTray }}" as="it" hint-placeholder-count="6">
+            <button onClick="{{ it.onClick }}" style="border-radius:11px;padding:11px 16px;font-family:'Figtree';font-weight:600;font-size:13px;cursor:pointer;transition:all .15s;border:2px solid {{ it.border }};background:{{ it.bg }};color:{{ it.fg }}">{{ it.label }}</button>
+          </sc-for>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:13px">
+          <div onClick="{{ dropMist }}" style="background:#f5f2fe;border:2px solid #ded3fb;border-radius:18px;padding:15px;min-height:170px;display:flex;flex-direction:column;gap:9px;cursor:pointer">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:14px;color:#7a5cf0">💧 Mist</div>
+            <sc-for list="{{ dragMist }}" as="it" hint-placeholder-count="0">
+              <button onClick="{{ it.onClick }}" style="display:flex;justify-content:space-between;align-items:center;gap:6px;text-align:left;border-radius:10px;padding:9px 12px;font-weight:600;font-size:11.5px;cursor:pointer;border:2px solid {{ it.border }};background:{{ it.bg }};color:{{ it.fg }}"><span>{{ it.label }}</span><span style="font-weight:800">{{ it.mark }}</span></button>
+            </sc-for>
+          </div>
+          <div onClick="{{ dropFog }}" style="background:#e9f6f1;border:2px solid #c2e4da;border-radius:18px;padding:15px;min-height:170px;display:flex;flex-direction:column;gap:9px;cursor:pointer">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:14px;color:#0e8f74">🌫️ Fog</div>
+            <sc-for list="{{ dragFog }}" as="it" hint-placeholder-count="0">
+              <button onClick="{{ it.onClick }}" style="display:flex;justify-content:space-between;align-items:center;gap:6px;text-align:left;border-radius:10px;padding:9px 12px;font-weight:600;font-size:11.5px;cursor:pointer;border:2px solid {{ it.border }};background:{{ it.bg }};color:{{ it.fg }}"><span>{{ it.label }}</span><span style="font-weight:800">{{ it.mark }}</span></button>
+            </sc-for>
+          </div>
+          <div onClick="{{ dropCloud }}" style="background:#eef4fd;border:2px solid #cfdffa;border-radius:18px;padding:15px;min-height:170px;display:flex;flex-direction:column;gap:9px;cursor:pointer">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:14px;color:#2e7fd4">☁️ Cloud</div>
+            <sc-for list="{{ dragCloud }}" as="it" hint-placeholder-count="0">
+              <button onClick="{{ it.onClick }}" style="display:flex;justify-content:space-between;align-items:center;gap:6px;text-align:left;border-radius:10px;padding:9px 12px;font-weight:600;font-size:11.5px;cursor:pointer;border:2px solid {{ it.border }};background:{{ it.bg }};color:{{ it.fg }}"><span>{{ it.label }}</span><span style="font-weight:800">{{ it.mark }}</span></button>
+            </sc-for>
+          </div>
+        </div>
+      </section>
+
+      <section data-scene data-screen-label="Final check" style="{{ sc17 }}">
+        <div style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#d98a18">🧠 Final knowledge check</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:30px;line-height:1.2;margin:0;max-width:40ch">{{ q3.question }}</h2>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:800px;width:100%;margin:0 auto">
+          <sc-for list="{{ q3.options }}" as="o" hint-placeholder-count="4">
+            <button onClick="{{ o.onClick }}" style="display:flex;align-items:center;justify-content:space-between;gap:10px;text-align:left;border-radius:15px;padding:18px 20px;font-family:'Figtree';font-weight:600;font-size:16px;cursor:pointer;transition:all .15s;border:2px solid {{ o.border }};background:{{ o.bg }};color:{{ o.fg }}"><span>{{ o.label }}</span><span style="font-weight:800;font-size:18px">{{ o.mark }}</span></button>
+          </sc-for>
+        </div>
+        <sc-if value="{{ q3.answered }}" hint-placeholder-val="{{ false }}">
+          <div style="max-width:800px;width:100%;margin:0 auto;border-radius:16px;padding:18px 22px;background:{{ q3.bannerBg }}">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:17px;color:{{ q3.bannerFg }};margin-bottom:5px">{{ q3.banner }}</div>
+            <div style="font-size:16px;line-height:1.55;color:#33534c">{{ q3.explanation }}</div>
+          </div>
+        </sc-if>
+      </section>
+
+      <section data-scene data-screen-label="Wrap-up" style="{{ sc18 }}">
+        <div style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px">
+          <div style="font-size:40px">🎉</div>
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#0e8f74">Session wrap-up</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:38px;line-height:1.04;margin:0;letter-spacing:-.01em">Send the decision, not the data</h2>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px">
+          <div style="background:#eef4fd;border:1px solid #cfdffa;border-radius:18px;padding:20px;display:flex;flex-direction:column;gap:7px">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:15px;color:#2e7fd4">✅ Covered</div>
+            <p style="margin:0;font-size:14px;line-height:1.55;color:#3c4a58">What edge computing is, its five drivers, where cloud-centric IoT breaks, and Infrastructure vs Device Edge across the last mile.</p>
+          </div>
+          <div style="background:#e9f6f1;border:1px solid #c2e4da;border-radius:18px;padding:20px;display:flex;flex-direction:column;gap:7px">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:15px;color:#0e8f74">🐄 Applied</div>
+            <p style="margin:0;font-size:14px;line-height:1.55;color:#3c4a58">A full mist → fog → cloud walkthrough on the smart farm, with the numbers behind the 99% data reduction.</p>
+          </div>
+          <div style="background:#fff7ef;border:1px solid #ffe0c2;border-radius:18px;padding:20px;display:flex;flex-direction:column;gap:7px">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:15px;color:#ec7211">🧩 Framed</div>
+            <p style="margin:0;font-size:14px;line-height:1.55;color:#3c4a58">SCALE and SCANC, the edge latency ladder, and how edge sites interconnect — MMRs, IX vs EX, cloud on-ramps.</p>
+          </div>
+        </div>
+        <div style="background:#f6faf9;border:1px solid #dcebe6;border-radius:18px;padding:20px 24px">
+          <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:15px;margin-bottom:9px;color:#0e8f74">🎯 The one idea to take away</div>
+          <p style="margin:0;font-size:15.5px;line-height:1.6;color:#3c4a58">The farm does not win by having a faster uplink — it wins by <b>deciding locally and transmitting conclusions</b>. When you design an edge system, the question is never "how do I move this data?" but "how little of it needs to move at all?"</p>
+        </div>
+        <div style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:2px">
+          <button onClick="{{ startLesson }}" style="background:#fff;color:#0e8f74;border:2px solid #b5ded2;border-radius:14px;padding:14px 26px;font-family:'Bricolage Grotesque';font-weight:700;font-size:16px;cursor:pointer" style-hover="background:#f4fbf8">↻ Review from the start</button>
+          <button onClick="{{ toggleGlossary }}" style="background:#0e8f74;color:#fff;border:none;border-radius:14px;padding:14px 26px;font-family:'Bricolage Grotesque';font-weight:700;font-size:16px;cursor:pointer">📖 Open glossary</button>
+        </div>
+        <div style="text-align:center;font-size:12.5px;color:#8ba39e;line-height:1.6">Buyya, R., Srirama, S. N., &amp; Chang, C. (2019). <i>Fog and Edge Computing: Principles and Paradigms</i>. John Wiley &amp; Sons.<br/>Ranganath, S. (2022). Edge computing: Types and attributes. In <i>Advances in Computers</i> (Vol. 127, pp. 35–62). Elsevier.</div>
+        <div style="text-align:center;font-size:14px;color:#8ba39e">Lesson prepared by <b style="color:#4c6660">Reza Shahabian</b></div>
+      </section>
+
+    </div>
+  </div>
+
+  <div style="position:sticky;bottom:0;z-index:20;width:100%;display:flex;justify-content:center;background:linear-gradient(to top,#edf5f2 55%,transparent);padding:10px 24px 22px">
+    <div style="width:100%;max-width:1180px;display:flex;align-items:center;justify-content:space-between;gap:14px">
+      <button onClick="{{ prev }}" style="display:flex;align-items:center;gap:8px;background:#fff;border:1px solid #d5e6e0;border-radius:13px;padding:13px 22px;font-family:'Bricolage Grotesque';font-weight:700;font-size:15px;color:#33534c;cursor:pointer" style-hover="border-color:#8fc9b9">← Back</button>
+      <div style="display:flex;align-items:center;gap:12px;font-weight:600;color:#6a857f;font-size:15px">
+        <span style="font-family:'Bricolage Grotesque';color:#1d2b2a;font-size:17px">{{ sceneNum }}</span>
+        <span style="color:#b6ccc6">/</span>
+        <span>{{ total }}</span>
+        <span style="color:#b6ccc6">·</span>
+        <span style="color:#33534c">{{ sceneTitle }}</span>
+      </div>
+      <button onClick="{{ next }}" style="display:flex;align-items:center;gap:8px;background:{{ accent }};border:none;border-radius:13px;padding:13px 26px;font-family:'Bricolage Grotesque';font-weight:700;font-size:15px;color:#fff;cursor:pointer;box-shadow:0 10px 20px -10px rgba(20,70,60,.5)" style-hover="transform:translateY(-2px)">Next →</button>
+    </div>
+  </div>
+
+  <sc-if value="{{ glossaryOpen }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ toggleGlossary }}" style="position:fixed;inset:0;z-index:50;background:rgba(20,40,36,.34);backdrop-filter:blur(2px)"></div>
+    <div style="position:fixed;top:0;right:0;bottom:0;z-index:51;width:min(460px,92vw);background:#fff;box-shadow:-20px 0 60px -20px rgba(20,70,60,.4);display:flex;flex-direction:column">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:24px 26px;border-bottom:1px solid #e8f1ee">
+        <div style="display:flex;flex-direction:column;gap:2px">
+          <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:22px">📖 Glossary</div>
+          <div style="font-size:13px;color:#7b948e">Edge, fog &amp; mist terms</div>
+        </div>
+        <button onClick="{{ toggleGlossary }}" style="background:#eef5f3;border:none;border-radius:10px;width:38px;height:38px;font-size:18px;cursor:pointer;color:#4c6660">✕</button>
+      </div>
+      <div style="overflow-y:auto;padding:18px 26px 40px;display:flex;flex-direction:column;gap:14px">
+        <sc-for list="{{ glossary }}" as="g" hint-placeholder-count="6">
+          <div style="border:1px solid #e8f1ee;border-radius:14px;padding:14px 16px;background:#fafcfb">
+            <div style="display:flex;align-items:center;gap:8px;font-family:'Bricolage Grotesque';font-weight:700;font-size:16px;color:#1d2b2a"><span>{{ g.icon }}</span>{{ g.term }}</div>
+            <div style="font-size:14.5px;line-height:1.5;color:#4c6660;margin-top:5px">{{ g.def }}</div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:820}}">
+class Component extends DCLogic {
+  state = { idx:0, playing:false, glossary:false, quiz:{q1:null,q2:null,q3:null},
+    layer:'fog', farm:0, cows:1000, scale:'security', scanc:'storage', etype:'iot',
+    drops:{collar:null,barn:null,ml:null,alert:null,archive:null,herd:null}, sel:null, dragChecked:false };
+
+  total = 19;
+  interactive = new Set([5,6,8,9,11,12,13,14,16,17]);
+  durations = { 0:5200 };
+
+  chapTitles = ['Welcome','What is edge computing','Why it matters','Limits of cloud-centric IoT','The three acts of the internet','Quick check','Cloud, fog & mist','Case study: the problem','Case study: the solution','Data reduction calculator','Infrastructure vs device edge','Edge types by latency','Quick check','SCALE','SCANC','Design & interconnection','Sort it out','Final check','Wrap-up'];
+  chapColors = ['#0e8f74','#2e7fd4','#0e8f74','#e0564a','#7a5cf0','#ffb43d','#0e8f74','#e0564a','#0e8f74','#ec7211','#2e7fd4','#7a5cf0','#ffb43d','#0e8f74','#2e7fd4','#ec7211','#0e8f74','#ffb43d','#0e8f74'];
+
+  whyPoints = [
+    {icon:'⏱️',t:'Latency',d:'Reduces delay for real-time applications.',c:'#0e8f74'},
+    {icon:'🪨',t:'Data Gravity',d:'Processes data near its source to avoid costly transfers.',c:'#2e7fd4'},
+    {icon:'🌊',t:'Data Velocity',d:'Enables timely insights from fast-moving data.',c:'#7a5cf0'},
+    {icon:'💰',t:'Transport Cost',d:'Cuts bandwidth costs by minimising long-haul data movement.',c:'#ec7211'},
+    {icon:'📍',t:'Locality',d:'Improves efficiency by optimising physical and logical proximity.',c:'#e0564a'},
+  ];
+
+  limits = [
+    {icon:'🚰',t:'Bandwidth overload',d:'Every device streaming raw data saturates the uplink.'},
+    {icon:'⏳',t:'Latency sensitivity',d:'A round trip to a distant region is too slow for real-time control.'},
+    {icon:'📵',t:'Unreliable connectivity',d:'Rural, mobile and industrial sites lose their link regularly.'},
+    {icon:'🔋',t:'Resource constraints',d:'Battery-powered devices cannot afford constant transmission.'},
+    {icon:'🔓',t:'Security vulnerabilities',d:'More data in flight over more networks means more exposure.'},
+  ];
+
+  acts = [
+    {t:'First Act',years:'1970s–1980s',d:'Centralised, academic use, low data volume.',c:'#8ba39e'},
+    {t:'Second Act',years:'1990s–2010s',d:'Cloud computing, CDNs, regionalisation.',c:'#2e7fd4'},
+    {t:'Third Act',years:'2020s–',d:'Real-time, distributed edge computing for entirely new use cases.',c:'#0e8f74'},
+  ];
+
+  layerData = {
+    mist:{name:'Mist Layer',icon:'💧',color:'#7a5cf0',where:'On the device itself',
+      desc:'The finest grain — compute embedded in the sensor or microcontroller that generates the data. Tiny, battery-powered, often doing nothing more than sampling and filtering.',
+      farm:'The collar and leg tag on each cow, sampling raw accelerometer data every second.',
+      traits:['Microcontroller-class compute','Extremely power constrained','Sampling, filtering, basic thresholds']},
+    fog:{name:'Fog Layer',icon:'🌫️',color:'#0e8f74',where:'On local premises',
+      desc:'A local node — a gateway, on-premises server or micro data centre — that aggregates many devices and runs real analysis close to where data is produced.',
+      farm:'A server in the barn receiving collar data over Bluetooth/LoRa and running a lightweight ML model.',
+      traits:['Server or gateway-class compute','Aggregates many mist devices','Runs real models and local decisions']},
+    cloud:{name:'Cloud Layer',icon:'☁️',color:'#2e7fd4',where:'In a central region',
+      desc:'Centralised, effectively unlimited compute and storage. Handles heavy training, long-term history and cross-site analysis — but it is far away and expensive to reach.',
+      farm:'Receives only the alert "Cow 105 needs a vet", plus long-term herd health history.',
+      traits:['Effectively unlimited scale','Long-term storage & model training','High latency, high transport cost']},
+  };
+  layerOrder = ['mist','fog','cloud'];
+
+  problemPoints = [
+    {icon:'🐄',t:'1,000 cows',d:'Each wears a collar and a leg tag.',c:'#0e8f74'},
+    {icon:'📈',t:'Data every second',d:'Every tag generates movement data once per second, continuously.',c:'#2e7fd4'},
+    {icon:'🚰',t:'Massive bandwidth',d:'Sending all this raw data to AWS requires bandwidth the farm does not have.',c:'#e0564a'},
+    {icon:'⏳',t:'High latency',d:'A round trip to the cloud delays every decision.',c:'#ec7211'},
+    {icon:'📵',t:'Unreliable rural internet',d:'Farm connectivity drops out — and a health system cannot stop when the link does.',c:'#7a5cf0'},
+  ];
+
+  farmSteps = [
+    {t:'Mist: the collar samples',d:'Sensors on each cow collect raw accelerometer data — every second, for all 1,000 animals. Nothing is transmitted off-farm yet.',layer:'mist',icon:'💧',color:'#7a5cf0'},
+    {t:'Local hop to the barn',d:'The tags send readings a short distance over Bluetooth or LoRa — low power, no internet needed. The link stays up even when the farm\u2019s broadband does not.',layer:'mist',icon:'📶',color:'#7a5cf0'},
+    {t:'Fog: the barn server analyses',d:'A local fog node aggregates all 1,000 herd streams and runs a lightweight machine-learning model to detect anomalies in gait and activity.',layer:'fog',icon:'🌫️',color:'#0e8f74'},
+    {t:'An anomaly is found',d:'The model flags a deviation: "Cow 105 is limping." This decision is made on-site, in seconds, with no cloud involvement.',layer:'fog',icon:'🚨',color:'#0e8f74'},
+    {t:'Cloud: only the alert travels',d:'A single message — "Cow 105 needs a vet" — goes to the cloud, along with summary history. Raw accelerometer data never leaves the farm.',layer:'cloud',icon:'☁️',color:'#2e7fd4'},
+    {t:'Result: 99% less transmission',d:'The fog layer turned a continuous firehose into occasional actionable alerts, cutting data transmission by roughly 99% — and the system keeps working offline.',layer:'cloud',icon:'✅',color:'#0e8f74'},
+  ];
+
+  cowOptions = [100,500,1000,5000];
+
+  edgeTypes = {
+    iot:{name:'IoT Edge',latency:'<1 ms',bar:8,color:'#7a5cf0',d:'Smart devices doing compute on or beside the sensor itself.',ex:'The cow collar; a smart camera classifying frames on-board.'},
+    onprem:{name:'On-Premises Edge',latency:'<5 ms',bar:22,color:'#0e8f74',d:'Local compute in the building — a gateway, server room or small rack.',ex:'The barn fog node; a factory-floor inference server.'},
+    wireless:{name:'Wireless Access Edge',latency:'~10 ms',bar:45,color:'#2e7fd4',d:'Virtualised RAN and 5G infrastructure at the access layer.',ex:'Compute hosted at a 5G base station for AR on mobile devices.'},
+    network:{name:'Network Edge',latency:'~20 ms',bar:70,color:'#ec7211',d:'Micro and nano data centres inside the operator network.',ex:'An Infrastructure Edge Data Centre serving a whole town.'},
+    cloud:{name:'Regional Cloud',latency:'50–200 ms',bar:100,color:'#e0564a',d:'The centralised region — everything the edge exists to avoid calling.',ex:'An AWS region several hundred miles away.'},
+  };
+  edgeTypeOrder = ['iot','onprem','wireless','network','cloud'];
+
+  scaleData = {
+    security:{letter:'S',name:'Security',color:'#e0564a',
+      d:'Enhanced protection for IoT devices through localised updates and threat mitigation, reducing reliance on distant cloud servers.',
+      farm:'Raw herd data never crosses the public internet — only alerts do.'},
+    cognition:{letter:'C',name:'Cognition',color:'#7a5cf0',
+      d:'Enables awareness and autonomous decision-making. FEC nodes can self-organise, adapt and act based on local context.',
+      farm:'The barn node decides "this is a limp" by itself, without asking the cloud.'},
+    agility:{letter:'A',name:'Agility',color:'#2e7fd4',
+      d:'Supports flexible and scalable deployment. Individuals and small businesses can deploy services using open SDKs and APIs.',
+      farm:'One farmer can add a new sensor type without re-architecting anything.'},
+    latency:{letter:'L',name:'Latency',color:'#0e8f74',
+      d:'Provides ultra-low response times by processing data near the source — ideal for real-time applications like AR/VR and autonomous vehicles.',
+      farm:'A welfare alert arrives in seconds, not after a cloud round trip.'},
+    efficiency:{letter:'E',name:'Efficiency',color:'#ec7211',
+      d:'Optimises performance and reduces costs by minimising bandwidth usage and energy consumption, especially for battery-powered devices.',
+      farm:'Collars sip battery on a short LoRa hop instead of a cellular uplink.'},
+  };
+  scaleOrder = ['security','cognition','agility','latency','efficiency'];
+
+  scancData = {
+    storage:{letter:'S',name:'Storage',color:'#0e8f74',
+      d:'Temporary data caching and buffering at the edge to improve content delivery and reduce latency.',
+      farm:'The barn node buffers readings while the farm\u2019s internet is down.'},
+    compute:{letter:'C',name:'Compute',color:'#2e7fd4',
+      d:'Local processing power via VMs or containers — supporting both infrastructure/platform as a service (I/PaaS) and software as a service (SaaS).',
+      farm:'The ML model runs in a container on the barn server.'},
+    acceleration:{letter:'A',name:'Acceleration',color:'#7a5cf0',
+      d:'Programmable performance boosts using GPUs, FPGAs and SDN — for both compute and network acceleration.',
+      farm:'A small GPU lets the node score the whole herd in real time.'},
+    networking:{letter:'N',name:'Networking',color:'#ec7211',
+      d:'Supports vertical (IP-based) and horizontal (e.g. ZigBee, Bluetooth) connectivity for seamless integration across devices and cloud.',
+      farm:'Horizontal Bluetooth/LoRa to the collars; vertical IP up to AWS.'},
+    control:{letter:'C',name:'Control',color:'#e0564a',
+      d:'Enables deployment, actuation, mediation and security control — allowing dynamic orchestration and policy enforcement at the edge.',
+      farm:'The cloud pushes an updated model down to the barn node.'},
+  };
+  scancOrder = ['storage','compute','acceleration','networking','control'];
+
+  designPoints = [
+    {icon:'🕸️',t:'Core topology',d:'A partial mesh for redundancy and scalability, extended with tree structures for modular growth, across tiered size categories of edge data centre.',c:'#2e7fd4'},
+    {icon:'🔌',t:'Transmission mediums',d:'Fibre for high bandwidth and low latency between data centres; copper only for legacy short runs; wireless (5G, Wi-Fi) at the access layer but not for data-centre interconnect.',c:'#0e8f74'},
+    {icon:'🏢',t:'Meet Me Rooms & haul',d:'MMRs are the physical places networks interconnect. Access/last-mile interconnection gives direct user-to-edge paths; midhaul and backhaul connect edge sites to each other and to regional data centres.',c:'#7a5cf0'},
+    {icon:'🛣️',t:'Cloud on-ramps',d:'A direct connection from an edge data centre to a cloud provider — lower latency, better reliability, bypassing the public internet. Requires cloud presence in or near that site.',c:'#ec7211'},
+    {icon:'📈',t:'Why interconnect',d:'Latency reduction enables real-time apps; less long-haul transport cuts cost; and the platform effect means more networks present makes the site more valuable to everyone.',c:'#e0564a'},
+  ];
+
+  ixRows = [
+    {f:'Location',ix:'Regional data centre (RNDC)',ex:'Edge data centre (IEDC)'},
+    {f:'Scale',ix:'Centralised',ex:'Distributed'},
+    {f:'Purpose',ix:'General interconnection',ex:'Low-latency, local interconnection'},
+    {f:'Use cases',ix:'Cloud, CDN',ex:'Real-time apps, IoT, 5G'},
+  ];
+
+  dragMeta = {
+    collar:{label:'Sampling accelerometer data on the cow',cat:'mist'},
+    herd:{label:'A microcontroller filtering its own readings',cat:'mist'},
+    barn:{label:'Aggregating 1,000 herd streams locally',cat:'fog'},
+    ml:{label:'Running the limp-detection model on-site',cat:'fog'},
+    alert:{label:'Receiving "Cow 105 needs a vet"',cat:'cloud'},
+    archive:{label:'Five years of herd health history',cat:'cloud'},
+  };
+  dragOrder = ['collar','herd','barn','ml','alert','archive'];
+
+  quizDefs = {
+    q1:{question:'What is the separation point between the Infrastructure Edge and the Device Edge?',
+      options:[{label:'The regional data centre'},{label:'The last mile network',correct:true},{label:'The Meet Me Room'},{label:'The cloud on-ramp'}],
+      explanation:'The last mile network is the separation point. Infrastructure Edge (micro data centres) sits on the network side of it; Device Edge (phones, IoT, autonomous systems) sits on the user side.'},
+    q2:{question:'In the smart-farm design, why does the barn fog node run the ML model rather than the cloud?',
+      options:[{label:'Cloud ML models are less accurate'},{label:'To avoid shipping raw data over unreliable rural internet and to decide in seconds locally',correct:true},{label:'Because collars cannot use Bluetooth'},{label:'AWS does not support anomaly detection'}],
+      explanation:'Sending raw per-second data from 1,000 animals needs bandwidth the farm lacks, adds latency, and breaks when rural connectivity drops. Analysing in the barn gives an immediate local decision and sends only the alert onward.'},
+    q3:{question:'In the SCALE framework, which letter covers FEC nodes self-organising and making autonomous decisions from local context?',
+      options:[{label:'Security'},{label:'Cognition',correct:true},{label:'Agility'},{label:'Efficiency'}],
+      explanation:'Cognition is awareness and autonomous decision-making — FEC nodes self-organise, adapt and act on local context. SCALE covers the benefits; SCANC (Storage, Compute, Acceleration, Networking, Control) covers the technical capabilities enabling them.'},
+  };
+
+  glossary = [
+    {icon:'📡',term:'Edge computing',def:'Decentralising compute, storage and network resources to sit closer to data sources and end users.'},
+    {icon:'💧',term:'Mist computing',def:'The finest grain of edge — compute embedded in the sensor or microcontroller itself.'},
+    {icon:'🌫️',term:'Fog computing',def:'A local aggregation layer (gateway, on-premises server, micro data centre) between devices and cloud.'},
+    {icon:'🏢',term:'Infrastructure Edge (IEDC)',def:'Micro data centres near last mile networks, supporting low-latency high-throughput workloads.'},
+    {icon:'📱',term:'Device Edge',def:'Smartphones, IoT devices and autonomous systems — limited compute, often battery-powered and mobile.'},
+    {icon:'🛣️',term:'Last mile network',def:'The separation point between Infrastructure Edge and Device Edge.'},
+    {icon:'🪨',term:'Data gravity',def:'The pull that makes it cheaper to process data where it already is than to move it.'},
+    {icon:'🌊',term:'Data velocity',def:'How fast data arrives — high velocity favours processing near the source.'},
+    {icon:'🧩',term:'FEC',def:'Fog and Edge Computing — the combined paradigm SCALE and SCANC describe.'},
+    {icon:'🅢',term:'SCALE',def:'Security, Cognition, Agility, Latency, Efficiency — the benefits FEC brings.'},
+    {icon:'🅒',term:'SCANC',def:'Storage, Compute, Acceleration, Networking, Control — the capabilities that enable those benefits.'},
+    {icon:'📶',term:'LoRa',def:'A long-range, low-power radio protocol — ideal for battery sensors talking to a local node.'},
+    {icon:'🏢',term:'Meet Me Room (MMR)',def:'A physical location inside a data centre where networks interconnect.'},
+    {icon:'🔀',term:'Midhaul / backhaul',def:'Links connecting edge data centres to each other and to regional data centres.'},
+    {icon:'🌐',term:'Internet Exchange (IX)',def:'Centralised interconnection at a regional data centre, for cloud and CDN traffic.'},
+    {icon:'⚡',term:'Edge Exchange (EX)',def:'Distributed, low-latency local interconnection at edge data centres, for real-time apps, IoT and 5G.'},
+    {icon:'🛤️',term:'Cloud on-ramp',def:'A direct connection from an edge data centre to a cloud provider, bypassing the public internet.'},
+    {icon:'🔗',term:'Cross connect',def:'A physical fibre link, or a virtual software-defined equivalent configured remotely.'},
+  ];
+
+  componentDidMount(){}
+  componentWillUnmount(){ window.removeEventListener('keydown', this.onKey); clearTimeout(this.t); }
+  ensureWiring(){
+    if(!this._kb){ this._kb=true; window.addEventListener('keydown', this.onKey); }
+    if(this._lastIdx!==this.state.idx || this._lastPlay!==this.state.playing){
+      this._lastIdx=this.state.idx; this._lastPlay=this.state.playing; this.scheduleAutoplay();
+    }
+  }
+  onKey = (e)=>{
+    const tag=(e.target&&e.target.tagName)||'';
+    if(tag==='INPUT'||tag==='TEXTAREA') return;
+    if(e.key==='ArrowRight'){ this.next(); }
+    else if(e.key==='ArrowLeft'){ this.prev(); }
+    else if(e.key===' '){ e.preventDefault(); this.togglePlay(); }
+  };
+
+  sceneCfg = [
+    {gap:22,center:true,pos:true},{gap:18},{gap:16},{gap:16},{gap:18},
+    {gap:22,vcenter:true},{gap:14},{gap:16},{gap:14},{gap:16},
+    {gap:18},{gap:14},{gap:22,vcenter:true},{gap:14},{gap:14},
+    {gap:14},{gap:18},{gap:22,vcenter:true},{gap:20},
+  ];
+  sceneStyle(k){
+    const c=this.sceneCfg[k]; const on=this.state.idx===k;
+    const s={display:on?'flex':'none',flexDirection:'column',minHeight:'560px',gap:c.gap+'px',width:'100%'};
+    if(c.center){ s.alignItems='center'; s.justifyContent='center'; s.textAlign='center'; }
+    if(c.vcenter){ s.justifyContent='center'; }
+    if(c.pos){ s.position='relative'; }
+    return s;
+  }
+
+  scheduleAutoplay(){
+    clearTimeout(this.t);
+    const i=this.state.idx;
+    if(this.state.playing && !this.interactive.has(i) && i<this.total-1){
+      this.t=setTimeout(()=>this.next(), this.durations[i]||9000);
+    }
+  }
+
+  next=()=> this.setState(s=> s.idx<this.total-1 ? {idx:s.idx+1} : {playing:false});
+  prev=()=> this.setState(s=> ({idx:Math.max(0,s.idx-1)}));
+  goTo=(i)=>()=> this.setState({idx:i});
+  togglePlay=()=> this.setState(s=>({playing:!s.playing}));
+  startLesson=()=> this.setState({idx:1});
+  playFromStart=()=> this.setState({idx:1, playing:true});
+  toggleGlossary=()=> this.setState(s=>({glossary:!s.glossary}));
+
+  answer=(q,i)=> this.setState(s=> s.quiz[q]!=null ? null : ({quiz:{...s.quiz,[q]:i}}));
+  setLayer=(k)=>()=> this.setState({layer:k});
+  farmNext=()=> this.setState(s=>({farm: Math.min(s.farm+1,5)}));
+  farmPrev=()=> this.setState(s=>({farm: Math.max(s.farm-1,0)}));
+  farmReset=()=> this.setState({farm:0});
+  setCows=(n)=>()=> this.setState({cows:n});
+  setScale=(k)=>()=> this.setState({scale:k});
+  setScanc=(k)=>()=> this.setState({scanc:k});
+  setEtype=(k)=>()=> this.setState({etype:k});
+
+  pick=(id)=>()=> this.setState(s=>({sel: s.sel===id?null:id}));
+  drop=(b)=>()=> this.setState(s=>{ if(!s.sel) return null; return {drops:{...s.drops,[s.sel]:b}, sel:null}; });
+  toTray=(id)=>()=> this.setState(s=>({drops:{...s.drops,[id]:null}, sel:null}));
+  checkDrag=()=> this.setState({dragChecked:true, sel:null});
+  resetDrag=()=> this.setState({drops:{collar:null,barn:null,ml:null,alert:null,archive:null,herd:null}, dragChecked:false, sel:null});
+
+  buildQuiz(qKey){
+    const def=this.quizDefs[qKey]; const sel=this.state.quiz[qKey];
+    const options=def.options.map((o,i)=>{
+      let bg='#fff',fg='#1d2b2a',border='#e2ebe8',mark='';
+      if(sel!=null){
+        if(o.correct){ bg='#e4f5ed';fg='#0a6b50';border='#19c39a';mark='✓'; }
+        else if(i===sel){ bg='#fdeceb';fg='#c2362b';border='#ff6b5e';mark='✗'; }
+        else { fg='#97a8a4';border='#eef3f1'; }
+      }
+      return {label:o.label,bg,fg,border,mark,onClick:()=>this.answer(qKey,i)};
+    });
+    const answered=sel!=null;
+    const isCorrect=answered && def.options[sel].correct;
+    return {question:def.question,options,answered,isCorrect,explanation:def.explanation,
+      banner: !answered ? '' : (isCorrect?'✅ Correct!':'❌ Not quite —'),
+      bannerBg: !answered ? '' : (isCorrect?'#e4f5ed':'#fdeceb'),
+      bannerFg: !answered ? '' : (isCorrect?'#0a6b50':'#c2362b')};
+  }
+
+  buildDragItem(id, place){
+    const m=this.dragMeta[id]; const drops=this.state.drops; const checked=this.state.dragChecked;
+    const selected=this.state.sel===id;
+    let bg='#fff',fg='#1d2b2a',border='#d5e6e0',mark='';
+    if(checked && place!=='tray'){
+      const ok=drops[id]===m.cat;
+      bg=ok?'#e4f5ed':'#fdeceb'; fg=ok?'#0a6b50':'#c2362b'; border=ok?'#19c39a':'#ff6b5e'; mark=ok?'✓':'✗';
+    } else if(selected){ bg='#e4f3ee'; border='#0e8f74'; }
+    const onClick = place==='tray' ? this.pick(id) : this.toTray(id);
+    return {id,label:m.label,bg,fg,border,mark,selected,onClick};
+  }
+
+  fmt(n){ return n.toLocaleString('en-GB'); }
+
+  renderVals(){
+    this.ensureWiring();
+    const i=this.state.idx;
+    const accent=this.chapColors[i]||'#0e8f74';
+    const sc={}; for(let k=0;k<this.total;k++) sc['sc'+k]=this.sceneStyle(k);
+    const chapters=this.chapTitles.map((t,k)=>({num:k+1,label:t,onClick:this.goTo(k),bg: k===i?this.chapColors[k] : (k<i?'#9ab9b1':'#d3e3de')}));
+
+    const layerList=this.layerOrder.map(k=>{ const L=this.layerData[k]; const on=this.state.layer===k;
+      return {k,name:L.name,icon:L.icon,onClick:this.setLayer(k),bg:on?L.color:'#f2f7f5',fg:on?'#fff':'#33534c',border:on?L.color:'#e2ebe8'}; });
+    const ld=this.layerData[this.state.layer];
+    const layerTraits=ld.traits.map(t=>({t}));
+
+    const fm=this.state.farm;
+    const farmList=this.farmSteps.map((s,ix)=>({...s,num:ix+1,
+      bg: ix===fm ? s.color : (ix<fm ? '#f2f7f5' : '#f8fafa'),
+      fg: ix===fm ? '#fff' : (ix<fm ? '#4c6660' : '#a9bcb7'),
+      border: ix===fm ? s.color : '#e8f1ee'}));
+    const fcur=this.farmSteps[fm];
+    const mistLit = fcur.layer==='mist', fogLit = fcur.layer==='fog', cloudLit = fcur.layer==='cloud';
+
+    const c=this.state.cows;
+    const tags=c*2;
+    const rawPerDay=tags*86400;
+    const rawMB=Math.round(rawPerDay*20/1024/1024);
+    const alerts=Math.max(1,Math.round(c*0.03));
+    const summaries=c*24;
+    const uploadBytes=alerts*200 + summaries*300;
+    const alertKB=Math.round(uploadBytes/1024/1024*10)/10+' MB';
+    const reduction=(100 - uploadBytes/(rawPerDay*20)*100);
+    const cowList=this.cowOptions.map(n=>({n,label:this.fmt(n)+' cows',onClick:this.setCows(n),
+      bg:this.state.cows===n?'#ec7211':'#f2f7f5',fg:this.state.cows===n?'#fff':'#33534c',border:this.state.cows===n?'#ec7211':'#e2ebe8'}));
+
+    const etypeList=this.edgeTypeOrder.map(k=>{ const E=this.edgeTypes[k]; const on=this.state.etype===k;
+      return {k,name:E.name,latency:E.latency,onClick:this.setEtype(k),
+        bg:on?E.color:'#f2f7f5',fg:on?'#fff':'#33534c',border:on?E.color:'#e2ebe8',
+        barW:E.bar+'%',barBg:on?E.color:'#d3e3de'}; });
+    const ed=this.edgeTypes[this.state.etype];
+
+    const scaleList=this.scaleOrder.map(k=>{ const S=this.scaleData[k]; const on=this.state.scale===k;
+      return {k,letter:S.letter,name:S.name,onClick:this.setScale(k),bg:on?S.color:'#f2f7f5',fg:on?'#fff':'#33534c',border:on?S.color:'#e2ebe8'}; });
+    const sd=this.scaleData[this.state.scale];
+
+    const scancList=this.scancOrder.map(k=>{ const S=this.scancData[k]; const on=this.state.scanc===k;
+      return {k,letter:S.letter,name:S.name,onClick:this.setScanc(k),bg:on?S.color:'#f2f7f5',fg:on?'#fff':'#33534c',border:on?S.color:'#e2ebe8'}; });
+    const nd=this.scancData[this.state.scanc];
+
+    const tray=this.dragOrder.filter(id=>this.state.drops[id]==null).map(id=>this.buildDragItem(id,'tray'));
+    const bucket=(x)=>this.dragOrder.filter(id=>this.state.drops[id]===x).map(id=>this.buildDragItem(id,x));
+    const correct=this.dragOrder.filter(id=>this.state.drops[id]===this.dragMeta[id].cat).length;
+
+    return {
+      ...sc,
+      progressPct: Math.round(i/(this.total-1)*100)+'%',
+      accent, sceneNum:i+1, total:this.total, sceneTitle:this.chapTitles[i], chapters,
+      next:this.next, prev:this.prev, togglePlay:this.togglePlay,
+      playLabel: this.state.playing?'⏸ Pause':'▶ Play',
+      startLesson:this.startLesson, playFromStart:this.playFromStart,
+      glossaryOpen:this.state.glossary, toggleGlossary:this.toggleGlossary, glossary:this.glossary,
+      whyPoints:this.whyPoints, limits:this.limits, acts:this.acts,
+      problemPoints:this.problemPoints, designPoints:this.designPoints, ixRows:this.ixRows,
+      layerList, layerInfo:ld, layerTraits,
+      farmList, farmTitle:fcur.t, farmDesc:fcur.d, farmIcon:fcur.icon, farmColor:fcur.color,
+      farmNum:(fm+1)+' / 6', farmNext:this.farmNext, farmPrev:this.farmPrev, farmReset:this.farmReset,
+      mistBg: mistLit?'#7a5cf0':'#f2f7f5', mistFg: mistLit?'#fff':'#6a857f',
+      fogBg: fogLit?'#0e8f74':'#f2f7f5', fogFg: fogLit?'#fff':'#6a857f',
+      cloudBg: cloudLit?'#2e7fd4':'#f2f7f5', cloudFg: cloudLit?'#fff':'#6a857f',
+      cowList, cowCount:this.fmt(c), tagCount:this.fmt(tags),
+      rawReadings:this.fmt(rawPerDay), rawMB:this.fmt(rawMB)+' MB',
+      alertCount:this.fmt(alerts), alertKB:alertKB, summaryCount:this.fmt(summaries),
+      reductionPct:reduction.toFixed(2)+'%',
+      etypeList, etypeInfo:ed,
+      scaleList, scaleInfo:sd, scancList, scancInfo:nd,
+      q1:this.buildQuiz('q1'), q2:this.buildQuiz('q2'), q3:this.buildQuiz('q3'),
+      dragTray:tray, dragMist:bucket('mist'), dragFog:bucket('fog'), dragCloud:bucket('cloud'),
+      dropMist:this.drop('mist'), dropFog:this.drop('fog'), dropCloud:this.drop('cloud'),
+      checkDrag:this.checkDrag, resetDrag:this.resetDrag, dragChecked:this.state.dragChecked,
+      dragScore:correct+' / 6 correct', dragScoreBg: correct===6?'#e4f5ed':'#fff4e8', dragScoreFg: correct===6?'#0a6b50':'#d98a18',
+    };
+  }
+}
+</script>
+</body>
+</html>

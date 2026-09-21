@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{background:#edf5f2;font-family:'Figtree',system-ui,sans-serif;color:#1d2b2a;-webkit-font-smoothing:antialiased}
+  a{color:#0e8f74}
+  a:hover{color:#0a6b57}
+  @keyframes floatA{0%,100%{transform:translateY(0) translateX(0)}50%{transform:translateY(-22px) translateX(10px)}}
+  @keyframes floatB{0%,100%{transform:translateY(0)}50%{transform:translateY(26px)}}
+  ::-webkit-scrollbar{width:10px;height:10px}
+  ::-webkit-scrollbar-thumb{background:#c2dcd4;border-radius:8px}
+</style>
+</helmet>
+<div style="min-height:100vh;position:relative;overflow-x:hidden;display:flex;flex-direction:column;align-items:center">
+
+  <div style="position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden">
+    <div style="position:absolute;top:12%;left:6%;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#ffffff,#d3ece3);opacity:.55;filter:blur(2px);animation:floatA 13s ease-in-out infinite"></div>
+    <div style="position:absolute;top:58%;left:80%;width:280px;height:280px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#ffffff,#d7e8ff);opacity:.45;filter:blur(2px);animation:floatB 17s ease-in-out infinite"></div>
+  </div>
+
+  <div style="position:sticky;top:0;z-index:30;width:100%;display:flex;justify-content:center;background:rgba(237,245,242,.85);backdrop-filter:blur(10px);border-bottom:1px solid #d5e6e0">
+    <div style="width:100%;max-width:1180px;display:flex;align-items:center;gap:20px;padding:14px 24px">
+      <div style="display:flex;align-items:center;gap:10px;font-family:'Bricolage Grotesque';font-weight:800;font-size:18px;color:#1d2b2a;white-space:nowrap">
+        <span style="font-size:22px">🏷️</span><span>Addressing</span>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;gap:6px;min-width:0">
+        <div style="height:8px;border-radius:99px;background:#d3e3de;overflow:hidden">
+          <div style="height:100%;border-radius:99px;transition:width .45s cubic-bezier(.22,.9,.3,1);width:{{ progressPct }};background:{{ accent }}"></div>
+        </div>
+        <div style="display:flex;gap:5px;flex-wrap:wrap">
+          <sc-for list="{{ chapters }}" as="c" hint-placeholder-count="15">
+            <button onClick="{{ c.onClick }}" title="{{ c.label }}" style="width:18px;height:18px;border:none;border-radius:50%;cursor:pointer;padding:0;font-size:9px;font-weight:700;color:#fff;line-height:18px;transition:transform .15s;background:{{ c.bg }}" style-hover="transform:scale(1.25)">{{ c.num }}</button>
+          </sc-for>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;white-space:nowrap">
+        <button onClick="{{ toggleGlossary }}" style="display:flex;align-items:center;gap:6px;background:#fff;border:1px solid #d5e6e0;border-radius:11px;padding:9px 14px;font-family:'Figtree';font-weight:600;font-size:14px;color:#33534c;cursor:pointer" style-hover="border-color:#0e8f74;color:#0e8f74">📖 Glossary</button>
+        <button onClick="{{ togglePlay }}" style="display:flex;align-items:center;gap:7px;background:{{ accent }};border:none;border-radius:11px;padding:10px 16px;font-family:'Bricolage Grotesque';font-weight:700;font-size:14px;color:#fff;cursor:pointer" style-hover="filter:brightness(1.06)">{{ playLabel }}</button>
+      </div>
+    </div>
+  </div>
+
+  <div style="width:100%;max-width:1180px;padding:30px 24px 16px;z-index:5">
+    <div style="position:relative;width:100%;background:#fff;border-radius:30px;box-shadow:0 24px 60px -28px rgba(20,70,60,.32),0 2px 0 #ffffff inset;padding:52px 56px;min-height:580px;overflow:hidden">
+
+      <section data-scene data-screen-label="Welcome" style="{{ sc0 }}">
+        <div style="position:absolute;top:0;right:8%;font-size:40px;animation:floatA 9s ease-in-out infinite">🏷️</div>
+        <div style="position:absolute;bottom:6%;left:6%;font-size:34px;animation:floatB 11s ease-in-out infinite">🧮</div>
+        <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.22em;text-transform:uppercase;font-weight:700;color:#0e8f74">Interactive Lesson</div>
+        <h1 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:56px;line-height:1.02;margin:0;max-width:18ch;letter-spacing:-.02em">Addressing &amp; <span style="background:linear-gradient(120deg,#0e8f74,#2e7fd4);-webkit-background-clip:text;background-clip:text;color:transparent">Subnetting</span></h1>
+        <p style="font-size:20px;line-height:1.55;color:#4c6660;max-width:70ch;margin:0">Two addresses run every network: one burned into the hardware, one assigned by you. Learn both — then slice a network into exactly the subnets you need.</p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:4px">
+          <span style="background:#e4f3ee;border:1px solid #c2e4da;border-radius:99px;padding:8px 16px;font-weight:600;font-size:15px;color:#0e8f74">⏱️ ~27 min</span>
+          <span style="background:#eaf1fd;border:1px solid #cfdffa;border-radius:99px;padding:8px 16px;font-weight:600;font-size:15px;color:#2e7fd4">📑 15 chapters</span>
+          <span style="background:#fdeeed;border:1px solid #ffd9d5;border-radius:99px;padding:8px 16px;font-weight:600;font-size:15px;color:#e0564a">🧠 3 quizzes</span>
+          <span style="background:#fef4e8;border:1px solid #ffe6c2;border-radius:99px;padding:8px 16px;font-weight:600;font-size:15px;color:#d98a18">🎯 CIDR calculator</span>
+        </div>
+        <div style="display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-top:14px">
+          <button onClick="{{ startLesson }}" style="background:#0e8f74;color:#fff;border:none;border-radius:15px;padding:18px 34px;font-family:'Bricolage Grotesque';font-weight:700;font-size:18px;cursor:pointer;box-shadow:0 12px 24px -8px rgba(14,143,116,.6)" style-hover="transform:translateY(-2px)">Start lesson →</button>
+          <button onClick="{{ playFromStart }}" style="background:#fff;color:#0e8f74;border:2px solid #b5ded2;border-radius:15px;padding:16px 30px;font-family:'Bricolage Grotesque';font-weight:700;font-size:18px;cursor:pointer" style-hover="border-color:#0e8f74;background:#f4fbf8">▶ Play as video</button>
+        </div>
+        <div style="margin-top:18px;display:flex;align-items:center;gap:10px;background:#f3f9f7;border:1px solid #dcebe6;border-radius:99px;padding:8px 8px 8px 18px">
+          <span style="font-size:14px;color:#6a857f">Prepared by</span>
+          <span style="background:#1d2b2a;color:#fff;border-radius:99px;padding:7px 16px;font-weight:700;font-size:14px;font-family:'Bricolage Grotesque'">Reza Shahabian</span>
+        </div>
+      </section>
+
+      <section data-scene data-screen-label="Two kinds of address" style="{{ sc1 }}">
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#2e7fd4">Chapter 01 · The big picture</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:42px;line-height:1.04;margin:0;letter-spacing:-.01em">Every device has two addresses</h2>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+          <div style="background:#f5f2fe;border:2px solid #ded3fb;border-radius:18px;padding:22px;display:flex;flex-direction:column;gap:11px">
+            <div style="display:flex;align-items:center;gap:10px"><span style="font-size:26px">🏷️</span><div><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:18px;color:#7a5cf0">MAC address</div><div style="font-size:12px;font-weight:600;color:#8ba39e">Layer 2 · Data Link</div></div></div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:15px;color:#7a5cf0;background:#fff;border-radius:9px;padding:9px 13px;text-align:center">00:1A:2B:3C:4D:5E</div>
+            <div style="display:flex;flex-direction:column;gap:5px;font-size:14px;color:#3c4a58">
+              <div>• Burned into the hardware — a permanent ID</div>
+              <div>• Used <b>within</b> a local network</div>
+              <div>• 48 bits, hexadecimal</div>
+            </div>
+          </div>
+          <div style="background:#eef4fd;border:2px solid #cfdffa;border-radius:18px;padding:22px;display:flex;flex-direction:column;gap:11px">
+            <div style="display:flex;align-items:center;gap:10px"><span style="font-size:26px">📮</span><div><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:18px;color:#2e7fd4">IP address</div><div style="font-size:12px;font-weight:600;color:#8ba39e">Layer 3 · Network</div></div></div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:15px;color:#2e7fd4;background:#fff;border-radius:9px;padding:9px 13px;text-align:center">192.168.1.1</div>
+            <div style="display:flex;flex-direction:column;gap:5px;font-size:14px;color:#3c4a58">
+              <div>• Assigned logically — can change</div>
+              <div>• Used <b>between</b> networks; makes routing possible</div>
+              <div>• 32 bits (IPv4) or 128 bits (IPv6)</div>
+            </div>
+          </div>
+        </div>
+        <div style="background:#f3f9f7;border:1px solid #dcebe6;border-radius:14px;padding:13px 20px;font-size:14.5px;color:#33534c">🔗 Both are required. IP guides data <b>across</b> networks; MAC delivers it <b>within</b> one. You'll see exactly how they hand off in the ARP chapter.</div>
+      </section>
+
+      <section data-scene data-screen-label="MAC addresses" style="{{ sc2 }}">
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#7a5cf0">Chapter 02 · The hardware ID</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:40px;line-height:1.04;margin:0;letter-spacing:-.01em">MAC addresses</h2>
+          <p style="font-size:16.5px;line-height:1.55;color:#4c6660;margin:0;max-width:86ch">A unique identification number given to the Network Interface Card of a device — 48 bits, written as six hexadecimal pairs.</p>
+        </div>
+        <div style="background:#1d2b2a;border-radius:20px;padding:26px;display:flex;flex-direction:column;gap:14px;align-items:center">
+          <div style="display:flex;gap:4px;flex-wrap:wrap;justify-content:center;font-family:'JetBrains Mono',monospace;font-weight:600;font-size:22px">
+            <span style="background:#7a5cf0;color:#fff;border-radius:8px;padding:9px 13px">00</span>
+            <span style="background:#7a5cf0;color:#fff;border-radius:8px;padding:9px 13px">1A</span>
+            <span style="background:#7a5cf0;color:#fff;border-radius:8px;padding:9px 13px">2B</span>
+            <span style="background:#0e8f74;color:#fff;border-radius:8px;padding:9px 13px">3C</span>
+            <span style="background:#0e8f74;color:#fff;border-radius:8px;padding:9px 13px">4D</span>
+            <span style="background:#0e8f74;color:#fff;border-radius:8px;padding:9px 13px">5E</span>
+          </div>
+          <div style="display:flex;gap:40px;flex-wrap:wrap;justify-content:center">
+            <div style="text-align:center"><div style="font-size:11px;font-weight:800;color:#c9b8f5;letter-spacing:.06em">FIRST 24 BITS — OUI</div><div style="font-size:12.5px;color:#8fb8ac;margin-top:3px">identifies the manufacturer</div></div>
+            <div style="text-align:center"><div style="font-size:11px;font-weight:800;color:#7fd4b8;letter-spacing:.06em">LAST 24 BITS</div><div style="font-size:12.5px;color:#8fb8ac;margin-top:3px">unique to this device</div></div>
+          </div>
+        </div>
+        <div style="background:#f6faf9;border:1px solid #dcebe6;border-radius:14px;padding:14px 20px;font-size:14.5px;color:#4c6660">💡 When computers, phones or printers exchange data over Ethernet or Wi-Fi, MAC addresses ensure it reaches the correct device. Think of it as a <b>permanent hardware ID</b>.</div>
+        <div style="background:#fffaf0;border:2px solid #ffe6c2;border-radius:18px;padding:20px 22px;display:flex;flex-direction:column;gap:12px">
+          <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:15px;color:#d98a18">🧠 Quick check — {{ q1.question }}</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+            <sc-for list="{{ q1.options }}" as="o" hint-placeholder-count="4">
+              <button onClick="{{ o.onClick }}" style="display:flex;align-items:center;justify-content:space-between;gap:8px;text-align:left;border-radius:12px;padding:13px 16px;font-family:'Figtree';font-weight:600;font-size:14.5px;cursor:pointer;transition:all .15s;border:2px solid {{ o.border }};background:{{ o.bg }};color:{{ o.fg }}"><span>{{ o.label }}</span><span style="font-weight:800;font-size:16px">{{ o.mark }}</span></button>
+            </sc-for>
+          </div>
+          <sc-if value="{{ q1.answered }}" hint-placeholder-val="{{ false }}">
+            <div style="border-radius:13px;padding:14px 18px;background:{{ q1.bannerBg }}">
+              <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:15px;color:{{ q1.bannerFg }};margin-bottom:4px">{{ q1.banner }}</div>
+              <div style="font-size:14.5px;line-height:1.55;color:#33534c">{{ q1.explanation }}</div>
+            </div>
+          </sc-if>
+        </div>
+      </section>
+
+      <section data-scene data-screen-label="IPv4 structure" style="{{ sc3 }}">
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#0e8f74">Chapter 03 · Anatomy of an IPv4 address</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:40px;line-height:1.04;margin:0;letter-spacing:-.01em">Network part, host part</h2>
+          <p style="font-size:16.5px;line-height:1.55;color:#4c6660;margin:0;max-width:86ch">32 bits, written as four <b>octets</b> of 8 bits each, separated by dots. Every octet ranges from 0 to 255.</p>
+        </div>
+        <div style="background:#1d2b2a;border-radius:20px;padding:26px;display:flex;flex-direction:column;gap:14px;align-items:center">
+          <div style="display:flex;gap:6px;align-items:center;font-family:'JetBrains Mono',monospace;font-weight:600;font-size:24px;flex-wrap:wrap;justify-content:center">
+            <span style="background:#0e8f74;color:#fff;border-radius:8px;padding:10px 15px">192</span><span style="color:#8fb8ac">.</span>
+            <span style="background:#0e8f74;color:#fff;border-radius:8px;padding:10px 15px">168</span><span style="color:#8fb8ac">.</span>
+            <span style="background:#0e8f74;color:#fff;border-radius:8px;padding:10px 15px">1</span><span style="color:#8fb8ac">.</span>
+            <span style="background:#2e7fd4;color:#fff;border-radius:8px;padding:10px 15px">1</span>
+          </div>
+          <div style="display:flex;gap:44px;flex-wrap:wrap;justify-content:center">
+            <div style="text-align:center"><div style="font-size:11px;font-weight:800;color:#7fd4b8;letter-spacing:.06em">NETWORK ID</div><div style="font-size:12.5px;color:#8fb8ac;margin-top:3px">which network the device is on</div></div>
+            <div style="text-align:center"><div style="font-size:11px;font-weight:800;color:#9fc6f5;letter-spacing:.06em">HOST ID</div><div style="font-size:12.5px;color:#8fb8ac;margin-top:3px">which device on that network</div></div>
+          </div>
+          <div style="font-size:12px;color:#6a857f">the split between them is set by the subnet mask — that's what the next chapters are about</div>
+        </div>
+        <div style="background:#f6faf9;border:1px solid #dcebe6;border-radius:14px;padding:14px 20px;font-size:14.5px;color:#4c6660">🧮 Each octet is 8 bits, so 4 × 8 = <b>32 bits</b> total — which is why IPv4 has roughly 4.3 billion possible addresses, and why we ran out.</div>
+      </section>
+
+      <section data-scene data-screen-label="Public vs private" style="{{ sc4 }}">
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#ec7211">Chapter 04 · Two worlds of address</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:40px;line-height:1.04;margin:0;letter-spacing:-.01em">Public vs private addresses</h2>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px">
+          <div style="background:#eef4fd;border:2px solid #cfdffa;border-radius:18px;padding:22px;display:flex;flex-direction:column;gap:10px">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:17px;color:#2e7fd4">🌍 Public IP</div>
+            <p style="margin:0;font-size:15px;line-height:1.55;color:#3c4a58">A globally unique address that can be accessed over the internet. Assigned by Internet Service Providers.</p>
+          </div>
+          <div style="background:#e9f6f1;border:2px solid #c2e4da;border-radius:18px;padding:22px;display:flex;flex-direction:column;gap:10px">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:17px;color:#0e8f74">🔒 Private IP</div>
+            <p style="margin:0;font-size:15px;line-height:1.55;color:#3c4a58">Used inside private networks — homes, offices, organisations. These addresses cannot be routed on the internet.</p>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:9px">
+          <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:14px;color:#0e8f74">The three private ranges — worth memorising</div>
+          <div style="display:flex;gap:11px;flex-wrap:wrap">
+            <div style="flex:1;min-width:250px;background:#f6faf9;border:1px solid #dcebe6;border-radius:13px;padding:14px 16px"><div style="font-family:'JetBrains Mono',monospace;font-weight:600;font-size:15px;color:#0e8f74">10.0.0.0/8</div><div style="font-size:12.5px;color:#4c6660;margin-top:4px">10.0.0.0 – 10.255.255.255</div></div>
+            <div style="flex:1;min-width:250px;background:#f6faf9;border:1px solid #dcebe6;border-radius:13px;padding:14px 16px"><div style="font-family:'JetBrains Mono',monospace;font-weight:600;font-size:15px;color:#0e8f74">172.16.0.0/12</div><div style="font-size:12.5px;color:#4c6660;margin-top:4px">172.16.0.0 – 172.31.255.255</div></div>
+            <div style="flex:1;min-width:250px;background:#f6faf9;border:1px solid #dcebe6;border-radius:13px;padding:14px 16px"><div style="font-family:'JetBrains Mono',monospace;font-weight:600;font-size:15px;color:#0e8f74">192.168.0.0/16</div><div style="font-size:12.5px;color:#4c6660;margin-top:4px">192.168.0.0 – 192.168.255.255</div></div>
+          </div>
+        </div>
+      </section>
+
+      <section data-scene data-screen-label="IPv6" style="{{ sc5 }}">
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#2e7fd4">Chapter 05 · Running out of numbers</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:40px;line-height:1.04;margin:0;letter-spacing:-.01em">IPv6</h2>
+          <p style="font-size:17px;line-height:1.55;color:#4c6660;margin:0;max-width:86ch">IPv6 uses <b>128-bit</b> addresses written in hexadecimal. It was developed to replace IPv4 because IPv4 addresses are limited and were becoming exhausted.</p>
+        </div>
+        <div style="background:#1d2b2a;border-radius:18px;padding:22px;display:flex;flex-direction:column;gap:12px;align-items:center">
+          <div style="font-family:'JetBrains Mono',monospace;font-weight:600;font-size:17px;color:#9fc6f5;text-align:center;word-break:break-all">2001:0db8:85a3:0000:0000:8a2e:0370:7334</div>
+          <div style="font-size:12px;color:#8fb8ac">eight groups of four hexadecimal digits</div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+          <div style="background:#f6faf9;border:1px solid #dcebe6;border-radius:16px;padding:18px"><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:15px;color:#4c6660">IPv4 — 32 bits</div><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:22px;color:#ec7211;margin-top:5px">~4.3 billion</div><div style="font-size:13px;color:#4c6660;margin-top:3px">addresses — and they ran out</div></div>
+          <div style="background:#eef4fd;border:1px solid #cfdffa;border-radius:16px;padding:18px"><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:15px;color:#4c6660">IPv6 — 128 bits</div><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:22px;color:#2e7fd4;margin-top:5px">340 undecillion</div><div style="font-size:13px;color:#4c6660;margin-top:3px">a 3.4 followed by 38 zeros</div></div>
+        </div>
+      </section>
+
+      <section data-scene data-screen-label="Quick check" style="{{ sc6 }}">
+        <div style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#d98a18">🧠 Knowledge check</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:30px;line-height:1.2;margin:0;max-width:40ch">{{ q3.question }}</h2>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:820px;width:100%;margin:0 auto">
+          <sc-for list="{{ q3.options }}" as="o" hint-placeholder-count="4">
+            <button onClick="{{ o.onClick }}" style="display:flex;align-items:center;justify-content:space-between;gap:10px;text-align:left;border-radius:15px;padding:18px 20px;font-family:'Figtree';font-weight:600;font-size:15.5px;cursor:pointer;transition:all .15s;border:2px solid {{ o.border }};background:{{ o.bg }};color:{{ o.fg }}"><span>{{ o.label }}</span><span style="font-weight:800;font-size:18px">{{ o.mark }}</span></button>
+          </sc-for>
+        </div>
+        <sc-if value="{{ q3.answered }}" hint-placeholder-val="{{ false }}">
+          <div style="max-width:820px;width:100%;margin:0 auto;border-radius:16px;padding:18px 22px;background:{{ q3.bannerBg }}">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:17px;color:{{ q3.bannerFg }};margin-bottom:5px">{{ q3.banner }}</div>
+            <div style="font-size:16px;line-height:1.55;color:#33534c">{{ q3.explanation }}</div>
+          </div>
+        </sc-if>
+      </section>
+
+      <section data-scene data-screen-label="Classful addressing" style="{{ sc7 }}">
+        <div style="display:flex;flex-direction:column;gap:5px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#e0564a">Chapter 07 · Mostly history</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:38px;line-height:1.04;margin:0;letter-spacing:-.01em">Classful addressing</h2>
+          <p style="font-size:15.5px;line-height:1.5;color:#4c6660;margin:0">Five predefined classes, each with a fixed range and default mask. <b>Tap each class.</b></p>
+        </div>
+        <div style="display:flex;gap:9px;flex-wrap:wrap">
+          <sc-for list="{{ clsList }}" as="C" hint-placeholder-count="5">
+            <button onClick="{{ C.onClick }}" style="flex:1;min-width:130px;border-radius:12px;padding:12px 16px;cursor:pointer;transition:all .15s;font-family:'Bricolage Grotesque';font-weight:800;font-size:14px;border:2px solid {{ C.border }};background:{{ C.bg }};color:{{ C.fg }}">{{ C.name }}</button>
+          </sc-for>
+        </div>
+        <div style="background:#f6faf9;border:2px solid #dcebe6;border-radius:20px;padding:26px;display:flex;flex-direction:column;gap:13px;min-height:180px;justify-content:center">
+          <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:24px;color:{{ clsInfo.color }}">{{ clsInfo.name }}</div>
+          <div style="display:flex;gap:13px;flex-wrap:wrap">
+            <div style="flex:2;min-width:250px;background:#fff;border:1px solid #dcebe6;border-radius:13px;padding:13px 16px"><div style="font-size:11.5px;font-weight:700;color:#8ba39e">RANGE</div><div style="font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:600;color:{{ clsInfo.color }};margin-top:3px">{{ clsInfo.range }}</div></div>
+            <div style="flex:1;min-width:180px;background:#fff;border:1px solid #dcebe6;border-radius:13px;padding:13px 16px"><div style="font-size:11.5px;font-weight:700;color:#8ba39e">DEFAULT MASK</div><div style="font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:600;color:{{ clsInfo.color }};margin-top:3px">{{ clsInfo.mask }}</div></div>
+          </div>
+          <div style="background:#fff;border:1px solid #dcebe6;border-radius:13px;padding:13px 16px;font-size:15px;color:#3c4a58">{{ clsInfo.use }}</div>
+        </div>
+        <div style="background:#fdf2f0;border:1px solid #f8d6d0;border-radius:14px;padding:13px 20px;font-size:14.5px;color:#9a3a30">⚠️ Classful addressing is <b>mostly obsolete today</b> — the fixed sizes used addresses very inefficiently. CIDR replaced it.</div>
+      </section>
+
+      <section data-scene data-screen-label="CIDR calculator" style="{{ sc8 }}">
+        <div style="display:flex;flex-direction:column;gap:5px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#0e8f74">🎯 Try it · Classless addressing</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:36px;line-height:1.04;margin:0;letter-spacing:-.01em">CIDR calculator</h2>
+          <p style="font-size:15.5px;line-height:1.5;color:#4c6660;margin:0">The number after the slash is how many bits are the <b>network</b> part. <b>Tap a prefix.</b></p>
+        </div>
+        <div style="display:flex;gap:7px;flex-wrap:wrap">
+          <sc-for list="{{ cidrList }}" as="C" hint-placeholder-count="8">
+            <button onClick="{{ C.onClick }}" style="flex:1;min-width:76px;border-radius:11px;padding:12px 10px;cursor:pointer;transition:all .15s;font-family:'JetBrains Mono',monospace;font-weight:600;font-size:15px;border:2px solid {{ C.border }};background:{{ C.bg }};color:{{ C.fg }}">{{ C.label }}</button>
+          </sc-for>
+        </div>
+        <div style="background:#1d2b2a;border-radius:20px;padding:24px;display:flex;flex-direction:column;gap:14px">
+          <div style="display:flex;align-items:baseline;gap:12px;justify-content:center;flex-wrap:wrap"><span style="font-family:'JetBrains Mono',monospace;font-weight:600;font-size:26px;color:#7fd4b8">{{ cidrInfo.example }}</span></div>
+          <div style="height:26px;border-radius:9px;background:#2f4340;overflow:hidden;display:flex">
+            <div style="height:100%;background:#0e8f74;display:flex;align-items:center;justify-content:center;font-size:10.5px;font-weight:800;color:#fff;transition:width .35s;width:{{ cidrInfo.barW }}">NETWORK</div>
+            <div style="flex:1;display:flex;align-items:center;justify-content:center;font-size:10.5px;font-weight:800;color:#9fc6f5">HOST</div>
+          </div>
+          <div style="display:flex;gap:11px;justify-content:center;flex-wrap:wrap;font-size:11px;font-weight:700;color:#8fb8ac"><span>{{ cidrInfo.netBits }}</span><span>·</span><span>{{ cidrInfo.hostBits }}</span></div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px">
+          <div style="background:#f6faf9;border:1px solid #dcebe6;border-radius:15px;padding:16px;text-align:center"><div style="font-size:11.5px;font-weight:700;color:#8ba39e">SUBNET MASK</div><div style="font-family:'JetBrains Mono',monospace;font-weight:600;font-size:17px;color:#0e8f74;margin-top:4px">{{ cidrInfo.mask }}</div></div>
+          <div style="background:#eef4fd;border:1px solid #cfdffa;border-radius:15px;padding:16px;text-align:center"><div style="font-size:11.5px;font-weight:700;color:#8ba39e">TOTAL ADDRESSES</div><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:22px;color:#2e7fd4;margin-top:4px">{{ cidrInfo.total }}</div></div>
+          <div style="background:#e9f6f1;border:1px solid #c2e4da;border-radius:15px;padding:16px;text-align:center"><div style="font-size:11.5px;font-weight:700;color:#8ba39e">USABLE HOSTS</div><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:22px;color:#0a6b50;margin-top:4px">{{ cidrInfo.usable }}</div></div>
+        </div>
+        <div style="background:#fff7ef;border:1px solid #ffe0c2;border-radius:14px;padding:13px 20px;font-size:14px;color:#8a5f21">➖ Two addresses are always lost per subnet: the <b>network address</b> (all host bits 0) and the <b>broadcast address</b> (all host bits 1).</div>
+      </section>
+
+      <section data-scene data-screen-label="FLSM vs VLSM" style="{{ sc9 }}">
+        <div style="display:flex;flex-direction:column;gap:5px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#7a5cf0">Chapter 09 · Two ways to subnet</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:38px;line-height:1.04;margin:0;letter-spacing:-.01em">FLSM vs VLSM</h2>
+          <p style="font-size:15.5px;line-height:1.5;color:#4c6660;margin:0">Subnetting borrows bits from the host portion to create subnets. <b>Tap each approach.</b></p>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <sc-for list="{{ subTabs }}" as="t" hint-placeholder-count="2">
+            <button onClick="{{ t.onClick }}" style="flex:1;min-width:150px;border:none;border-radius:13px;padding:13px 22px;font-family:'Bricolage Grotesque';font-weight:800;font-size:16px;cursor:pointer;transition:all .15s;background:{{ t.bg }};color:{{ t.fg }}">{{ t.name }}</button>
+          </sc-for>
+        </div>
+        <div style="background:#f6faf9;border:2px solid #dcebe6;border-radius:20px;padding:24px;display:flex;flex-direction:column;gap:13px">
+          <div style="display:flex;align-items:baseline;gap:11px;flex-wrap:wrap"><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:23px;color:{{ subInfo.color }}">{{ subInfo.name }}</div><div style="font-size:13.5px;font-weight:600;color:#8ba39e">{{ subInfo.full }}</div></div>
+          <p style="margin:0;font-size:16.5px;line-height:1.6;color:#3c4a58">{{ subInfo.desc }}</p>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:13px">
+            <div style="background:#e9f6f1;border:1px solid #c2e4da;border-radius:13px;padding:14px 16px"><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:13px;color:#0a6b50;margin-bottom:6px">✓ Strengths</div><sc-for list="{{ subInfo.pros }}" as="p" hint-placeholder-count="2"><div style="font-size:13.5px;color:#3c4a58;line-height:1.5">• {{ p.t }}</div></sc-for></div>
+            <div style="background:#fdf2f0;border:1px solid #f8d6d0;border-radius:13px;padding:14px 16px"><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:13px;color:#c2453a;margin-bottom:6px">✗ Trade-offs</div><sc-for list="{{ subInfo.cons }}" as="p" hint-placeholder-count="1"><div style="font-size:13.5px;color:#3c4a58;line-height:1.5">• {{ p.t }}</div></sc-for></div>
+          </div>
+          <div style="background:#fff;border:1px solid #dcebe6;border-radius:13px;padding:13px 16px;font-size:14.5px;color:#4c6660">💡 {{ subInfo.ex }}</div>
+        </div>
+      </section>
+
+      <section data-scene data-screen-label="A VLSM worked example" style="{{ sc10 }}">
+        <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap">
+          <div style="display:flex;flex-direction:column;gap:4px">
+            <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#2e7fd4">🎯 Try it · Work it through</div>
+            <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:32px;line-height:1.05;margin:0">{{ vlsmTitle }}</h2>
+          </div>
+          <div style="display:flex;gap:9px;align-items:center">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:15px;color:#0e8f74;background:#e4f3ee;border-radius:11px;padding:11px 15px">{{ vlsmNum }}</div>
+            <button onClick="{{ stepPrev }}" style="background:#fff;border:1px solid #d5e6e0;border-radius:11px;padding:11px 16px;font-family:'Figtree';font-weight:600;font-size:14px;color:#4c6660;cursor:pointer">◀ Prev</button>
+            <button onClick="{{ stepNext }}" style="background:#0e8f74;border:none;border-radius:11px;padding:11px 18px;font-family:'Bricolage Grotesque';font-weight:700;font-size:14px;color:#fff;cursor:pointer">Next ▶</button>
+          </div>
+        </div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <sc-for list="{{ vlsmList }}" as="v" hint-placeholder-count="5">
+            <div style="flex:1;min-width:140px;display:flex;gap:8px;align-items:center;border-radius:11px;padding:10px 12px;border:1.5px solid {{ v.border }};background:{{ v.bg }};color:{{ v.fg }}"><span style="width:19px;height:19px;flex-shrink:0;border-radius:50%;background:rgba(0,0,0,.12);display:flex;align-items:center;justify-content:center;font-family:'Bricolage Grotesque';font-weight:800;font-size:10px">{{ v.num }}</span><span style="font-size:11.5px;font-weight:700">{{ v.t }}</span></div>
+          </sc-for>
+        </div>
+        <div style="background:#f6faf9;border:2px solid #dcebe6;border-radius:16px;padding:16px 20px;min-height:66px;display:flex;align-items:center">
+          <p style="margin:0;font-size:15.5px;line-height:1.55;color:#3c4a58">{{ vlsmDesc }}</p>
+        </div>
+        <div style="background:#1d2b2a;border-radius:18px;padding:20px 22px;font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.75;color:#cfe5df;white-space:pre-wrap;overflow-x:auto;min-height:170px">{{ vlsmCode }}</div>
+      </section>
+
+      <section data-scene data-screen-label="ARP: MAC meets IP" style="{{ sc11 }}">
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#ec7211">Chapter 11 · How they work together</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:38px;line-height:1.04;margin:0;letter-spacing:-.01em">ARP: where MAC meets IP</h2>
+          <p style="font-size:16.5px;line-height:1.55;color:#4c6660;margin:0;max-width:86ch">When a device sends data to another device on a different network, three things happen in order.</p>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:11px">
+          <sc-for list="{{ arpSteps }}" as="a" hint-placeholder-count="3">
+            <div style="display:flex;gap:14px;align-items:flex-start;background:#f6faf9;border:1px solid #dcebe6;border-radius:15px;padding:16px 19px">
+              <div style="font-size:24px;flex-shrink:0">{{ a.icon }}</div>
+              <div><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:16px;color:#0e8f74">{{ a.t }}</div><div style="font-size:14.5px;line-height:1.55;color:#3c4a58;margin-top:4px">{{ a.d }}</div></div>
+            </div>
+          </sc-for>
+        </div>
+        <div style="background:#fff7ef;border:2px solid #ffe0c2;border-radius:16px;padding:16px 22px;font-size:15px;line-height:1.55;color:#8a5f21">🎯 <b>In summary:</b> IP addresses guide the data <b>across</b> networks, while MAC addresses ensure accurate delivery <b>within</b> a local network. Both are required for complete, reliable communication.</div>
+      </section>
+
+      <section data-scene data-screen-label="Sort it out" style="{{ sc12 }}">
+        <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap">
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#0e8f74">🎯 Try it · Which address?</div>
+            <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:34px;line-height:1.05;margin:0">MAC or IP?</h2>
+            <p style="font-size:15px;color:#4c6660;margin:0"><b>Tap a property</b>, then <b>tap the address type</b> it describes.</p>
+          </div>
+          <div style="display:flex;gap:10px">
+            <sc-if value="{{ dragChecked }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;align-items:center;border-radius:12px;padding:11px 18px;font-family:'Bricolage Grotesque';font-weight:800;font-size:16px;background:{{ dragScoreBg }};color:{{ dragScoreFg }}">{{ dragScore }}</div>
+            </sc-if>
+            <button onClick="{{ resetDrag }}" style="background:#fff;border:1px solid #d5e6e0;border-radius:12px;padding:11px 18px;font-family:'Figtree';font-weight:600;font-size:14px;color:#4c6660;cursor:pointer">↺ Reset</button>
+            <button onClick="{{ checkDrag }}" style="background:#0e8f74;border:none;border-radius:12px;padding:11px 20px;font-family:'Bricolage Grotesque';font-weight:700;font-size:15px;color:#fff;cursor:pointer">Check answers</button>
+          </div>
+        </div>
+        <div style="min-height:54px;background:#f2f7f5;border:2px dashed #c6ddd6;border-radius:16px;padding:12px;display:flex;flex-wrap:wrap;gap:10px;align-items:center">
+          <span style="font-size:13px;font-weight:700;color:#8ba39e;padding:0 6px">TRAY:</span>
+          <sc-for list="{{ dragTray }}" as="it" hint-placeholder-count="6">
+            <button onClick="{{ it.onClick }}" style="border-radius:11px;padding:11px 16px;font-family:'Figtree';font-weight:600;font-size:14px;cursor:pointer;transition:all .15s;border:2px solid {{ it.border }};background:{{ it.bg }};color:{{ it.fg }}">{{ it.label }}</button>
+          </sc-for>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+          <div onClick="{{ dropMac }}" style="background:#f5f2fe;border:2px solid #ded3fb;border-radius:18px;padding:16px;min-height:180px;display:flex;flex-direction:column;gap:10px;cursor:pointer">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:15px;color:#7a5cf0">🏷️ MAC address</div>
+            <sc-for list="{{ dragMac }}" as="it" hint-placeholder-count="0">
+              <button onClick="{{ it.onClick }}" style="display:flex;justify-content:space-between;align-items:center;gap:6px;text-align:left;border-radius:10px;padding:10px 13px;font-weight:600;font-size:12.5px;cursor:pointer;border:2px solid {{ it.border }};background:{{ it.bg }};color:{{ it.fg }}"><span>{{ it.label }}</span><span style="font-weight:800">{{ it.mark }}</span></button>
+            </sc-for>
+          </div>
+          <div onClick="{{ dropIp }}" style="background:#eef4fd;border:2px solid #cfdffa;border-radius:18px;padding:16px;min-height:180px;display:flex;flex-direction:column;gap:10px;cursor:pointer">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:15px;color:#2e7fd4">📮 IP address</div>
+            <sc-for list="{{ dragIp }}" as="it" hint-placeholder-count="0">
+              <button onClick="{{ it.onClick }}" style="display:flex;justify-content:space-between;align-items:center;gap:6px;text-align:left;border-radius:10px;padding:10px 13px;font-weight:600;font-size:12.5px;cursor:pointer;border:2px solid {{ it.border }};background:{{ it.bg }};color:{{ it.fg }}"><span>{{ it.label }}</span><span style="font-weight:800">{{ it.mark }}</span></button>
+            </sc-for>
+          </div>
+        </div>
+      </section>
+
+      <section data-scene data-screen-label="Final check" style="{{ sc13 }}">
+        <div style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#d98a18">🧠 Final knowledge check</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:30px;line-height:1.2;margin:0;max-width:40ch">{{ q2.question }}</h2>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:820px;width:100%;margin:0 auto">
+          <sc-for list="{{ q2.options }}" as="o" hint-placeholder-count="4">
+            <button onClick="{{ o.onClick }}" style="display:flex;align-items:center;justify-content:space-between;gap:10px;text-align:left;border-radius:15px;padding:18px 20px;font-family:'Figtree';font-weight:600;font-size:15.5px;cursor:pointer;transition:all .15s;border:2px solid {{ o.border }};background:{{ o.bg }};color:{{ o.fg }}"><span>{{ o.label }}</span><span style="font-weight:800;font-size:18px">{{ o.mark }}</span></button>
+          </sc-for>
+        </div>
+        <sc-if value="{{ q2.answered }}" hint-placeholder-val="{{ false }}">
+          <div style="max-width:820px;width:100%;margin:0 auto;border-radius:16px;padding:18px 22px;background:{{ q2.bannerBg }}">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:17px;color:{{ q2.bannerFg }};margin-bottom:5px">{{ q2.banner }}</div>
+            <div style="font-size:16px;line-height:1.55;color:#33534c">{{ q2.explanation }}</div>
+          </div>
+        </sc-if>
+      </section>
+
+      <section data-scene data-screen-label="Wrap-up" style="{{ sc14 }}">
+        <div style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px">
+          <div style="font-size:42px">🎉</div>
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#0e8f74">Session wrap-up</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:40px;line-height:1.04;margin:0;letter-spacing:-.01em">Hardware ID, logical address, and how to slice a network</h2>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
+          <div style="background:#f5f2fe;border:1px solid #ded3fb;border-radius:18px;padding:22px;display:flex;flex-direction:column;gap:8px">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:16px;color:#7a5cf0">✅ Covered</div>
+            <p style="margin:0;font-size:14.5px;line-height:1.55;color:#3c4a58">MAC addresses and their OUI, IPv4 structure, public vs private ranges, and IPv6.</p>
+          </div>
+          <div style="background:#e9f6f1;border:1px solid #c2e4da;border-radius:18px;padding:22px;display:flex;flex-direction:column;gap:8px">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:16px;color:#0e8f74">🛠️ Applied</div>
+            <p style="margin:0;font-size:14.5px;line-height:1.55;color:#3c4a58">Classful vs CIDR, the maths behind a prefix, and FLSM vs VLSM with a full worked example.</p>
+          </div>
+          <div style="background:#fff7ef;border:1px solid #ffe0c2;border-radius:18px;padding:22px;display:flex;flex-direction:column;gap:8px">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:16px;color:#ec7211">🤔 Connected</div>
+            <p style="margin:0;font-size:14.5px;line-height:1.55;color:#3c4a58">How ARP ties the two together so data can cross networks and still reach the right device.</p>
+          </div>
+        </div>
+        <div style="background:#f6faf9;border:1px solid #dcebe6;border-radius:18px;padding:20px 24px">
+          <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:15px;margin-bottom:9px;color:#0e8f74">🎯 You should now be able to…</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:14.5px;color:#3c4a58">
+            <div>• Explain the role of IPv4 and IPv6 in network communication</div>
+            <div>• Describe MAC address structure and its Layer 2 role</div>
+            <div>• Apply FLSM and VLSM to divide a network efficiently</div>
+            <div>• Differentiate classful from classless (CIDR) addressing</div>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:2px">
+          <button onClick="{{ startLesson }}" style="background:#fff;color:#0e8f74;border:2px solid #b5ded2;border-radius:14px;padding:14px 26px;font-family:'Bricolage Grotesque';font-weight:700;font-size:16px;cursor:pointer" style-hover="background:#f4fbf8">↻ Review from the start</button>
+          <button onClick="{{ toggleGlossary }}" style="background:#0e8f74;color:#fff;border:none;border-radius:14px;padding:14px 26px;font-family:'Bricolage Grotesque';font-weight:700;font-size:16px;cursor:pointer">📖 Open glossary</button>
+        </div>
+        <div style="text-align:center;font-size:14px;color:#8ba39e;margin-top:4px">Lesson prepared by <b style="color:#4c6660">Reza Shahabian</b></div>
+      </section>
+
+    </div>
+  </div>
+
+  <div style="position:sticky;bottom:0;z-index:20;width:100%;display:flex;justify-content:center;background:linear-gradient(to top,#edf5f2 55%,transparent);padding:10px 24px 22px">
+    <div style="width:100%;max-width:1180px;display:flex;align-items:center;justify-content:space-between;gap:14px">
+      <button onClick="{{ prev }}" style="display:flex;align-items:center;gap:8px;background:#fff;border:1px solid #d5e6e0;border-radius:13px;padding:13px 22px;font-family:'Bricolage Grotesque';font-weight:700;font-size:15px;color:#33534c;cursor:pointer" style-hover="border-color:#8fc9b9">← Back</button>
+      <div style="display:flex;align-items:center;gap:12px;font-weight:600;color:#6a857f;font-size:15px">
+        <span style="font-family:'Bricolage Grotesque';color:#1d2b2a;font-size:17px">{{ sceneNum }}</span>
+        <span style="color:#b6ccc6">/</span>
+        <span>{{ total }}</span>
+        <span style="color:#b6ccc6">·</span>
+        <span style="color:#33534c">{{ sceneTitle }}</span>
+      </div>
+      <button onClick="{{ next }}" style="display:flex;align-items:center;gap:8px;background:{{ accent }};border:none;border-radius:13px;padding:13px 26px;font-family:'Bricolage Grotesque';font-weight:700;font-size:15px;color:#fff;cursor:pointer;box-shadow:0 10px 20px -10px rgba(20,70,60,.5)" style-hover="transform:translateY(-2px)">Next →</button>
+    </div>
+  </div>
+
+  <sc-if value="{{ glossaryOpen }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ toggleGlossary }}" style="position:fixed;inset:0;z-index:50;background:rgba(20,40,36,.34);backdrop-filter:blur(2px)"></div>
+    <div style="position:fixed;top:0;right:0;bottom:0;z-index:51;width:min(460px,92vw);background:#fff;box-shadow:-20px 0 60px -20px rgba(20,70,60,.4);display:flex;flex-direction:column">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:24px 26px;border-bottom:1px solid #e8f1ee">
+        <div style="display:flex;flex-direction:column;gap:2px">
+          <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:22px">📖 Glossary</div>
+          <div style="font-size:13px;color:#7b948e">Addressing &amp; subnetting terms</div>
+        </div>
+        <button onClick="{{ toggleGlossary }}" style="background:#eef5f3;border:none;border-radius:10px;width:38px;height:38px;font-size:18px;cursor:pointer;color:#4c6660">✕</button>
+      </div>
+      <div style="overflow-y:auto;padding:18px 26px 40px;display:flex;flex-direction:column;gap:14px">
+        <sc-for list="{{ glossary }}" as="g" hint-placeholder-count="6">
+          <div style="border:1px solid #e8f1ee;border-radius:14px;padding:14px 16px;background:#fafcfb">
+            <div style="display:flex;align-items:center;gap:8px;font-family:'Bricolage Grotesque';font-weight:700;font-size:16px;color:#1d2b2a"><span>{{ g.icon }}</span>{{ g.term }}</div>
+            <div style="font-size:14.5px;line-height:1.5;color:#4c6660;margin-top:5px">{{ g.def }}</div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:820}}">
+class Component extends DCLogic {
+  state = { idx:0, playing:false, glossary:false, quiz:{q1:null,q2:null,q3:null},
+    cidr:24, cls:'a', sub:'flsm', step:0,
+    drops:{mac:null,oui:null,arp:null,ip:null,route:null,cidrn:null}, sel:null, dragChecked:false };
+
+  total = 15;
+  interactive = new Set([2,6,7,8,9,10,12,13]);
+  durations = { 0:5200 };
+
+  chapTitles = ['Welcome','Two kinds of address','MAC addresses','IPv4 structure','Public vs private','IPv6','Quick check','Classful addressing','CIDR calculator','FLSM vs VLSM','A VLSM worked example','ARP: MAC meets IP','Sort it out','Final check','Wrap-up'];
+  chapColors = ['#0e8f74','#2e7fd4','#7a5cf0','#0e8f74','#ec7211','#2e7fd4','#ffb43d','#e0564a','#0e8f74','#7a5cf0','#2e7fd4','#ec7211','#0e8f74','#ffb43d','#0e8f74'];
+
+  cidrOptions = [8,16,20,22,24,26,28,30];
+
+  classData = {
+    a:{name:'Class A',color:'#0e8f74',range:'0.0.0.0 – 127.255.255.255',mask:'/8 (255.0.0.0)',use:'Designed for very large networks.'},
+    b:{name:'Class B',color:'#2e7fd4',range:'128.0.0.0 – 191.255.255.255',mask:'/16 (255.255.0.0)',use:'Supports medium-sized networks.'},
+    c:{name:'Class C',color:'#7a5cf0',range:'192.0.0.0 – 223.255.255.255',mask:'/24 (255.255.255.0)',use:'Suitable for small networks.'},
+    d:{name:'Class D',color:'#ec7211',range:'224.0.0.0 – 239.255.255.255',mask:'none',use:'Reserved for multicast communication — does not use subnet masks.'},
+    e:{name:'Class E',color:'#e0564a',range:'240.0.0.0 – 255.255.255.255',mask:'none',use:'Reserved for experimental and research purposes.'},
+  };
+  classOrder = ['a','b','c','d','e'];
+
+  subData = {
+    flsm:{name:'FLSM',full:'Fixed-Length Subnet Masking',color:'#7a5cf0',
+      desc:'All subnets are the same size — each has the same number of host addresses.',
+      pros:['Simple to design','Simple to manage'],
+      cons:['Wastes IP addresses when subnets need very different sizes'],
+      ex:'With a /24 mask every subnet contains 256 total IPs — even the one with 3 devices on it.'},
+    vlsm:{name:'VLSM',full:'Variable-Length Subnet Masking',color:'#0e8f74',
+      desc:'Subnets may be different sizes, assigned according to what each one actually needs.',
+      pros:['Optimises IP address usage','Reduces wastage','Matches real requirements'],
+      cons:['More planning required — allocate the largest block first'],
+      ex:'A 100-host LAN gets a /25, while a 2-address router link gets a /30.'},
+  };
+  subOrder = ['flsm','vlsm'];
+
+  vlsmSteps = [
+    {t:'Start with the requirement',d:'You have 192.168.10.0/24 and four networks to serve.',
+      code:'Available:  192.168.10.0/24   (256 addresses)\n\nSales    → 100 hosts\nSupport  →  50 hosts\nAdmin    →  20 hosts\nWAN link →   2 hosts'},
+    {t:'Sort largest first',d:'VLSM only works if you allocate the biggest block first — otherwise you fragment the space and cannot fit the large subnet later.',
+      code:'Order of allocation:\n  1. Sales     (100)\n  2. Support   (50)\n  3. Admin     (20)\n  4. WAN link  (2)'},
+    {t:'Size each block',d:'Round each requirement up to the next power of two, remembering two addresses per subnet go to the network and broadcast address.',
+      code:'100 hosts → needs 128 → /25  (126 usable)\n 50 hosts → needs  64 → /26  ( 62 usable)\n 20 hosts → needs  32 → /27  ( 30 usable)\n  2 hosts → needs   4 → /30  (  2 usable)'},
+    {t:'Allocate in order',d:'Each subnet starts where the previous one ended. Notice how the blocks shrink as the requirements shrink.',
+      code:'Sales     192.168.10.0/25    .0   – .127\nSupport   192.168.10.128/26  .128 – .191\nAdmin     192.168.10.192/27  .192 – .223\nWAN link  192.168.10.224/30  .224 – .227\n\nStill free: .228 – .255'},
+    {t:'Compare with FLSM',d:'Fixed /26 blocks would give four equal subnets of 62 usable hosts — too small for Sales, and wildly oversized for a 2-address router link.',
+      code:'FLSM (/26 everywhere):\n  Sales    62 usable → TOO SMALL for 100 hosts ✗\n  WAN link 62 usable → 60 addresses wasted ✗\n\nVLSM:\n  every subnet sized to its actual need ✓\n  28 addresses still spare ✓'},
+  ];
+
+  arpSteps = [
+    {t:'IP to MAC mapping (ARP)',icon:'🔍',d:'Within the local network, the sending device uses the Address Resolution Protocol to find the MAC address that matches a known IP address — so the frame can be delivered to the right device or gateway at the data link layer.'},
+    {t:'Routing using IP addresses',icon:'🧭',d:'Routers examine the destination IP address and decide the best path across multiple networks. IP is used here because it carries the logical network information routing needs.'},
+    {t:'Final delivery using MAC',icon:'📬',d:'Once the data reaches the destination network, the MAC address delivers it to the exact target device on that local network.'},
+  ];
+
+  dragMeta = {
+    mac:{label:'48-bit, hexadecimal',cat:'mac'},
+    oui:{label:'First 24 bits identify the manufacturer',cat:'mac'},
+    arp:{label:'Used for delivery inside a LAN',cat:'mac'},
+    ip:{label:'32-bit, dotted decimal',cat:'ip'},
+    route:{label:'Lets routers pick a path between networks',cat:'ip'},
+    cidrn:{label:'Written with a /24-style prefix',cat:'ip'},
+  };
+  dragOrder = ['mac','oui','arp','ip','route','cidrn'];
+
+  quizDefs = {
+    q1:{question:'A MAC address is 48 bits. What do the first 24 bits identify?',
+      options:[{label:'The device\u2019s IP subnet'},{label:'The manufacturer of the network card (the OUI)',correct:true},{label:'The default gateway'},{label:'The OSI layer it operates at'}],
+      explanation:'The first 24 bits are the Organizationally Unique Identifier, identifying the manufacturer. The last 24 bits are unique to the device, distinguishing it from others made by the same manufacturer.'},
+    q2:{question:'Four subnets need 100, 50, 20 and 2 hosts. Which approach wastes the fewest addresses?',
+      options:[{label:'FLSM with /24 everywhere'},{label:'FLSM with /26 everywhere'},{label:'VLSM, sizing each subnet to its need',correct:true},{label:'Classful Class C addressing'}],
+      explanation:'VLSM assigns each subnet a mask matched to its actual requirement — /25, /26, /27 and /30 here. FLSM forces one size on all four, so it either wastes addresses on the small subnets or is too small for the large one.'},
+    q3:{question:'A device sends data to another device on a DIFFERENT network. Which address gets it across the networks, and which delivers it at the far end?',
+      options:[{label:'MAC across, IP at the end'},{label:'IP across, MAC at the end',correct:true},{label:'IP for both'},{label:'MAC for both'}],
+      explanation:'IP addresses guide the data across networks — routers make their decisions on the destination IP. MAC addresses ensure accurate delivery within the local network at each hop, including the final one.'},
+  };
+
+  glossary = [
+    {icon:'🏷️',term:'MAC address',def:'A 48-bit hexadecimal hardware ID on a NIC, used at Layer 2 to deliver frames within a LAN.'},
+    {icon:'🏭',term:'OUI',def:'Organizationally Unique Identifier — the first 24 bits of a MAC address, identifying the manufacturer.'},
+    {icon:'📮',term:'IP address',def:'A logical Layer 3 address identifying a device on a network and making routing possible.'},
+    {icon:'4️⃣',term:'IPv4',def:'A 32-bit address in dotted-decimal form (four octets, 0–255), e.g. 192.168.1.1.'},
+    {icon:'6️⃣',term:'IPv6',def:'A 128-bit address in hexadecimal, created because IPv4 addresses were being exhausted.'},
+    {icon:'🌐',term:'Network ID',def:'The part of an IP address identifying which network the device belongs to.'},
+    {icon:'💻',term:'Host ID',def:'The part of an IP address identifying the specific device within that network.'},
+    {icon:'🔢',term:'Octet',def:'One of the four 8-bit sections of an IPv4 address, each ranging from 0 to 255.'},
+    {icon:'✂️',term:'Subnetting',def:'Dividing a large network into smaller subnetworks by borrowing bits from the host portion.'},
+    {icon:'📏',term:'FLSM',def:'Fixed-Length Subnet Masking — all subnets the same size. Simple, but wasteful.'},
+    {icon:'📐',term:'VLSM',def:'Variable-Length Subnet Masking — subnets sized to actual need, reducing wastage.'},
+    {icon:'🗂️',term:'Classful addressing',def:'The obsolete scheme dividing addresses into fixed Classes A–E with default masks.'},
+    {icon:'🔀',term:'CIDR',def:'Classless Inter-Domain Routing — flexible prefixes in slash notation, e.g. /22.'},
+    {icon:'🔒',term:'Private IP',def:'Addresses used inside private networks and not routable on the internet (10/8, 172.16/12, 192.168/16).'},
+    {icon:'🌍',term:'Public IP',def:'A globally unique address reachable over the internet, assigned by an ISP.'},
+    {icon:'🔍',term:'ARP',def:'Address Resolution Protocol — finds the MAC address matching a known IP on the local network.'},
+  ];
+
+  componentDidMount(){}
+  componentWillUnmount(){ window.removeEventListener('keydown', this.onKey); clearTimeout(this.t); }
+  ensureWiring(){
+    if(!this._kb){ this._kb=true; window.addEventListener('keydown', this.onKey); }
+    if(this._lastIdx!==this.state.idx || this._lastPlay!==this.state.playing){
+      this._lastIdx=this.state.idx; this._lastPlay=this.state.playing; this.scheduleAutoplay();
+    }
+  }
+  onKey = (e)=>{
+    const tag=(e.target&&e.target.tagName)||'';
+    if(tag==='INPUT'||tag==='TEXTAREA') return;
+    if(e.key==='ArrowRight'){ this.next(); }
+    else if(e.key==='ArrowLeft'){ this.prev(); }
+    else if(e.key===' '){ e.preventDefault(); this.togglePlay(); }
+  };
+
+  sceneCfg = [
+    {gap:22,center:true,pos:true},{gap:18},{gap:18},{gap:18},{gap:18},
+    {gap:18},{gap:22,vcenter:true},{gap:16},{gap:16},{gap:16},
+    {gap:16},{gap:18},{gap:18},{gap:22,vcenter:true},{gap:22},
+  ];
+  sceneStyle(k){
+    const c=this.sceneCfg[k]; const on=this.state.idx===k;
+    const s={display:on?'flex':'none',flexDirection:'column',minHeight:'560px',gap:c.gap+'px',width:'100%'};
+    if(c.center){ s.alignItems='center'; s.justifyContent='center'; s.textAlign='center'; }
+    if(c.vcenter){ s.justifyContent='center'; }
+    if(c.pos){ s.position='relative'; }
+    return s;
+  }
+
+  scheduleAutoplay(){
+    clearTimeout(this.t);
+    const i=this.state.idx;
+    if(this.state.playing && !this.interactive.has(i) && i<this.total-1){
+      this.t=setTimeout(()=>this.next(), this.durations[i]||9000);
+    }
+  }
+
+  next=()=> this.setState(s=> s.idx<this.total-1 ? {idx:s.idx+1} : {playing:false});
+  prev=()=> this.setState(s=> ({idx:Math.max(0,s.idx-1)}));
+  goTo=(i)=>()=> this.setState({idx:i});
+  togglePlay=()=> this.setState(s=>({playing:!s.playing}));
+  startLesson=()=> this.setState({idx:1});
+  playFromStart=()=> this.setState({idx:1, playing:true});
+  toggleGlossary=()=> this.setState(s=>({glossary:!s.glossary}));
+
+  answer=(q,i)=> this.setState(s=> s.quiz[q]!=null ? null : ({quiz:{...s.quiz,[q]:i}}));
+  setCidr=(n)=>()=> this.setState({cidr:n});
+  setCls=(k)=>()=> this.setState({cls:k});
+  setSub=(k)=>()=> this.setState({sub:k});
+  stepNext=()=> this.setState(s=>({step: Math.min(s.step+1, 4)}));
+  stepPrev=()=> this.setState(s=>({step: Math.max(s.step-1, 0)}));
+
+  pick=(id)=>()=> this.setState(s=>({sel: s.sel===id?null:id}));
+  drop=(b)=>()=> this.setState(s=>{ if(!s.sel) return null; return {drops:{...s.drops,[s.sel]:b}, sel:null}; });
+  toTray=(id)=>()=> this.setState(s=>({drops:{...s.drops,[id]:null}, sel:null}));
+  checkDrag=()=> this.setState({dragChecked:true, sel:null});
+  resetDrag=()=> this.setState({drops:{mac:null,oui:null,arp:null,ip:null,route:null,cidrn:null}, dragChecked:false, sel:null});
+
+  maskFor(n){
+    const bits='1'.repeat(n)+'0'.repeat(32-n);
+    return [0,1,2,3].map(i=>parseInt(bits.slice(i*8,i*8+8),2)).join('.');
+  }
+
+  buildQuiz(qKey){
+    const def=this.quizDefs[qKey]; const sel=this.state.quiz[qKey];
+    const options=def.options.map((o,i)=>{
+      let bg='#fff',fg='#1d2b2a',border='#e2ebe8',mark='';
+      if(sel!=null){
+        if(o.correct){ bg='#e4f5ed';fg='#0a6b50';border='#19c39a';mark='✓'; }
+        else if(i===sel){ bg='#fdeceb';fg='#c2362b';border='#ff6b5e';mark='✗'; }
+        else { fg='#97a8a4';border='#eef3f1'; }
+      }
+      return {label:o.label,bg,fg,border,mark,onClick:()=>this.answer(qKey,i)};
+    });
+    const answered=sel!=null;
+    const isCorrect=answered && def.options[sel].correct;
+    return {question:def.question,options,answered,isCorrect,explanation:def.explanation,
+      banner: !answered ? '' : (isCorrect?'✅ Correct!':'❌ Not quite —'),
+      bannerBg: !answered ? '' : (isCorrect?'#e4f5ed':'#fdeceb'),
+      bannerFg: !answered ? '' : (isCorrect?'#0a6b50':'#c2362b')};
+  }
+
+  buildDragItem(id, place){
+    const m=this.dragMeta[id]; const drops=this.state.drops; const checked=this.state.dragChecked;
+    const selected=this.state.sel===id;
+    let bg='#fff',fg='#1d2b2a',border='#d5e6e0',mark='';
+    if(checked && place!=='tray'){
+      const ok=drops[id]===m.cat;
+      bg=ok?'#e4f5ed':'#fdeceb'; fg=ok?'#0a6b50':'#c2362b'; border=ok?'#19c39a':'#ff6b5e'; mark=ok?'✓':'✗';
+    } else if(selected){ bg='#e4f3ee'; border='#0e8f74'; }
+    const onClick = place==='tray' ? this.pick(id) : this.toTray(id);
+    return {id,label:m.label,bg,fg,border,mark,selected,onClick};
+  }
+
+  renderVals(){
+    this.ensureWiring();
+    const i=this.state.idx;
+    const accent=this.chapColors[i]||'#0e8f74';
+    const sc={}; for(let k=0;k<this.total;k++) sc['sc'+k]=this.sceneStyle(k);
+    const chapters=this.chapTitles.map((t,k)=>({num:k+1,label:t,onClick:this.goTo(k),bg: k===i?this.chapColors[k] : (k<i?'#9ab9b1':'#d3e3de')}));
+
+    const n=this.state.cidr;
+    const totalIps=Math.pow(2,32-n);
+    const usable=Math.max(totalIps-2,0);
+    const cidrList=this.cidrOptions.map(v=>({v,label:'/'+v,onClick:this.setCidr(v),
+      bg: v===n?'#0e8f74':'#f2f7f5', fg: v===n?'#fff':'#33534c', border: v===n?'#0e8f74':'#e2ebe8'}));
+    const cidrInfo={ prefix:'/'+n, mask:this.maskFor(n), total:totalIps.toLocaleString(),
+      usable:usable.toLocaleString(), hostBits:(32-n)+' host bits', netBits:n+' network bits',
+      barW: Math.round(n/32*100)+'%', example:'192.168.1.0/'+n };
+
+    const clsList=this.classOrder.map(k=>{ const C=this.classData[k]; const on=this.state.cls===k;
+      return {k,name:C.name,onClick:this.setCls(k),bg:on?C.color:'#f2f7f5',fg:on?'#fff':'#33534c',border:on?C.color:'#e2ebe8'}; });
+    const cl=this.classData[this.state.cls];
+
+    const subTabs=this.subOrder.map(k=>{ const S=this.subData[k]; const on=this.state.sub===k;
+      return {k,name:S.name,onClick:this.setSub(k),bg:on?S.color:'#f2f7f5',fg:on?'#fff':'#4c6660'}; });
+    const sd=this.subData[this.state.sub];
+    const subInfo={...sd, pros:sd.pros.map(t=>({t})), cons:sd.cons.map(t=>({t}))};
+
+    const st=this.state.step;
+    const vlsmList=this.vlsmSteps.map((s,ix)=>({t:s.t,num:ix+1,
+      bg: ix===st ? '#0e8f74' : (ix<st ? '#e4f3ee' : '#f6f9f8'),
+      fg: ix===st ? '#fff' : (ix<st ? '#0a6b50' : '#8ba39e'),
+      border: ix===st ? '#0e8f74' : (ix<st ? '#c2e4da' : '#e8f1ee')}));
+    const vcur=this.vlsmSteps[st];
+
+    const tray=this.dragOrder.filter(id=>this.state.drops[id]==null).map(id=>this.buildDragItem(id,'tray'));
+    const bucket=(b)=>this.dragOrder.filter(id=>this.state.drops[id]===b).map(id=>this.buildDragItem(id,b));
+    const correct=this.dragOrder.filter(id=>this.state.drops[id]===this.dragMeta[id].cat).length;
+
+    return {
+      ...sc,
+      progressPct: Math.round(i/(this.total-1)*100)+'%',
+      accent, sceneNum:i+1, total:this.total, sceneTitle:this.chapTitles[i], chapters,
+      next:this.next, prev:this.prev, togglePlay:this.togglePlay,
+      playLabel: this.state.playing?'⏸ Pause':'▶ Play',
+      startLesson:this.startLesson, playFromStart:this.playFromStart,
+      glossaryOpen:this.state.glossary, toggleGlossary:this.toggleGlossary, glossary:this.glossary,
+      cidrList, cidrInfo,
+      clsList, clsInfo:cl,
+      subTabs, subInfo,
+      vlsmList, vlsmTitle:vcur.t, vlsmDesc:vcur.d, vlsmCode:vcur.code,
+      vlsmNum:(st+1)+' / 5', stepNext:this.stepNext, stepPrev:this.stepPrev,
+      arpSteps:this.arpSteps,
+      q1:this.buildQuiz('q1'), q2:this.buildQuiz('q2'), q3:this.buildQuiz('q3'),
+      dragTray:tray, dragMac:bucket('mac'), dragIp:bucket('ip'),
+      dropMac:this.drop('mac'), dropIp:this.drop('ip'),
+      checkDrag:this.checkDrag, resetDrag:this.resetDrag, dragChecked:this.state.dragChecked,
+      dragScore:correct+' / 6 correct', dragScoreBg: correct===6?'#e4f5ed':'#fff4e8', dragScoreFg: correct===6?'#0a6b50':'#d98a18',
+    };
+  }
+}
+</script>
+</body>
+</html>

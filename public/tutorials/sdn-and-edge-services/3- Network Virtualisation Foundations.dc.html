@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{background:#edf5f2;font-family:'Figtree',system-ui,sans-serif;color:#1d2b2a;-webkit-font-smoothing:antialiased}
+  a{color:#0e8f74}
+  a:hover{color:#0a6b57}
+  @keyframes floatA{0%,100%{transform:translateY(0) translateX(0)}50%{transform:translateY(-22px) translateX(10px)}}
+  @keyframes floatB{0%,100%{transform:translateY(0)}50%{transform:translateY(26px)}}
+  ::-webkit-scrollbar{width:10px;height:10px}
+  ::-webkit-scrollbar-thumb{background:#c2dcd4;border-radius:8px}
+</style>
+</helmet>
+<div style="min-height:100vh;position:relative;overflow-x:hidden;display:flex;flex-direction:column;align-items:center">
+
+  <div style="position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden">
+    <div style="position:absolute;top:12%;left:6%;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#ffffff,#d3ece3);opacity:.55;filter:blur(2px);animation:floatA 13s ease-in-out infinite"></div>
+    <div style="position:absolute;top:58%;left:80%;width:280px;height:280px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#ffffff,#d7e8ff);opacity:.45;filter:blur(2px);animation:floatB 17s ease-in-out infinite"></div>
+    <div style="position:absolute;top:74%;left:10%;width:160px;height:160px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#ffffff,#fdeed6);opacity:.5;filter:blur(2px);animation:floatA 15s ease-in-out infinite"></div>
+  </div>
+
+  <div style="position:sticky;top:0;z-index:30;width:100%;display:flex;justify-content:center;background:rgba(237,245,242,.85);backdrop-filter:blur(10px);border-bottom:1px solid #d5e6e0">
+    <div style="width:100%;max-width:1180px;display:flex;align-items:center;gap:20px;padding:14px 24px">
+      <div style="display:flex;align-items:center;gap:10px;font-family:'Bricolage Grotesque';font-weight:800;font-size:18px;color:#1d2b2a;white-space:nowrap">
+        <span style="font-size:22px">🧩</span><span>Network Virtualisation</span>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;gap:6px;min-width:0">
+        <div style="height:8px;border-radius:99px;background:#d3e3de;overflow:hidden">
+          <div style="height:100%;border-radius:99px;transition:width .45s cubic-bezier(.22,.9,.3,1);width:{{ progressPct }};background:{{ accent }}"></div>
+        </div>
+        <div style="display:flex;gap:5px;flex-wrap:wrap">
+          <sc-for list="{{ chapters }}" as="c" hint-placeholder-count="17">
+            <button onClick="{{ c.onClick }}" title="{{ c.label }}" style="width:18px;height:18px;border:none;border-radius:50%;cursor:pointer;padding:0;font-size:9px;font-weight:700;color:#fff;line-height:18px;transition:transform .15s;background:{{ c.bg }}" style-hover="transform:scale(1.25)">{{ c.num }}</button>
+          </sc-for>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;white-space:nowrap">
+        <button onClick="{{ toggleGlossary }}" style="display:flex;align-items:center;gap:6px;background:#fff;border:1px solid #d5e6e0;border-radius:11px;padding:9px 14px;font-family:'Figtree';font-weight:600;font-size:14px;color:#33534c;cursor:pointer" style-hover="border-color:#0e8f74;color:#0e8f74">📖 Glossary</button>
+        <button onClick="{{ togglePlay }}" style="display:flex;align-items:center;gap:7px;background:{{ accent }};border:none;border-radius:11px;padding:10px 16px;font-family:'Bricolage Grotesque';font-weight:700;font-size:14px;color:#fff;cursor:pointer" style-hover="filter:brightness(1.06)">{{ playLabel }}</button>
+      </div>
+    </div>
+  </div>
+
+  <div style="width:100%;max-width:1180px;padding:30px 24px 16px;z-index:5">
+    <div style="position:relative;width:100%;background:#fff;border-radius:30px;box-shadow:0 24px 60px -28px rgba(20,70,60,.32),0 2px 0 #ffffff inset;padding:52px 56px;min-height:580px;overflow:hidden">
+
+      <!-- SCENE 0 — TITLE -->
+      <section data-scene data-screen-label="Welcome" style="{{ sc0 }}">
+        <div style="position:absolute;top:0;right:8%;font-size:40px;animation:floatA 9s ease-in-out infinite">🔀</div>
+        <div style="position:absolute;bottom:6%;left:6%;font-size:34px;animation:floatB 11s ease-in-out infinite">🧠</div>
+        <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.22em;text-transform:uppercase;font-weight:700;color:#0e8f74">Interactive Lesson</div>
+        <h1 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:56px;line-height:1.02;margin:0;max-width:19ch;letter-spacing:-.02em">Inside the box, then <span style="background:linear-gradient(120deg,#0e8f74,#2e7fd4);-webkit-background-clip:text;background-clip:text;color:transparent">without the box</span></h1>
+        <p style="font-size:20px;line-height:1.55;color:#4c6660;max-width:70ch;margin:0">Open up NICs, switches, routers and firewalls — discover they're all the same three parts. Then delete the hardware and keep the software: network virtualisation, and the SDN three-plane model.</p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:4px">
+          <span style="background:#e4f3ee;border:1px solid #c2e4da;border-radius:99px;padding:8px 16px;font-weight:600;font-size:15px;color:#0e8f74">⏱️ ~28 min</span>
+          <span style="background:#eaf1fd;border:1px solid #cfdffa;border-radius:99px;padding:8px 16px;font-weight:600;font-size:15px;color:#2e7fd4">📑 17 chapters</span>
+          <span style="background:#fdeeed;border:1px solid #ffd9d5;border-radius:99px;padding:8px 16px;font-weight:600;font-size:15px;color:#e0564a">🧠 3 quizzes</span>
+          <span style="background:#fef4e8;border:1px solid #ffe6c2;border-radius:99px;padding:8px 16px;font-weight:600;font-size:15px;color:#d98a18">🎯 Device teardown</span>
+        </div>
+        <div style="display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-top:14px">
+          <button onClick="{{ startLesson }}" style="background:#0e8f74;color:#fff;border:none;border-radius:15px;padding:18px 34px;font-family:'Bricolage Grotesque';font-weight:700;font-size:18px;cursor:pointer;box-shadow:0 12px 24px -8px rgba(14,143,116,.6)" style-hover="transform:translateY(-2px)">Start lesson →</button>
+          <button onClick="{{ playFromStart }}" style="background:#fff;color:#0e8f74;border:2px solid #b5ded2;border-radius:15px;padding:16px 30px;font-family:'Bricolage Grotesque';font-weight:700;font-size:18px;cursor:pointer" style-hover="border-color:#0e8f74;background:#f4fbf8">▶ Play as video</button>
+        </div>
+        <div style="margin-top:18px;display:flex;align-items:center;gap:10px;background:#f3f9f7;border:1px solid #dcebe6;border-radius:99px;padding:8px 8px 8px 18px">
+          <span style="font-size:14px;color:#6a857f">Prepared by</span>
+          <span style="background:#1d2b2a;color:#fff;border-radius:99px;padding:7px 16px;font-weight:700;font-size:14px;font-family:'Bricolage Grotesque'">Reza Shahabian</span>
+        </div>
+      </section>
+
+      <!-- SCENE 1 — THE PHYSICAL NETWORK -->
+      <section data-scene data-screen-label="The physical network" style="{{ sc1 }}">
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#2e7fd4">Chapter 01 · Refresher</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:40px;line-height:1.04;margin:0;letter-spacing:-.01em">A physical network across two sites</h2>
+          <p style="font-size:16.5px;line-height:1.5;color:#4c6660;margin:0;max-width:84ch">Servers, switches, routers and user devices, wired together so two locations can communicate. <b>Tap any device</b> to see what it does.</p>
+        </div>
+        <div style="display:flex;gap:7px;flex-wrap:wrap">
+          <sc-for list="{{ devList }}" as="D" hint-placeholder-count="8">
+            <button onClick="{{ D.onClick }}" style="display:flex;align-items:center;gap:7px;border-radius:11px;padding:10px 14px;cursor:pointer;transition:all .15s;border:2px solid {{ D.border }};background:{{ D.bg }};color:{{ D.fg }}"><span style="font-size:16px">{{ D.icon }}</span><span style="font-family:'Bricolage Grotesque';font-weight:700;font-size:12.5px">{{ D.short }}</span></button>
+          </sc-for>
+        </div>
+        <div style="background:#f6faf9;border:2px solid #dcebe6;border-radius:20px;padding:24px;display:flex;gap:18px;align-items:center;flex-wrap:wrap;min-height:150px">
+          <div style="width:62px;height:62px;border-radius:16px;background:{{ devInfo.color }};display:flex;align-items:center;justify-content:center;font-size:29px;flex-shrink:0">{{ devInfo.icon }}</div>
+          <div style="flex:1;min-width:280px;display:flex;flex-direction:column;gap:8px">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:22px;color:{{ devInfo.color }}">{{ devInfo.name }}</div>
+            <p style="margin:0;font-size:16px;line-height:1.55;color:#3c4a58">{{ devInfo.desc }}</p>
+            <div style="background:#fff;border:1px solid #dcebe6;border-radius:12px;padding:11px 15px;font-size:13.5px;color:#4c6660">💡 <b>Example:</b> {{ devInfo.ex }}</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SCENE 2 — OSI MAPPING -->
+      <section data-scene data-screen-label="Devices and OSI layers" style="{{ sc2 }}">
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#0e8f74">Chapter 02 · Where do they operate?</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:40px;line-height:1.04;margin:0;letter-spacing:-.01em">Devices on the OSI model</h2>
+          <p style="font-size:17px;line-height:1.55;color:#4c6660;margin:0;max-width:84ch">In the broadest sense, most physical network devices operate within <b>Layers 1 to 4</b>. Higher layers (5–7) are handled by software and applications, not networking hardware.</p>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:7px">
+          <div style="display:flex;gap:9px;align-items:center;background:#f2f7f5;border:1px solid #e2ebe8;border-radius:12px;padding:11px 15px;opacity:.6"><span style="width:26px;height:26px;flex-shrink:0;border-radius:7px;background:#b6ccc6;color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Bricolage Grotesque';font-weight:800;font-size:12px">7</span><span style="font-size:14px;font-weight:700;color:#4c6660;min-width:110px">Application</span><span style="font-size:12.5px;color:#8ba39e">software &amp; applications</span></div>
+          <div style="display:flex;gap:9px;align-items:center;background:#f2f7f5;border:1px solid #e2ebe8;border-radius:12px;padding:11px 15px;opacity:.6"><span style="width:26px;height:26px;flex-shrink:0;border-radius:7px;background:#b6ccc6;color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Bricolage Grotesque';font-weight:800;font-size:12px">6</span><span style="font-size:14px;font-weight:700;color:#4c6660;min-width:110px">Presentation</span><span style="font-size:12.5px;color:#8ba39e">software &amp; applications</span></div>
+          <div style="display:flex;gap:9px;align-items:center;background:#f2f7f5;border:1px solid #e2ebe8;border-radius:12px;padding:11px 15px;opacity:.6"><span style="width:26px;height:26px;flex-shrink:0;border-radius:7px;background:#b6ccc6;color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Bricolage Grotesque';font-weight:800;font-size:12px">5</span><span style="font-size:14px;font-weight:700;color:#4c6660;min-width:110px">Session</span><span style="font-size:12.5px;color:#8ba39e">software &amp; applications</span></div>
+          <div style="display:flex;gap:9px;align-items:center;background:#eaf1fd;border:2px solid #cfdffa;border-radius:12px;padding:11px 15px"><span style="width:26px;height:26px;flex-shrink:0;border-radius:7px;background:#2e7fd4;color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Bricolage Grotesque';font-weight:800;font-size:12px">4</span><span style="font-size:14px;font-weight:800;color:#22598f;min-width:110px">Transport</span><span style="font-size:12.5px;color:#4c6660">L3 switches · firewalls (TCP/UDP ports)</span></div>
+          <div style="display:flex;gap:9px;align-items:center;background:#eaf1fd;border:2px solid #cfdffa;border-radius:12px;padding:11px 15px"><span style="width:26px;height:26px;flex-shrink:0;border-radius:7px;background:#2e7fd4;color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Bricolage Grotesque';font-weight:800;font-size:12px">3</span><span style="font-size:14px;font-weight:800;color:#22598f;min-width:110px">Network</span><span style="font-size:12.5px;color:#4c6660">routers · L3 switches (IP addresses)</span></div>
+          <div style="display:flex;gap:9px;align-items:center;background:#e9f6f1;border:2px solid #c2e4da;border-radius:12px;padding:11px 15px"><span style="width:26px;height:26px;flex-shrink:0;border-radius:7px;background:#0e8f74;color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Bricolage Grotesque';font-weight:800;font-size:12px">2</span><span style="font-size:14px;font-weight:800;color:#0a6b50;min-width:110px">Data Link</span><span style="font-size:12.5px;color:#4c6660">L2 switches · NICs · WAPs (MAC addresses)</span></div>
+          <div style="display:flex;gap:9px;align-items:center;background:#e9f6f1;border:2px solid #c2e4da;border-radius:12px;padding:11px 15px"><span style="width:26px;height:26px;flex-shrink:0;border-radius:7px;background:#0e8f74;color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Bricolage Grotesque';font-weight:800;font-size:12px">1</span><span style="font-size:14px;font-weight:800;color:#0a6b50;min-width:110px">Physical</span><span style="font-size:12.5px;color:#4c6660">cables · NIC hardware · signalling</span></div>
+        </div>
+      </section>
+
+      <!-- SCENE 3 — INSIDE A NIC -->
+      <section data-scene data-screen-label="Inside a NIC" style="{{ sc3 }}">
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#7a5cf0">Chapter 03 · Teardown 1 of 4</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:40px;line-height:1.04;margin:0;letter-spacing:-.01em">Inside a Network Interface Card</h2>
+          <p style="font-size:16.5px;line-height:1.5;color:#4c6660;margin:0;max-width:84ch">A NIC physically connects a device to the network medium and communicates with the host through the data bus — sending and receiving network data between the device and the network.</p>
+        </div>
+        <div style="display:grid;grid-template-columns:1.05fr .95fr;gap:20px;align-items:start">
+          <div style="background:#f5f2fe;border:2px solid #ded3fb;border-radius:20px;padding:22px;display:flex;flex-direction:column;gap:10px">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:16px;color:#7a5cf0">⚙️ The dedicated controller inside</div>
+            <sc-for list="{{ nicController }}" as="p" hint-placeholder-count="5">
+              <div style="display:flex;gap:9px;align-items:flex-start;background:#fff;border:1px solid #ded3fb;border-radius:11px;padding:10px 14px"><span style="color:#7a5cf0;font-weight:800;flex-shrink:0">•</span><span style="font-size:13.5px;line-height:1.5;color:#3c4a58">{{ p.t }}</span></div>
+            </sc-for>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:14px">
+            <div style="background:#1d2b2a;border-radius:18px;padding:18px;display:flex;flex-direction:column;gap:7px">
+              <div style="font-size:10.5px;font-weight:800;letter-spacing:.1em;color:#8fb8ac;text-align:center">DATA BUS ← → INTERFACE</div>
+              <div style="background:#7a5cf0;color:#fff;border-radius:10px;padding:10px;text-align:center;font-family:'Bricolage Grotesque';font-weight:800;font-size:12.5px">Operating Firmware</div>
+              <div style="background:#2f4340;color:#cfe5df;border-radius:10px;padding:10px;text-align:center;font-weight:700;font-size:12px">Data transfer path</div>
+              <div style="background:#2f4340;color:#cfe5df;border-radius:10px;padding:10px;text-align:center;font-weight:700;font-size:12px">Management</div>
+            </div>
+            <div style="background:#f6faf9;border:1px solid #dcebe6;border-radius:14px;padding:14px 17px">
+              <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:13.5px;color:#0e8f74;margin-bottom:7px">Logically, a NIC consists of</div>
+              <div style="display:flex;gap:6px;flex-wrap:wrap">
+                <sc-for list="{{ nicLogical }}" as="l" hint-placeholder-count="4">
+                  <span style="background:#fff;border:1px solid #dcebe6;border-radius:99px;padding:6px 13px;font-weight:600;font-size:12.5px;color:#33534c">{{ l.t }}</span>
+                </sc-for>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style="background:#fffaf0;border:2px solid #ffe6c2;border-radius:18px;padding:20px 22px;display:flex;flex-direction:column;gap:12px">
+          <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:15px;color:#d98a18">🧠 Quick check — {{ q1.question }}</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+            <sc-for list="{{ q1.options }}" as="o" hint-placeholder-count="4">
+              <button onClick="{{ o.onClick }}" style="display:flex;align-items:center;justify-content:space-between;gap:8px;text-align:left;border-radius:12px;padding:13px 16px;font-family:'Figtree';font-weight:600;font-size:14.5px;cursor:pointer;transition:all .15s;border:2px solid {{ o.border }};background:{{ o.bg }};color:{{ o.fg }}"><span>{{ o.label }}</span><span style="font-weight:800;font-size:16px">{{ o.mark }}</span></button>
+            </sc-for>
+          </div>
+          <sc-if value="{{ q1.answered }}" hint-placeholder-val="{{ false }}">
+            <div style="border-radius:13px;padding:14px 18px;background:{{ q1.bannerBg }}">
+              <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:15px;color:{{ q1.bannerFg }};margin-bottom:4px">{{ q1.banner }}</div>
+              <div style="font-size:14.5px;line-height:1.55;color:#33534c">{{ q1.explanation }}</div>
+            </div>
+          </sc-if>
+        </div>
+      </section>
+
+      <!-- SCENE 4 — INSIDE A SWITCH -->
+      <section data-scene data-screen-label="Inside a switch" style="{{ sc4 }}">
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#2e7fd4">Chapter 04 · Teardown 2 of 4</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:40px;line-height:1.04;margin:0;letter-spacing:-.01em">Inside a network switch</h2>
+          <p style="font-size:16.5px;line-height:1.5;color:#4c6660;margin:0;max-width:84ch">A switch receives traffic on its ports, examines the frame headers, and forwards packets to the appropriate destination port(s) where the target device is connected.</p>
+        </div>
+        <div style="display:grid;grid-template-columns:1.05fr .95fr;gap:20px;align-items:start">
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <sc-for list="{{ switchInternals }}" as="s" hint-placeholder-count="5">
+              <div style="background:#eef4fd;border:1px solid #cfdffa;border-radius:12px;padding:12px 15px"><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:14px;color:#2e7fd4">{{ s.t }}</div><div style="font-size:13px;color:#4c6660;margin-top:3px;line-height:1.45">{{ s.d }}</div></div>
+            </sc-for>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:14px">
+            <div style="background:#1d2b2a;border-radius:18px;padding:18px;display:flex;flex-direction:column;gap:7px">
+              <div style="font-size:10.5px;font-weight:800;letter-spacing:.1em;color:#8fb8ac;text-align:center">INTERFACES</div>
+              <div style="background:#2e7fd4;color:#fff;border-radius:10px;padding:11px;text-align:center;font-family:'Bricolage Grotesque';font-weight:800;font-size:12.5px">Switch Plane</div>
+              <div style="background:#3a5470;color:#dbe9fb;border-radius:10px;padding:10px;text-align:center;font-weight:700;font-size:12px">Operating Firmware</div>
+              <div style="background:#2f4340;color:#cfe5df;border-radius:10px;padding:10px;text-align:center;font-weight:700;font-size:12px">Management</div>
+              <div style="font-size:10.5px;font-weight:800;letter-spacing:.1em;color:#8fb8ac;text-align:center">INTERFACES</div>
+            </div>
+            <div style="background:#f6faf9;border:1px solid #dcebe6;border-radius:14px;padding:14px 17px;font-size:13.5px;line-height:1.5;color:#4c6660">🔁 Same story as the NIC: external interfaces are standardised so switches are interchangeable — <b>firmware</b> is where manufacturers compete on features and performance.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SCENE 5 — L2 VS L3 -->
+      <section data-scene data-screen-label="L2 vs L3 switching" style="{{ sc5 }}">
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#ec7211">Chapter 05 · Two kinds of switch</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:40px;line-height:1.04;margin:0;letter-spacing:-.01em">Layer 2 vs Layer 3</h2>
+          <p style="font-size:16px;line-height:1.5;color:#4c6660;margin:0"><b>Tap each type</b> to compare what it understands and how it forwards.</p>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <sc-for list="{{ swTabs }}" as="t" hint-placeholder-count="2">
+            <button onClick="{{ t.onClick }}" style="border:none;border-radius:13px;padding:13px 24px;font-family:'Bricolage Grotesque';font-weight:700;font-size:15px;cursor:pointer;transition:all .15s;background:{{ t.bg }};color:{{ t.fg }}">{{ t.name }}</button>
+          </sc-for>
+        </div>
+        <div style="background:#f6faf9;border:2px solid #dcebe6;border-radius:20px;padding:26px;display:flex;flex-direction:column;gap:13px;min-height:200px">
+          <div style="display:flex;align-items:baseline;gap:12px;flex-wrap:wrap"><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:24px;color:{{ swInfo.color }}">{{ swInfo.name }}</div><div style="font-size:13.5px;font-weight:700;color:#8ba39e">{{ swInfo.layer }}</div></div>
+          <p style="margin:0;font-size:17px;line-height:1.6;color:#3c4a58">{{ swInfo.desc }}</p>
+          <div style="display:flex;flex-direction:column;gap:7px">
+            <sc-for list="{{ swInfo.points }}" as="p" hint-placeholder-count="3">
+              <div style="display:flex;gap:9px;align-items:flex-start;background:#fff;border:1px solid #dcebe6;border-radius:11px;padding:10px 14px"><span style="color:{{ swInfo.color }};font-weight:800;flex-shrink:0">•</span><span style="font-size:14px;line-height:1.5;color:#3c4a58">{{ p.t }}</span></div>
+            </sc-for>
+          </div>
+        </div>
+        <div style="background:#fdf2f0;border:2px solid #f8d6d0;border-radius:18px;padding:20px 22px;display:flex;flex-direction:column;gap:12px">
+          <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:15px;color:#c2453a">🧠 Quick check — {{ q2.question }}</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+            <sc-for list="{{ q2.options }}" as="o" hint-placeholder-count="4">
+              <button onClick="{{ o.onClick }}" style="display:flex;align-items:center;justify-content:space-between;gap:8px;text-align:left;border-radius:12px;padding:13px 16px;font-family:'Figtree';font-weight:600;font-size:14.5px;cursor:pointer;transition:all .15s;border:2px solid {{ o.border }};background:{{ o.bg }};color:{{ o.fg }}"><span>{{ o.label }}</span><span style="font-weight:800;font-size:16px">{{ o.mark }}</span></button>
+            </sc-for>
+          </div>
+          <sc-if value="{{ q2.answered }}" hint-placeholder-val="{{ false }}">
+            <div style="border-radius:13px;padding:14px 18px;background:{{ q2.bannerBg }}">
+              <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:15px;color:{{ q2.bannerFg }};margin-bottom:4px">{{ q2.banner }}</div>
+              <div style="font-size:14.5px;line-height:1.55;color:#33534c">{{ q2.explanation }}</div>
+            </div>
+          </sc-if>
+        </div>
+      </section>
+
+      <!-- SCENE 6 — INSIDE A ROUTER -->
+      <section data-scene data-screen-label="Inside a router" style="{{ sc6 }}">
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#0e8f74">Chapter 06 · Teardown 3 of 4</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:40px;line-height:1.04;margin:0;letter-spacing:-.01em">Inside a router</h2>
+        </div>
+        <div style="display:grid;grid-template-columns:1.15fr .85fr;gap:20px;align-items:start">
+          <div style="display:flex;flex-direction:column;gap:7px">
+            <sc-for list="{{ routerPoints }}" as="p" hint-placeholder-count="7">
+              <div style="display:flex;gap:9px;align-items:flex-start;background:#f6faf9;border:1px solid #dcebe6;border-radius:11px;padding:10px 14px"><span style="color:#0e8f74;font-weight:800;flex-shrink:0">•</span><span style="font-size:13.5px;line-height:1.5;color:#3c4a58">{{ p.t }}</span></div>
+            </sc-for>
+          </div>
+          <div style="background:#1d2b2a;border-radius:18px;padding:18px;display:flex;flex-direction:column;gap:7px">
+            <div style="font-size:10.5px;font-weight:800;letter-spacing:.1em;color:#8fb8ac;text-align:center">INTERFACES</div>
+            <div style="background:#0e8f74;color:#fff;border-radius:10px;padding:11px;text-align:center;font-family:'Bricolage Grotesque';font-weight:800;font-size:12.5px">Routing / Switch Plane</div>
+            <div style="background:#2f4340;color:#cfe5df;border-radius:10px;padding:10px;text-align:center;font-weight:700;font-size:12px">Operating Firmware</div>
+            <div style="background:#2f4340;color:#cfe5df;border-radius:10px;padding:10px;text-align:center;font-weight:700;font-size:12px">Management</div>
+            <div style="font-size:10.5px;font-weight:800;letter-spacing:.1em;color:#8fb8ac;text-align:center">INTERFACES</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SCENE 7 — INSIDE A FIREWALL -->
+      <section data-scene data-screen-label="Inside a firewall" style="{{ sc7 }}">
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#e0564a">Chapter 07 · Teardown 4 of 4</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:40px;line-height:1.04;margin:0;letter-spacing:-.01em">Inside a firewall</h2>
+        </div>
+        <div style="display:grid;grid-template-columns:1.15fr .85fr;gap:20px;align-items:start">
+          <div style="display:flex;flex-direction:column;gap:7px">
+            <sc-for list="{{ firewallPoints }}" as="p" hint-placeholder-count="4">
+              <div style="display:flex;gap:9px;align-items:flex-start;background:#fdf2f0;border:1px solid #f8d6d0;border-radius:11px;padding:11px 15px"><span style="color:#e0564a;font-weight:800;flex-shrink:0">•</span><span style="font-size:14px;line-height:1.5;color:#3c4a58">{{ p.t }}</span></div>
+            </sc-for>
+          </div>
+          <div style="background:#1d2b2a;border-radius:18px;padding:18px;display:flex;flex-direction:column;gap:7px">
+            <div style="font-size:10.5px;font-weight:800;letter-spacing:.1em;color:#8fb8ac;text-align:center">INTERFACES</div>
+            <div style="background:#e0564a;color:#fff;border-radius:10px;padding:11px;text-align:center;font-family:'Bricolage Grotesque';font-weight:800;font-size:12.5px">Routing / Port Switch Plane</div>
+            <div style="background:#2f4340;color:#cfe5df;border-radius:10px;padding:10px;text-align:center;font-weight:700;font-size:12px">Operating Firmware</div>
+            <div style="background:#2f4340;color:#cfe5df;border-radius:10px;padding:10px;text-align:center;font-weight:700;font-size:12px">Management</div>
+            <div style="font-size:10.5px;font-weight:800;letter-spacing:.1em;color:#8fb8ac;text-align:center">INTERFACES</div>
+          </div>
+        </div>
+        <div style="background:#fff7ef;border:1px solid #ffe0c2;border-radius:14px;padding:13px 20px;font-size:14px;color:#8a5f21">⚠️ Firewalls are highly complex devices — this is a simplified description. In reality they perform many additional security functions.</div>
+      </section>
+
+      <!-- SCENE 8 — THE UNIVERSAL PATTERN -->
+      <section data-scene data-screen-label="The universal pattern" style="{{ sc8 }}">
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#7a5cf0">Chapter 08 · The key abstraction</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:42px;line-height:1.04;margin:0;letter-spacing:-.01em">They're all the same three parts</h2>
+          <p style="font-size:17.5px;line-height:1.55;color:#4c6660;margin:0;max-width:84ch">NIC, switch, router, firewall — every device you just opened relies on the same core components.</p>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
+          <div style="background:#f5f2fe;border:2px solid #ded3fb;border-radius:18px;padding:22px;display:flex;flex-direction:column;gap:9px">
+            <div style="width:44px;height:44px;border-radius:12px;background:#7a5cf0;display:flex;align-items:center;justify-content:center;font-size:22px">🔧</div>
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:17px;color:#7a5cf0">Hardware platform</div>
+            <div style="font-size:14.5px;line-height:1.5;color:#4c6660">Network interfaces, memory and a CPU.</div>
+          </div>
+          <div style="background:#e9f6f1;border:2px solid #c2e4da;border-radius:18px;padding:22px;display:flex;flex-direction:column;gap:9px">
+            <div style="width:44px;height:44px;border-radius:12px;background:#0e8f74;display:flex;align-items:center;justify-content:center;font-size:22px">💾</div>
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:17px;color:#0e8f74">Firmware</div>
+            <div style="font-size:14.5px;line-height:1.5;color:#4c6660">Controls how and where data is processed and transported.</div>
+          </div>
+          <div style="background:#eef4fd;border:2px solid #cfdffa;border-radius:18px;padding:22px;display:flex;flex-direction:column;gap:9px">
+            <div style="width:44px;height:44px;border-radius:12px;background:#2e7fd4;display:flex;align-items:center;justify-content:center;font-size:22px">🎛️</div>
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:17px;color:#2e7fd4">Management system</div>
+            <div style="font-size:14.5px;line-height:1.5;color:#4c6660">Status monitoring, configuration and control.</div>
+          </div>
+        </div>
+        <div style="background:#1d2b2a;border-radius:18px;padding:20px;display:flex;flex-direction:column;gap:8px;max-width:540px;margin:0 auto;width:100%">
+          <div style="font-size:10.5px;font-weight:800;letter-spacing:.1em;color:#8fb8ac;text-align:center">INTERFACES</div>
+          <div style="background:#7a5cf0;color:#fff;border-radius:10px;padding:11px;text-align:center;font-family:'Bricolage Grotesque';font-weight:800;font-size:13px">Routing / Port / Switch Plane</div>
+          <div style="background:#2f4340;color:#cfe5df;border-radius:10px;padding:10px;text-align:center;font-weight:700;font-size:12.5px">Operating Firmware</div>
+          <div style="background:#2f4340;color:#cfe5df;border-radius:10px;padding:10px;text-align:center;font-weight:700;font-size:12.5px">Management System</div>
+          <div style="font-size:10.5px;font-weight:800;letter-spacing:.1em;color:#8fb8ac;text-align:center">INTERFACES</div>
+        </div>
+        <div style="background:#fffaf0;border:1px solid #ffe6c2;border-radius:14px;padding:13px 20px;font-size:14.5px;color:#8a5f21;text-align:center">🎯 Hold onto this abstraction — everything that follows depends on it.</div>
+      </section>
+
+      <!-- SCENE 9 — COMPUTERS & THE HAL -->
+      <section data-scene data-screen-label="Computers and the HAL" style="{{ sc9 }}">
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#2e7fd4">Chapter 09 · The same trick, for computers</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:40px;line-height:1.04;margin:0;letter-spacing:-.01em">Hardware abstraction</h2>
+          <p style="font-size:17px;line-height:1.55;color:#4c6660;margin:0;max-width:84ch">PCs, laptops and phones all follow a similar internal structure. The hardware is <b>abstracted</b> from the operating system — so in theory an OS can move from one hardware platform to another.</p>
+        </div>
+        <div style="display:grid;grid-template-columns:.9fr 1.1fr;gap:20px;align-items:center">
+          <div style="background:#1d2b2a;border-radius:18px;padding:20px;display:flex;flex-direction:column;gap:8px">
+            <div style="background:#2e7fd4;color:#fff;border-radius:10px;padding:11px;text-align:center;font-family:'Bricolage Grotesque';font-weight:800;font-size:12.5px">Management System (UI)</div>
+            <div style="background:#0e8f74;color:#fff;border-radius:10px;padding:11px;text-align:center;font-family:'Bricolage Grotesque';font-weight:800;font-size:12.5px">Operating System</div>
+            <div style="font-size:10.5px;font-weight:800;letter-spacing:.1em;color:#8fb8ac;text-align:center">DEVICES ↕ PORTS</div>
+            <div style="background:#7a5cf0;color:#fff;border-radius:10px;padding:11px;text-align:center;font-family:'Bricolage Grotesque';font-weight:800;font-size:12.5px">Hardware Abstraction Layer</div>
+            <div style="font-size:10.5px;font-weight:800;letter-spacing:.1em;color:#8fb8ac;text-align:center">INTERFACES</div>
+          </div>
+          <div style="background:#f5f2fe;border:2px solid #ded3fb;border-radius:20px;padding:24px;display:flex;flex-direction:column;gap:11px">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:17px;color:#7a5cf0">💡 When an OS runs inside a virtual machine</div>
+            <div style="display:flex;gap:9px;align-items:flex-start;background:#fff;border:1px solid #ded3fb;border-radius:11px;padding:11px 15px"><span style="color:#7a5cf0;font-weight:800">•</span><span style="font-size:14.5px;line-height:1.5;color:#3c4a58">A hardware abstraction layer is implemented <b>in software</b></span></div>
+            <div style="display:flex;gap:9px;align-items:flex-start;background:#fff;border:1px solid #ded3fb;border-radius:11px;padding:11px 15px"><span style="color:#7a5cf0;font-weight:800">•</span><span style="font-size:14.5px;line-height:1.5;color:#3c4a58">This layer <b>emulates the functions</b> of physical hardware</span></div>
+            <div style="display:flex;gap:9px;align-items:flex-start;background:#fff;border:1px solid #ded3fb;border-radius:11px;padding:11px 15px"><span style="color:#7a5cf0;font-weight:800">•</span><span style="font-size:14.5px;line-height:1.5;color:#3c4a58">The OS accesses the <b>virtual devices and interfaces</b> it needs to function correctly</span></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SCENE 10 — PHYSICAL DATA PATH -->
+      <section data-scene data-screen-label="Physical data path" style="{{ sc10 }}">
+        <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap">
+          <div style="display:flex;flex-direction:column;gap:4px">
+            <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#0e8f74">🎯 Try it · PC to PC</div>
+            <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:34px;line-height:1.05;margin:0">How data actually crosses the wire</h2>
+            <p style="font-size:15px;color:#4c6660;margin:0">Step through the five stages from one OS to another.</p>
+          </div>
+          <div style="display:flex;gap:9px;align-items:center">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:15px;color:#0e8f74;background:#e4f3ee;border-radius:11px;padding:11px 15px">{{ pathNum }}</div>
+            <button onClick="{{ stepPrev }}" style="background:#fff;border:1px solid #d5e6e0;border-radius:11px;padding:11px 16px;font-family:'Figtree';font-weight:600;font-size:14px;color:#4c6660;cursor:pointer">◀ Prev</button>
+            <button onClick="{{ stepNext }}" style="background:#0e8f74;border:none;border-radius:11px;padding:11px 18px;font-family:'Bricolage Grotesque';font-weight:700;font-size:14px;color:#fff;cursor:pointer">Next ▶</button>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:.9fr 1.1fr;gap:18px;align-items:start">
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <sc-for list="{{ pathList }}" as="f" hint-placeholder-count="5">
+              <div style="display:flex;gap:9px;align-items:center;border-radius:11px;padding:11px 14px;border:1.5px solid {{ f.border }};background:{{ f.bg }};color:{{ f.fg }}"><span style="width:20px;height:20px;flex-shrink:0;border-radius:50%;background:rgba(0,0,0,.12);display:flex;align-items:center;justify-content:center;font-family:'Bricolage Grotesque';font-weight:800;font-size:10.5px">{{ f.num }}</span><span style="font-size:12.5px;font-weight:700">{{ f.t }}</span></div>
+            </sc-for>
+          </div>
+          <div style="background:#f6faf9;border:2px solid #dcebe6;border-radius:18px;padding:26px;display:flex;flex-direction:column;gap:12px;min-height:200px;justify-content:center">
+            <div style="font-size:36px">{{ pathIcon }}</div>
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:22px;color:#0e8f74">{{ pathTitle }}</div>
+            <p style="margin:0;font-size:16.5px;line-height:1.6;color:#3c4a58">{{ pathDesc }}</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SCENE 11 — VIRTUALISING THE NETWORK -->
+      <section data-scene data-screen-label="Virtualising the network" style="{{ sc11 }}">
+        <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap">
+          <div style="display:flex;flex-direction:column;gap:4px">
+            <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#7a5cf0">🎯 Try it · Delete the hardware</div>
+            <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:36px;line-height:1.05;margin:0">Virtualising the network</h2>
+            <p style="font-size:15px;color:#4c6660;margin:0">Flip the switch and watch the physical layer disappear.</p>
+          </div>
+          <button onClick="{{ toggleVirt }}" style="border:none;border-radius:13px;padding:14px 26px;font-family:'Bricolage Grotesque';font-weight:800;font-size:16px;color:#fff;cursor:pointer;transition:all .2s;background:{{ virtBtnBg }}">{{ virtLabel }}</button>
+        </div>
+        <div style="background:#1d2b2a;border-radius:20px;padding:24px;display:flex;flex-direction:column;gap:12px">
+          <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap">
+            <div style="flex:1;min-width:230px;display:flex;flex-direction:column;gap:6px">
+              <div style="background:#2e7fd4;color:#fff;border-radius:9px;padding:9px;text-align:center;font-weight:800;font-size:11.5px;font-family:'Bricolage Grotesque'">Management System (UI)</div>
+              <div style="background:#0e8f74;color:#fff;border-radius:9px;padding:9px;text-align:center;font-weight:800;font-size:11.5px;font-family:'Bricolage Grotesque'">Operating System</div>
+              <div style="background:#7a5cf0;color:#fff;border-radius:9px;padding:9px;text-align:center;font-weight:700;font-size:11px;transition:all .25s">{{ virtHardware }}</div>
+            </div>
+            <div style="align-self:center;display:flex;flex-direction:column;align-items:center;gap:5px">
+              <div style="border-radius:9px;padding:9px 15px;font-weight:800;font-size:10.5px;letter-spacing:.06em;color:#fff;transition:all .25s;background:{{ virtLinkBg }}">{{ virtLink }}</div>
+              <span style="color:#8fb8ac;font-size:15px">⇄</span>
+            </div>
+            <div style="flex:1;min-width:230px;display:flex;flex-direction:column;gap:6px">
+              <div style="background:#2e7fd4;color:#fff;border-radius:9px;padding:9px;text-align:center;font-weight:800;font-size:11.5px;font-family:'Bricolage Grotesque'">Management System (UI)</div>
+              <div style="background:#0e8f74;color:#fff;border-radius:9px;padding:9px;text-align:center;font-weight:800;font-size:11.5px;font-family:'Bricolage Grotesque'">Operating System</div>
+              <div style="background:#7a5cf0;color:#fff;border-radius:9px;padding:9px;text-align:center;font-weight:700;font-size:11px;transition:all .25s">{{ virtHardware }}</div>
+            </div>
+          </div>
+        </div>
+        <div style="background:#f6faf9;border:2px solid #dcebe6;border-radius:18px;padding:20px 24px;min-height:96px;display:flex;align-items:center">
+          <p style="margin:0;font-size:16px;line-height:1.6;color:#3c4a58">{{ virtNote }}</p>
+        </div>
+        <div style="background:#f5f2fe;border:1px solid #ded3fb;border-radius:14px;padding:13px 20px;font-size:14.5px;color:#5a4a8f">🧩 The same abstraction works for <b>network devices</b>: strip the physical hardware, keep the operating firmware and management system, and let the virtualised devices talk over <b>virtual channels</b>.</div>
+      </section>
+
+      <!-- SCENE 12 — BENEFITS -->
+      <section data-scene data-screen-label="Benefits of virtualisation" style="{{ sc12 }}">
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#0e8f74">Chapter 12 · Why bother</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:38px;line-height:1.04;margin:0;letter-spacing:-.01em">Benefits of virtualised networks</h2>
+          <p style="font-size:16px;line-height:1.5;color:#4c6660;margin:0">All the functionality of a traditional physical network, plus significant extras. <b>Tap each benefit.</b></p>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <sc-for list="{{ benefitList }}" as="B" hint-placeholder-count="6">
+            <button onClick="{{ B.onClick }}" style="display:flex;align-items:center;gap:7px;border-radius:12px;padding:11px 16px;cursor:pointer;transition:all .15s;border:2px solid {{ B.border }};background:{{ B.bg }};color:{{ B.fg }}"><span style="font-size:16px">{{ B.icon }}</span><span style="font-family:'Bricolage Grotesque';font-weight:800;font-size:13px">{{ B.name }}</span></button>
+          </sc-for>
+        </div>
+        <div style="background:#f6faf9;border:2px solid #dcebe6;border-radius:20px;padding:26px;display:flex;flex-direction:column;gap:13px;min-height:200px;justify-content:center">
+          <div style="display:flex;align-items:center;gap:13px"><div style="width:54px;height:54px;border-radius:14px;background:{{ benefitInfo.color }};display:flex;align-items:center;justify-content:center;font-size:26px">{{ benefitInfo.icon }}</div><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:24px;color:{{ benefitInfo.color }}">{{ benefitInfo.name }}</div></div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <sc-for list="{{ benefitInfo.points }}" as="p" hint-placeholder-count="3">
+              <div style="display:flex;gap:9px;align-items:flex-start;background:#fff;border:1px solid #dcebe6;border-radius:11px;padding:11px 15px"><span style="color:{{ benefitInfo.color }};font-weight:800;flex-shrink:0">✓</span><span style="font-size:15px;line-height:1.5;color:#3c4a58">{{ p.t }}</span></div>
+            </sc-for>
+          </div>
+        </div>
+      </section>
+
+      <!-- SCENE 13 — SDN THREE PLANES -->
+      <section data-scene data-screen-label="SDN: the three planes" style="{{ sc13 }}">
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#2e7fd4">Chapter 13 · Standardising the design</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:38px;line-height:1.04;margin:0;letter-spacing:-.01em">SDN: the three planes</h2>
+          <p style="font-size:16px;line-height:1.5;color:#4c6660;margin:0;max-width:84ch">SDN extends virtualisation into cloud computing by standardising network design and interfaces into three distinct layers. <b>Tap each plane.</b></p>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <sc-for list="{{ planeList }}" as="P" hint-placeholder-count="3">
+            <button onClick="{{ P.onClick }}" style="flex:1;min-width:190px;display:flex;align-items:center;gap:9px;border-radius:13px;padding:13px 18px;cursor:pointer;transition:all .15s;border:2px solid {{ P.border }};background:{{ P.bg }};color:{{ P.fg }}"><span style="font-size:19px">{{ P.icon }}</span><span style="font-family:'Bricolage Grotesque';font-weight:800;font-size:14px;text-align:left">{{ P.name }}</span></button>
+          </sc-for>
+        </div>
+        <div style="background:#f6faf9;border:2px solid #dcebe6;border-radius:20px;padding:26px;display:flex;flex-direction:column;gap:13px;min-height:190px;justify-content:center">
+          <div style="display:flex;align-items:center;gap:13px"><div style="width:54px;height:54px;border-radius:14px;background:{{ planeInfo.color }};display:flex;align-items:center;justify-content:center;font-size:26px">{{ planeInfo.icon }}</div><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:23px;color:{{ planeInfo.color }}">{{ planeInfo.name }}</div></div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <sc-for list="{{ planeInfo.points }}" as="p" hint-placeholder-count="3">
+              <div style="display:flex;gap:9px;align-items:flex-start;background:#fff;border:1px solid #dcebe6;border-radius:11px;padding:11px 15px"><span style="color:{{ planeInfo.color }};font-weight:800;flex-shrink:0">•</span><span style="font-size:15px;line-height:1.5;color:#3c4a58">{{ p.t }}</span></div>
+            </sc-for>
+          </div>
+        </div>
+        <div style="background:#eef4fd;border:1px solid #cfdffa;border-radius:14px;padding:13px 20px;font-size:14.5px;color:#22598f">📍 In a <b>physical</b> network these three planes exist inside every single device. SDN pulls them apart.</div>
+      </section>
+
+      <!-- SCENE 14 — THE SDN CONTROLLER -->
+      <section data-scene data-screen-label="The SDN controller" style="{{ sc14 }}">
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#ec7211">Chapter 14 · Putting it together</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:40px;line-height:1.04;margin:0;letter-spacing:-.01em">One controller, one interface</h2>
+          <p style="font-size:17px;line-height:1.55;color:#4c6660;margin:0;max-width:84ch">In SDN, network device functions are provided through <b>virtual devices</b> — provisioned, configured and managed by an SDN controller.</p>
+        </div>
+        <div style="background:#1d2b2a;border-radius:20px;padding:24px;display:flex;flex-direction:column;gap:11px;align-items:center">
+          <div style="background:#ec7211;color:#fff;border-radius:13px;padding:14px 26px;font-family:'Bricolage Grotesque';font-weight:800;font-size:15px">🎛️ SDN Controller — single user interface</div>
+          <div style="background:#3a5470;color:#dbe9fb;border-radius:9px;padding:7px 16px;font-weight:700;font-size:11.5px;letter-spacing:.05em">standard API ↓ to each management plane</div>
+          <div style="display:flex;gap:9px;flex-wrap:wrap;justify-content:center">
+            <div style="background:#2f4340;border-radius:11px;padding:12px 16px;text-align:center"><div style="font-size:19px">🔀</div><div style="font-size:10.5px;font-weight:700;color:#cfe5df;margin-top:3px">Virtual switch</div><div style="font-size:9px;color:#8fb8ac">Vendor A</div></div>
+            <div style="background:#2f4340;border-radius:11px;padding:12px 16px;text-align:center"><div style="font-size:19px">🧭</div><div style="font-size:10.5px;font-weight:700;color:#cfe5df;margin-top:3px">Virtual router</div><div style="font-size:9px;color:#8fb8ac">Vendor B</div></div>
+            <div style="background:#2f4340;border-radius:11px;padding:12px 16px;text-align:center"><div style="font-size:19px">🛡️</div><div style="font-size:10.5px;font-weight:700;color:#cfe5df;margin-top:3px">Virtual firewall</div><div style="font-size:9px;color:#8fb8ac">Vendor C</div></div>
+          </div>
+        </div>
+        <div style="background:#fff7ef;border:2px solid #ffe0c2;border-radius:18px;padding:20px 22px;display:flex;flex-direction:column;gap:12px">
+          <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:15px;color:#d98a18">🧠 Quick check — {{ q3.question }}</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+            <sc-for list="{{ q3.options }}" as="o" hint-placeholder-count="4">
+              <button onClick="{{ o.onClick }}" style="display:flex;align-items:center;justify-content:space-between;gap:8px;text-align:left;border-radius:12px;padding:13px 16px;font-family:'Figtree';font-weight:600;font-size:14.5px;cursor:pointer;transition:all .15s;border:2px solid {{ o.border }};background:{{ o.bg }};color:{{ o.fg }}"><span>{{ o.label }}</span><span style="font-weight:800;font-size:16px">{{ o.mark }}</span></button>
+            </sc-for>
+          </div>
+          <sc-if value="{{ q3.answered }}" hint-placeholder-val="{{ false }}">
+            <div style="border-radius:13px;padding:14px 18px;background:{{ q3.bannerBg }}">
+              <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:15px;color:{{ q3.bannerFg }};margin-bottom:4px">{{ q3.banner }}</div>
+              <div style="font-size:14.5px;line-height:1.55;color:#33534c">{{ q3.explanation }}</div>
+            </div>
+          </sc-if>
+        </div>
+      </section>
+
+      <!-- SCENE 15 — DRAG SORT -->
+      <section data-scene data-screen-label="Sort it out" style="{{ sc15 }}">
+        <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap">
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#0e8f74">🎯 Try it · Where does each belong?</div>
+            <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:34px;line-height:1.05;margin:0">Switch-level, router-level, or virtualisation win?</h2>
+            <p style="font-size:15px;color:#4c6660;margin:0"><b>Tap a capability</b>, then <b>tap the category</b> it belongs to.</p>
+          </div>
+          <div style="display:flex;gap:10px">
+            <sc-if value="{{ dragChecked }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;align-items:center;border-radius:12px;padding:11px 18px;font-family:'Bricolage Grotesque';font-weight:800;font-size:16px;background:{{ dragScoreBg }};color:{{ dragScoreFg }}">{{ dragScore }}</div>
+            </sc-if>
+            <button onClick="{{ resetDrag }}" style="background:#fff;border:1px solid #d5e6e0;border-radius:12px;padding:11px 18px;font-family:'Figtree';font-weight:600;font-size:14px;color:#4c6660;cursor:pointer">↺ Reset</button>
+            <button onClick="{{ checkDrag }}" style="background:#0e8f74;border:none;border-radius:12px;padding:11px 20px;font-family:'Bricolage Grotesque';font-weight:700;font-size:15px;color:#fff;cursor:pointer">Check answers</button>
+          </div>
+        </div>
+        <div style="min-height:54px;background:#f2f7f5;border:2px dashed #c6ddd6;border-radius:16px;padding:12px;display:flex;flex-wrap:wrap;gap:10px;align-items:center">
+          <span style="font-size:13px;font-weight:700;color:#8ba39e;padding:0 6px">TRAY:</span>
+          <sc-for list="{{ dragTray }}" as="it" hint-placeholder-count="6">
+            <button onClick="{{ it.onClick }}" style="border-radius:11px;padding:11px 16px;font-family:'Figtree';font-weight:600;font-size:14px;cursor:pointer;transition:all .15s;border:2px solid {{ it.border }};background:{{ it.bg }};color:{{ it.fg }}">{{ it.label }}</button>
+          </sc-for>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px">
+          <div onClick="{{ dropL2 }}" style="background:#e9f6f1;border:2px solid #c2e4da;border-radius:18px;padding:16px;min-height:180px;display:flex;flex-direction:column;gap:10px;cursor:pointer">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:14.5px;color:#0e8f74">🔀 Switch / firewall level</div>
+            <sc-for list="{{ dragL2 }}" as="it" hint-placeholder-count="0">
+              <button onClick="{{ it.onClick }}" style="display:flex;justify-content:space-between;align-items:center;gap:6px;text-align:left;border-radius:10px;padding:10px 13px;font-weight:600;font-size:12.5px;cursor:pointer;border:2px solid {{ it.border }};background:{{ it.bg }};color:{{ it.fg }}"><span>{{ it.label }}</span><span style="font-weight:800">{{ it.mark }}</span></button>
+            </sc-for>
+          </div>
+          <div onClick="{{ dropL3 }}" style="background:#eef4fd;border:2px solid #cfdffa;border-radius:18px;padding:16px;min-height:180px;display:flex;flex-direction:column;gap:10px;cursor:pointer">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:14.5px;color:#2e7fd4">🧭 Router level</div>
+            <sc-for list="{{ dragL3 }}" as="it" hint-placeholder-count="0">
+              <button onClick="{{ it.onClick }}" style="display:flex;justify-content:space-between;align-items:center;gap:6px;text-align:left;border-radius:10px;padding:10px 13px;font-weight:600;font-size:12.5px;cursor:pointer;border:2px solid {{ it.border }};background:{{ it.bg }};color:{{ it.fg }}"><span>{{ it.label }}</span><span style="font-weight:800">{{ it.mark }}</span></button>
+            </sc-for>
+          </div>
+          <div onClick="{{ dropVirt }}" style="background:#f5f2fe;border:2px solid #ded3fb;border-radius:18px;padding:16px;min-height:180px;display:flex;flex-direction:column;gap:10px;cursor:pointer">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:14.5px;color:#7a5cf0">🧩 Virtualisation benefit</div>
+            <sc-for list="{{ dragVirt }}" as="it" hint-placeholder-count="0">
+              <button onClick="{{ it.onClick }}" style="display:flex;justify-content:space-between;align-items:center;gap:6px;text-align:left;border-radius:10px;padding:10px 13px;font-weight:600;font-size:12.5px;cursor:pointer;border:2px solid {{ it.border }};background:{{ it.bg }};color:{{ it.fg }}"><span>{{ it.label }}</span><span style="font-weight:800">{{ it.mark }}</span></button>
+            </sc-for>
+          </div>
+        </div>
+      </section>
+
+      <!-- SCENE 16 — WRAP-UP -->
+      <section data-scene data-screen-label="Wrap-up" style="{{ sc16 }}">
+        <div style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px">
+          <div style="font-size:42px">🎉</div>
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#0e8f74">Session wrap-up</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:40px;line-height:1.04;margin:0;letter-spacing:-.01em">Hardware, firmware, management — then drop the hardware</h2>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
+          <div style="background:#e9f6f1;border:1px solid #c2e4da;border-radius:18px;padding:22px;display:flex;flex-direction:column;gap:8px">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:16px;color:#0e8f74">✅ Opened up</div>
+            <p style="margin:0;font-size:14.5px;line-height:1.55;color:#3c4a58">NICs, switches, routers and firewalls — and mapped their functions onto OSI Layers 1–4.</p>
+          </div>
+          <div style="background:#f5f2fe;border:1px solid #ded3fb;border-radius:18px;padding:22px;display:flex;flex-direction:column;gap:8px">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:16px;color:#7a5cf0">🛠️ Abstracted</div>
+            <p style="margin:0;font-size:14.5px;line-height:1.55;color:#3c4a58">The universal pattern, the HAL, and how virtualisation swaps physical hardware for software.</p>
+          </div>
+          <div style="background:#eef4fd;border:1px solid #cfdffa;border-radius:18px;padding:22px;display:flex;flex-direction:column;gap:8px">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:16px;color:#2e7fd4">🤔 Connected</div>
+            <p style="margin:0;font-size:14.5px;line-height:1.55;color:#3c4a58">Six benefits of virtualised networks, the SDN three-plane model, and the controller's standard API.</p>
+          </div>
+        </div>
+        <div style="background:#f6faf9;border:1px solid #dcebe6;border-radius:18px;padding:20px 24px">
+          <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:15px;margin-bottom:9px;color:#0e8f74">🎯 You should now be able to…</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:14.5px;color:#3c4a58">
+            <div>• Explain how physical network devices operate and map them to OSI layers</div>
+            <div>• Describe how virtualisation replaces hardware with software abstraction</div>
+            <div>• Differentiate Layer 2 switching from Layer 3 routing</div>
+            <div>• Analyse the key benefits of virtualised networks in the cloud</div>
+          </div>
+        </div>
+        <div style="background:#fff7ef;border:1px solid #ffe0c2;border-radius:14px;padding:14px 20px;font-size:14.5px;color:#8a5f21">📺 Worth watching: Professor Messer's short <a href="https://youtu.be/wNiDqwCoojI" target="_blank" rel="noopener">SDN Introduction</a> for a brief overview of everything in this session.</div>
+        <div style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:2px">
+          <button onClick="{{ startLesson }}" style="background:#fff;color:#0e8f74;border:2px solid #b5ded2;border-radius:14px;padding:14px 26px;font-family:'Bricolage Grotesque';font-weight:700;font-size:16px;cursor:pointer" style-hover="background:#f4fbf8">↻ Review from the start</button>
+          <button onClick="{{ toggleGlossary }}" style="background:#0e8f74;color:#fff;border:none;border-radius:14px;padding:14px 26px;font-family:'Bricolage Grotesque';font-weight:700;font-size:16px;cursor:pointer">📖 Open glossary</button>
+        </div>
+        <div style="text-align:center;font-size:14px;color:#8ba39e;margin-top:4px">Lesson prepared by <b style="color:#4c6660">Reza Shahabian</b></div>
+      </section>
+
+    </div>
+  </div>
+
+  <div style="position:sticky;bottom:0;z-index:20;width:100%;display:flex;justify-content:center;background:linear-gradient(to top,#edf5f2 55%,transparent);padding:10px 24px 22px">
+    <div style="width:100%;max-width:1180px;display:flex;align-items:center;justify-content:space-between;gap:14px">
+      <button onClick="{{ prev }}" style="display:flex;align-items:center;gap:8px;background:#fff;border:1px solid #d5e6e0;border-radius:13px;padding:13px 22px;font-family:'Bricolage Grotesque';font-weight:700;font-size:15px;color:#33534c;cursor:pointer" style-hover="border-color:#8fc9b9">← Back</button>
+      <div style="display:flex;align-items:center;gap:12px;font-weight:600;color:#6a857f;font-size:15px">
+        <span style="font-family:'Bricolage Grotesque';color:#1d2b2a;font-size:17px">{{ sceneNum }}</span>
+        <span style="color:#b6ccc6">/</span>
+        <span>{{ total }}</span>
+        <span style="color:#b6ccc6">·</span>
+        <span style="color:#33534c">{{ sceneTitle }}</span>
+      </div>
+      <button onClick="{{ next }}" style="display:flex;align-items:center;gap:8px;background:{{ accent }};border:none;border-radius:13px;padding:13px 26px;font-family:'Bricolage Grotesque';font-weight:700;font-size:15px;color:#fff;cursor:pointer;box-shadow:0 10px 20px -10px rgba(20,70,60,.5)" style-hover="transform:translateY(-2px)">Next →</button>
+    </div>
+  </div>
+
+  <sc-if value="{{ glossaryOpen }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ toggleGlossary }}" style="position:fixed;inset:0;z-index:50;background:rgba(20,40,36,.34);backdrop-filter:blur(2px)"></div>
+    <div style="position:fixed;top:0;right:0;bottom:0;z-index:51;width:min(460px,92vw);background:#fff;box-shadow:-20px 0 60px -20px rgba(20,70,60,.4);display:flex;flex-direction:column">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:24px 26px;border-bottom:1px solid #e8f1ee">
+        <div style="display:flex;flex-direction:column;gap:2px">
+          <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:22px">📖 Glossary</div>
+          <div style="font-size:13px;color:#7b948e">Device internals &amp; virtualisation terms</div>
+        </div>
+        <button onClick="{{ toggleGlossary }}" style="background:#eef5f3;border:none;border-radius:10px;width:38px;height:38px;font-size:18px;cursor:pointer;color:#4c6660">✕</button>
+      </div>
+      <div style="overflow-y:auto;padding:18px 26px 40px;display:flex;flex-direction:column;gap:14px">
+        <sc-for list="{{ glossary }}" as="g" hint-placeholder-count="6">
+          <div style="border:1px solid #e8f1ee;border-radius:14px;padding:14px 16px;background:#fafcfb">
+            <div style="display:flex;align-items:center;gap:8px;font-family:'Bricolage Grotesque';font-weight:700;font-size:16px;color:#1d2b2a"><span>{{ g.icon }}</span>{{ g.term }}</div>
+            <div style="font-size:14.5px;line-height:1.5;color:#4c6660;margin-top:5px">{{ g.def }}</div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:820}}">
+class Component extends DCLogic {
+  state = {
+    idx: 0, playing: false, glossary: false,
+    quiz: { q1: null, q2: null, q3: null },
+    dev: 'switch', teardown: 'nic', sw: 'l2', virt: false, benefit: 'security', plane: 'management', step: 0,
+    drops: { mac:null, ip:null, rules:null, snapshot:null, scale:null, clone:null },
+    sel: null, dragChecked: false,
+  };
+
+  total = 17;
+  interactive = new Set([1,3,5,10,11,12,13,14,15]);
+  durations = { 0:5200 };
+
+  chapTitles = ['Welcome','The physical network','Devices and OSI layers','Inside a NIC','Inside a switch','L2 vs L3 switching','Inside a router','Inside a firewall','The universal pattern','Computers & the HAL','Physical data path','Virtualising the network','Benefits of virtualisation','SDN: the three planes','The SDN controller','Sort it out','Wrap-up'];
+  chapColors = ['#0e8f74','#2e7fd4','#0e8f74','#7a5cf0','#2e7fd4','#ec7211','#0e8f74','#e0564a','#7a5cf0','#2e7fd4','#0e8f74','#7a5cf0','#0e8f74','#2e7fd4','#ec7211','#0e8f74','#0e8f74'];
+
+  devData = {
+    nic:{name:'Network Interface (NIC)',short:'NIC',icon:'🔌',color:'#7a5cf0',desc:'Allows a device to connect to a network.',ex:'A laptop\u2019s Ethernet or Wi-Fi card enabling internet access.'},
+    switch:{name:'Network Switch',short:'Switch',icon:'🔀',color:'#0e8f74',desc:'Connects multiple devices within the same local network (LAN).',ex:'A switch connecting PCs and printers in an office.'},
+    wap:{name:'Wireless Access Point',short:'WAP',icon:'📶',color:'#2e7fd4',desc:'Provides wireless (Wi-Fi) network access to devices.',ex:'Employees connecting laptops and phones to office Wi-Fi.'},
+    router:{name:'Router',short:'Router',icon:'🧭',color:'#ec7211',desc:'Connects different networks and directs data between them.',ex:'A router connecting an office network to the internet or another site.'},
+    firewall:{name:'Firewall',short:'Firewall',icon:'🛡️',color:'#e0564a',desc:'Protects the network by allowing or blocking traffic based on security rules.',ex:'Blocking unauthorised access from the internet.'},
+    server:{name:'Server',short:'Server',icon:'🖥️',color:'#0e8f74',desc:'Provides shared services and resources to users.',ex:'A file server storing company documents.'},
+    printer:{name:'Printer',short:'Printer',icon:'🖨️',color:'#7a5cf0',desc:'Allows users to print documents over the network.',ex:'Multiple employees using one network printer.'},
+    pc:{name:'PC (Personal Computer)',short:'PC',icon:'💻',color:'#2e7fd4',desc:'Used by people to access applications, data and network services.',ex:'An employee using a PC to access email and business software.'},
+  };
+  devOrder = ['nic','switch','wap','router','firewall','server','printer','pc'];
+
+  nicController = [
+    'Is programmed with the device\u2019s MAC address',
+    'Runs firmware that enables the NIC to function',
+    'Communicates using HDLC or other data-link protocols',
+    'Reports status information to the host through the system bus',
+    'Transfers data between the system bus and the physical network interface',
+  ];
+  nicLogical = ['Physical interface hardware','Operating firmware','Data transfer path','Management interface'];
+
+  switchInternals = [
+    {t:'Physical network interfaces',d:'The ports traffic arrives on and leaves from.'},
+    {t:'Data bus & switching fabric',d:'Directs each received packet to the correct port.'},
+    {t:'Memory',d:'Stores device addresses and their associated port numbers.'},
+    {t:'CPU',d:'Runs firmware to control switch operations.'},
+    {t:'Management interface',d:'Used for monitoring, configuration and management.'},
+  ];
+
+  swData = {
+    l2:{name:'Layer 2 Switch',color:'#0e8f74',layer:'OSI Layer 2 — Data Link',
+      desc:'Understands data-link layer protocols such as HDLC, and forwards traffic based on MAC addresses.',
+      points:['Forwards on MAC address','Understands data-link protocols (e.g. HDLC)','No awareness of IP or ports']},
+    l3:{name:'Layer 3 Switch',color:'#2e7fd4',layer:'OSI Layers 3 & 4',
+      desc:'Also understands network-layer protocols, so it can prioritise and direct traffic based on Layer 3 and Layer 4 requirements.',
+      points:['Understands network-layer protocols too','TCP for directed, reliable data','UDP for streamed data']},
+  };
+  swOrder = ['l2','l3'];
+
+  routerPoints = [
+    'Routers can be thought of as switches that operate at the network level rather than the device level — forwarding on the network address rather than the device address.',
+    'They learn about remote networks through connections to other routers on their interfaces.',
+    'They understand the status and performance of their own links, and those of other routers in the network.',
+    'Routers talk to each other over network connections to keep routing and link information up to date.',
+    'Unlike a switch, a router CAN transmit data between different network segments — provided it is configured to do so.',
+    'Many routers support modular interfaces, connecting to fibre, copper and radio links.',
+    'They need more memory and faster processing than switches, but the hardware design is logically similar.',
+  ];
+
+  firewallPoints = [
+    'At the most basic level, a firewall controls what information is allowed to pass between the ports on a device.',
+    'It may allow all traffic from inside the network out to the Internet, while permitting only specific ports back in.',
+    'Another mode opens ports only in response to a request initiated from inside the local network.',
+    'Internally: external interfaces, a switching plane controlling flow between them, a high-performance CPU, significant memory, and firmware that controls, monitors, configures and manages everything.',
+  ];
+
+  pathSteps = [
+    {t:'OS sends through a port',d:'Communication leaves the operating system through a port, down to the Hardware Abstraction Layer (HAL).',icon:'🖥️'},
+    {t:'HAL directs to the NIC',d:'Within the HAL, data is directed to the network interface hardware.',icon:'🧱'},
+    {t:'Framing & signalling',d:'The network interface encapsulates the data with headers and footers to form a frame, and converts it into electrical signals.',icon:'📻'},
+    {t:'Across the physical network',d:'The signal travels over the physical medium to the network interface of the second PC.',icon:'🔗'},
+    {t:'De-framing & delivery',d:'The frame is removed and the data is passed up through the HAL to the appropriate operating system port.',icon:'📬'},
+  ];
+
+  benefitData = {
+    security:{name:'Security',icon:'🔐',color:'#e0564a',points:['Functionality can be easily updated as security issues are identified','Security improves by reducing the number of physical devices required','Systems can be automatically reset to their original state if compromised']},
+    scalability:{name:'Scalability',icon:'📈',color:'#0e8f74',points:['Can be rapidly and easily scaled up or down as required','Not limited by physical network appliance ports','Not constrained by fixed processing power or memory']},
+    flexibility:{name:'Flexibility',icon:'🤸',color:'#2e7fd4',points:['Flexibility in choosing and managing network routes and connections','Simple and dynamic network segmentation','Easy modification of devices and network structure']},
+    dr:{name:'Disaster Recovery',icon:'🛟',color:'#7a5cf0',points:['Regular, consistent snapshots enable quick recovery to a known state','Easy dynamic movement of network interfaces to any global location','Fast cloning and synchronisation of servers and services worldwide']},
+    remote:{name:'Remote Access',icon:'🌍',color:'#ec7211',points:['Access from any location with an internet connection','Flexible availability of ports and bandwidth for changing demand','Easy management of global access policies and security requirements']},
+    cost:{name:'Lower Operating Costs',icon:'💰',color:'#0e8f74',points:['No upfront hardware costs, and no risk of hardware becoming outdated','Dynamic provisioning to support real-time demand changes','Low cost for service and support']},
+  };
+  benefitOrder = ['security','scalability','flexibility','dr','remote','cost'];
+
+  planeData = {
+    management:{name:'Management Plane',icon:'🎛️',color:'#7a5cf0',points:['Communicates to network devices','Monitors network status and traffic conditions','Allows configuration changes and ensures the network operates as intended']},
+    control:{name:'Control Plane',icon:'🧠',color:'#0e8f74',points:['Handles signalling traffic between network devices','Makes decisions on how traffic is routed and secured','Shares network information and builds routing tables']},
+    data:{name:'Data Plane (Forwarding Plane)',icon:'➡️',color:'#2e7fd4',points:['Moves traffic through network devices','Performs switching and routing of data','Implements access control lists (ACLs)']},
+  };
+  planeOrder = ['management','control','data'];
+
+  dragMeta = {
+    mac:{label:'Forwarding on MAC address',cat:'l2'},
+    rules:{label:'Applying access control lists',cat:'l2'},
+    ip:{label:'Forwarding between different networks',cat:'l3'},
+    scale:{label:'Adding 20 more ports in seconds',cat:'virt'},
+    snapshot:{label:'Rolling back to a known-good state',cat:'virt'},
+    clone:{label:'Cloning a service to another continent',cat:'virt'},
+  };
+  dragOrder = ['mac','rules','ip','scale','snapshot','clone'];
+
+  quizDefs = {
+    q1:{question:'What is the main difference between NICs from different manufacturers, given the system bus and external interfaces are standardised?',
+      options:[{label:'The MAC address format'},{label:'The firmware',correct:true},{label:'The cable type'},{label:'The OSI layer they use'}],
+      explanation:'Because the system bus and external interfaces are well defined and standardised, NICs are easily interchanged. Firmware is proprietary — it is how manufacturers differentiate on performance, features and efficiency.'},
+    q2:{question:'A switch has two separate networks configured on it. Can it forward traffic between them?',
+      options:[{label:'Yes, that is what switches are for'},{label:'No — a switch cannot forward traffic between different networks',correct:true},{label:'Only if it is a Layer 2 switch'},{label:'Only if the networks share a MAC address'}],
+      explanation:'Switches only process traffic within individual networks. Multiple networks can exist on the same switch, but it cannot forward between them — that is the router\u2019s job, operating on network addresses.'},
+    q3:{question:'In SDN, how does the controller provision and manage the virtual network devices?',
+      options:[{label:'By physically cabling into each device'},{label:'Through the devices\u2019 management plane using a standard API',correct:true},{label:'By rewriting each device\u2019s firmware by hand'},{label:'Through the data plane only'}],
+      explanation:'The SDN controller communicates with the devices\u2019 management plane using a standard Application Programming Interface (API) — which is what lets features from different vendors be selected and managed through a single user interface.'},
+  };
+
+  glossary = [
+    {icon:'🔌',term:'NIC',def:'Network Interface Card — physically connects a device to the network medium and talks to the host through the data bus.'},
+    {icon:'🏷️',term:'MAC address',def:'The hardware address programmed into a NIC\u2019s controller, used for Layer 2 forwarding.'},
+    {icon:'💾',term:'Firmware',def:'Proprietary software inside a device that makes it function — the main way manufacturers differentiate products.'},
+    {icon:'📡',term:'HDLC',def:'A data-link layer protocol NICs and Layer 2 switches use to communicate.'},
+    {icon:'🔀',term:'Switching fabric',def:'The internal data path that directs each received packet to the correct outgoing port.'},
+    {icon:'2️⃣',term:'Layer 2 switch',def:'Forwards traffic based on MAC addresses, understanding data-link protocols only.'},
+    {icon:'3️⃣',term:'Layer 3 switch',def:'Also understands network-layer protocols, so it can prioritise on Layer 3/4 requirements (TCP, UDP).'},
+    {icon:'🧭',term:'Router',def:'Forwards traffic on network addresses and — unlike a switch — can transmit between different network segments.'},
+    {icon:'🛡️',term:'Firewall',def:'Controls which information may pass between ports, allowing or blocking traffic by security rules.'},
+    {icon:'🧱',term:'HAL',def:'Hardware Abstraction Layer — separates the operating system from physical hardware, so an OS can move between platforms.'},
+    {icon:'🧩',term:'Network virtualisation',def:'Replacing physical network hardware with software that performs the same role, communicating over virtual channels.'},
+    {icon:'🖧',term:'Virtual interface',def:'A software network interface that a virtual device or VM uses in place of physical hardware.'},
+    {icon:'🎛️',term:'Management plane',def:'Monitors status and traffic, and applies configuration changes to devices.'},
+    {icon:'🧠',term:'Control plane',def:'Handles signalling between devices, decides routing and security, and builds routing tables.'},
+    {icon:'➡️',term:'Data plane',def:'Also called the forwarding plane — moves traffic, switches and routes it, and implements ACLs.'},
+    {icon:'🔗',term:'API',def:'The standard interface an SDN controller uses to reach each device\u2019s management plane.'},
+    {icon:'🚧',term:'ACL',def:'Access Control List — rules in the data plane deciding which traffic is permitted.'},
+  ];
+
+  componentDidMount(){}
+  componentWillUnmount(){ window.removeEventListener('keydown', this.onKey); clearTimeout(this.t); }
+  ensureWiring(){
+    if(!this._kb){ this._kb=true; window.addEventListener('keydown', this.onKey); }
+    if(this._lastIdx!==this.state.idx || this._lastPlay!==this.state.playing){
+      this._lastIdx=this.state.idx; this._lastPlay=this.state.playing; this.scheduleAutoplay();
+    }
+  }
+  onKey = (e)=>{
+    const tag=(e.target&&e.target.tagName)||'';
+    if(tag==='INPUT'||tag==='TEXTAREA') return;
+    if(e.key==='ArrowRight'){ this.next(); }
+    else if(e.key==='ArrowLeft'){ this.prev(); }
+    else if(e.key===' '){ e.preventDefault(); this.togglePlay(); }
+  };
+
+  sceneCfg = [
+    {gap:22,center:true,pos:true},{gap:18},{gap:16},{gap:18},{gap:18},
+    {gap:18},{gap:16},{gap:18},{gap:18},{gap:18},
+    {gap:16},{gap:18},{gap:18},{gap:18},{gap:18},{gap:18},{gap:22},
+  ];
+  sceneStyle(k){
+    const c=this.sceneCfg[k]; const on=this.state.idx===k;
+    const s={display:on?'flex':'none',flexDirection:'column',minHeight:'560px',gap:c.gap+'px',width:'100%'};
+    if(c.center){ s.alignItems='center'; s.justifyContent='center'; s.textAlign='center'; }
+    if(c.vcenter){ s.justifyContent='center'; }
+    if(c.pos){ s.position='relative'; }
+    return s;
+  }
+
+  scheduleAutoplay(){
+    clearTimeout(this.t);
+    const i=this.state.idx;
+    if(this.state.playing && !this.interactive.has(i) && i<this.total-1){
+      this.t=setTimeout(()=>this.next(), this.durations[i]||9000);
+    }
+  }
+
+  next=()=> this.setState(s=> s.idx<this.total-1 ? {idx:s.idx+1} : {playing:false});
+  prev=()=> this.setState(s=> ({idx:Math.max(0,s.idx-1)}));
+  goTo=(i)=>()=> this.setState({idx:i});
+  togglePlay=()=> this.setState(s=>({playing:!s.playing}));
+  startLesson=()=> this.setState({idx:1});
+  playFromStart=()=> this.setState({idx:1, playing:true});
+  toggleGlossary=()=> this.setState(s=>({glossary:!s.glossary}));
+
+  answer=(q,i)=> this.setState(s=> s.quiz[q]!=null ? null : ({quiz:{...s.quiz,[q]:i}}));
+  setDev=(k)=>()=> this.setState({dev:k});
+  setSw=(k)=>()=> this.setState({sw:k});
+  setBenefit=(k)=>()=> this.setState({benefit:k});
+  setPlane=(k)=>()=> this.setState({plane:k});
+  toggleVirt=()=> this.setState(s=>({virt:!s.virt}));
+  stepNext=()=> this.setState(s=>({step: Math.min(s.step+1, 4)}));
+  stepPrev=()=> this.setState(s=>({step: Math.max(s.step-1, 0)}));
+
+  pick=(id)=>()=> this.setState(s=>({sel: s.sel===id?null:id}));
+  drop=(b)=>()=> this.setState(s=>{ if(!s.sel) return null; return {drops:{...s.drops,[s.sel]:b}, sel:null}; });
+  toTray=(id)=>()=> this.setState(s=>({drops:{...s.drops,[id]:null}, sel:null}));
+  checkDrag=()=> this.setState({dragChecked:true, sel:null});
+  resetDrag=()=> this.setState({drops:{mac:null,ip:null,rules:null,snapshot:null,scale:null,clone:null}, dragChecked:false, sel:null});
+
+  buildQuiz(qKey){
+    const def=this.quizDefs[qKey]; const sel=this.state.quiz[qKey];
+    const options=def.options.map((o,i)=>{
+      let bg='#fff',fg='#1d2b2a',border='#e2ebe8',mark='';
+      if(sel!=null){
+        if(o.correct){ bg='#e4f5ed';fg='#0a6b50';border='#19c39a';mark='✓'; }
+        else if(i===sel){ bg='#fdeceb';fg='#c2362b';border='#ff6b5e';mark='✗'; }
+        else { fg='#97a8a4';border='#eef3f1'; }
+      }
+      return {label:o.label,bg,fg,border,mark,onClick:()=>this.answer(qKey,i)};
+    });
+    const answered=sel!=null;
+    const isCorrect=answered && def.options[sel].correct;
+    return {question:def.question,options,answered,isCorrect,explanation:def.explanation,
+      banner: !answered ? '' : (isCorrect?'✅ Correct!':'❌ Not quite —'),
+      bannerBg: !answered ? '' : (isCorrect?'#e4f5ed':'#fdeceb'),
+      bannerFg: !answered ? '' : (isCorrect?'#0a6b50':'#c2362b')};
+  }
+
+  buildDragItem(id, place){
+    const m=this.dragMeta[id]; const drops=this.state.drops; const checked=this.state.dragChecked;
+    const selected=this.state.sel===id;
+    let bg='#fff',fg='#1d2b2a',border='#d5e6e0',mark='';
+    if(checked && place!=='tray'){
+      const ok=drops[id]===m.cat;
+      bg=ok?'#e4f5ed':'#fdeceb'; fg=ok?'#0a6b50':'#c2362b'; border=ok?'#19c39a':'#ff6b5e'; mark=ok?'✓':'✗';
+    } else if(selected){ bg='#e4f3ee'; border='#0e8f74'; }
+    const onClick = place==='tray' ? this.pick(id) : this.toTray(id);
+    return {id,label:m.label,bg,fg,border,mark,selected,onClick};
+  }
+
+  renderVals(){
+    this.ensureWiring();
+    const i=this.state.idx;
+    const accent=this.chapColors[i]||'#0e8f74';
+    const sc={}; for(let k=0;k<this.total;k++) sc['sc'+k]=this.sceneStyle(k);
+    const chapters=this.chapTitles.map((t,k)=>({num:k+1,label:t,onClick:this.goTo(k),bg: k===i?this.chapColors[k] : (k<i?'#9ab9b1':'#d3e3de')}));
+
+    const devList=this.devOrder.map(k=>{ const D=this.devData[k]; const on=this.state.dev===k;
+      return {k,short:D.short,icon:D.icon,onClick:this.setDev(k),bg:on?D.color:'#f2f7f5',fg:on?'#fff':'#33534c',border:on?D.color:'#e2ebe8'}; });
+    const dv=this.devData[this.state.dev];
+
+    const swTabs=this.swOrder.map(k=>{ const S=this.swData[k]; const on=this.state.sw===k;
+      return {k,name:S.name,onClick:this.setSw(k),bg:on?S.color:'#f2f7f5',fg:on?'#fff':'#4c6660'}; });
+    const sw=this.swData[this.state.sw];
+    const swInfo={...sw, points:sw.points.map(t=>({t}))};
+
+    const benefitList=this.benefitOrder.map(k=>{ const B=this.benefitData[k]; const on=this.state.benefit===k;
+      return {k,name:B.name,icon:B.icon,onClick:this.setBenefit(k),bg:on?B.color:'#f2f7f5',fg:on?'#fff':'#33534c',border:on?B.color:'#e2ebe8'}; });
+    const bn=this.benefitData[this.state.benefit];
+    const benefitInfo={...bn, points:bn.points.map(t=>({t}))};
+
+    const planeList=this.planeOrder.map(k=>{ const P=this.planeData[k]; const on=this.state.plane===k;
+      return {k,name:P.name,icon:P.icon,onClick:this.setPlane(k),bg:on?P.color:'#f2f7f5',fg:on?'#fff':'#33534c',border:on?P.color:'#e2ebe8'}; });
+    const pl=this.planeData[this.state.plane];
+    const planeInfo={...pl, points:pl.points.map(t=>({t}))};
+
+    const st=this.state.step;
+    const pathList=this.pathSteps.map((s,ix)=>({...s,num:ix+1,
+      bg: ix===st ? '#0e8f74' : (ix<st ? '#e4f3ee' : '#f6f9f8'),
+      fg: ix===st ? '#fff' : (ix<st ? '#0a6b50' : '#8ba39e'),
+      border: ix===st ? '#0e8f74' : (ix<st ? '#c2e4da' : '#e8f1ee')}));
+    const pcur=this.pathSteps[st];
+
+    const virt=this.state.virt;
+
+    const tray=this.dragOrder.filter(id=>this.state.drops[id]==null).map(id=>this.buildDragItem(id,'tray'));
+    const bucket=(b)=>this.dragOrder.filter(id=>this.state.drops[id]===b).map(id=>this.buildDragItem(id,b));
+    const correct=this.dragOrder.filter(id=>this.state.drops[id]===this.dragMeta[id].cat).length;
+
+    return {
+      ...sc,
+      progressPct: Math.round(i/(this.total-1)*100)+'%',
+      accent, sceneNum:i+1, total:this.total, sceneTitle:this.chapTitles[i], chapters,
+      next:this.next, prev:this.prev, togglePlay:this.togglePlay,
+      playLabel: this.state.playing?'⏸ Pause':'▶ Play',
+      startLesson:this.startLesson, playFromStart:this.playFromStart,
+      glossaryOpen:this.state.glossary, toggleGlossary:this.toggleGlossary, glossary:this.glossary,
+      devList, devInfo:dv,
+      nicController:this.nicController.map(t=>({t})), nicLogical:this.nicLogical.map(t=>({t})),
+      switchInternals:this.switchInternals,
+      swTabs, swInfo,
+      routerPoints:this.routerPoints.map(t=>({t})),
+      firewallPoints:this.firewallPoints.map(t=>({t})),
+      pathList, pathTitle:pcur.t, pathDesc:pcur.d, pathIcon:pcur.icon,
+      pathNum:(st+1)+' / 5', stepNext:this.stepNext, stepPrev:this.stepPrev,
+      virtOn:virt, toggleVirt:this.toggleVirt,
+      virtLabel: virt ? '🧩 Virtualised' : '🧱 Physical',
+      virtBtnBg: virt ? '#7a5cf0' : '#0e8f74',
+      virtHardware: virt ? 'Software abstraction layer' : 'Physical hardware (DEVICES / INTERFACES)',
+      virtLink: virt ? 'VIRTUAL INTERFACE' : 'PHYSICAL NETWORK',
+      virtLinkBg: virt ? '#7a5cf0' : '#2e7fd4',
+      virtNote: virt
+        ? 'The physical hardware is replaced by software performing the role of the physical network interfaces. From the operating system\u2019s perspective, network communication behaves exactly as it does in the physical world — even though the underlying connections are virtual.'
+        : 'Each machine has a management system (user interface), an operating system, and a hardware abstraction layer sitting on real physical hardware, cabled into a physical network.',
+      benefitList, benefitInfo,
+      planeList, planeInfo,
+      q1:this.buildQuiz('q1'), q2:this.buildQuiz('q2'), q3:this.buildQuiz('q3'),
+      dragTray:tray, dragL2:bucket('l2'), dragL3:bucket('l3'), dragVirt:bucket('virt'),
+      dropL2:this.drop('l2'), dropL3:this.drop('l3'), dropVirt:this.drop('virt'),
+      checkDrag:this.checkDrag, resetDrag:this.resetDrag, dragChecked:this.state.dragChecked,
+      dragScore:correct+' / 6 correct', dragScoreBg: correct===6?'#e4f5ed':'#fff4e8', dragScoreFg: correct===6?'#0a6b50':'#d98a18',
+    };
+  }
+}
+</script>
+</body>
+</html>

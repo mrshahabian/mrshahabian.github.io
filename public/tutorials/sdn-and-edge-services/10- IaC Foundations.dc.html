@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{background:#edf5f2;font-family:'Figtree',system-ui,sans-serif;color:#1d2b2a;-webkit-font-smoothing:antialiased}
+  a{color:#0e8f74}
+  a:hover{color:#0a6b57}
+  @keyframes floatA{0%,100%{transform:translateY(0) translateX(0)}50%{transform:translateY(-22px) translateX(10px)}}
+  @keyframes floatB{0%,100%{transform:translateY(0)}50%{transform:translateY(26px)}}
+  ::-webkit-scrollbar{width:10px;height:10px}
+  ::-webkit-scrollbar-thumb{background:#c2dcd4;border-radius:8px}
+</style>
+</helmet>
+<div style="min-height:100vh;position:relative;overflow-x:hidden;display:flex;flex-direction:column;align-items:center">
+
+  <div style="position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden">
+    <div style="position:absolute;top:12%;left:6%;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#ffffff,#d3ece3);opacity:.55;filter:blur(2px);animation:floatA 13s ease-in-out infinite"></div>
+    <div style="position:absolute;top:58%;left:80%;width:280px;height:280px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#ffffff,#fdeed6);opacity:.45;filter:blur(2px);animation:floatB 17s ease-in-out infinite"></div>
+    <div style="position:absolute;top:74%;left:10%;width:160px;height:160px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#ffffff,#d7e8ff);opacity:.5;filter:blur(2px);animation:floatA 15s ease-in-out infinite"></div>
+  </div>
+
+  <div style="position:sticky;top:0;z-index:30;width:100%;display:flex;justify-content:center;background:rgba(237,245,242,.85);backdrop-filter:blur(10px);border-bottom:1px solid #d5e6e0">
+    <div style="width:100%;max-width:1180px;display:flex;align-items:center;gap:20px;padding:14px 24px">
+      <div style="display:flex;align-items:center;gap:10px;font-family:'Bricolage Grotesque';font-weight:800;font-size:18px;color:#1d2b2a;white-space:nowrap">
+        <span style="font-size:22px">📜</span><span>Infrastructure as Code</span>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;gap:6px;min-width:0">
+        <div style="height:8px;border-radius:99px;background:#d3e3de;overflow:hidden">
+          <div style="height:100%;border-radius:99px;transition:width .45s cubic-bezier(.22,.9,.3,1);width:{{ progressPct }};background:{{ accent }}"></div>
+        </div>
+        <div style="display:flex;gap:5px;flex-wrap:wrap">
+          <sc-for list="{{ chapters }}" as="c" hint-placeholder-count="17">
+            <button onClick="{{ c.onClick }}" title="{{ c.label }}" style="width:18px;height:18px;border:none;border-radius:50%;cursor:pointer;padding:0;font-size:9px;font-weight:700;color:#fff;line-height:18px;transition:transform .15s;background:{{ c.bg }}" style-hover="transform:scale(1.25)">{{ c.num }}</button>
+          </sc-for>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;white-space:nowrap">
+        <button onClick="{{ toggleGlossary }}" style="display:flex;align-items:center;gap:6px;background:#fff;border:1px solid #d5e6e0;border-radius:11px;padding:9px 14px;font-family:'Figtree';font-weight:600;font-size:14px;color:#33534c;cursor:pointer" style-hover="border-color:#0e8f74;color:#0e8f74">📖 Glossary</button>
+        <button onClick="{{ togglePlay }}" style="display:flex;align-items:center;gap:7px;background:{{ accent }};border:none;border-radius:11px;padding:10px 16px;font-family:'Bricolage Grotesque';font-weight:700;font-size:14px;color:#fff;cursor:pointer" style-hover="filter:brightness(1.06)">{{ playLabel }}</button>
+      </div>
+    </div>
+  </div>
+
+  <div style="width:100%;max-width:1180px;padding:30px 24px 16px;z-index:5">
+    <div style="position:relative;width:100%;background:#fff;border-radius:30px;box-shadow:0 24px 60px -28px rgba(20,70,60,.32),0 2px 0 #ffffff inset;padding:52px 56px;min-height:580px;overflow:hidden">
+
+      <!-- SCENE 0 — TITLE -->
+      <section data-scene data-screen-label="Welcome" style="{{ sc0 }}">
+        <div style="position:absolute;top:0;right:8%;font-size:40px;animation:floatA 9s ease-in-out infinite">⚙️</div>
+        <div style="position:absolute;bottom:6%;left:6%;font-size:34px;animation:floatB 11s ease-in-out infinite">📜</div>
+        <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.22em;text-transform:uppercase;font-weight:700;color:#0e8f74">Interactive Lesson</div>
+        <h1 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:56px;line-height:1.02;margin:0;max-width:18ch;letter-spacing:-.02em">Infrastructure <span style="background:linear-gradient(120deg,#0e8f74,#ec7211);-webkit-background-clip:text;background-clip:text;color:transparent">as Code</span></h1>
+        <p style="font-size:20px;line-height:1.55;color:#4c6660;max-width:70ch;margin:0">Stop clicking through consoles. Treat your infrastructure as software — scripted, version-controlled, repeatable — and let AWS CloudFormation build it for you.</p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:4px">
+          <span style="background:#e4f3ee;border:1px solid #c2e4da;border-radius:99px;padding:8px 16px;font-weight:600;font-size:15px;color:#0e8f74">⏱️ ~27 min</span>
+          <span style="background:#fef4e8;border:1px solid #ffe6c2;border-radius:99px;padding:8px 16px;font-weight:600;font-size:15px;color:#d98a18">📑 17 chapters</span>
+          <span style="background:#fdeeed;border:1px solid #ffd9d5;border-radius:99px;padding:8px 16px;font-weight:600;font-size:15px;color:#e0564a">🧠 3 quizzes</span>
+          <span style="background:#eaf1fd;border:1px solid #cfdffa;border-radius:99px;padding:8px 16px;font-weight:600;font-size:15px;color:#2e7fd4">🎯 Template builder</span>
+        </div>
+        <div style="display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-top:14px">
+          <button onClick="{{ startLesson }}" style="background:#0e8f74;color:#fff;border:none;border-radius:15px;padding:18px 34px;font-family:'Bricolage Grotesque';font-weight:700;font-size:18px;cursor:pointer;box-shadow:0 12px 24px -8px rgba(14,143,116,.6)" style-hover="transform:translateY(-2px)">Start lesson →</button>
+          <button onClick="{{ playFromStart }}" style="background:#fff;color:#0e8f74;border:2px solid #b5ded2;border-radius:15px;padding:16px 30px;font-family:'Bricolage Grotesque';font-weight:700;font-size:18px;cursor:pointer" style-hover="border-color:#0e8f74;background:#f4fbf8">▶ Play as video</button>
+        </div>
+        <div style="margin-top:18px;display:flex;align-items:center;gap:10px;background:#f3f9f7;border:1px solid #dcebe6;border-radius:99px;padding:8px 8px 8px 18px">
+          <span style="font-size:14px;color:#6a857f">Prepared by</span>
+          <span style="background:#1d2b2a;color:#fff;border-radius:99px;padding:7px 16px;font-weight:700;font-size:14px;font-family:'Bricolage Grotesque'">Reza Shahabian</span>
+        </div>
+      </section>
+
+      <!-- SCENE 1 — WHAT IS IaC -->
+      <section data-scene data-screen-label="What is IaC" style="{{ sc1 }}">
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#0e8f74">Chapter 01 · The core idea</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:42px;line-height:1.04;margin:0;letter-spacing:-.01em">What is Infrastructure as Code?</h2>
+          <p style="font-size:18px;line-height:1.55;color:#4c6660;margin:0;max-width:84ch">IaC automates the management of IT infrastructure by <b>treating it as software</b>. Instead of manual configuration, everything is scripted and automated.</p>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+          <div style="background:#fdf2f0;border:2px solid #f8d6d0;border-radius:18px;padding:22px;display:flex;flex-direction:column;gap:11px">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:17px;color:#c2453a">🖱️ Manual (ClickOps)</div>
+            <div style="display:flex;flex-direction:column;gap:6px;font-size:14px;color:#3c4a58">
+              <div>• Point-and-click through the console</div>
+              <div>• Slow, repetitive, easy to mis-configure</div>
+              <div>• "It works on staging" — but nobody knows why</div>
+              <div>• No history of who changed what</div>
+            </div>
+          </div>
+          <div style="background:#e9f6f1;border:2px solid #c2e4da;border-radius:18px;padding:22px;display:flex;flex-direction:column;gap:11px">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:17px;color:#0e8f74">📜 Infrastructure as Code</div>
+            <div style="display:flex;flex-direction:column;gap:6px;font-size:14px;color:#3c4a58">
+              <div>• Rapid delivery of infrastructure services</div>
+              <div>• Consistency and reduced errors</div>
+              <div>• Increased productivity</div>
+              <div>• Version-controlled, reviewable, repeatable</div>
+            </div>
+          </div>
+        </div>
+        <div style="background:#fff7ef;border:1px solid #ffe0c2;border-radius:14px;padding:14px 20px;font-size:14.5px;color:#8a5f21">🏢 <b>Why it matters:</b> organisations need efficient, scalable infrastructure as they shift to digital — and you cannot scale a process that depends on someone remembering which buttons to press.</div>
+      </section>
+
+      <!-- SCENE 2 — DEVOPS & IaC -->
+      <section data-scene data-screen-label="DevOps and IaC" style="{{ sc2 }}">
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#2e7fd4">Chapter 02 · Two halves of one idea</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:42px;line-height:1.04;margin:0;letter-spacing:-.01em">DevOps and IaC</h2>
+          <p style="font-size:18px;line-height:1.55;color:#4c6660;margin:0;max-width:84ch">DevOps integrates <b>development, operations and stakeholders</b>, enabling continuous delivery. IaC is what makes that possible for infrastructure — automating and standardising how it is managed.</p>
+        </div>
+        <div style="background:#1d2b2a;border-radius:20px;padding:24px;display:flex;align-items:center;justify-content:center;gap:11px;flex-wrap:wrap">
+          <div style="background:#2e7fd4;color:#fff;border-radius:12px;padding:13px 19px;text-align:center"><div style="font-size:20px">👩‍💻</div><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:12px;margin-top:3px">Development</div></div>
+          <span style="color:#8fb8ac;font-size:18px">+</span>
+          <div style="background:#ec7211;color:#fff;border-radius:12px;padding:13px 19px;text-align:center"><div style="font-size:20px">🛠️</div><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:12px;margin-top:3px">Operations</div></div>
+          <span style="color:#8fb8ac;font-size:18px">+</span>
+          <div style="background:#7a5cf0;color:#fff;border-radius:12px;padding:13px 19px;text-align:center"><div style="font-size:20px">🧑‍💼</div><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:12px;margin-top:3px">Stakeholders</div></div>
+          <span style="color:#8fb8ac;font-size:18px">→</span>
+          <div style="background:#0e8f74;color:#fff;border-radius:12px;padding:13px 22px;text-align:center"><div style="font-size:20px">🔄</div><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:12px;margin-top:3px">Continuous Delivery</div></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+          <div style="background:#eef4fd;border:1px solid #cfdffa;border-radius:16px;padding:20px"><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:16px;color:#2e7fd4">🤝 Collaboration across teams</div><div style="font-size:14.5px;line-height:1.5;color:#3c4a58;margin-top:6px">Developers and operations work from the same definitions rather than throwing work over a wall.</div></div>
+          <div style="background:#e9f6f1;border:1px solid #c2e4da;border-radius:16px;padding:20px"><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:16px;color:#0e8f74">🔄 CI/CD supported through IaC</div><div style="font-size:14.5px;line-height:1.5;color:#3c4a58;margin-top:6px">Infrastructure changes flow through the same pipeline as application code — built, tested, released.</div></div>
+        </div>
+      </section>
+
+      <!-- SCENE 3 — BENEFITS -->
+      <section data-scene data-screen-label="Benefits of IaC" style="{{ sc3 }}">
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#7a5cf0">Chapter 03 · The case for it</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:42px;line-height:1.04;margin:0;letter-spacing:-.01em">Benefits of IaC</h2>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:9px">
+          <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:15px;color:#7a5cf0">💼 Business benefits</div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px">
+            <sc-for list="{{ bizBenefits }}" as="b" hint-placeholder-count="3">
+              <div style="background:#f5f2fe;border:1px solid #ded3fb;border-radius:16px;padding:18px"><div style="font-size:22px">{{ b.icon }}</div><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:15px;color:#7a5cf0;margin-top:6px">{{ b.t }}</div><div style="font-size:13.5px;line-height:1.5;color:#4c6660;margin-top:4px">{{ b.d }}</div></div>
+            </sc-for>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:9px">
+          <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:15px;color:#0e8f74">⚙️ Technical benefits</div>
+          <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:14px">
+            <sc-for list="{{ techBenefits }}" as="b" hint-placeholder-count="2">
+              <div style="background:#e9f6f1;border:1px solid #c2e4da;border-radius:16px;padding:18px"><div style="font-size:22px">{{ b.icon }}</div><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:15px;color:#0e8f74;margin-top:6px">{{ b.t }}</div><div style="font-size:13.5px;line-height:1.5;color:#4c6660;margin-top:4px">{{ b.d }}</div></div>
+            </sc-for>
+          </div>
+        </div>
+      </section>
+
+      <!-- SCENE 4 — CORE PRACTICES -->
+      <section data-scene data-screen-label="Core practices" style="{{ sc4 }}">
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#ec7211">Chapter 04 · How to actually do it</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:40px;line-height:1.04;margin:0;letter-spacing:-.01em">Three core practices</h2>
+          <p style="font-size:16px;line-height:1.5;color:#4c6660;margin:0"><b>Tap each practice</b> to see what it means and why it works.</p>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <sc-for list="{{ practiceList }}" as="P" hint-placeholder-count="3">
+            <button onClick="{{ P.onClick }}" style="flex:1;min-width:210px;display:flex;align-items:center;gap:9px;border-radius:13px;padding:14px 18px;cursor:pointer;transition:all .15s;border:2px solid {{ P.border }};background:{{ P.bg }};color:{{ P.fg }}"><span style="font-size:20px">{{ P.icon }}</span><span style="font-family:'Bricolage Grotesque';font-weight:800;font-size:14px;text-align:left">{{ P.name }}</span></button>
+          </sc-for>
+        </div>
+        <div style="background:#fff7ef;border:2px solid #ffe0c2;border-radius:20px;padding:26px;display:flex;flex-direction:column;gap:13px;min-height:180px;justify-content:center">
+          <div style="display:flex;align-items:center;gap:13px"><div style="width:54px;height:54px;border-radius:14px;background:{{ practiceInfo.color }};display:flex;align-items:center;justify-content:center;font-size:26px">{{ practiceInfo.icon }}</div><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:23px;color:{{ practiceInfo.color }}">{{ practiceInfo.name }}</div></div>
+          <p style="margin:0;font-size:17px;line-height:1.6;color:#3c4a58">{{ practiceInfo.desc }}</p>
+          <div style="background:#fff;border:1px solid #ffe0c2;border-radius:13px;padding:13px 17px;font-size:14.5px;line-height:1.55;color:#8a5f21">🎯 <b>Why:</b> {{ practiceInfo.why }}</div>
+        </div>
+      </section>
+
+      <!-- SCENE 5 — OPTIMISING FOR CHANGE -->
+      <section data-scene data-screen-label="Optimising for change" style="{{ sc5 }}">
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#e0564a">Chapter 05 · The only constant</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:42px;line-height:1.04;margin:0;letter-spacing:-.01em">Optimising for change</h2>
+          <p style="font-size:18px;line-height:1.55;color:#4c6660;margin:0;max-width:84ch">Change is inevitable in any infrastructure. IaC optimises your ability to manage those changes <b>rapidly and safely</b>.</p>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px">
+          <div style="background:#fdf2f0;border:2px solid #f8d6d0;border-radius:18px;padding:22px;display:flex;flex-direction:column;gap:9px">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:16px;color:#c2453a">🙅 "Automation is too risky"</div>
+            <p style="margin:0;font-size:15px;line-height:1.55;color:#3c4a58">The opposite is true — <b>automation ensures safe, reliable changes</b>. Manual steps are where mistakes creep in.</p>
+          </div>
+          <div style="background:#fdf2f0;border:2px solid #f8d6d0;border-radius:18px;padding:22px;display:flex;flex-direction:column;gap:9px">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:16px;color:#c2453a">🙅 "We'll automate later"</div>
+            <p style="margin:0;font-size:15px;line-height:1.55;color:#3c4a58"><b>Automation should be built from the start.</b> Retrofitting it onto a hand-built estate is far harder than starting with it.</p>
+          </div>
+        </div>
+        <div style="background:#e9f6f1;border:1px solid #c2e4da;border-radius:14px;padding:14px 20px;font-size:15px;color:#0a6b50">✅ Treat the ability to change as a feature of your infrastructure, not a threat to it.</div>
+      </section>
+
+      <!-- SCENE 6 — SPEED VS QUALITY -->
+      <section data-scene data-screen-label="Speed vs quality" style="{{ sc6 }}">
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#2e7fd4">Chapter 06 · A myth, measured</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:40px;line-height:1.04;margin:0;letter-spacing:-.01em">Speed vs quality — a false choice</h2>
+          <p style="font-size:16.5px;line-height:1.5;color:#4c6660;margin:0;max-width:84ch">High-performing teams achieve <b>both</b>, through continuous delivery and testing using IaC. The DORA <i>Accelerate</i> report measures it with four metrics — <b>tap each one.</b></p>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <sc-for list="{{ metricList }}" as="M" hint-placeholder-count="4">
+            <button onClick="{{ M.onClick }}" style="flex:1;min-width:170px;display:flex;align-items:center;gap:8px;border-radius:12px;padding:13px 16px;cursor:pointer;transition:all .15s;border:2px solid {{ M.border }};background:{{ M.bg }};color:{{ M.fg }}"><span style="font-size:18px">{{ M.icon }}</span><span style="font-family:'Bricolage Grotesque';font-weight:800;font-size:13.5px;text-align:left">{{ M.name }}</span></button>
+          </sc-for>
+        </div>
+        <div style="background:#eef4fd;border:2px solid #cfdffa;border-radius:20px;padding:26px;display:flex;flex-direction:column;gap:13px;min-height:170px;justify-content:center">
+          <div style="display:flex;align-items:center;gap:13px"><div style="width:52px;height:52px;border-radius:14px;background:{{ metricInfo.color }};display:flex;align-items:center;justify-content:center;font-size:25px">{{ metricInfo.icon }}</div><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:23px;color:{{ metricInfo.color }}">{{ metricInfo.name }}</div></div>
+          <p style="margin:0;font-size:17px;line-height:1.6;color:#3c4a58">{{ metricInfo.q }}</p>
+          <div style="background:#fff;border:1px solid #cfdffa;border-radius:13px;padding:13px 17px;font-size:14.5px;line-height:1.55;color:#22598f">📊 {{ metricInfo.good }}</div>
+        </div>
+        <div style="background:#fffaf0;border:2px solid #ffe6c2;border-radius:18px;padding:20px 22px;display:flex;flex-direction:column;gap:12px">
+          <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:15px;color:#d98a18">🧠 Quick check — {{ q1.question }}</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+            <sc-for list="{{ q1.options }}" as="o" hint-placeholder-count="4">
+              <button onClick="{{ o.onClick }}" style="display:flex;align-items:center;justify-content:space-between;gap:8px;text-align:left;border-radius:12px;padding:13px 16px;font-family:'Figtree';font-weight:600;font-size:14.5px;cursor:pointer;transition:all .15s;border:2px solid {{ o.border }};background:{{ o.bg }};color:{{ o.fg }}"><span>{{ o.label }}</span><span style="font-weight:800;font-size:16px">{{ o.mark }}</span></button>
+            </sc-for>
+          </div>
+          <sc-if value="{{ q1.answered }}" hint-placeholder-val="{{ false }}">
+            <div style="border-radius:13px;padding:14px 18px;background:{{ q1.bannerBg }}">
+              <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:15px;color:{{ q1.bannerFg }};margin-bottom:4px">{{ q1.banner }}</div>
+              <div style="font-size:14.5px;line-height:1.55;color:#33534c">{{ q1.explanation }}</div>
+            </div>
+          </sc-if>
+        </div>
+      </section>
+
+      <!-- SCENE 7 — MEET CLOUDFORMATION -->
+      <section data-scene data-screen-label="Meet CloudFormation" style="{{ sc7 }}">
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#ec7211">Chapter 07 · IaC on AWS</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:42px;line-height:1.04;margin:0;letter-spacing:-.01em">Meet AWS CloudFormation</h2>
+          <p style="font-size:18px;line-height:1.55;color:#4c6660;margin:0;max-width:84ch">CloudFormation lets you define AWS infrastructure using templates written in <b>JSON or YAML</b>.</p>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
+          <div style="background:#fff7ef;border:1px solid #ffe0c2;border-radius:18px;padding:20px"><div style="font-size:24px">📣</div><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:16px;color:#ec7211;margin-top:6px">Declarative syntax</div><div style="font-size:14px;line-height:1.5;color:#4c6660;margin-top:5px">You define <b>'what'</b>; CloudFormation handles <b>'how'</b>.</div></div>
+          <div style="background:#e9f6f1;border:1px solid #c2e4da;border-radius:18px;padding:20px"><div style="font-size:24px">♻️</div><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:16px;color:#0e8f74;margin-top:6px">Template reusability</div><div style="font-size:14px;line-height:1.5;color:#4c6660;margin-top:5px">The same file deploys dev, staging and production.</div></div>
+          <div style="background:#eef4fd;border:1px solid #cfdffa;border-radius:18px;padding:20px"><div style="font-size:24px">↩️</div><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:16px;color:#2e7fd4;margin-top:6px">Automated rollbacks</div><div style="font-size:14px;line-height:1.5;color:#4c6660;margin-top:5px">A failed deployment reverts, instead of leaving half-built infrastructure.</div></div>
+        </div>
+        <div style="background:#1d2b2a;border-radius:18px;padding:20px 22px;font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.75;color:#cfe5df;white-space:pre-wrap"># A whole web server, in six lines of YAML
+Resources:
+  WebServer:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: t3.micro
+      ImageId: ami-0abcdef1234567890</div>
+      </section>
+
+      <!-- SCENE 8 — TEMPLATE ANATOMY -->
+      <section data-scene data-screen-label="Template anatomy" style="{{ sc8 }}">
+        <div style="display:flex;flex-direction:column;gap:5px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#0e8f74">🎯 Try it · The five sections</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:36px;line-height:1.04;margin:0;letter-spacing:-.01em">Anatomy of a CloudFormation template</h2>
+          <p style="font-size:15.5px;line-height:1.5;color:#4c6660;margin:0"><b>Tap a section</b> to see what it does and real YAML for it.</p>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <sc-for list="{{ compList }}" as="C" hint-placeholder-count="5">
+            <button onClick="{{ C.onClick }}" style="display:flex;align-items:center;gap:7px;border-radius:12px;padding:11px 16px;cursor:pointer;transition:all .15s;border:2px solid {{ C.border }};background:{{ C.bg }};color:{{ C.fg }}"><span style="font-size:16px">{{ C.icon }}</span><span style="font-family:'Bricolage Grotesque';font-weight:800;font-size:13px">{{ C.name }}</span></button>
+          </sc-for>
+        </div>
+        <div style="display:grid;grid-template-columns:.92fr 1.08fr;gap:18px;align-items:stretch">
+          <div style="background:#f6faf9;border:2px solid #dcebe6;border-radius:18px;padding:22px;display:flex;flex-direction:column;gap:11px;justify-content:center">
+            <div style="display:flex;align-items:center;gap:11px;flex-wrap:wrap"><span style="font-size:27px">{{ compInfo.icon }}</span><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:22px;color:{{ compInfo.color }}">{{ compInfo.name }}</div></div>
+            <div style="display:inline-flex;align-self:flex-start;background:{{ compInfo.color }};color:#fff;border-radius:99px;padding:5px 14px;font-weight:700;font-size:12px;font-family:'Bricolage Grotesque'">{{ compInfo.required }}</div>
+            <p style="margin:0;font-size:15.5px;line-height:1.6;color:#3c4a58">{{ compInfo.desc }}</p>
+          </div>
+          <div style="background:#1d2b2a;border-radius:18px;padding:20px 22px;font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.7;color:#cfe5df;white-space:pre-wrap;overflow-x:auto">{{ compInfo.code }}</div>
+        </div>
+      </section>
+
+      <!-- SCENE 9 — PARAMETER TYPES -->
+      <section data-scene data-screen-label="Parameter types" style="{{ sc9 }}">
+        <div style="display:flex;flex-direction:column;gap:5px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#7a5cf0">Chapter 09 · Defining inputs</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:36px;line-height:1.04;margin:0;letter-spacing:-.01em">Common parameter types</h2>
+          <p style="font-size:15.5px;line-height:1.5;color:#4c6660;margin:0"><b>Tap each type.</b></p>
+        </div>
+        <div style="display:flex;gap:9px;flex-wrap:wrap">
+          <sc-for list="{{ ptypeList }}" as="P" hint-placeholder-count="4">
+            <button onClick="{{ P.onClick }}" style="flex:1;min-width:160px;display:flex;align-items:center;gap:8px;border-radius:12px;padding:12px 16px;cursor:pointer;transition:all .15s;border:2px solid {{ P.border }};background:{{ P.bg }};color:{{ P.fg }}"><span style="font-size:17px">{{ P.icon }}</span><span style="font-family:'Bricolage Grotesque';font-weight:800;font-size:13.5px">{{ P.name }}</span></button>
+          </sc-for>
+        </div>
+        <div style="display:grid;grid-template-columns:.92fr 1.08fr;gap:18px;align-items:stretch">
+          <div style="background:#f5f2fe;border:2px solid #ded3fb;border-radius:18px;padding:22px;display:flex;flex-direction:column;gap:11px;justify-content:center">
+            <div style="display:flex;align-items:center;gap:11px"><span style="font-size:27px">{{ ptypeInfo.icon }}</span><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:22px;color:{{ ptypeInfo.color }}">{{ ptypeInfo.name }}</div></div>
+            <p style="margin:0;font-size:15.5px;line-height:1.6;color:#3c4a58">{{ ptypeInfo.desc }}</p>
+          </div>
+          <div style="background:#1d2b2a;border-radius:18px;padding:20px 22px;font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.7;color:#cfe5df;white-space:pre-wrap;overflow-x:auto">{{ ptypeInfo.code }}</div>
+        </div>
+      </section>
+
+      <!-- SCENE 10 — USING PARAMETERS -->
+      <section data-scene data-screen-label="Using parameters" style="{{ sc10 }}">
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#2e7fd4">Chapter 10 · Why bother</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:38px;line-height:1.04;margin:0;letter-spacing:-.01em">Using parameters</h2>
+          <p style="font-size:16.5px;line-height:1.55;color:#4c6660;margin:0;max-width:84ch">Parameters let you pass input values into the template <b>during stack creation</b>.</p>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px">
+          <div style="background:#eef4fd;border:1px solid #cfdffa;border-radius:16px;padding:18px"><div style="font-size:22px">🌍</div><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:15px;color:#2e7fd4;margin-top:6px">Flexibility</div><div style="font-size:13.5px;line-height:1.5;color:#4c6660;margin-top:4px">Different values for different environments, from one file.</div></div>
+          <div style="background:#e9f6f1;border:1px solid #c2e4da;border-radius:16px;padding:18px"><div style="font-size:22px">♻️</div><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:15px;color:#0e8f74;margin-top:6px">Reusability</div><div style="font-size:13.5px;line-height:1.5;color:#4c6660;margin-top:4px">The same template works across projects.</div></div>
+          <div style="background:#f5f2fe;border:1px solid #ded3fb;border-radius:16px;padding:18px"><div style="font-size:22px">🔐</div><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:15px;color:#7a5cf0;margin-top:6px">Security</div><div style="font-size:13.5px;line-height:1.5;color:#4c6660;margin-top:4px">Sensitive inputs stay out of the committed template.</div></div>
+        </div>
+        <div style="background:#1d2b2a;border-radius:18px;padding:20px 22px;font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.75;color:#cfe5df;white-space:pre-wrap;overflow-x:auto">Parameters:
+  InstanceType:
+    Type: String
+    Default: t3.micro
+    AllowedValues: [t3.micro, t3.small, t3.medium]
+
+Resources:
+  WebServer:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: !Ref InstanceType</div>
+        <div style="background:#fffaf0;border:2px solid #ffe6c2;border-radius:18px;padding:20px 22px;display:flex;flex-direction:column;gap:12px">
+          <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:15px;color:#d98a18">🧠 Quick check — {{ q3.question }}</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+            <sc-for list="{{ q3.options }}" as="o" hint-placeholder-count="4">
+              <button onClick="{{ o.onClick }}" style="display:flex;align-items:center;justify-content:space-between;gap:8px;text-align:left;border-radius:12px;padding:13px 16px;font-family:'Figtree';font-weight:600;font-size:14.5px;cursor:pointer;transition:all .15s;border:2px solid {{ o.border }};background:{{ o.bg }};color:{{ o.fg }}"><span>{{ o.label }}</span><span style="font-weight:800;font-size:16px">{{ o.mark }}</span></button>
+            </sc-for>
+          </div>
+          <sc-if value="{{ q3.answered }}" hint-placeholder-val="{{ false }}">
+            <div style="border-radius:13px;padding:14px 18px;background:{{ q3.bannerBg }}">
+              <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:15px;color:{{ q3.bannerFg }};margin-bottom:4px">{{ q3.banner }}</div>
+              <div style="font-size:14.5px;line-height:1.55;color:#33534c">{{ q3.explanation }}</div>
+            </div>
+          </sc-if>
+        </div>
+      </section>
+
+      <!-- SCENE 11 — OUTPUTS -->
+      <section data-scene data-screen-label="Outputs" style="{{ sc11 }}">
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#ec7211">Chapter 11 · What comes back</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:40px;line-height:1.04;margin:0;letter-spacing:-.01em">Outputs</h2>
+          <p style="font-size:17px;line-height:1.55;color:#4c6660;margin:0;max-width:84ch">Outputs let you return information about the resources that were created.</p>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+          <div style="background:#fff7ef;border:1px solid #ffe0c2;border-radius:16px;padding:20px"><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:16px;color:#ec7211">🔗 Share values with other stacks</div><div style="font-size:14.5px;line-height:1.5;color:#3c4a58;margin-top:6px">VPC ID, Security Group ID — so a networking stack can feed an application stack.</div></div>
+          <div style="background:#e9f6f1;border:1px solid #c2e4da;border-radius:16px;padding:20px"><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:16px;color:#0e8f74">👀 Display useful info</div><div style="font-size:14.5px;line-height:1.5;color:#3c4a58;margin-top:6px">EC2 instance IP, DNS name — the facts a human or script needs right after deployment.</div></div>
+        </div>
+        <div style="background:#1d2b2a;border-radius:18px;padding:20px 22px;font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.75;color:#cfe5df;white-space:pre-wrap;overflow-x:auto">Outputs:
+  InstancePublicIP:
+    Description: Public IP of Web Server
+    Value: !GetAtt EnduroWebServer.PublicIp
+
+  VpcId:
+    Description: VPC for other stacks to import
+    Value: !Ref EnduroVPC
+    Export:
+      Name: !Sub "${AWS::StackName}-VpcId"</div>
+        <div style="background:#f6faf9;border:1px solid #dcebe6;border-radius:14px;padding:13px 20px;font-size:14px;color:#4c6660">💡 <b>!Ref</b> returns the resource itself (usually its ID). <b>!GetAtt</b> reaches inside it for a specific attribute — like a public IP or DNS name.</div>
+      </section>
+
+      <!-- SCENE 12 — BEST PRACTICES -->
+      <section data-scene data-screen-label="Best practices" style="{{ sc12 }}">
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#0e8f74">Chapter 12 · Doing it well</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:40px;line-height:1.04;margin:0;letter-spacing:-.01em">Best practices</h2>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px">
+          <div style="background:#f5f2fe;border:2px solid #ded3fb;border-radius:18px;padding:22px;display:flex;flex-direction:column;gap:10px">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:17px;color:#7a5cf0">🎚️ Parameters</div>
+            <sc-for list="{{ bpParams }}" as="p" hint-placeholder-count="2">
+              <div style="display:flex;gap:9px;align-items:flex-start;background:#fff;border:1px solid #ded3fb;border-radius:11px;padding:12px 15px"><span style="color:#7a5cf0;font-weight:800;flex-shrink:0">✓</span><span style="font-size:14.5px;line-height:1.5;color:#3c4a58">{{ p.t }}</span></div>
+            </sc-for>
+          </div>
+          <div style="background:#fff7ef;border:2px solid #ffe0c2;border-radius:18px;padding:22px;display:flex;flex-direction:column;gap:10px">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:17px;color:#ec7211">📤 Outputs</div>
+            <sc-for list="{{ bpOutputs }}" as="p" hint-placeholder-count="2">
+              <div style="display:flex;gap:9px;align-items:flex-start;background:#fff;border:1px solid #ffe0c2;border-radius:11px;padding:12px 15px"><span style="color:#ec7211;font-weight:800;flex-shrink:0">✓</span><span style="font-size:14.5px;line-height:1.5;color:#3c4a58">{{ p.t }}</span></div>
+            </sc-for>
+          </div>
+        </div>
+        <div style="background:#fffaf0;border:2px solid #ffe6c2;border-radius:18px;padding:20px 22px;display:flex;flex-direction:column;gap:12px">
+          <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:15px;color:#d98a18">🧠 Quick check — {{ q2.question }}</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+            <sc-for list="{{ q2.options }}" as="o" hint-placeholder-count="4">
+              <button onClick="{{ o.onClick }}" style="display:flex;align-items:center;justify-content:space-between;gap:8px;text-align:left;border-radius:12px;padding:13px 16px;font-family:'Figtree';font-weight:600;font-size:14.5px;cursor:pointer;transition:all .15s;border:2px solid {{ o.border }};background:{{ o.bg }};color:{{ o.fg }}"><span>{{ o.label }}</span><span style="font-weight:800;font-size:16px">{{ o.mark }}</span></button>
+            </sc-for>
+          </div>
+          <sc-if value="{{ q2.answered }}" hint-placeholder-val="{{ false }}">
+            <div style="border-radius:13px;padding:14px 18px;background:{{ q2.bannerBg }}">
+              <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:15px;color:{{ q2.bannerFg }};margin-bottom:4px">{{ q2.banner }}</div>
+              <div style="font-size:14.5px;line-height:1.55;color:#33534c">{{ q2.explanation }}</div>
+            </div>
+          </sc-if>
+        </div>
+      </section>
+
+      <!-- SCENE 13 — BUILD A TEMPLATE -->
+      <section data-scene data-screen-label="Build a template" style="{{ sc13 }}">
+        <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap">
+          <div style="display:flex;flex-direction:column;gap:4px">
+            <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#2e7fd4">🎯 Try it · Write it line by line</div>
+            <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:34px;line-height:1.05;margin:0">Build a template</h2>
+            <p style="font-size:15px;color:#4c6660;margin:0">Five steps from empty file to deployed stack.</p>
+          </div>
+          <div style="display:flex;gap:9px;align-items:center">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:15px;color:#0e8f74;background:#e4f3ee;border-radius:11px;padding:11px 15px">{{ buildNum }}</div>
+            <button onClick="{{ buildPrev }}" style="background:#fff;border:1px solid #d5e6e0;border-radius:11px;padding:11px 16px;font-family:'Figtree';font-weight:600;font-size:14px;color:#4c6660;cursor:pointer">◀ Prev</button>
+            <button onClick="{{ buildNext }}" style="background:#0e8f74;border:none;border-radius:11px;padding:11px 18px;font-family:'Bricolage Grotesque';font-weight:700;font-size:14px;color:#fff;cursor:pointer">Next ▶</button>
+          </div>
+        </div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <sc-for list="{{ buildList }}" as="b" hint-placeholder-count="5">
+            <div style="flex:1;min-width:150px;display:flex;gap:8px;align-items:center;border-radius:11px;padding:10px 12px;border:1.5px solid {{ b.border }};background:{{ b.bg }};color:{{ b.fg }}"><span style="width:19px;height:19px;flex-shrink:0;border-radius:50%;background:rgba(0,0,0,.12);display:flex;align-items:center;justify-content:center;font-family:'Bricolage Grotesque';font-weight:800;font-size:10px">{{ b.num }}</span><span style="font-size:11.5px;font-weight:700">{{ b.t }}</span></div>
+          </sc-for>
+        </div>
+        <div style="display:grid;grid-template-columns:.85fr 1.15fr;gap:18px;align-items:stretch">
+          <div style="background:#f6faf9;border:2px solid #dcebe6;border-radius:18px;padding:22px;display:flex;flex-direction:column;gap:10px;justify-content:center">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:20px;color:#0e8f74">{{ buildTitle }}</div>
+            <p style="margin:0;font-size:15.5px;line-height:1.6;color:#3c4a58">{{ buildDesc }}</p>
+          </div>
+          <div style="background:#1d2b2a;border-radius:18px;padding:20px 22px;font-family:'JetBrains Mono',monospace;font-size:12.5px;line-height:1.7;color:#cfe5df;white-space:pre-wrap;overflow-x:auto">{{ buildCode }}</div>
+        </div>
+      </section>
+
+      <!-- SCENE 14 — THE LAB -->
+      <section data-scene data-screen-label="Hands-on lab" style="{{ sc14 }}">
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#ec7211">Practical · Your first template</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:38px;line-height:1.04;margin:0;letter-spacing:-.01em">Lab: "Hello Bucket"</h2>
+          <p style="font-size:16px;line-height:1.5;color:#4c6660;margin:0;max-width:84ch">Write a simple IaC template and deploy it to AWS to see automation in action.</p>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px">
+          <div style="background:#e9f6f1;border:1px solid #c2e4da;border-radius:15px;padding:16px"><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:13.5px;color:#0e8f74">1 · Write the code</div><div style="font-size:12.5px;line-height:1.5;color:#4c6660;margin-top:4px">Create <b>s3_bucket.yaml</b> defining a simple S3 Bucket resource.</div></div>
+          <div style="background:#eef4fd;border:1px solid #cfdffa;border-radius:15px;padding:16px"><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:13.5px;color:#2e7fd4">2 · Deploy</div><div style="font-size:12.5px;line-height:1.5;color:#4c6660;margin-top:4px">Upload the template to the CloudFormation console.</div></div>
+          <div style="background:#f5f2fe;border:1px solid #ded3fb;border-radius:15px;padding:16px"><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:13.5px;color:#7a5cf0">3 · Verify</div><div style="font-size:12.5px;line-height:1.5;color:#4c6660;margin-top:4px">Watch AWS provision it, then check S3 to prove it exists.</div></div>
+          <div style="background:#fff7ef;border:1px solid #ffe0c2;border-radius:15px;padding:16px"><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:13.5px;color:#ec7211">4 · Update</div><div style="font-size:12.5px;line-height:1.5;color:#4c6660;margin-top:4px">Add a Tag and update the stack — IaC managing change safely.</div></div>
+        </div>
+        <div style="background:#1d2b2a;border-radius:18px;padding:20px 22px;font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.75;color:#cfe5df;white-space:pre-wrap;overflow-x:auto"># s3_bucket.yaml — the whole thing
+Resources:
+  MyFirstBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: my-first-iac-bucket-2026
+      Tags:
+        - Key: Owner
+          Value: Student</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+          <div style="background:#f6faf9;border:1px solid #dcebe6;border-radius:14px;padding:14px 18px;font-size:14px;color:#4c6660">🧰 <b>Before the session:</b> have a code editor ready (VS Code, Atom, Notepad++) and log into your AWS Academy Learner Lab so you can start immediately.</div>
+          <div style="background:#fff7ef;border:1px solid #ffe0c2;border-radius:14px;padding:14px 18px;font-size:14px;color:#8a5f21">📚 Bookmark the <a href="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/Welcome.html" target="_blank" rel="noopener">CloudFormation User Guide</a> — you'll use it constantly to find syntax for different AWS resources.</div>
+        </div>
+      </section>
+
+      <!-- SCENE 15 — DRAG SORT -->
+      <section data-scene data-screen-label="Sort it out" style="{{ sc15 }}">
+        <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap">
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#0e8f74">🎯 Try it · Which section?</div>
+            <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:34px;line-height:1.05;margin:0">Parameter, Resource, or Output?</h2>
+            <p style="font-size:15px;color:#4c6660;margin:0"><b>Tap an item</b>, then <b>tap the template section</b> it belongs in.</p>
+          </div>
+          <div style="display:flex;gap:10px">
+            <sc-if value="{{ dragChecked }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;align-items:center;border-radius:12px;padding:11px 18px;font-family:'Bricolage Grotesque';font-weight:800;font-size:16px;background:{{ dragScoreBg }};color:{{ dragScoreFg }}">{{ dragScore }}</div>
+            </sc-if>
+            <button onClick="{{ resetDrag }}" style="background:#fff;border:1px solid #d5e6e0;border-radius:12px;padding:11px 18px;font-family:'Figtree';font-weight:600;font-size:14px;color:#4c6660;cursor:pointer">↺ Reset</button>
+            <button onClick="{{ checkDrag }}" style="background:#0e8f74;border:none;border-radius:12px;padding:11px 20px;font-family:'Bricolage Grotesque';font-weight:700;font-size:15px;color:#fff;cursor:pointer">Check answers</button>
+          </div>
+        </div>
+        <div style="min-height:54px;background:#f2f7f5;border:2px dashed #c6ddd6;border-radius:16px;padding:12px;display:flex;flex-wrap:wrap;gap:10px;align-items:center">
+          <span style="font-size:13px;font-weight:700;color:#8ba39e;padding:0 6px">TRAY:</span>
+          <sc-for list="{{ dragTray }}" as="it" hint-placeholder-count="6">
+            <button onClick="{{ it.onClick }}" style="border-radius:11px;padding:11px 16px;font-family:'Figtree';font-weight:600;font-size:14px;cursor:pointer;transition:all .15s;border:2px solid {{ it.border }};background:{{ it.bg }};color:{{ it.fg }}">{{ it.label }}</button>
+          </sc-for>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px">
+          <div onClick="{{ dropParam }}" style="background:#f5f2fe;border:2px solid #ded3fb;border-radius:18px;padding:16px;min-height:180px;display:flex;flex-direction:column;gap:10px;cursor:pointer">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:15px;color:#7a5cf0">🎚️ Parameters</div>
+            <sc-for list="{{ dragParam }}" as="it" hint-placeholder-count="0">
+              <button onClick="{{ it.onClick }}" style="display:flex;justify-content:space-between;align-items:center;gap:6px;text-align:left;border-radius:10px;padding:10px 13px;font-weight:600;font-size:12.5px;cursor:pointer;border:2px solid {{ it.border }};background:{{ it.bg }};color:{{ it.fg }}"><span>{{ it.label }}</span><span style="font-weight:800">{{ it.mark }}</span></button>
+            </sc-for>
+          </div>
+          <div onClick="{{ dropResource }}" style="background:#e9f6f1;border:2px solid #c2e4da;border-radius:18px;padding:16px;min-height:180px;display:flex;flex-direction:column;gap:10px;cursor:pointer">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:15px;color:#0e8f74">🧱 Resources</div>
+            <sc-for list="{{ dragResource }}" as="it" hint-placeholder-count="0">
+              <button onClick="{{ it.onClick }}" style="display:flex;justify-content:space-between;align-items:center;gap:6px;text-align:left;border-radius:10px;padding:10px 13px;font-weight:600;font-size:12.5px;cursor:pointer;border:2px solid {{ it.border }};background:{{ it.bg }};color:{{ it.fg }}"><span>{{ it.label }}</span><span style="font-weight:800">{{ it.mark }}</span></button>
+            </sc-for>
+          </div>
+          <div onClick="{{ dropOutput }}" style="background:#fff7ef;border:2px solid #ffe0c2;border-radius:18px;padding:16px;min-height:180px;display:flex;flex-direction:column;gap:10px;cursor:pointer">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:15px;color:#ec7211">📤 Outputs</div>
+            <sc-for list="{{ dragOutput }}" as="it" hint-placeholder-count="0">
+              <button onClick="{{ it.onClick }}" style="display:flex;justify-content:space-between;align-items:center;gap:6px;text-align:left;border-radius:10px;padding:10px 13px;font-weight:600;font-size:12.5px;cursor:pointer;border:2px solid {{ it.border }};background:{{ it.bg }};color:{{ it.fg }}"><span>{{ it.label }}</span><span style="font-weight:800">{{ it.mark }}</span></button>
+            </sc-for>
+          </div>
+        </div>
+      </section>
+
+      <!-- SCENE 16 — WRAP-UP -->
+      <section data-scene data-screen-label="Wrap-up" style="{{ sc16 }}">
+        <div style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px">
+          <div style="font-size:42px">🎉</div>
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#0e8f74">Session wrap-up</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:40px;line-height:1.04;margin:0;letter-spacing:-.01em">Your infrastructure is now a file you can review</h2>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
+          <div style="background:#e9f6f1;border:1px solid #c2e4da;border-radius:18px;padding:22px;display:flex;flex-direction:column;gap:8px">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:16px;color:#0e8f74">✅ Covered</div>
+            <p style="margin:0;font-size:14.5px;line-height:1.55;color:#3c4a58">What IaC is, how it powers DevOps and CI/CD, and its business &amp; technical benefits.</p>
+          </div>
+          <div style="background:#f5f2fe;border:1px solid #ded3fb;border-radius:18px;padding:22px;display:flex;flex-direction:column;gap:8px">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:16px;color:#7a5cf0">🛠️ Practised</div>
+            <p style="margin:0;font-size:14.5px;line-height:1.55;color:#3c4a58">Three core practices, optimising for change, and the four DORA metrics that prove speed and quality coexist.</p>
+          </div>
+          <div style="background:#fff7ef;border:1px solid #ffe0c2;border-radius:18px;padding:22px;display:flex;flex-direction:column;gap:8px">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:16px;color:#ec7211">☁️ Built</div>
+            <p style="margin:0;font-size:14.5px;line-height:1.55;color:#3c4a58">CloudFormation templates — Resources, Parameters, Outputs, Mappings and Conditions — and deployed a stack.</p>
+          </div>
+        </div>
+        <div style="background:#f6faf9;border:1px solid #dcebe6;border-radius:18px;padding:20px 24px">
+          <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:15px;margin-bottom:9px;color:#0e8f74">🎯 You should now be able to…</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:14.5px;color:#3c4a58">
+            <div>• Explain what IaC is and why it automates cloud infrastructure</div>
+            <div>• Describe how DevOps and IaC support continuous delivery</div>
+            <div>• Identify the business and technical benefits of IaC</div>
+            <div>• Read and write a CloudFormation template with parameters and outputs</div>
+          </div>
+        </div>
+        <div style="background:#fffaf0;border:1px solid #ffe6c2;border-radius:14px;padding:14px 20px;font-size:14.5px;color:#8a5f21">☁️ <b>CloudFormation lets you model, provision and manage AWS and third-party resources by treating infrastructure as code</b> — use parameters for customisation across environments, and outputs to return key information for further automation.</div>
+        <div style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:2px">
+          <button onClick="{{ startLesson }}" style="background:#fff;color:#0e8f74;border:2px solid #b5ded2;border-radius:14px;padding:14px 26px;font-family:'Bricolage Grotesque';font-weight:700;font-size:16px;cursor:pointer" style-hover="background:#f4fbf8">↻ Review from the start</button>
+          <button onClick="{{ toggleGlossary }}" style="background:#0e8f74;color:#fff;border:none;border-radius:14px;padding:14px 26px;font-family:'Bricolage Grotesque';font-weight:700;font-size:16px;cursor:pointer">📖 Open glossary</button>
+        </div>
+        <div style="text-align:center;font-size:14px;color:#8ba39e;margin-top:4px">Lesson prepared by <b style="color:#4c6660">Reza Shahabian</b></div>
+      </section>
+
+    </div>
+  </div>
+
+  <div style="position:sticky;bottom:0;z-index:20;width:100%;display:flex;justify-content:center;background:linear-gradient(to top,#edf5f2 55%,transparent);padding:10px 24px 22px">
+    <div style="width:100%;max-width:1180px;display:flex;align-items:center;justify-content:space-between;gap:14px">
+      <button onClick="{{ prev }}" style="display:flex;align-items:center;gap:8px;background:#fff;border:1px solid #d5e6e0;border-radius:13px;padding:13px 22px;font-family:'Bricolage Grotesque';font-weight:700;font-size:15px;color:#33534c;cursor:pointer" style-hover="border-color:#8fc9b9">← Back</button>
+      <div style="display:flex;align-items:center;gap:12px;font-weight:600;color:#6a857f;font-size:15px">
+        <span style="font-family:'Bricolage Grotesque';color:#1d2b2a;font-size:17px">{{ sceneNum }}</span>
+        <span style="color:#b6ccc6">/</span>
+        <span>{{ total }}</span>
+        <span style="color:#b6ccc6">·</span>
+        <span style="color:#33534c">{{ sceneTitle }}</span>
+      </div>
+      <button onClick="{{ next }}" style="display:flex;align-items:center;gap:8px;background:{{ accent }};border:none;border-radius:13px;padding:13px 26px;font-family:'Bricolage Grotesque';font-weight:700;font-size:15px;color:#fff;cursor:pointer;box-shadow:0 10px 20px -10px rgba(20,70,60,.5)" style-hover="transform:translateY(-2px)">Next →</button>
+    </div>
+  </div>
+
+  <sc-if value="{{ glossaryOpen }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ toggleGlossary }}" style="position:fixed;inset:0;z-index:50;background:rgba(20,40,36,.34);backdrop-filter:blur(2px)"></div>
+    <div style="position:fixed;top:0;right:0;bottom:0;z-index:51;width:min(460px,92vw);background:#fff;box-shadow:-20px 0 60px -20px rgba(20,70,60,.4);display:flex;flex-direction:column">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:24px 26px;border-bottom:1px solid #e8f1ee">
+        <div style="display:flex;flex-direction:column;gap:2px">
+          <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:22px">📖 Glossary</div>
+          <div style="font-size:13px;color:#7b948e">IaC, DevOps &amp; CloudFormation terms</div>
+        </div>
+        <button onClick="{{ toggleGlossary }}" style="background:#eef5f3;border:none;border-radius:10px;width:38px;height:38px;font-size:18px;cursor:pointer;color:#4c6660">✕</button>
+      </div>
+      <div style="overflow-y:auto;padding:18px 26px 40px;display:flex;flex-direction:column;gap:14px">
+        <sc-for list="{{ glossary }}" as="g" hint-placeholder-count="6">
+          <div style="border:1px solid #e8f1ee;border-radius:14px;padding:14px 16px;background:#fafcfb">
+            <div style="display:flex;align-items:center;gap:8px;font-family:'Bricolage Grotesque';font-weight:700;font-size:16px;color:#1d2b2a"><span>{{ g.icon }}</span>{{ g.term }}</div>
+            <div style="font-size:14.5px;line-height:1.5;color:#4c6660;margin-top:5px">{{ g.def }}</div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:820}}">
+class Component extends DCLogic {
+  state = {
+    idx: 0, playing: false, glossary: false,
+    quiz: { q1: null, q2: null, q3: null },
+    practice: 'code', metric: 'lead', comp: 'resources', ptype: 'string', build: 0,
+    drops: { instype:null, env:null, ip:null, sgid:null, ec2:null, bucket:null },
+    sel: null, dragChecked: false,
+  };
+
+  total = 17;
+  interactive = new Set([4,6,8,9,10,12,13,15]);
+  durations = { 0:5200 };
+
+  chapTitles = ['Welcome','What is IaC','DevOps & IaC','Benefits of IaC','Core practices','Optimising for change','Speed vs quality','Meet CloudFormation','Template anatomy','Parameter types','Using parameters','Outputs','Best practices','Build a template','Sort it out','Final check','Wrap-up'];
+  chapColors = ['#0e8f74','#0e8f74','#2e7fd4','#7a5cf0','#ec7211','#e0564a','#2e7fd4','#ec7211','#0e8f74','#7a5cf0','#2e7fd4','#ec7211','#0e8f74','#2e7fd4','#0e8f74','#ffb43d','#0e8f74'];
+
+  bizBenefits = [
+    {icon:'🚀',t:'Faster delivery of value',d:'Infrastructure arrives in minutes, not change-request weeks.'},
+    {icon:'🛡️',t:'Reducing risk through automation',d:'The machine does not forget a step at 2am.'},
+    {icon:'📈',t:'Scalability to meet business needs',d:'The same template deploys one environment or fifty.'},
+  ];
+  techBenefits = [
+    {icon:'🔁',t:'Consistency across environments',d:'Dev, staging and production are built from the same definition.'},
+    {icon:'⚡',t:'Increased efficiency and productivity',d:'Engineers spend time on problems, not on repetitive provisioning.'},
+  ];
+
+  practiceData = {
+    code:{name:'Define Everything as Code',icon:'📜',color:'#0e8f74',
+      desc:'Every piece of infrastructure is expressed in a file, not in someone\u2019s memory or a runbook.',
+      why:'Ensures consistency and reusability — and makes infrastructure reviewable in version control.'},
+    test:{name:'Continuously Test and Deliver',icon:'🔄',color:'#2e7fd4',
+      desc:'Automate testing and delivery so every change is validated on its way to production.',
+      why:'Problems are caught early and small, when they are cheap to fix.'},
+    small:{name:'Build Small, Loosely Coupled Systems',icon:'🧩',color:'#7a5cf0',
+      desc:'Break infrastructure into independent pieces rather than one giant monolithic definition.',
+      why:'Simplifies updates and improves fault tolerance — one failure does not take everything down.'},
+  };
+  practiceOrder = ['code','test','small'];
+
+  metricData = {
+    lead:{name:'Delivery Lead Time',icon:'⏳',color:'#0e8f74',q:'How long from committing a change to it running in production?',good:'Shorter is better — elite teams measure this in under an hour.'},
+    freq:{name:'Deployment Frequency',icon:'📦',color:'#2e7fd4',q:'How often do you successfully release to production?',good:'Higher is better — frequent small releases beat rare big ones.'},
+    fail:{name:'Change Fail Percentage',icon:'⚠️',color:'#e0564a',q:'What proportion of changes cause a failure in production?',good:'Lower is better — automation and testing drive this down.'},
+    mttr:{name:'MTTR',icon:'🔧',color:'#ec7211',q:'Mean Time To Restore — how quickly do you recover from a failure?',good:'Shorter is better — IaC lets you rebuild a known-good state fast.'},
+  };
+  metricOrder = ['lead','freq','fail','mttr'];
+
+  compData = {
+    resources:{name:'Resources',icon:'🧱',color:'#0e8f74',required:'Required',
+      desc:'Define the AWS resources to create — EC2 instances, RDS databases, S3 buckets, VPCs and so on. This is the only mandatory section of a template.',
+      code:'Resources:\n  MyWebServer:\n    Type: AWS::EC2::Instance\n    Properties:\n      InstanceType: t3.micro\n      ImageId: ami-0abcdef1234567890'},
+    parameters:{name:'Parameters',icon:'🎚️',color:'#7a5cf0',required:'Optional',
+      desc:'Input values that customise the template at stack-creation time, so one template serves many environments.',
+      code:'Parameters:\n  EnvironmentName:\n    Type: String\n    Default: dev\n    AllowedValues: [dev, staging, prod]'},
+    outputs:{name:'Outputs',icon:'📤',color:'#2e7fd4',required:'Optional',
+      desc:'Return values about the resources that were created — IP addresses, resource IDs, DNS names.',
+      code:'Outputs:\n  WebServerIP:\n    Description: Public IP of the web server\n    Value: !GetAtt MyWebServer.PublicIp'},
+    mappings:{name:'Mappings',icon:'🗺️',color:'#ec7211',required:'Optional',
+      desc:'Look-up tables that pick settings based on a key — most commonly a different AMI ID per region.',
+      code:'Mappings:\n  RegionAMI:\n    eu-west-2:\n      AMI: ami-0aaa111\n    us-east-1:\n      AMI: ami-0bbb222'},
+    conditions:{name:'Conditions',icon:'🔀',color:'#e0564a',required:'Optional',
+      desc:'Control whether resources are created, based on the environment or parameter values.',
+      code:'Conditions:\n  IsProduction: !Equals [!Ref EnvironmentName, prod]\n\n# then on a resource:\n#   Condition: IsProduction'},
+  };
+  compOrder = ['resources','parameters','outputs','mappings','conditions'];
+
+  ptypeData = {
+    string:{name:'String',icon:'🔤',color:'#0e8f74',desc:'Free-form string, commonly used for naming resources.',
+      code:'BucketName:\n  Type: String\n  Default: innovatecore-assets\n  MinLength: 3'},
+    number:{name:'Number',icon:'🔢',color:'#2e7fd4',desc:'Numeric input, for values such as port numbers or instance counts.',
+      code:'InstanceCount:\n  Type: Number\n  Default: 2\n  MinValue: 1\n  MaxValue: 10'},
+    aws:{name:'AWS-Specific',icon:'☁️',color:'#ec7211',desc:'Predefined options validated against your account — e.g. AWS::EC2::InstanceType or AWS::SSM::Parameter::Value<String>.',
+      code:'KeyName:\n  Type: AWS::EC2::KeyPair::KeyName\n\nVpcId:\n  Type: AWS::EC2::VPC::Id'},
+    list:{name:'List Types',icon:'📋',color:'#7a5cf0',desc:'A list of values, such as security group IDs or subnet IDs.',
+      code:'SubnetIds:\n  Type: List<AWS::EC2::Subnet::Id>\n\nPorts:\n  Type: List<Number>\n  Default: "80,443"'},
+  };
+  ptypeOrder = ['string','number','aws','list'];
+
+  buildSteps = [
+    {t:'Start with the parameters',d:'Expose only what genuinely varies between environments — here, the environment name and instance size.',
+      code:'Parameters:\n  EnvironmentName:\n    Type: String\n    Default: dev\n    AllowedValues: [dev, staging, prod]\n  InstanceType:\n    Type: String\n    Default: t3.micro'},
+    {t:'Add the resource',d:'Declare WHAT you want. CloudFormation works out HOW to create it, in what order, and what depends on what.',
+      code:'Resources:\n  WebServer:\n    Type: AWS::EC2::Instance\n    Properties:\n      InstanceType: !Ref InstanceType\n      Tags:\n        - Key: Environment\n          Value: !Ref EnvironmentName'},
+    {t:'Reference parameters with !Ref',d:'!Ref pulls a parameter\u2019s value into the resource, so the same template builds a t3.micro in dev and something larger in prod.',
+      code:'      InstanceType: !Ref InstanceType\n      Tags:\n        - Key: Environment\n          Value: !Ref EnvironmentName\n\n# one template, three environments'},
+    {t:'Return what callers need',d:'Outputs surface the useful facts — here the public IP, so another stack or a script can pick it up.',
+      code:'Outputs:\n  WebServerIP:\n    Description: Public IP of the web server\n    Value: !GetAtt WebServer.PublicIp\n    Export:\n      Name: !Sub "${EnvironmentName}-WebServerIP"'},
+    {t:'Deploy the stack',d:'CloudFormation creates every resource as one unit. If any resource fails, the whole stack rolls back automatically — no half-built infrastructure.',
+      code:'$ aws cloudformation deploy \\\n    --template-file web.yaml \\\n    --stack-name innovatecore-dev \\\n    --parameter-overrides EnvironmentName=dev\n\n✔ Successfully created/updated stack'},
+  ];
+
+  bestPractices = {
+    params:['Use default values and constraints to ensure inputs are valid','Avoid overloading templates with too many parameters — only expose inputs necessary for customisation'],
+    outputs:['Limit the number of outputs to essential information','Use outputs to provide actionable information for further automation (e.g. passing outputs to other stacks or scripts)'],
+  };
+
+  dragMeta = {
+    instype:{label:'Which EC2 size to launch',cat:'param'},
+    env:{label:'dev / staging / prod name',cat:'param'},
+    ip:{label:'The running server\u2019s public IP',cat:'output'},
+    sgid:{label:'Security Group ID for another stack',cat:'output'},
+    ec2:{label:'An EC2 instance to create',cat:'resource'},
+    bucket:{label:'An S3 bucket to create',cat:'resource'},
+  };
+  dragOrder = ['instype','env','ip','sgid','ec2','bucket'];
+
+  quizDefs = {
+    q1:{question:'Which statement best reflects the speed-vs-quality trade-off, according to the DORA Accelerate research?',
+      options:[{label:'Teams must sacrifice quality to move fast'},{label:'Teams must slow down to be reliable'},{label:'It is a myth — high performers achieve both via continuous delivery and testing',correct:true},{label:'Speed and quality are unrelated'}],
+      explanation:'It is a myth that teams must choose. High-performing teams achieve both, through continuous delivery and testing supported by IaC — measured by delivery lead time, deployment frequency, change fail percentage and MTTR.'},
+    q2:{question:'CloudFormation uses a declarative syntax. What does that mean in practice?',
+      options:[{label:'You script each API call in order'},{label:'You define WHAT you want; CloudFormation handles HOW',correct:true},{label:'You must write templates in Python'},{label:'You manually roll back failed deployments'}],
+      explanation:'Declarative means you describe the desired end state and CloudFormation works out how to reach it — including ordering and dependencies. It also gives you template reusability and automated rollbacks for failed deployments.'},
+    q3:{question:'You want one template to deploy to dev, staging and production with different instance sizes. Which component do you use?',
+      options:[{label:'Outputs'},{label:'Parameters',correct:true},{label:'Resources only'},{label:'Nothing — write three templates'}],
+      explanation:'Parameters pass input values into the template at stack-creation time, giving flexibility for different environments, reusability across projects, and security for sensitive inputs — all from a single template.'},
+  };
+
+  glossary = [
+    {icon:'📜',term:'Infrastructure as Code (IaC)',def:'Automating IT infrastructure management by treating it as software — scripted and automated rather than manually configured.'},
+    {icon:'🤝',term:'DevOps',def:'Integrating development, operations and stakeholders to enable continuous delivery.'},
+    {icon:'🔄',term:'CI/CD',def:'Continuous Integration / Continuous Delivery — automatically building, testing and releasing changes.'},
+    {icon:'☁️',term:'AWS CloudFormation',def:'AWS service for defining infrastructure using templates written in JSON or YAML.'},
+    {icon:'📄',term:'Template',def:'The JSON or YAML file describing the infrastructure CloudFormation should create.'},
+    {icon:'📚',term:'Stack',def:'The set of AWS resources CloudFormation creates and manages together from one template.'},
+    {icon:'🧱',term:'Resources',def:'The template section defining the AWS resources to create — the only required section.'},
+    {icon:'🎚️',term:'Parameters',def:'Input values passed into a template at stack-creation time to customise it.'},
+    {icon:'📤',term:'Outputs',def:'Values a template returns about created resources — IPs, IDs, DNS names.'},
+    {icon:'🗺️',term:'Mappings',def:'Look-up tables selecting values by key, commonly a different AMI per region.'},
+    {icon:'🔀',term:'Conditions',def:'Rules controlling whether resources are created, based on environment or parameter values.'},
+    {icon:'📣',term:'Declarative syntax',def:'You define WHAT you want; the tool works out HOW to achieve it.'},
+    {icon:'↩️',term:'Automated rollback',def:'If a deployment fails, CloudFormation reverts the stack rather than leaving it half-built.'},
+    {icon:'🔗',term:'!Ref',def:'CloudFormation function that pulls in a parameter value or a resource reference.'},
+    {icon:'🏷️',term:'!GetAtt',def:'CloudFormation function that retrieves an attribute of a created resource, e.g. its public IP.'},
+    {icon:'📊',term:'DORA metrics',def:'Delivery lead time, deployment frequency, change fail percentage and MTTR — the four measures of delivery performance.'},
+    {icon:'🔧',term:'MTTR',def:'Mean Time To Restore — how quickly a team recovers from a production failure.'},
+  ];
+
+  componentDidMount(){}
+  componentWillUnmount(){ window.removeEventListener('keydown', this.onKey); clearTimeout(this.t); }
+  ensureWiring(){
+    if(!this._kb){ this._kb=true; window.addEventListener('keydown', this.onKey); }
+    if(this._lastIdx!==this.state.idx || this._lastPlay!==this.state.playing){
+      this._lastIdx=this.state.idx; this._lastPlay=this.state.playing; this.scheduleAutoplay();
+    }
+  }
+  onKey = (e)=>{
+    const tag=(e.target&&e.target.tagName)||'';
+    if(tag==='INPUT'||tag==='TEXTAREA') return;
+    if(e.key==='ArrowRight'){ this.next(); }
+    else if(e.key==='ArrowLeft'){ this.prev(); }
+    else if(e.key===' '){ e.preventDefault(); this.togglePlay(); }
+  };
+
+  sceneCfg = [
+    {gap:22,center:true,pos:true},{gap:18},{gap:18},{gap:18},{gap:18},
+    {gap:18},{gap:18},{gap:18},{gap:16},{gap:16},
+    {gap:16},{gap:18},{gap:18},{gap:16},{gap:18},{gap:22,vcenter:true},{gap:22},
+  ];
+  sceneStyle(k){
+    const c=this.sceneCfg[k]; const on=this.state.idx===k;
+    const s={display:on?'flex':'none',flexDirection:'column',minHeight:'560px',gap:c.gap+'px',width:'100%'};
+    if(c.center){ s.alignItems='center'; s.justifyContent='center'; s.textAlign='center'; }
+    if(c.vcenter){ s.justifyContent='center'; }
+    if(c.pos){ s.position='relative'; }
+    return s;
+  }
+
+  scheduleAutoplay(){
+    clearTimeout(this.t);
+    const i=this.state.idx;
+    if(this.state.playing && !this.interactive.has(i) && i<this.total-1){
+      this.t=setTimeout(()=>this.next(), this.durations[i]||9000);
+    }
+  }
+
+  next=()=> this.setState(s=> s.idx<this.total-1 ? {idx:s.idx+1} : {playing:false});
+  prev=()=> this.setState(s=> ({idx:Math.max(0,s.idx-1)}));
+  goTo=(i)=>()=> this.setState({idx:i});
+  togglePlay=()=> this.setState(s=>({playing:!s.playing}));
+  startLesson=()=> this.setState({idx:1});
+  playFromStart=()=> this.setState({idx:1, playing:true});
+  toggleGlossary=()=> this.setState(s=>({glossary:!s.glossary}));
+
+  answer=(q,i)=> this.setState(s=> s.quiz[q]!=null ? null : ({quiz:{...s.quiz,[q]:i}}));
+  setPractice=(k)=>()=> this.setState({practice:k});
+  setMetric=(k)=>()=> this.setState({metric:k});
+  setComp=(k)=>()=> this.setState({comp:k});
+  setPtype=(k)=>()=> this.setState({ptype:k});
+  buildNext=()=> this.setState(s=>({build: Math.min(s.build+1, 4)}));
+  buildPrev=()=> this.setState(s=>({build: Math.max(s.build-1, 0)}));
+
+  pick=(id)=>()=> this.setState(s=>({sel: s.sel===id?null:id}));
+  drop=(b)=>()=> this.setState(s=>{ if(!s.sel) return null; return {drops:{...s.drops,[s.sel]:b}, sel:null}; });
+  toTray=(id)=>()=> this.setState(s=>({drops:{...s.drops,[id]:null}, sel:null}));
+  checkDrag=()=> this.setState({dragChecked:true, sel:null});
+  resetDrag=()=> this.setState({drops:{instype:null,env:null,ip:null,sgid:null,ec2:null,bucket:null}, dragChecked:false, sel:null});
+
+  buildQuiz(qKey){
+    const def=this.quizDefs[qKey]; const sel=this.state.quiz[qKey];
+    const options=def.options.map((o,i)=>{
+      let bg='#fff',fg='#1d2b2a',border='#e2ebe8',mark='';
+      if(sel!=null){
+        if(o.correct){ bg='#e4f5ed';fg='#0a6b50';border='#19c39a';mark='✓'; }
+        else if(i===sel){ bg='#fdeceb';fg='#c2362b';border='#ff6b5e';mark='✗'; }
+        else { fg='#97a8a4';border='#eef3f1'; }
+      }
+      return {label:o.label,bg,fg,border,mark,onClick:()=>this.answer(qKey,i)};
+    });
+    const answered=sel!=null;
+    const isCorrect=answered && def.options[sel].correct;
+    return {question:def.question,options,answered,isCorrect,explanation:def.explanation,
+      banner: !answered ? '' : (isCorrect?'✅ Correct!':'❌ Not quite —'),
+      bannerBg: !answered ? '' : (isCorrect?'#e4f5ed':'#fdeceb'),
+      bannerFg: !answered ? '' : (isCorrect?'#0a6b50':'#c2362b')};
+  }
+
+  buildDragItem(id, place){
+    const m=this.dragMeta[id]; const drops=this.state.drops; const checked=this.state.dragChecked;
+    const selected=this.state.sel===id;
+    let bg='#fff',fg='#1d2b2a',border='#d5e6e0',mark='';
+    if(checked && place!=='tray'){
+      const ok=drops[id]===m.cat;
+      bg=ok?'#e4f5ed':'#fdeceb'; fg=ok?'#0a6b50':'#c2362b'; border=ok?'#19c39a':'#ff6b5e'; mark=ok?'✓':'✗';
+    } else if(selected){ bg='#e4f3ee'; border='#0e8f74'; }
+    const onClick = place==='tray' ? this.pick(id) : this.toTray(id);
+    return {id,label:m.label,bg,fg,border,mark,selected,onClick};
+  }
+
+  renderVals(){
+    this.ensureWiring();
+    const i=this.state.idx;
+    const accent=this.chapColors[i]||'#0e8f74';
+    const sc={}; for(let k=0;k<this.total;k++) sc['sc'+k]=this.sceneStyle(k);
+    const chapters=this.chapTitles.map((t,k)=>({num:k+1,label:t,onClick:this.goTo(k),bg: k===i?this.chapColors[k] : (k<i?'#9ab9b1':'#d3e3de')}));
+
+    const practiceList=this.practiceOrder.map(k=>{ const P=this.practiceData[k]; const on=this.state.practice===k;
+      return {k,name:P.name,icon:P.icon,onClick:this.setPractice(k),bg:on?P.color:'#f2f7f5',fg:on?'#fff':'#33534c',border:on?P.color:'#e2ebe8'}; });
+    const pr=this.practiceData[this.state.practice];
+
+    const metricList=this.metricOrder.map(k=>{ const M=this.metricData[k]; const on=this.state.metric===k;
+      return {k,name:M.name,icon:M.icon,onClick:this.setMetric(k),bg:on?M.color:'#f2f7f5',fg:on?'#fff':'#33534c',border:on?M.color:'#e2ebe8'}; });
+    const mt=this.metricData[this.state.metric];
+
+    const compList=this.compOrder.map(k=>{ const C=this.compData[k]; const on=this.state.comp===k;
+      return {k,name:C.name,icon:C.icon,onClick:this.setComp(k),bg:on?C.color:'#f2f7f5',fg:on?'#fff':'#33534c',border:on?C.color:'#e2ebe8'}; });
+    const cp=this.compData[this.state.comp];
+
+    const ptypeList=this.ptypeOrder.map(k=>{ const P=this.ptypeData[k]; const on=this.state.ptype===k;
+      return {k,name:P.name,icon:P.icon,onClick:this.setPtype(k),bg:on?P.color:'#f2f7f5',fg:on?'#fff':'#33534c',border:on?P.color:'#e2ebe8'}; });
+    const pt=this.ptypeData[this.state.ptype];
+
+    const bs=this.state.build;
+    const buildList=this.buildSteps.map((s,ix)=>({t:s.t,num:ix+1,
+      bg: ix===bs ? '#0e8f74' : (ix<bs ? '#e4f3ee' : '#f6f9f8'),
+      fg: ix===bs ? '#fff' : (ix<bs ? '#0a6b50' : '#8ba39e'),
+      border: ix===bs ? '#0e8f74' : (ix<bs ? '#c2e4da' : '#e8f1ee')}));
+    const bcur=this.buildSteps[bs];
+
+    const tray=this.dragOrder.filter(id=>this.state.drops[id]==null).map(id=>this.buildDragItem(id,'tray'));
+    const bucket=(b)=>this.dragOrder.filter(id=>this.state.drops[id]===b).map(id=>this.buildDragItem(id,b));
+    const correct=this.dragOrder.filter(id=>this.state.drops[id]===this.dragMeta[id].cat).length;
+
+    return {
+      ...sc,
+      progressPct: Math.round(i/(this.total-1)*100)+'%',
+      accent, sceneNum:i+1, total:this.total, sceneTitle:this.chapTitles[i], chapters,
+      next:this.next, prev:this.prev, togglePlay:this.togglePlay,
+      playLabel: this.state.playing?'⏸ Pause':'▶ Play',
+      startLesson:this.startLesson, playFromStart:this.playFromStart,
+      glossaryOpen:this.state.glossary, toggleGlossary:this.toggleGlossary, glossary:this.glossary,
+      bizBenefits:this.bizBenefits, techBenefits:this.techBenefits,
+      practiceList, practiceInfo:pr,
+      metricList, metricInfo:mt,
+      compList, compInfo:cp,
+      ptypeList, ptypeInfo:pt,
+      buildList, buildTitle:bcur.t, buildDesc:bcur.d, buildCode:bcur.code,
+      buildNum:(bs+1)+' / 5', buildNext:this.buildNext, buildPrev:this.buildPrev,
+      bpParams:this.bestPractices.params.map(t=>({t})), bpOutputs:this.bestPractices.outputs.map(t=>({t})),
+      q1:this.buildQuiz('q1'), q2:this.buildQuiz('q2'), q3:this.buildQuiz('q3'),
+      dragTray:tray, dragParam:bucket('param'), dragOutput:bucket('output'), dragResource:bucket('resource'),
+      dropParam:this.drop('param'), dropOutput:this.drop('output'), dropResource:this.drop('resource'),
+      checkDrag:this.checkDrag, resetDrag:this.resetDrag, dragChecked:this.state.dragChecked,
+      dragScore:correct+' / 6 correct', dragScoreBg: correct===6?'#e4f5ed':'#fff4e8', dragScoreFg: correct===6?'#0a6b50':'#d98a18',
+    };
+  }
+}
+</script>
+</body>
+</html>

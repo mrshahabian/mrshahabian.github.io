@@ -23,6 +23,11 @@ public/tutorials/
 - **Lesson title** = the file name without extension. A leading `NN - ` (e.g. `01 - `)
   sets the order and is stripped from the displayed title.
 - **`README.html` or `index.html`** → rendered as the topic's intro text (not a lesson).
+- **`*.dc.html` files** → raw lesson exports from the dc authoring tool (the ones that
+  ship next to a `support.js`). Drop them in as they are: the build wraps each one into
+  a self-contained bundled page (runtime + React embedded, no `support.js` needed) so
+  it renders exactly like the pre-bundled lessons. The `.dc` is stripped from the
+  title. Runtime assets live in `src/dc-runtime/`.
 - **Any non-HTML file** (png, pdf, zip, …) → listed under **Resources & files** as a download.
 
 ## Editing the topic landing (`meta.json`)

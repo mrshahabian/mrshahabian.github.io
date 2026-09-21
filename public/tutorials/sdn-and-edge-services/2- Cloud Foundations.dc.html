@@ -1,0 +1,1312 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style data-omelette-print-defaults>
+@media print {
+  @page { margin: 0.5in; }
+  h1, h2, h3, h4, h5, h6 { break-after: avoid; }
+  figure, table, pre, blockquote, img, svg, tr, [class~="card" i] { break-inside: avoid; }
+  img, svg { max-width: 100%; }
+  p { orphans: 3; widows: 3; }
+}
+</style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{background:#eef2fc;font-family:'Figtree',system-ui,sans-serif;color:#22243f;-webkit-font-smoothing:antialiased}
+  @keyframes floatA{0%,100%{transform:translateY(0) translateX(0)}50%{transform:translateY(-22px) translateX(10px)}}
+  @keyframes floatB{0%,100%{transform:translateY(0)}50%{transform:translateY(26px)}}
+  @keyframes sceneIn{0%{opacity:0;transform:translateY(16px) scale(.99)}100%{opacity:1;transform:none}}
+  @keyframes pulseHint{0%,100%{transform:translateX(0);opacity:.85}50%{transform:translateX(5px);opacity:1}}
+  @keyframes popBadge{0%{transform:scale(0);opacity:0}60%{transform:scale(1.12)}100%{transform:scale(1);opacity:1}}
+  ::-webkit-scrollbar{width:10px;height:10px}
+  ::-webkit-scrollbar-thumb{background:#c7d0ea;border-radius:8px}
+</style>
+</helmet>
+<div style="min-height:100vh;position:relative;overflow-x:hidden;display:flex;flex-direction:column;align-items:center">
+
+  <div style="position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden">
+    <div style="position:absolute;top:12%;left:6%;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#ffffff,#dbe6ff);opacity:.55;filter:blur(2px);animation:floatA 13s ease-in-out infinite"></div>
+    <div style="position:absolute;top:58%;left:80%;width:280px;height:280px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#ffffff,#e7dcff);opacity:.5;filter:blur(2px);animation:floatB 17s ease-in-out infinite"></div>
+    <div style="position:absolute;top:74%;left:10%;width:160px;height:160px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#ffffff,#d6f6ec);opacity:.55;filter:blur(2px);animation:floatA 15s ease-in-out infinite"></div>
+  </div>
+
+  <!-- TOP BAR -->
+  <div style="position:sticky;top:0;z-index:30;width:100%;display:flex;justify-content:center;background:rgba(238,242,252,.82);backdrop-filter:blur(10px);border-bottom:1px solid #dde4f5">
+    <div style="width:100%;max-width:1180px;display:flex;align-items:center;gap:20px;padding:14px 24px">
+      <div style="display:flex;align-items:center;gap:10px;font-family:'Bricolage Grotesque';font-weight:800;font-size:18px;color:#22243f;white-space:nowrap">
+        <span style="font-size:22px">☁️</span><span>Cloud Foundations</span>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;gap:6px;min-width:0">
+        <div style="height:8px;border-radius:99px;background:#dbe2f4;overflow:hidden">
+          <div style="height:100%;border-radius:99px;transition:width .45s cubic-bezier(.22,.9,.3,1);width:{{ progressPct }};background:{{ accent }}"></div>
+        </div>
+        <div style="display:flex;gap:5px;flex-wrap:wrap">
+          <sc-for list="{{ chapters }}" as="c" hint-placeholder-count="16">
+            <button onClick="{{ c.onClick }}" title="{{ c.label }}" style="width:18px;height:18px;border:none;border-radius:50%;cursor:pointer;padding:0;font-size:9px;font-weight:700;color:#fff;line-height:18px;transition:transform .15s;background:{{ c.bg }}" style-hover="transform:scale(1.25)">{{ c.num }}</button>
+          </sc-for>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;white-space:nowrap">
+        <button onClick="{{ toggleGlossary }}" style="display:flex;align-items:center;gap:6px;background:#fff;border:1px solid #dde4f5;border-radius:11px;padding:9px 14px;font-family:'Figtree';font-weight:600;font-size:14px;color:#3a3f5c;cursor:pointer" style-hover="border-color:#3d6ef5;color:#3d6ef5">📖 Glossary</button>
+        <button onClick="{{ togglePlay }}" style="display:flex;align-items:center;gap:7px;background:{{ accent }};border:none;border-radius:11px;padding:10px 16px;font-family:'Bricolage Grotesque';font-weight:700;font-size:14px;color:#fff;cursor:pointer" style-hover="filter:brightness(1.06)">{{ playLabel }}</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STAGE -->
+  <div style="width:100%;max-width:1180px;padding:30px 24px 16px;z-index:5">
+    <div ref="{{ stageRef }}" style="position:relative;width:100%;background:#fff;border-radius:30px;box-shadow:0 24px 60px -28px rgba(40,55,120,.35),0 2px 0 #ffffff inset;padding:52px 56px;min-height:580px;overflow:hidden">
+
+      <!-- SCENE 0 — TITLE -->
+      <section data-scene data-screen-label="Welcome" style="flex-direction:column;align-items:center;justify-content:center;text-align:center;min-height:560px;gap:22px;position:relative">
+        <div style="position:absolute;top:0;right:8%;font-size:40px;animation:floatA 9s ease-in-out infinite">🛰️</div>
+        <div style="position:absolute;bottom:6%;left:6%;font-size:34px;animation:floatB 11s ease-in-out infinite">📦</div>
+        <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.22em;text-transform:uppercase;font-weight:700;color:#3d6ef5">Interactive Lesson</div>
+        <h1 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:68px;line-height:1.02;margin:0;max-width:13ch;letter-spacing:-.02em">Introduction to <span style="background:linear-gradient(120deg,#3d6ef5,#8a5cf6);-webkit-background-clip:text;background-clip:text;color:transparent">Cloud Computing</span></h1>
+        <p style="font-size:21px;line-height:1.55;color:#5a6080;max-width:60ch;margin:0">From owning servers in a back room to renting world-scale superpowers by the minute — learn the models, the money, and the machinery behind the cloud.</p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:4px">
+          <span style="background:#eef3ff;border:1px solid #dbe6ff;border-radius:99px;padding:8px 16px;font-weight:600;font-size:15px;color:#3d6ef5">⏱️ ~25 min</span>
+          <span style="background:#fef4e8;border:1px solid #ffe6c2;border-radius:99px;padding:8px 16px;font-weight:600;font-size:15px;color:#d98a18">📑 16 chapters</span>
+          <span style="background:#fdeeed;border:1px solid #ffd9d5;border-radius:99px;padding:8px 16px;font-weight:600;font-size:15px;color:#e0564a">🧠 3 quizzes</span>
+          <span style="background:#e8faf3;border:1px solid #c4f0df;border-radius:99px;padding:8px 16px;font-weight:600;font-size:15px;color:#12a87f">🎯 Drag & match</span>
+        </div>
+        <div style="display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-top:14px">
+          <button onClick="{{ startLesson }}" style="background:#3d6ef5;color:#fff;border:none;border-radius:15px;padding:18px 34px;font-family:'Bricolage Grotesque';font-weight:700;font-size:18px;cursor:pointer;box-shadow:0 12px 24px -8px rgba(61,110,245,.6)" style-hover="transform:translateY(-2px)">Start lesson →</button>
+          <button onClick="{{ playFromStart }}" style="background:#fff;color:#3d6ef5;border:2px solid #c9d8ff;border-radius:15px;padding:16px 30px;font-family:'Bricolage Grotesque';font-weight:700;font-size:18px;cursor:pointer" style-hover="border-color:#3d6ef5;background:#f5f8ff">▶ Play as video</button>
+        </div>
+        <div style="margin-top:18px;display:flex;align-items:center;gap:10px;background:#f6f8ff;border:1px solid #e7ecfa;border-radius:99px;padding:8px 8px 8px 18px">
+          <span style="font-size:14px;color:#7a809c">Prepared by</span>
+          <span style="background:#22243f;color:#fff;border-radius:99px;padding:7px 16px;font-weight:700;font-size:14px;font-family:'Bricolage Grotesque'">Reza Shahabian</span>
+        </div>
+      </section>
+
+      <!-- SCENE 1 — WHAT IS CLOUD -->
+      <section data-scene data-screen-label="What is cloud" style="flex-direction:column;min-height:560px;gap:26px">
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#3d6ef5">Chapter 01 · The big idea</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:46px;line-height:1.04;margin:0;letter-spacing:-.01em">What is cloud computing?</h2>
+        </div>
+        <div style="display:grid;grid-template-columns:1.05fr .95fr;gap:30px;align-items:start">
+          <div style="display:flex;flex-direction:column;gap:18px">
+            <p style="font-size:20px;line-height:1.6;margin:0;color:#454b68">Cloud computing is renting computing power — servers, storage, databases, networking — <b>over the internet, on demand</b>, instead of buying and running your own hardware. You pay only for what you use, and scale up or down in minutes.</p>
+            <div style="background:#f6f8ff;border:1px solid #e7ecfa;border-radius:18px;padding:22px;display:flex;flex-direction:column;gap:12px">
+              <div style="font-family:'Bricolage Grotesque';font-weight:700;font-size:16px;color:#22243f">🔑 The mental model</div>
+              <p style="margin:0;font-size:17px;line-height:1.55;color:#555b78">It's the difference between <b>buying a car</b> (you own it, park it, fix it) and <b>calling a ride</b> (it appears when you need it, you pay per trip, someone else maintains it). The cloud is computing-on-tap.</p>
+            </div>
+            <div style="display:flex;gap:12px;align-items:center;background:#fff4ee;border:1px solid #ffdcc9;border-radius:18px;padding:18px 22px">
+              <span style="font-size:30px">🎬</span>
+              <p style="margin:0;font-size:16px;line-height:1.5;color:#9a4a22"><b>Real world:</b> Netflix owns almost no servers. Its entire streaming platform — serving 280M+ members — runs on the public cloud (AWS), scaling automatically for the evening rush.</p>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:14px">
+            <div style="background:#fff;border:2px solid #ffd9d5;border-radius:20px;padding:22px;position:relative">
+              <div style="position:absolute;top:-12px;left:20px;background:#ff6b5e;color:#fff;font-size:12px;font-weight:700;border-radius:99px;padding:5px 12px;font-family:'Bricolage Grotesque'">TRADITIONAL</div>
+              <div style="font-size:34px;margin-top:6px">🏚️</div>
+              <ul style="margin:10px 0 0;padding-left:18px;font-size:15px;line-height:1.7;color:#7a5048">
+                <li>Buy servers up front 💸</li><li>Wait weeks to expand</li><li>You patch, cool & secure it</li><li>Pay even when idle</li>
+              </ul>
+            </div>
+            <div style="text-align:center;font-size:24px;color:#b9c0d8">↓</div>
+            <div style="background:#fff;border:2px solid #c4f0df;border-radius:20px;padding:22px;position:relative">
+              <div style="position:absolute;top:-12px;left:20px;background:#19c39a;color:#fff;font-size:12px;font-weight:700;border-radius:99px;padding:5px 12px;font-family:'Bricolage Grotesque'">CLOUD</div>
+              <div style="font-size:34px;margin-top:6px">☁️</div>
+              <ul style="margin:10px 0 0;padding-left:18px;font-size:15px;line-height:1.7;color:#1a7a5c">
+                <li>Spin up in minutes ⚡</li><li>Scale instantly, globally</li><li>Provider runs the hardware</li><li>Pay only for what you use</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SCENE 2 — WHY CLOUD -->
+      <section data-scene data-screen-label="Why cloud" style="flex-direction:column;min-height:560px;gap:24px">
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#19c39a">Chapter 02 · Motivation</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:46px;line-height:1.04;margin:0;letter-spacing:-.01em">Why do organisations move to the cloud?</h2>
+          <p style="font-size:19px;line-height:1.55;color:#5a6080;margin:0;max-width:70ch">Six forces drive the decision to adopt public cloud — they all trade owning-and-maintaining for renting-and-focusing.</p>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
+          <div style="background:#f6f8ff;border:1px solid #e7ecfa;border-radius:18px;padding:22px;display:flex;flex-direction:column;gap:8px">
+            <div style="font-size:30px">💰</div>
+            <div style="font-family:'Bricolage Grotesque';font-weight:700;font-size:18px">No upfront cost</div>
+            <p style="margin:0;font-size:15px;line-height:1.5;color:#5a6080">Swap big hardware purchases (capex) for pay-as-you-go (opex). Trade fixed expense for variable expense.</p>
+          </div>
+          <div style="background:#f6f8ff;border:1px solid #e7ecfa;border-radius:18px;padding:22px;display:flex;flex-direction:column;gap:8px">
+            <div style="font-size:30px">📈</div>
+            <div style="font-family:'Bricolage Grotesque';font-weight:700;font-size:18px">Elastic scale</div>
+            <p style="margin:0;font-size:15px;line-height:1.5;color:#5a6080">Add hundreds of servers for an hour, then give them back. Never guess capacity again.</p>
+          </div>
+          <div style="background:#f6f8ff;border:1px solid #e7ecfa;border-radius:18px;padding:22px;display:flex;flex-direction:column;gap:8px">
+            <div style="font-size:30px">⚡</div>
+            <div style="font-family:'Bricolage Grotesque';font-weight:700;font-size:18px">Speed & agility</div>
+            <p style="margin:0;font-size:15px;line-height:1.5;color:#5a6080">New resources are minutes away, not weeks. Experiment cheaply and ship faster.</p>
+          </div>
+          <div style="background:#f6f8ff;border:1px solid #e7ecfa;border-radius:18px;padding:22px;display:flex;flex-direction:column;gap:8px">
+            <div style="font-size:30px">🌍</div>
+            <div style="font-family:'Bricolage Grotesque';font-weight:700;font-size:18px">Go global in minutes</div>
+            <p style="margin:0;font-size:15px;line-height:1.5;color:#5a6080">Deploy to data centers on multiple continents to put your app close to every user.</p>
+          </div>
+          <div style="background:#f6f8ff;border:1px solid #e7ecfa;border-radius:18px;padding:22px;display:flex;flex-direction:column;gap:8px">
+            <div style="font-size:30px">🛡️</div>
+            <div style="font-family:'Bricolage Grotesque';font-weight:700;font-size:18px">Reliability built in</div>
+            <p style="margin:0;font-size:15px;line-height:1.5;color:#5a6080">Multiple data centers and automatic backups make high availability achievable for everyone.</p>
+          </div>
+          <div style="background:#f6f8ff;border:1px solid #e7ecfa;border-radius:18px;padding:22px;display:flex;flex-direction:column;gap:8px">
+            <div style="font-size:30px">🎯</div>
+            <div style="font-family:'Bricolage Grotesque';font-weight:700;font-size:18px">Focus on what matters</div>
+            <p style="margin:0;font-size:15px;line-height:1.5;color:#5a6080">Stop the “undifferentiated heavy lifting” of racking, patching and cooling. Build product instead.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SCENE 3 — DEPLOYMENT MODELS -->
+      <section data-scene data-screen-label="Deployment models" style="flex-direction:column;min-height:560px;gap:22px">
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#8a5cf6">Chapter 03 · Where it runs</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:46px;line-height:1.04;margin:0;letter-spacing:-.01em">Cloud deployment models</h2>
+          <p style="font-size:18px;line-height:1.5;color:#5a6080;margin:0">Three ways to place your infrastructure. <b>Tap each one</b> to explore it.</p>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <sc-for list="{{ deployTabs }}" as="t" hint-placeholder-count="3">
+            <button onClick="{{ t.onClick }}" style="display:flex;align-items:center;gap:8px;border:none;border-radius:13px;padding:13px 22px;font-family:'Bricolage Grotesque';font-weight:700;font-size:16px;cursor:pointer;transition:all .15s;background:{{ t.bg }};color:{{ t.fg }}"><span style="font-size:18px">{{ t.icon }}</span>{{ t.label }}</button>
+          </sc-for>
+        </div>
+        <div style="display:grid;grid-template-columns:1.1fr .9fr;gap:24px;align-items:stretch">
+          <div style="background:#faf8ff;border:1px solid #ece4fb;border-radius:20px;padding:26px;display:flex;flex-direction:column;gap:16px">
+            <div style="display:flex;align-items:center;gap:12px">
+              <div style="font-size:34px">{{ deployInfo.icon }}</div>
+              <div>
+                <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:24px;color:{{ deployInfo.color }}">{{ deployInfo.title }}</div>
+                <div style="font-size:14px;font-weight:600;color:#8a90a8">{{ deployInfo.tag }}</div>
+              </div>
+            </div>
+            <p style="margin:0;font-size:17px;line-height:1.6;color:#454b68">{{ deployInfo.desc }}</p>
+            <div style="display:flex;gap:18px;flex-wrap:wrap">
+              <div style="flex:1;min-width:180px">
+                <div style="font-weight:700;font-size:14px;color:#0c7a52;margin-bottom:8px">👍 Strengths</div>
+                <div style="display:flex;flex-direction:column;gap:6px">
+                  <sc-for list="{{ deployInfo.pros }}" as="p" hint-placeholder-count="3">
+                    <div style="font-size:15px;line-height:1.4;color:#3a3f5c">• {{ p.t }}</div>
+                  </sc-for>
+                </div>
+              </div>
+              <div style="flex:1;min-width:180px">
+                <div style="font-weight:700;font-size:14px;color:#c2362b;margin-bottom:8px">👎 Trade-offs</div>
+                <div style="display:flex;flex-direction:column;gap:6px">
+                  <sc-for list="{{ deployInfo.cons }}" as="c" hint-placeholder-count="2">
+                    <div style="font-size:15px;line-height:1.4;color:#3a3f5c">• {{ c.t }}</div>
+                  </sc-for>
+                </div>
+              </div>
+            </div>
+            <div style="background:#fff;border:1px solid #ece4fb;border-radius:14px;padding:14px 16px;font-size:15px;color:#5a6080"><b style="color:{{ deployInfo.color }}">Example · </b>{{ deployInfo.example }}</div>
+          </div>
+          <div style="background:#f6f9ff;border:1px solid #e3ecfb;border-radius:20px;padding:24px;display:flex;flex-direction:column;gap:14px">
+            <div style="font-family:'Bricolage Grotesque';font-weight:700;font-size:16px;color:#22243f">🔗 Worked example: a hybrid setup</div>
+            <p style="margin:0;font-size:14.5px;line-height:1.5;color:#5a6080">A retailer keeps customer records on-site, but bursts its busy web shop into the cloud:</p>
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <div style="display:flex;align-items:center;gap:12px;background:#fff;border:1px solid #e7ecfa;border-radius:13px;padding:13px 15px">
+                <div style="width:34px;height:34px;border-radius:9px;background:#8a5cf6;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;flex-shrink:0">1</div>
+                <div style="font-size:14px;color:#3a3f5c"><b>🏢 On-prem servers</b> hold the sensitive customer database.</div>
+              </div>
+              <div style="text-align:center;color:#b9c0d8;font-size:16px">⬇ secure VPN tunnel</div>
+              <div style="display:flex;align-items:center;gap:12px;background:#fff;border:1px solid #e7ecfa;border-radius:13px;padding:13px 15px">
+                <div style="width:34px;height:34px;border-radius:9px;background:#3d6ef5;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;flex-shrink:0">2</div>
+                <div style="font-size:14px;color:#3a3f5c"><b>☁️ Cloud VPC</b> runs the web shop & APIs, scaling for peak traffic.</div>
+              </div>
+              <div style="text-align:center;color:#b9c0d8;font-size:16px">⬇</div>
+              <div style="display:flex;align-items:center;gap:12px;background:#fff;border:1px solid #e7ecfa;border-radius:13px;padding:13px 15px">
+                <div style="width:34px;height:34px;border-radius:9px;background:#19c39a;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;flex-shrink:0">3</div>
+                <div style="font-size:14px;color:#3a3f5c"><b>🌍 Customers</b> get a fast site; private data never leaves the building.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SCENE 4 — QUIZ 1 -->
+      <section data-scene data-screen-label="Quick check 1" style="flex-direction:column;min-height:560px;gap:22px;justify-content:center">
+        <div style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#ffb43d">🧠 Knowledge check</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:34px;line-height:1.15;margin:0;max-width:24ch">{{ q1.question }}</h2>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:760px;width:100%;margin:0 auto">
+          <sc-for list="{{ q1.options }}" as="o" hint-placeholder-count="4">
+            <button onClick="{{ o.onClick }}" style="display:flex;align-items:center;justify-content:space-between;gap:10px;text-align:left;border-radius:15px;padding:18px 20px;font-family:'Figtree';font-weight:600;font-size:17px;cursor:pointer;transition:all .15s;border:2px solid {{ o.border }};background:{{ o.bg }};color:{{ o.fg }}"><span>{{ o.label }}</span><span style="font-weight:800;font-size:18px">{{ o.mark }}</span></button>
+          </sc-for>
+        </div>
+        <sc-if value="{{ q1.answered }}" hint-placeholder-val="{{ false }}">
+          <div style="max-width:760px;width:100%;margin:0 auto;border-radius:16px;padding:18px 22px;background:{{ q1.bannerBg }}">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:17px;color:{{ q1.bannerFg }};margin-bottom:5px">{{ q1.banner }}</div>
+            <div style="font-size:16px;line-height:1.55;color:#3a3f5c">{{ q1.explanation }}</div>
+          </div>
+        </sc-if>
+      </section>
+
+      <!-- SCENE 5 — SERVICE MODELS -->
+      <section data-scene data-screen-label="Service models" style="flex-direction:column;min-height:560px;gap:20px">
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#ff6b5e">Chapter 05 · How much you manage</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:46px;line-height:1.04;margin:0;letter-spacing:-.01em">IaaS · PaaS · SaaS</h2>
+          <p style="font-size:18px;line-height:1.5;color:#5a6080;margin:0">The three service models = how much the provider manages vs you. <b>Tap a tab</b> — watch the stack change colour.</p>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <sc-for list="{{ svcTabs }}" as="t" hint-placeholder-count="3">
+            <button onClick="{{ t.onClick }}" style="display:flex;flex-direction:column;align-items:flex-start;border:none;border-radius:13px;padding:12px 20px;font-family:'Bricolage Grotesque';font-weight:700;cursor:pointer;transition:all .15s;background:{{ t.bg }};color:{{ t.fg }}"><span style="font-size:18px">{{ t.label }}</span><span style="font-size:11px;opacity:.85;font-weight:600">{{ t.full }}</span></button>
+          </sc-for>
+        </div>
+        <div style="display:grid;grid-template-columns:.95fr 1.05fr;gap:24px;align-items:start">
+          <div style="display:flex;flex-direction:column;gap:5px">
+            <div style="display:flex;justify-content:space-between;font-size:12px;font-weight:700;color:#8a90a8;padding:0 4px 4px">
+              <span>↑ APP LAYER</span><span>INFRASTRUCTURE ↓</span>
+            </div>
+            <sc-for list="{{ svcLayers }}" as="L" hint-placeholder-count="9">
+              <div style="display:flex;align-items:center;justify-content:space-between;border-radius:10px;padding:11px 16px;transition:all .25s;background:{{ L.bg }};color:{{ L.fg }}"><span style="font-weight:600;font-size:15px">{{ L.label }}</span><span style="font-size:10px;font-weight:800;letter-spacing:.08em;opacity:.9">{{ L.badge }}</span></div>
+            </sc-for>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:14px">
+            <div style="background:#fff7f4;border:1px solid #ffe0d6;border-radius:18px;padding:20px">
+              <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:22px;color:{{ svcInfo.color }}">{{ svcInfo.title }}</div>
+              <p style="margin:10px 0 0;font-size:16px;line-height:1.55;color:#454b68">{{ svcInfo.analogy }}</p>
+            </div>
+            <div style="background:#f6f8ff;border:1px solid #e7ecfa;border-radius:18px;padding:18px 20px;font-size:15.5px;line-height:1.55;color:#5a6080">{{ svcInfo.manage }}</div>
+            <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center">
+              <span style="font-size:13px;font-weight:700;color:#8a90a8">EXAMPLES:</span>
+              <sc-for list="{{ svcInfo.examples }}" as="e" hint-placeholder-count="3">
+                <span style="background:#fff;border:1px solid #e4e8f5;border-radius:99px;padding:7px 15px;font-weight:600;font-size:14px;color:#3a3f5c">{{ e.t }}</span>
+              </sc-for>
+            </div>
+            <div style="display:inline-flex;align-self:flex-start;align-items:center;gap:8px;background:{{ svcInfo.color }};color:#fff;border-radius:99px;padding:8px 16px;font-weight:700;font-size:14px;font-family:'Bricolage Grotesque'">✦ {{ svcInfo.flex }}</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SCENE 6 — DRAG & MATCH -->
+      <section data-scene data-screen-label="Match it up" style="flex-direction:column;min-height:560px;gap:18px">
+        <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap">
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#19c39a">🎯 Try it · Sort the services</div>
+            <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:38px;line-height:1.05;margin:0">Which model is each service?</h2>
+            <p style="font-size:16px;color:#5a6080;margin:0"><b>Tap a service</b> below, then <b>tap the category</b> it belongs to.</p>
+          </div>
+          <div style="display:flex;gap:10px">
+            <sc-if value="{{ dragChecked }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;align-items:center;border-radius:12px;padding:11px 18px;font-family:'Bricolage Grotesque';font-weight:800;font-size:16px;background:{{ dragScoreBg }};color:{{ dragScoreFg }}">{{ dragScore }}</div>
+            </sc-if>
+            <button onClick="{{ resetDrag }}" style="background:#fff;border:1px solid #dde4f5;border-radius:12px;padding:11px 18px;font-family:'Figtree';font-weight:600;font-size:14px;color:#5a6080;cursor:pointer">↺ Reset</button>
+            <button onClick="{{ checkDrag }}" style="background:#19c39a;border:none;border-radius:12px;padding:11px 20px;font-family:'Bricolage Grotesque';font-weight:700;font-size:15px;color:#fff;cursor:pointer">Check answers</button>
+          </div>
+        </div>
+        <div style="min-height:54px;background:#f4f6fc;border:2px dashed #cdd6ee;border-radius:16px;padding:12px;display:flex;flex-wrap:wrap;gap:10px;align-items:center">
+          <span style="font-size:13px;font-weight:700;color:#9aa0b8;padding:0 6px">TRAY:</span>
+          <sc-for list="{{ dragTray }}" as="it" hint-placeholder-count="6">
+            <button onClick="{{ it.onClick }}" style="border-radius:11px;padding:11px 17px;font-family:'Figtree';font-weight:600;font-size:15px;cursor:pointer;transition:all .15s;border:2px solid {{ it.border }};background:{{ it.bg }};color:{{ it.fg }}">{{ it.label }}</button>
+          </sc-for>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px">
+          <div onClick="{{ dropIaas }}" style="background:#f1f5ff;border:2px solid #d3e0ff;border-radius:18px;padding:16px;min-height:200px;display:flex;flex-direction:column;gap:10px;cursor:pointer">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:17px;color:#3d6ef5">🧱 IaaS</div>
+            <sc-for list="{{ dragIaas }}" as="it" hint-placeholder-count="0">
+              <button onClick="{{ it.onClick }}" style="display:flex;justify-content:space-between;align-items:center;border-radius:10px;padding:11px 14px;font-weight:600;font-size:14px;cursor:pointer;border:2px solid {{ it.border }};background:{{ it.bg }};color:{{ it.fg }}"><span>{{ it.label }}</span><span style="font-weight:800">{{ it.mark }}</span></button>
+            </sc-for>
+          </div>
+          <div onClick="{{ dropPaas }}" style="background:#f7f2ff;border:2px solid #e3d5fb;border-radius:18px;padding:16px;min-height:200px;display:flex;flex-direction:column;gap:10px;cursor:pointer">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:17px;color:#8a5cf6">⚙️ PaaS</div>
+            <sc-for list="{{ dragPaas }}" as="it" hint-placeholder-count="0">
+              <button onClick="{{ it.onClick }}" style="display:flex;justify-content:space-between;align-items:center;border-radius:10px;padding:11px 14px;font-weight:600;font-size:14px;cursor:pointer;border:2px solid {{ it.border }};background:{{ it.bg }};color:{{ it.fg }}"><span>{{ it.label }}</span><span style="font-weight:800">{{ it.mark }}</span></button>
+            </sc-for>
+          </div>
+          <div onClick="{{ dropSaas }}" style="background:#fff2f0;border:2px solid #ffd6cf;border-radius:18px;padding:16px;min-height:200px;display:flex;flex-direction:column;gap:10px;cursor:pointer">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:17px;color:#ff6b5e">📦 SaaS</div>
+            <sc-for list="{{ dragSaas }}" as="it" hint-placeholder-count="0">
+              <button onClick="{{ it.onClick }}" style="display:flex;justify-content:space-between;align-items:center;border-radius:10px;padding:11px 14px;font-weight:600;font-size:14px;cursor:pointer;border:2px solid {{ it.border }};background:{{ it.bg }};color:{{ it.fg }}"><span>{{ it.label }}</span><span style="font-weight:800">{{ it.mark }}</span></button>
+            </sc-for>
+          </div>
+        </div>
+      </section>
+
+      <!-- SCENE 7 — PROVIDERS -->
+      <section data-scene data-screen-label="Providers" style="flex-direction:column;min-height:560px;gap:22px">
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#3d6ef5">Chapter 07 · The ecosystem</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:46px;line-height:1.04;margin:0;letter-spacing:-.01em">Who runs the cloud?</h2>
+          <p style="font-size:19px;line-height:1.5;color:#5a6080;margin:0;max-width:72ch">A handful of hyperscalers dominate the public cloud, while open-source platforms let organisations build private clouds of their own.</p>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
+          <div style="background:linear-gradient(160deg,#fff4e6,#fff);border:1px solid #ffe2bd;border-radius:20px;padding:24px;display:flex;flex-direction:column;gap:8px">
+            <div style="font-size:30px">🟧</div>
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:20px">Amazon Web Services</div>
+            <div style="font-size:13px;font-weight:700;color:#d98a18">Market leader · since 2006</div>
+            <p style="margin:0;font-size:14.5px;line-height:1.5;color:#5a6080">The pioneer of modern IaaS. The most services and the largest global footprint — the focus of this module.</p>
+          </div>
+          <div style="background:linear-gradient(160deg,#eef4ff,#fff);border:1px solid #d3e0ff;border-radius:20px;padding:24px;display:flex;flex-direction:column;gap:8px">
+            <div style="font-size:30px">🔷</div>
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:20px">Microsoft Azure</div>
+            <div style="font-size:13px;font-weight:700;color:#3d6ef5">Strong in enterprise</div>
+            <p style="margin:0;font-size:14.5px;line-height:1.5;color:#5a6080">Deeply integrated with Windows, Office 365 and enterprise identity — popular with large businesses.</p>
+          </div>
+          <div style="background:linear-gradient(160deg,#eafaf3,#fff);border:1px solid #c4f0df;border-radius:20px;padding:24px;display:flex;flex-direction:column;gap:8px">
+            <div style="font-size:30px">🟩</div>
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:20px">Google Cloud (GCP)</div>
+            <div style="font-size:13px;font-weight:700;color:#19c39a">Data & AI strength</div>
+            <p style="margin:0;font-size:14.5px;line-height:1.5;color:#5a6080">Known for data analytics, Kubernetes and machine-learning services built on Google's own infrastructure.</p>
+          </div>
+        </div>
+        <div style="background:#f6f8ff;border:1px solid #e7ecfa;border-radius:18px;padding:20px 24px;display:flex;gap:16px;align-items:center;flex-wrap:wrap">
+          <div style="font-size:28px">🏢</div>
+          <div style="flex:1;min-width:240px">
+            <div style="font-family:'Bricolage Grotesque';font-weight:700;font-size:16px;margin-bottom:4px">Building a private cloud?</div>
+            <p style="margin:0;font-size:15px;line-height:1.5;color:#5a6080">Open-source platforms act as the control software for private clouds — running on your own hardware:</p>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <span style="background:#fff;border:1px solid #e4e8f5;border-radius:99px;padding:8px 15px;font-weight:600;font-size:14px;color:#3a3f5c">OpenStack</span>
+            <span style="background:#fff;border:1px solid #e4e8f5;border-radius:99px;padding:8px 15px;font-weight:600;font-size:14px;color:#3a3f5c">OpenNebula</span>
+            <span style="background:#fff;border:1px solid #e4e8f5;border-radius:99px;padding:8px 15px;font-weight:600;font-size:14px;color:#3a3f5c">Eucalyptus</span>
+            <span style="background:#fff;border:1px solid #e4e8f5;border-radius:99px;padding:8px 15px;font-weight:600;font-size:14px;color:#3a3f5c">Nimbus</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- SCENE 8 — REGIONS & AZ -->
+      <section data-scene data-screen-label="Regions and AZs" style="flex-direction:column;min-height:560px;gap:20px">
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#8a5cf6">Chapter 08 · The geography of the cloud</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:44px;line-height:1.04;margin:0;letter-spacing:-.01em">Regions &amp; Availability Zones</h2>
+          <p style="font-size:18px;line-height:1.5;color:#5a6080;margin:0;max-width:74ch">Providers run data centers across the globe. <b>Pick a region</b> to see its Availability Zones — each is a cluster of data centers, isolated so one failure can't take the others down.</p>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <sc-for list="{{ regionTabs }}" as="r" hint-placeholder-count="4">
+            <button onClick="{{ r.onClick }}" style="display:flex;align-items:center;gap:8px;border:none;border-radius:13px;padding:12px 18px;font-family:'Bricolage Grotesque';font-weight:700;font-size:15px;cursor:pointer;transition:all .15s;background:{{ r.bg }};color:{{ r.fg }}"><span style="font-size:17px">{{ r.flag }}</span>{{ r.name }}</button>
+          </sc-for>
+        </div>
+        <div style="background:#faf8ff;border:2px solid #ece4fb;border-radius:22px;padding:26px;display:flex;flex-direction:column;gap:18px">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px">
+            <div style="display:flex;align-items:center;gap:10px">
+              <span style="font-size:24px">🗺️</span>
+              <span style="font-family:'Bricolage Grotesque';font-weight:800;font-size:22px;color:#8a5cf6">Region: {{ regionInfo.name }}</span>
+              <span style="background:#fff;border:1px solid #ece4fb;border-radius:8px;padding:4px 10px;font-family:'Figtree';font-weight:600;font-size:13px;color:#8a90a8">{{ regionInfo.code }}</span>
+            </div>
+            <span style="background:#8a5cf6;color:#fff;border-radius:99px;padding:7px 16px;font-weight:700;font-size:14px;font-family:'Bricolage Grotesque'">{{ regionAzText }}</span>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px">
+            <sc-for list="{{ regionInfo.azList }}" as="az" hint-placeholder-count="3">
+              <div style="background:#fff;border:1px solid #e7ecfa;border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:10px">
+                <div style="font-family:'Bricolage Grotesque';font-weight:700;font-size:14px;color:#3a3f5c">🏗️ Availability Zone {{ az.n }}</div>
+                <div style="display:flex;gap:7px;flex-wrap:wrap">
+                  <sc-for list="{{ az.dc }}" as="d" hint-placeholder-count="2">
+                    <div style="width:36px;height:30px;border-radius:7px;background:linear-gradient(160deg,#cdb8fb,#a07ef0);display:flex;align-items:center;justify-content:center;font-size:13px">🖥️</div>
+                  </sc-for>
+                </div>
+                <div style="font-size:12px;color:#9aa0b8">isolated data center(s)</div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+        <div style="display:flex;gap:14px;flex-wrap:wrap">
+          <div style="flex:1;min-width:200px;background:#f6f8ff;border:1px solid #e7ecfa;border-radius:14px;padding:16px"><b style="color:#8a5cf6">Regions don't share resources</b> <span style="color:#5a6080;font-size:15px">— they communicate over the internet, so a problem in one stays contained.</span></div>
+          <div style="flex:1;min-width:200px;background:#f6f8ff;border:1px solid #e7ecfa;border-radius:14px;padding:16px"><b style="color:#8a5cf6">Today's scale</b> <span style="color:#5a6080;font-size:15px">— AWS alone runs 30+ regions and 100+ Availability Zones worldwide.</span></div>
+        </div>
+      </section>
+
+      <!-- SCENE 9 — VIRTUAL MACHINES -->
+      <section data-scene data-screen-label="Virtual machines" style="flex-direction:column;min-height:560px;gap:20px">
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#ff6b5e">Chapter 09 · The workhorse</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:46px;line-height:1.04;margin:0;letter-spacing:-.01em">Instances &amp; virtual servers</h2>
+          <p style="font-size:18px;line-height:1.5;color:#5a6080;margin:0;max-width:74ch">An <b>instance</b> (AWS calls them EC2) is a virtual server with a defined slice of CPU, memory, storage and bandwidth. Virtualization lets one physical machine host many isolated instances.</p>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:start">
+          <div style="background:#fff7f4;border:1px solid #ffe0d6;border-radius:20px;padding:24px;display:flex;flex-direction:column;gap:14px">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:18px;color:#ff6b5e">🧰 You choose when launching</div>
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <div style="background:#fff;border:1px solid #ffe0d6;border-radius:12px;padding:13px 16px;font-size:15px;color:#3a3f5c"><b>📍 Region &amp; Availability Zone</b> — where the server physically lives.</div>
+              <div style="background:#fff;border:1px solid #ffe0d6;border-radius:12px;padding:13px 16px;font-size:15px;color:#3a3f5c"><b>📦 Instance type</b> — a size from a menu (more CPU, more memory, GPUs…).</div>
+              <div style="background:#fff;border:1px solid #ffe0d6;border-radius:12px;padding:13px 16px;font-size:15px;color:#3a3f5c"><b>💿 Image</b> — the OS &amp; software the instance boots with (Linux or Windows).</div>
+            </div>
+          </div>
+          <div style="background:#f6f8ff;border:1px solid #e7ecfa;border-radius:20px;padding:24px;display:flex;flex-direction:column;gap:14px">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:18px;color:#3d6ef5">🌐 Every instance gets addresses</div>
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <div style="background:#fff;border:1px solid #e7ecfa;border-radius:12px;padding:13px 16px;font-size:15px;color:#3a3f5c"><b>🔒 Private IP</b> — for talking to other instances inside the cloud network.</div>
+              <div style="background:#fff;border:1px solid #e7ecfa;border-radius:12px;padding:13px 16px;font-size:15px;color:#3a3f5c"><b>🌍 Public IP</b> — for reaching the instance from the internet (changes if you stop it).</div>
+              <div style="background:#fff;border:2px solid #c4f0df;border-radius:12px;padding:13px 16px;font-size:15px;color:#3a3f5c"><b style="color:#12a87f">📌 Elastic IP</b> — a <b>static</b> public IP you keep and re-attach, even after a stop/restart.</div>
+            </div>
+          </div>
+        </div>
+        <div style="background:#fffbe9;border:1px solid #ffe9a8;border-radius:16px;padding:16px 22px;display:flex;gap:14px;align-items:center">
+          <span style="font-size:26px">💡</span>
+          <p style="margin:0;font-size:15.5px;line-height:1.5;color:#9a7a18"><b>Cloud hygiene:</b> instances cost money while they run. Terminate what you're not using — and keep your own notes on how you set each service up. That muscle memory is what the assessment rewards.</p>
+        </div>
+      </section>
+
+      <!-- SCENE 10 — QUIZ 2 -->
+      <section data-scene data-screen-label="Quick check 2" style="flex-direction:column;min-height:560px;gap:22px;justify-content:center">
+        <div style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#ffb43d">🧠 Knowledge check</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:34px;line-height:1.15;margin:0;max-width:26ch">{{ q2.question }}</h2>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:760px;width:100%;margin:0 auto">
+          <sc-for list="{{ q2.options }}" as="o" hint-placeholder-count="4">
+            <button onClick="{{ o.onClick }}" style="display:flex;align-items:center;justify-content:space-between;gap:10px;text-align:left;border-radius:15px;padding:18px 20px;font-family:'Figtree';font-weight:600;font-size:17px;cursor:pointer;transition:all .15s;border:2px solid {{ o.border }};background:{{ o.bg }};color:{{ o.fg }}"><span>{{ o.label }}</span><span style="font-weight:800;font-size:18px">{{ o.mark }}</span></button>
+          </sc-for>
+        </div>
+        <sc-if value="{{ q2.answered }}" hint-placeholder-val="{{ false }}">
+          <div style="max-width:760px;width:100%;margin:0 auto;border-radius:16px;padding:18px 22px;background:{{ q2.bannerBg }}">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:17px;color:{{ q2.bannerFg }};margin-bottom:5px">{{ q2.banner }}</div>
+            <div style="font-size:16px;line-height:1.55;color:#3a3f5c">{{ q2.explanation }}</div>
+          </div>
+        </sc-if>
+      </section>
+
+      <!-- SCENE 11 — COST & VENDOR LOCK-IN -->
+      <section data-scene data-screen-label="Cost and lock-in" style="flex-direction:column;min-height:560px;gap:20px">
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#ff6b5e">Chapter 11 · The catch</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:46px;line-height:1.04;margin:0;letter-spacing:-.01em">Cost &amp; vendor lock-in</h2>
+          <p style="font-size:18px;line-height:1.5;color:#5a6080;margin:0;max-width:74ch">The cloud is powerful, but leaning entirely on one provider carries real risks. Knowing them is half of designing well.</p>
+        </div>
+        <div style="display:grid;grid-template-columns:1.05fr .95fr;gap:22px;align-items:start">
+          <div style="background:#fff2f0;border:1px solid #ffd6cf;border-radius:20px;padding:24px;display:flex;flex-direction:column;gap:12px">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:18px;color:#e0564a">⚠️ Risks of relying on one provider</div>
+            <div style="display:flex;flex-direction:column;gap:9px">
+              <div style="display:flex;gap:10px;font-size:15px;color:#3a3f5c"><span>🚫</span><span><b>Outages</b> — services can be unavailable for minutes or hours.</span></div>
+              <div style="display:flex;gap:10px;font-size:15px;color:#3a3f5c"><span>💥</span><span><b>Data loss</b> — a catastrophic failure could lose data permanently.</span></div>
+              <div style="display:flex;gap:10px;font-size:15px;color:#3a3f5c"><span>💸</span><span><b>Price hikes</b> — the provider may raise prices over time.</span></div>
+              <div style="display:flex;gap:10px;font-size:15px;color:#3a3f5c"><span>🔒</span><span><b>Lock-in</b> — moving your data elsewhere can be slow and expensive.</span></div>
+            </div>
+          </div>
+          <div style="background:#eafaf3;border:1px solid #c4f0df;border-radius:20px;padding:24px;display:flex;flex-direction:column;gap:14px">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:18px;color:#12a87f">🛡️ Storage diversity — the fix</div>
+            <p style="margin:0;font-size:15.5px;line-height:1.55;color:#3a3f5c">Replicate data across <b>multiple providers</b>, much like RAID spreads data across disks. If one provider fails or hikes prices, your data still lives elsewhere.</p>
+            <div style="display:flex;align-items:center;justify-content:center;gap:10px;background:#fff;border:1px solid #c4f0df;border-radius:14px;padding:16px">
+              <div style="text-align:center"><div style="font-size:24px">📄</div><div style="font-size:11px;color:#8a90a8;margin-top:2px">your data</div></div>
+              <div style="color:#12a87f;font-size:18px">→</div>
+              <div style="display:flex;gap:8px">
+                <div style="text-align:center"><div style="font-size:22px">🟧</div><div style="font-size:10px;color:#8a90a8">AWS</div></div>
+                <div style="text-align:center"><div style="font-size:22px">🔷</div><div style="font-size:10px;color:#8a90a8">Azure</div></div>
+                <div style="text-align:center"><div style="font-size:22px">🟩</div><div style="font-size:10px;color:#8a90a8">GCP</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style="background:#f6f8ff;border:1px solid #e7ecfa;border-radius:16px;padding:16px 22px;display:flex;gap:14px;align-items:center">
+          <span style="font-size:24px">🌉</span>
+          <p style="margin:0;font-size:15px;line-height:1.5;color:#5a6080"><b>What about one big "Intercloud"?</b> A federation where clouds cooperate sounds ideal — but it isn't realistic yet: there are no shared standards, providers use different models, and each guards its services as a competitive edge. Security concerns make it harder still.</p>
+        </div>
+      </section>
+
+      <!-- SCENE 12 — SUSTAINABILITY -->
+      <section data-scene data-screen-label="Sustainability" style="flex-direction:column;min-height:560px;gap:20px">
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#19c39a">Chapter 12 · The planet</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:46px;line-height:1.04;margin:0;letter-spacing:-.01em">Energy &amp; the environment</h2>
+          <p style="font-size:18px;line-height:1.5;color:#5a6080;margin:0;max-width:74ch">Data centers consume enormous amounts of electricity for computing and cooling. Efficiency isn't just green — it's a core design concern.</p>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
+          <div style="background:#eafaf3;border:1px solid #c4f0df;border-radius:18px;padding:22px;text-align:center">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:40px;color:#12a87f">~1.5%</div>
+            <div style="font-size:14px;color:#5a6080;line-height:1.45;margin-top:6px">of electricity consumption already went to US data centers as far back as 2006</div>
+          </div>
+          <div style="background:#eafaf3;border:1px solid #c4f0df;border-radius:18px;padding:22px;text-align:center">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:40px;color:#12a87f">×2</div>
+            <div style="font-size:14px;color:#5a6080;line-height:1.45;margin-top:6px">energy use was expected to double in just five years as demand grew</div>
+          </div>
+          <div style="background:#eafaf3;border:1px solid #c4f0df;border-radius:18px;padding:22px;text-align:center">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:40px;color:#12a87f">50%</div>
+            <div style="font-size:14px;color:#5a6080;line-height:1.45;margin-top:6px">of full-load power can be drawn by a server even when it sits idle</div>
+          </div>
+        </div>
+        <div style="background:#f6fbf8;border:1px solid #cdeede;border-radius:20px;padding:24px;display:flex;flex-direction:column;gap:12px">
+          <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:18px;color:#12a87f">⚖️ Energy-proportional systems</div>
+          <p style="margin:0;font-size:16px;line-height:1.6;color:#454b68">The ideal machine would draw <b>no power when idle</b> and gradually more as load rises — always running at 100% efficiency. Real servers fall short: even idle, they can waste half their full-load power. That mismatch (Google clusters often sit at just 10–50% CPU use) is exactly what efficiency engineering targets.</p>
+          <div style="display:flex;gap:12px;align-items:center;background:#fff;border:1px solid #cdeede;border-radius:14px;padding:14px 18px">
+            <span style="font-size:26px">🧍</span>
+            <p style="margin:0;font-size:15px;color:#5a6080"><b>A human is a great approximation</b> — about 70 W at rest, ~120 W on average, but able to surge to 1,000–2,000 W during brief, intense effort. Power scales with the work being done.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SCENE 13 — SLA & SECURITY -->
+      <section data-scene data-screen-label="SLAs and security" style="flex-direction:column;min-height:560px;gap:18px">
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#8a5cf6">Chapter 13 · Contracts &amp; security</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:44px;line-height:1.04;margin:0;letter-spacing:-.01em">SLAs &amp; shared responsibility</h2>
+        </div>
+        <div style="display:grid;grid-template-columns:.85fr 1.15fr;gap:22px;align-items:start">
+          <div style="background:#faf8ff;border:1px solid #ece4fb;border-radius:20px;padding:22px;display:flex;flex-direction:column;gap:12px">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:18px;color:#8a5cf6">📜 Service Level Agreement</div>
+            <p style="margin:0;font-size:15.5px;line-height:1.55;color:#454b68">A negotiated contract between customer and provider. It defines <b>what service you get</b> (not how it's delivered) — resources, security, timing and quality of service.</p>
+            <div style="display:flex;flex-direction:column;gap:7px">
+              <div style="font-size:14px;color:#3a3f5c">✔️ Defines classes of service &amp; their cost</div>
+              <div style="font-size:14px;color:#3a3f5c">✔️ Clarifies who's responsible when things fail</div>
+              <div style="font-size:14px;color:#3a3f5c">✔️ Reduces conflict &amp; unrealistic expectations</div>
+            </div>
+          </div>
+          <div style="background:#f6f8ff;border:1px solid #e7ecfa;border-radius:20px;padding:22px;display:flex;flex-direction:column;gap:14px">
+            <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px">
+              <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:18px;color:#3d6ef5">🤝 Who secures what?</div>
+              <div style="display:flex;gap:6px">
+                <sc-for list="{{ secTabs }}" as="t" hint-placeholder-count="3">
+                  <button onClick="{{ t.onClick }}" style="border:none;border-radius:9px;padding:8px 14px;font-family:'Bricolage Grotesque';font-weight:700;font-size:13px;cursor:pointer;background:{{ t.bg }};color:{{ t.fg }}">{{ t.label }}</button>
+                </sc-for>
+              </div>
+            </div>
+            <p style="margin:0;font-size:14px;color:#8a90a8">In <b>{{ secModelLabel }}</b>, responsibility splits like this — the more the provider manages, the less is on you:</p>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+              <div style="background:#eef3ff;border:2px solid #cfe0ff;border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:8px;min-height:150px">
+                <div style="font-weight:800;font-size:13px;color:#3d6ef5;font-family:'Bricolage Grotesque'">🧑‍💻 YOU SECURE</div>
+                <sc-for list="{{ secYou }}" as="s" hint-placeholder-count="3">
+                  <div style="background:#fff;border:1px solid #cfe0ff;border-radius:9px;padding:8px 11px;font-size:13.5px;font-weight:600;color:#2c4fa0">{{ s.t }}</div>
+                </sc-for>
+              </div>
+              <div style="background:#faf8ff;border:2px solid #e3d5fb;border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:8px;min-height:150px">
+                <div style="font-weight:800;font-size:13px;color:#8a5cf6;font-family:'Bricolage Grotesque'">☁️ PROVIDER SECURES</div>
+                <sc-for list="{{ secProv }}" as="s" hint-placeholder-count="4">
+                  <div style="background:#fff;border:1px solid #e3d5fb;border-radius:9px;padding:8px 11px;font-size:13.5px;font-weight:600;color:#6b3fc0">{{ s.t }}</div>
+                </sc-for>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style="background:#fffbe9;border:1px solid #ffe9a8;border-radius:14px;padding:13px 20px;display:flex;gap:12px;align-items:center">
+          <span style="font-size:22px">🔐</span>
+          <p style="margin:0;font-size:14.5px;line-height:1.45;color:#9a7a18"><b>Common user concerns:</b> data privacy &amp; encryption, multi-tenant isolation, where data physically lives (national borders), and proving compliance through audits and certifications.</p>
+        </div>
+      </section>
+
+      <!-- SCENE 14 — QUIZ 3 -->
+      <section data-scene data-screen-label="Final check" style="flex-direction:column;min-height:560px;gap:22px;justify-content:center">
+        <div style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#ffb43d">🧠 Final knowledge check</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:34px;line-height:1.15;margin:0;max-width:26ch">{{ q3.question }}</h2>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:760px;width:100%;margin:0 auto">
+          <sc-for list="{{ q3.options }}" as="o" hint-placeholder-count="4">
+            <button onClick="{{ o.onClick }}" style="display:flex;align-items:center;justify-content:space-between;gap:10px;text-align:left;border-radius:15px;padding:18px 20px;font-family:'Figtree';font-weight:600;font-size:17px;cursor:pointer;transition:all .15s;border:2px solid {{ o.border }};background:{{ o.bg }};color:{{ o.fg }}"><span>{{ o.label }}</span><span style="font-weight:800;font-size:18px">{{ o.mark }}</span></button>
+          </sc-for>
+        </div>
+        <sc-if value="{{ q3.answered }}" hint-placeholder-val="{{ false }}">
+          <div style="max-width:760px;width:100%;margin:0 auto;border-radius:16px;padding:18px 22px;background:{{ q3.bannerBg }}">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:17px;color:{{ q3.bannerFg }};margin-bottom:5px">{{ q3.banner }}</div>
+            <div style="font-size:16px;line-height:1.55;color:#3a3f5c">{{ q3.explanation }}</div>
+          </div>
+        </sc-if>
+      </section>
+
+      <!-- SCENE 15 — WRAP-UP -->
+      <section data-scene data-screen-label="Wrap-up" style="flex-direction:column;min-height:560px;gap:22px">
+        <div style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px">
+          <div style="font-size:44px">🎉</div>
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#3d6ef5">Session wrap-up</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:46px;line-height:1.04;margin:0;letter-spacing:-.01em">You can now talk cloud</h2>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
+          <div style="background:#f1f5ff;border:1px solid #d3e0ff;border-radius:18px;padding:22px;display:flex;flex-direction:column;gap:8px">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:16px;color:#3d6ef5">✅ Covered</div>
+            <p style="margin:0;font-size:15px;line-height:1.55;color:#454b68">Cloud fundamentals — deployment models (public, private, hybrid) and service models (IaaS, PaaS, SaaS).</p>
+          </div>
+          <div style="background:#f7f2ff;border:1px solid #e3d5fb;border-radius:18px;padding:22px;display:flex;flex-direction:column;gap:8px">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:16px;color:#8a5cf6">🛠️ Applied</div>
+            <p style="margin:0;font-size:15px;line-height:1.55;color:#454b68">The geography of the cloud — regions, availability zones and EC2 instances, ready for the AWS console lab.</p>
+          </div>
+          <div style="background:#eafaf3;border:1px solid #c4f0df;border-radius:18px;padding:22px;display:flex;flex-direction:column;gap:8px">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:16px;color:#12a87f">🤔 Reflected</div>
+            <p style="margin:0;font-size:15px;line-height:1.55;color:#454b68">Trade-offs — cost, vendor lock-in, sustainability and the shared-responsibility security model.</p>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+          <div style="background:#f6f8ff;border:1px solid #e7ecfa;border-radius:18px;padding:22px">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:17px;margin-bottom:10px">🎯 You should now be able to…</div>
+            <div style="display:flex;flex-direction:column;gap:8px;font-size:15px;color:#3a3f5c">
+              <div>• Explain the core models &amp; concepts of cloud computing</div>
+              <div>• Identify &amp; describe AWS core services</div>
+              <div>• Evaluate the benefits and risks of adopting the cloud</div>
+            </div>
+          </div>
+          <div style="background:linear-gradient(150deg,#eef3ff,#f7f2ff);border:1px solid #dce4fb;border-radius:18px;padding:22px">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:17px;margin-bottom:10px">🚀 Looking ahead</div>
+            <p style="margin:0;font-size:15px;line-height:1.55;color:#454b68">Next: cloud networking, virtualisation and VPC configuration — then put it to work designing a basic hybrid cloud in the lab.</p>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:4px">
+          <button onClick="{{ startLesson }}" style="background:#fff;color:#3d6ef5;border:2px solid #c9d8ff;border-radius:14px;padding:14px 26px;font-family:'Bricolage Grotesque';font-weight:700;font-size:16px;cursor:pointer" style-hover="background:#f5f8ff">↻ Review from the start</button>
+          <button onClick="{{ toggleGlossary }}" style="background:#3d6ef5;color:#fff;border:none;border-radius:14px;padding:14px 26px;font-family:'Bricolage Grotesque';font-weight:700;font-size:16px;cursor:pointer">📖 Open glossary</button>
+        </div>
+        <div style="text-align:center;font-size:14px;color:#9aa0b8;margin-top:6px">Lesson prepared by <b style="color:#5a6080">Reza Shahabian</b></div>
+      </section>
+
+      <!--SCENES-->
+
+    </div>
+  </div>
+
+  <!-- BOTTOM NAV -->
+  <div style="position:sticky;bottom:0;z-index:20;width:100%;display:flex;justify-content:center;background:linear-gradient(to top,#eef2fc 55%,transparent);padding:10px 24px 22px">
+    <div style="width:100%;max-width:1180px;display:flex;align-items:center;justify-content:space-between;gap:14px">
+      <button onClick="{{ prev }}" style="display:flex;align-items:center;gap:8px;background:#fff;border:1px solid #dde4f5;border-radius:13px;padding:13px 22px;font-family:'Bricolage Grotesque';font-weight:700;font-size:15px;color:#3a3f5c;cursor:pointer" style-hover="border-color:#9fb4ff">← Back</button>
+      <div style="display:flex;align-items:center;gap:12px;font-weight:600;color:#7a809c;font-size:15px">
+        <span style="font-family:'Bricolage Grotesque';color:#22243f;font-size:17px">{{ sceneNum }}</span>
+        <span style="color:#c2c8de">/</span>
+        <span>{{ total }}</span>
+        <span style="color:#b9c0d8">·</span>
+        <span style="color:#3a3f5c">{{ sceneTitle }}</span>
+      </div>
+      <button onClick="{{ next }}" style="display:flex;align-items:center;gap:8px;background:{{ accent }};border:none;border-radius:13px;padding:13px 26px;font-family:'Bricolage Grotesque';font-weight:700;font-size:15px;color:#fff;cursor:pointer;box-shadow:0 10px 20px -10px rgba(40,55,120,.5)" style-hover="transform:translateY(-2px)">Next →</button>
+    </div>
+  </div>
+
+  <!-- GLOSSARY PANEL -->
+  <sc-if value="{{ glossaryOpen }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ toggleGlossary }}" style="position:fixed;inset:0;z-index:50;background:rgba(34,36,63,.34);backdrop-filter:blur(2px)"></div>
+    <div style="position:fixed;top:0;right:0;bottom:0;z-index:51;width:min(460px,92vw);background:#fff;box-shadow:-20px 0 60px -20px rgba(40,55,120,.4);display:flex;flex-direction:column;animation:sceneIn .35s ease both">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:24px 26px;border-bottom:1px solid #eef1f8">
+        <div style="display:flex;flex-direction:column;gap:2px">
+          <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:22px">📖 Glossary</div>
+          <div style="font-size:13px;color:#8a90a8">Key cloud terms, plain English</div>
+        </div>
+        <button onClick="{{ toggleGlossary }}" style="background:#f1f4fb;border:none;border-radius:10px;width:38px;height:38px;font-size:18px;cursor:pointer;color:#5a6080">✕</button>
+      </div>
+      <div style="overflow-y:auto;padding:18px 26px 40px;display:flex;flex-direction:column;gap:14px">
+        <sc-for list="{{ glossary }}" as="g" hint-placeholder-count="6">
+          <div style="border:1px solid #eef1f8;border-radius:14px;padding:14px 16px;background:#fafbff">
+            <div style="display:flex;align-items:center;gap:8px;font-family:'Bricolage Grotesque';font-weight:700;font-size:16px;color:#22243f"><span>{{ g.icon }}</span>{{ g.term }}</div>
+            <div style="font-size:14.5px;line-height:1.5;color:#5a6080;margin-top:5px">{{ g.def }}</div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:820}}">
+class Component extends DCLogic {
+  state = {
+    idx: 0, playing: false, glossary: false,
+    quiz: { q1: null, q2: null, q3: null },
+    deploy: 'public', svc: 'iaas', region: 'use1', secModel: 'iaas',
+    drops: { ec2:null, gce:null, beanstalk:null, heroku:null, gmail:null, dropbox:null },
+    sel: null, dragChecked: false,
+  };
+
+  total = 16;
+  interactive = new Set([3,4,5,6,8,10,13,14]);
+  durations = { 0:5200 };
+
+  chapTitles = ['Welcome','What is cloud?','Why cloud?','Deployment models','Quick check','Service models','Match it up','Providers','Regions & AZs','Virtual machines','Quick check','Cost & lock-in','Sustainability','SLAs & security','Final check','Wrap-up'];
+  chapColors = ['#3d6ef5','#3d6ef5','#19c39a','#8a5cf6','#ffb43d','#ff6b5e','#19c39a','#3d6ef5','#8a5cf6','#ff6b5e','#ffb43d','#ff6b5e','#19c39a','#8a5cf6','#ffb43d','#3d6ef5'];
+
+  quizDefs = {
+    q1: { accent:'#8a5cf6',
+      question:'A company keeps its customer database on its own on-site servers, but runs its public website and mobile app on AWS. Which deployment model is this?',
+      options:[{label:'Public cloud only'},{label:'On-premises (private) only'},{label:'Hybrid cloud',correct:true},{label:'Intercloud'}],
+      explanation:'It combines on-premises infrastructure (the database) with public cloud (the website). That mix is a hybrid deployment — often linked over a VPN.' },
+    q2: { accent:'#ff6b5e',
+      question:'In Gmail you just open the app and send email — you never touch servers, operating systems, or patches. Which cloud service model is this?',
+      options:[{label:'IaaS'},{label:'PaaS'},{label:'SaaS',correct:true},{label:'On-premises'}],
+      explanation:'SaaS (Software as a Service) delivers a finished application. The provider runs and maintains everything underneath; you only use it.' },
+    q3: { accent:'#ffb43d',
+      question:'Your company stored everything with one provider and now finds it expensive and difficult to move elsewhere. What is this risk called?',
+      options:[{label:'Energy proportionality'},{label:'Vendor lock-in',correct:true},{label:'A Service Level Agreement'},{label:'Network Address Translation'}],
+      explanation:'Vendor lock-in — deep dependence on a single provider makes switching costly and complex. Spreading data across providers (like RAID) helps mitigate it.' },
+  };
+
+  deployData = {
+    public:{title:'Public cloud',icon:'🌐',color:'#3d6ef5',tag:'Fully in the cloud',
+      desc:'Every part of the application runs in the cloud — built there or migrated there to gain elasticity, global reach and pay-as-you-go pricing.',
+      pros:['No hardware to buy or maintain','Scales up and down in minutes','Global reach almost instantly'],
+      cons:['Less direct control of hardware','Ongoing usage-based costs'],
+      example:'Netflix runs its entire streaming platform on public cloud (AWS).'},
+    private:{title:'Private / On-premises',icon:'🏢',color:'#8a5cf6',tag:'Your own data center',
+      desc:'Resources deployed on-premises using virtualization and management tools — sometimes called a “private cloud”. It resembles legacy IT but aims to raise utilization.',
+      pros:['Dedicated, isolated resources','Full physical control','Easier data-residency compliance'],
+      cons:['You buy & maintain the hardware','Limited elasticity','High upfront cost'],
+      example:'A bank keeps its core customer records on its own servers for control & compliance.'},
+    hybrid:{title:'Hybrid cloud',icon:'🔗',color:'#19c39a',tag:'Best of both worlds',
+      desc:'Connects on-premises infrastructure with cloud resources — extending an organisation into the cloud while linking back to internal systems, often over a VPN.',
+      pros:['Keep sensitive data in-house','Burst into the cloud on demand','Smooth, low-risk migration path'],
+      cons:['More complex to design & secure','Networking between the two sites'],
+      example:'See the worked walkthrough below ↓'},
+  };
+
+  svcMeta = {
+    iaas:{title:'Infrastructure as a Service',short:'IaaS',color:'#3d6ef5',
+      analogy:'🍕 Take-and-bake: the kitchen & oven (servers, storage, network) are provided — you still do the cooking (OS, runtime, apps).',
+      manage:'You manage the operating system, runtime and your apps. The provider runs the hardware and virtualization.',
+      flex:'Most control & flexibility',
+      examples:['Amazon EC2','Google Compute Engine','Azure Virtual Machines']},
+    paas:{title:'Platform as a Service',short:'PaaS',color:'#8a5cf6',
+      analogy:'🍕 Pizza delivery: the platform (OS, runtime, scaling, patching) is handled — you just bring your recipe (code & data).',
+      manage:'You manage only your application and data. The provider handles the OS, servers and scaling.',
+      flex:'Focus on code, not servers',
+      examples:['AWS Elastic Beanstalk','Heroku','Google App Engine']},
+    saas:{title:'Software as a Service',short:'SaaS',color:'#ff6b5e',
+      analogy:'🍕 Dining out: you just eat. The provider runs absolutely everything; you only use the finished app.',
+      manage:'The provider manages everything. You manage only your data and who can access it.',
+      flex:'Zero maintenance',
+      examples:['Gmail','Dropbox','Salesforce']},
+  };
+  layerNames = ['Applications','Data','Runtime','Middleware','Operating system','Virtualization','Servers','Storage','Networking'];
+  layerMap = {
+    iaas:['you','you','you','you','you','prov','prov','prov','prov'],
+    paas:['you','you','prov','prov','prov','prov','prov','prov','prov'],
+    saas:['prov','you','prov','prov','prov','prov','prov','prov','prov'],
+  };
+
+  regions = [
+    {id:'use1',name:'N. Virginia',code:'us-east-1',az:6,flag:'🇺🇸'},
+    {id:'euw1',name:'Ireland',code:'eu-west-1',az:3,flag:'🇮🇪'},
+    {id:'apne1',name:'Tokyo',code:'ap-northeast-1',az:4,flag:'🇯🇵'},
+    {id:'apse2',name:'Sydney',code:'ap-southeast-2',az:3,flag:'🇦🇺'},
+  ];
+
+  secItems = ['Customer data','Identity & access','Application code','Operating system','Network controls','Virtualization','Physical servers','Data-center security'];
+  secMap = {
+    iaas:['you','you','you','you','you','prov','prov','prov'],
+    paas:['you','you','you','prov','prov','prov','prov','prov'],
+    saas:['you','you','prov','prov','prov','prov','prov','prov'],
+  };
+
+  dragMeta = {
+    ec2:{label:'Amazon EC2',cat:'iaas'}, gce:{label:'Google Compute Engine',cat:'iaas'},
+    beanstalk:{label:'AWS Elastic Beanstalk',cat:'paas'}, heroku:{label:'Heroku',cat:'paas'},
+    gmail:{label:'Gmail',cat:'saas'}, dropbox:{label:'Dropbox',cat:'saas'},
+  };
+  dragOrder = ['ec2','gce','beanstalk','heroku','gmail','dropbox'];
+
+  glossary = [
+    {icon:'☁️',term:'Cloud computing',def:'Renting computing resources (servers, storage, databases) over the internet, on demand, paying only for what you use.'},
+    {icon:'🌐',term:'Public cloud',def:'Shared infrastructure run by a provider like AWS, Azure or GCP, available to anyone over the internet.'},
+    {icon:'🏢',term:'Private cloud',def:'Cloud-style infrastructure dedicated to one organisation, often on-premises in its own data center.'},
+    {icon:'🔗',term:'Hybrid cloud',def:'A mix of on-premises and public cloud, connected so workloads and data can move between them.'},
+    {icon:'🧱',term:'IaaS',def:'Infrastructure as a Service — raw building blocks (compute, storage, network). You manage the OS and apps.'},
+    {icon:'⚙️',term:'PaaS',def:'Platform as a Service — a ready platform to deploy code on. The provider manages the OS and scaling.'},
+    {icon:'📦',term:'SaaS',def:'Software as a Service — a finished application (e.g. Gmail). The provider manages everything.'},
+    {icon:'🖥️',term:'Virtualization',def:'Software that splits one physical server into many isolated virtual machines, raising utilization.'},
+    {icon:'🗺️',term:'Region',def:'A geographic area (e.g. Ireland) containing multiple isolated Availability Zones.'},
+    {icon:'🏗️',term:'Availability Zone',def:'One or more discrete data centers within a Region, isolated for fault tolerance.'},
+    {icon:'💻',term:'Instance (EC2)',def:'A virtual server with a defined CPU, memory, storage and bandwidth that you launch in the cloud.'},
+    {icon:'📌',term:'Elastic IP',def:'A static public IP you can keep and reattach to instances, even after they stop or restart.'},
+    {icon:'🔒',term:'Vendor lock-in',def:'Deep dependence on one provider that makes switching costly and difficult.'},
+    {icon:'📜',term:'SLA',def:'Service Level Agreement — a contract defining the service, quality and responsibilities between customer and provider.'},
+    {icon:'🤝',term:'Shared responsibility',def:'Security model where the provider secures the cloud and you secure what you put in it.'},
+  ];
+
+  componentDidMount(){ this.syncScenes(); }
+  componentWillUnmount(){ window.removeEventListener('keydown', this.onKey); clearTimeout(this.t); }
+  ensureWiring(){
+    if(!this._kb){ this._kb=true; window.addEventListener('keydown', this.onKey); }
+    if(this._lastIdx!==this.state.idx || this._lastPlay!==this.state.playing){
+      this._lastIdx=this.state.idx; this._lastPlay=this.state.playing; this.scheduleAutoplay();
+    }
+    if(typeof requestAnimationFrame!=='undefined') requestAnimationFrame(()=>this.syncScenes());
+    else setTimeout(()=>this.syncScenes(),0);
+  }
+  onKey = (e)=>{
+    const tag=(e.target&&e.target.tagName)||'';
+    if(tag==='INPUT'||tag==='TEXTAREA') return;
+    if(e.key==='ArrowRight'){ this.next(); }
+    else if(e.key==='ArrowLeft'){ this.prev(); }
+    else if(e.key===' '){ e.preventDefault(); this.togglePlay(); }
+  };
+
+  syncScenes(){
+    const root=this.stage || document;
+    const secs=root.querySelectorAll('[data-scene]');
+    if(!secs.length) return;
+    secs.forEach((s,i)=>{
+      if(i===this.state.idx){
+        const fresh = s.dataset.shown!=='1';
+        s.style.display='flex'; s.style.opacity='1'; s.style.animation='none';
+        if(fresh && document.timeline && document.timeline.currentTime){ void s.offsetWidth; s.style.animation='sceneIn .45s cubic-bezier(.22,.9,.3,1)'; }
+        s.dataset.shown='1';
+      } else { s.style.display='none'; s.dataset.shown=''; }
+    });
+  }
+  scheduleAutoplay(){
+    clearTimeout(this.t);
+    const i=this.state.idx;
+    if(this.state.playing && !this.interactive.has(i) && i<this.total-1){
+      this.t=setTimeout(()=>this.next(), this.durations[i]||9000);
+    }
+  }
+
+  next=()=> this.setState(s=> s.idx<this.total-1 ? {idx:s.idx+1} : {playing:false});
+  prev=()=> this.setState(s=> ({idx:Math.max(0,s.idx-1)}));
+  goTo=(i)=>()=> this.setState({idx:i});
+  togglePlay=()=> this.setState(s=>({playing:!s.playing}));
+  startLesson=()=> this.setState({idx:1});
+  playFromStart=()=> this.setState({idx:1, playing:true});
+  toggleGlossary=()=> this.setState(s=>({glossary:!s.glossary}));
+
+  answer=(q,i)=> this.setState(s=> s.quiz[q]!=null ? null : ({quiz:{...s.quiz,[q]:i}}));
+  setDeploy=(d)=>()=> this.setState({deploy:d});
+  setSvc=(v)=>()=> this.setState({svc:v});
+  setRegion=(r)=>()=> this.setState({region:r});
+  setSec=(m)=>()=> this.setState({secModel:m});
+
+  pick=(id)=>()=> this.setState(s=>({sel: s.sel===id?null:id}));
+  drop=(b)=>()=> this.setState(s=>{ if(!s.sel) return null; return {drops:{...s.drops,[s.sel]:b}, sel:null}; });
+  toTray=(id)=>()=> this.setState(s=>({drops:{...s.drops,[id]:null}, sel:null}));
+  checkDrag=()=> this.setState({dragChecked:true, sel:null});
+  resetDrag=()=> this.setState({drops:{ec2:null,gce:null,beanstalk:null,heroku:null,gmail:null,dropbox:null}, dragChecked:false, sel:null});
+
+  buildQuiz(qKey){
+    const def=this.quizDefs[qKey]; const sel=this.state.quiz[qKey];
+    const options=def.options.map((o,i)=>{
+      let bg='#fff',fg='#22243f',border='#e4e8f5',mark='';
+      if(sel!=null){
+        if(o.correct){ bg='#e7f9f1';fg='#0c7a52';border='#19c39a';mark='✓'; }
+        else if(i===sel){ bg='#fdeceb';fg='#c2362b';border='#ff6b5e';mark='✗'; }
+        else { fg='#9aa0b8';border='#eef1f8'; }
+      }
+      return {label:o.label,bg,fg,border,mark,onClick:()=>this.answer(qKey,i)};
+    });
+    const answered=sel!=null;
+    const isCorrect=answered && def.options[sel].correct;
+    return {question:def.question,accent:def.accent,options,answered,isCorrect,
+      explanation:def.explanation,
+      banner: !answered ? '' : (isCorrect?'✅ Correct!':'❌ Not quite —'),
+      bannerBg: !answered ? '' : (isCorrect?'#e7f9f1':'#fdeceb'),
+      bannerFg: !answered ? '' : (isCorrect?'#0c7a52':'#c2362b')};
+  }
+
+  buildDragItem(id, place){
+    const m=this.dragMeta[id]; const drops=this.state.drops; const checked=this.state.dragChecked;
+    const selected=this.state.sel===id;
+    let bg='#fff',fg='#22243f',border='#dde4f5',mark='';
+    if(checked && place!=='tray'){
+      const ok=drops[id]===m.cat;
+      bg=ok?'#e7f9f1':'#fdeceb'; fg=ok?'#0c7a52':'#c2362b'; border=ok?'#19c39a':'#ff6b5e'; mark=ok?'✓':'✗';
+    } else if(selected){ bg='#eef3ff'; border='#3d6ef5'; }
+    const onClick = place==='tray' ? this.pick(id) : this.toTray(id);
+    return {id,label:m.label,bg,fg,border,mark,selected,onClick};
+  }
+
+  renderVals(){
+    const i=this.state.idx;
+    const accent=this.chapColors[i]||'#3d6ef5';
+    const chapters=this.chapTitles.map((t,k)=>({
+      num:k+1,label:t,onClick:this.goTo(k),
+      bg: k===i?this.chapColors[k] : (k<i?'#aab6dd':'#dbe2f4'),
+    }));
+
+    // deployment
+    const dd=this.deployData[this.state.deploy];
+    const deployTabs=Object.keys(this.deployData).map(k=>({
+      key:k,label:this.deployData[k].title,icon:this.deployData[k].icon,
+      active:this.state.deploy===k,onClick:this.setDeploy(k),
+      bg:this.state.deploy===k?this.deployData[k].color:'#f1f4fb',
+      fg:this.state.deploy===k?'#fff':'#5a6080',
+    }));
+    const deployInfo={...dd, pros:dd.pros.map(p=>({t:p})), cons:dd.cons.map(c=>({t:c}))};
+
+    // service models
+    const sm=this.svcMeta[this.state.svc];
+    const svcTabs=Object.keys(this.svcMeta).map(k=>({
+      key:k,label:this.svcMeta[k].short,full:this.svcMeta[k].title,
+      active:this.state.svc===k,onClick:this.setSvc(k),
+      bg:this.state.svc===k?this.svcMeta[k].color:'#f1f4fb',
+      fg:this.state.svc===k?'#fff':'#5a6080',
+    }));
+    const lm=this.layerMap[this.state.svc];
+    const svcLayers=this.layerNames.map((n,k)=>{
+      const you=lm[k]==='you';
+      return {label:n, who: you?'You manage':'Provider',
+        bg: you? sm.color : '#eef1fb', fg: you?'#fff':'#8a90a8',
+        badge: you?'YOU':'PROVIDER'};
+    });
+    const svcInfo={...sm, examples:sm.examples.map(e=>({t:e}))};
+
+    // regions
+    const rg=this.regions.find(r=>r.id===this.state.region)||this.regions[0];
+    const regionTabs=this.regions.map(r=>({
+      ...r,active:this.state.region===r.id,onClick:this.setRegion(r.id),
+      bg:this.state.region===r.id?'#8a5cf6':'#f1f4fb',
+      fg:this.state.region===r.id?'#fff':'#5a6080',
+    }));
+    const azList=Array.from({length:rg.az},(_,k)=>({n:k+1,dc:Array.from({length: (k%2)+2},(_,j)=>j)}));
+    const regionInfo={name:rg.name,code:rg.code,az:rg.az,azList};
+
+    // security shared responsibility
+    const sec=this.secMap[this.state.secModel];
+    const secTabs=Object.keys(this.svcMeta).map(k=>({
+      key:k,label:this.svcMeta[k].short,active:this.state.secModel===k,onClick:this.setSec(k),
+      bg:this.state.secModel===k?'#8a5cf6':'#f1f4fb',fg:this.state.secModel===k?'#fff':'#5a6080',
+    }));
+    const secYou=this.secItems.filter((it,k)=>sec[k]==='you').map(t=>({t}));
+    const secProv=this.secItems.filter((it,k)=>sec[k]==='prov').map(t=>({t}));
+
+    // drag
+    const tray=this.dragOrder.filter(id=>this.state.drops[id]==null).map(id=>this.buildDragItem(id,'tray'));
+    const bucket=(b)=>this.dragOrder.filter(id=>this.state.drops[id]===b).map(id=>this.buildDragItem(id,b));
+    const placed=this.dragOrder.filter(id=>this.state.drops[id]!=null).length;
+    const correct=this.dragOrder.filter(id=>this.state.drops[id]===this.dragMeta[id].cat).length;
+
+    this.ensureWiring();
+    return {
+      stageRef:(el)=>{ this.stage=el; },
+      progressPct: Math.round(i/(this.total-1)*100)+'%',
+      accent, sceneNum:i+1, total:this.total, sceneTitle:this.chapTitles[i],
+      chapters,
+      next:this.next, prev:this.prev, togglePlay:this.togglePlay,
+      playLabel: this.state.playing?'⏸ Pause':'▶ Play',
+      startLesson:this.startLesson, playFromStart:this.playFromStart,
+      glossaryOpen:this.state.glossary, toggleGlossary:this.toggleGlossary, glossary:this.glossary,
+      // deploy
+      deployTabs, deployInfo,
+      // service
+      svcTabs, svcInfo, svcLayers,
+      // regions
+      regionTabs, regionInfo, regionAzText: rg.az+' Availability Zones',
+      // security
+      secTabs, secYou, secProv, secModelLabel:this.svcMeta[this.state.secModel].short,
+      // quizzes
+      q1:this.buildQuiz('q1'), q2:this.buildQuiz('q2'), q3:this.buildQuiz('q3'),
+      // drag
+      dragTray:tray, dragIaas:bucket('iaas'), dragPaas:bucket('paas'), dragSaas:bucket('saas'),
+      dragHasSel:this.state.sel!=null, dropIaas:this.drop('iaas'), dropPaas:this.drop('paas'), dropSaas:this.drop('saas'),
+      checkDrag:this.checkDrag, resetDrag:this.resetDrag, dragChecked:this.state.dragChecked,
+      dragCanCheck: placed===6, dragScore:correct+' / 6 correct',
+      dragScoreBg: correct===6?'#e7f9f1':'#fff4e8', dragScoreFg: correct===6?'#0c7a52':'#d98a18',
+    };
+  }
+}
+</script>
+<script>
+(async () => {
+  if (!document.title || !document.title.trim()) document.title = "Cloud Foundations";
+  // Prepend so page-supplied @page / break rules (deck-stage's margin:0,
+  // author CSS) keep source-order precedence over the baseline.
+  const baseCss = document.createElement('style');
+  baseCss.textContent = "@media print {\n  figure, table { break-inside: avoid; }\n  *, *::before, *::after {\n    print-color-adjust: exact; -webkit-print-color-adjust: exact;\n    backdrop-filter: none !important; -webkit-backdrop-filter: none !important;\n    animation-delay: -99s !important; animation-duration: .001s !important;\n    animation-iteration-count: 1 !important; animation-fill-mode: both !important;\n    animation-play-state: running !important; transition-duration: 0s !important;\n  }\n}";
+  document.head.prepend(baseCss);
+  if (document.readyState === 'loading') {
+    await new Promise((r) => document.addEventListener('DOMContentLoaded', r, { once: true }));
+  }
+  let ds = document.querySelector('deck-stage');
+  // whenDefined never resolves when nothing registers the element, so only
+  // await it when a <deck-stage> tag exists (and race a timeout regardless).
+  if (ds && !customElements.get('deck-stage')) {
+    try {
+      await Promise.race([
+        customElements.whenDefined('deck-stage'),
+        new Promise((r) => setTimeout(r, 3000)),
+      ]);
+    } catch (e) {}
+    ds = document.querySelector('deck-stage');
+  }
+  // dc-runtime assigns window.DCLogic at init and mounts into #dc-root on
+  // DOMContentLoaded; settle on that subtree so React has rendered before
+  // print(). Non-DC pages fall through to weighing body.
+  const isDc = !ds && 'DCLogic' in window;
+  const settleRoot = ds || (isDc ? document.getElementById('dc-root') : null) || document.body;
+  if (settleRoot) {
+    // Weigh only content children — skip script/style/template so inline
+    // Babel/CSS doesn't register as stable "content" before the framework
+    // has mounted anything.
+    const MEDIA = 'img,svg,canvas,video,picture,iframe,embed,object';
+    const weigh = () => {
+      let text = 0, media = 0;
+      for (const c of settleRoot.children) {
+        const t = c.tagName;
+        if (t === 'SCRIPT' || t === 'STYLE' || t === 'TEMPLATE') continue;
+        text += (c.textContent || '').trim().length;
+        media += c.querySelectorAll(MEDIA).length + (c.matches(MEDIA) ? 1 : 0);
+      }
+      return text + media * 100;
+    };
+    // "Non-zero and stable" alone is not sufficient to mean rendered: generic
+    // body can carry a static shell while async main content is pending, and
+    // #dc-root can carry the root DC's static text while child refs are still
+    // .sc-placeholder boxes. Gate generic on readyState 'complete', and never
+    // accept stability while a dc-runtime placeholder is present.
+    const isGeneric = settleRoot === document.body;
+    const deadline = Date.now() + 15000;
+    let last = -1, stable = 0;
+    while (Date.now() < deadline) {
+      const n = weigh();
+      const ready =
+        (!isGeneric || document.readyState === 'complete') &&
+        !settleRoot.querySelector('.sc-placeholder');
+      if (n > 0 && n === last && ready) { if (++stable >= 2) break; } else { stable = 0; }
+      last = n;
+      await new Promise((r) => setTimeout(r, 250));
+    }
+  }
+  // Reveal content gated on scroll or visibility before printing. Lazy <img>,
+  // IntersectionObserver fade-ins, and collapsed <details> don't render while
+  // off-screen, so a long page would print with them blank or closed. Open
+  // every <details>, force native-lazy images eager, and scroll the document
+  // through its full height to trip lazy-load + IO; then wait (bounded) for the
+  // newly-triggered images. Inert for deck-stage (slides aren't scroll-gated).
+  try {
+    for (const d of document.querySelectorAll('details')) d.open = true;
+    for (const img of document.querySelectorAll('img[loading="lazy"]'))
+      img.loading = 'eager';
+    const scroller = document.scrollingElement || document.documentElement;
+    const full = Math.max(scroller.scrollHeight, document.body.scrollHeight);
+    const step = window.innerHeight || 800;
+    for (let y = 0; y <= full; y += step) {
+      window.scrollTo(0, y);
+      await new Promise((r) => requestAnimationFrame(r));
+    }
+    window.scrollTo(0, 0);
+    await Promise.race([
+      Promise.all(
+        [...document.images].map((img) =>
+          img.complete
+            ? null
+            : new Promise((res) => {
+                img.addEventListener('load', res, { once: true });
+                img.addEventListener('error', res, { once: true });
+              })
+        )
+      ),
+      new Promise((r) => setTimeout(r, 4000)),
+    ]);
+  } catch (e) {}
+  try { await document.fonts.ready; } catch (e) {}
+  // Jump every animation to its end state so print() never captures a slide
+  // mid-entrance. Ordering matters: the 0s-transition style must be live
+  // BEFORE data-deck-active is set so attribute-keyed transitions don't
+  // start a (now-0s) run from the pre-active base.
+  const st = document.createElement('style');
+  st.textContent = '*,*::before,*::after{animation-delay:-99s !important;animation-duration:.001s !important;animation-iteration-count:1 !important;animation-fill-mode:both !important;animation-play-state:running !important;transition-duration:0s !important}';
+  document.head.appendChild(st);
+  for (const d of document.querySelectorAll('deck-stage')) {
+    for (const c of d.children) {
+      const t = c.tagName;
+      if (t === 'SCRIPT' || t === 'STYLE' || t === 'TEMPLATE') continue;
+      c.setAttribute('data-deck-active', '');
+    }
+  }
+  // Re-append deck-stage's @page last so no author @page can add a margin and
+  // spill each full-bleed slide onto two sheets. Backstop for old copies.
+  if (ds) {
+    let pg = document.getElementById('deck-stage-print-page');
+    if (!pg) {
+      pg = document.createElement('style');
+      pg.textContent = '@page{size:' + (+ds.getAttribute('width') || 1920) +
+        'px ' + (+ds.getAttribute('height') || 1080) + 'px;margin:0}';
+    }
+    document.body.appendChild(pg);
+  }
+  try {
+    const sweep = () => {
+      for (const a of document.getAnimations()) {
+        try { a.finish(); } catch (e) {
+          try { a.currentTime = (a.effect && a.effect.getComputedTiming().duration) || 0; a.pause(); } catch (e2) {}
+        }
+      }
+    };
+    sweep();
+    await new Promise((r) => requestAnimationFrame(r));
+    sweep();
+    await new Promise((r) => requestAnimationFrame(r));
+  } catch (e) {}
+  // Size the PDF page to the rendered design unless the file opted into
+  // standard paper via @page{size:letter|A4|…}. Decks own their own @page.
+  var __m = null;
+  try { __m = (() => {
+  var docEl = document.documentElement;
+  var doc = { width: docEl.scrollWidth, height: docEl.scrollHeight };
+
+  var ds = document.querySelector('deck-stage');
+  if (ds) {
+    var dw = Number(ds.getAttribute('width')) || 1920;
+    var dh = Number(ds.getAttribute('height')) || 1080;
+    var n = typeof ds.length === 'number' ? ds.length : ds.children.length;
+    var idx = typeof ds.index === 'number' ? ds.index : 0;
+    var frames = [];
+    for (var i = 0; i < n; i++) frames.push({ left: 0, top: 0, width: dw, height: dh });
+    return { kind: 'deck', doc: doc, frames: frames,
+      authored: frames.map(function(){return{width:true,height:true}}),
+      deck: { width: dw, height: dh, slideCount: n, index: idx },
+      signals: { paperPage: false, pxPage: false } };
+  }
+
+  var paperPage = false, pxPage = false;
+  var eachRule = function (fn) {
+    for (var s = 0; s < document.styleSheets.length; s++) {
+      var rs; try { rs = document.styleSheets[s].cssRules; } catch (e) { continue; }
+      for (var r = 0; r < rs.length; r++) {
+        fn(rs[r]);
+        if (rs[r].cssRules) for (var n = 0; n < rs[r].cssRules.length; n++) fn(rs[r].cssRules[n]);
+      }
+    }
+  };
+  eachRule(function (r) {
+    if (r.type !== 6) return;
+    var m = /\bsize\s*:\s*([^;}]+)/i.exec(r.cssText || '');
+    if (!m) return;
+    if (/\b(letter|a[3-5]|legal|ledger)\b/i.test(m[1])) paperPage = true;
+    if (/\d+(?:\.\d+)?px\b/i.test(m[1])) pxPage = true;
+  });
+  var signals = { paperPage: paperPage, pxPage: pxPage };
+
+  if (paperPage) {
+    return { kind: 'paper-doc', doc: doc, signals: signals,
+      frames: [{ left: 0, top: 0, width: doc.width, height: doc.height }],
+      authored: [{ width: false, height: false }] };
+  }
+
+  var pxVal = function (v) {
+    var m = /^(\d+(?:\.\d+)?)px$/.exec(v || ''); return m ? +m[1] : 0;
+  };
+  var authoredPx = function (el, prop) {
+    if (pxVal(el.style[prop])) return true;
+    var attr = el.getAttribute(prop);
+    if (attr && /^\d+$/.test(attr)) return true;
+    var hit = false;
+    eachRule(function (r) {
+      if (hit || r.type !== 1 || !r.style) return;
+      try { if (el.matches(r.selectorText) && pxVal(r.style[prop])) hit = true; } catch (e) {}
+    });
+    return hit;
+  };
+
+  var el = document.body;
+  for (;;) {
+    var kids = [];
+    for (var c = 0; c < el.children.length; c++) {
+      var t = el.children[c].tagName;
+      if (t !== 'SCRIPT' && t !== 'STYLE' && t !== 'TEMPLATE') kids.push(el.children[c]);
+    }
+    if (kids.length !== 1 || !(kids[0] instanceof HTMLElement)) break;
+    el.setAttribute('data-om-frame-wrap', '');
+    el = kids[0];
+    if (authoredPx(el, 'width')) break;
+  }
+
+  var sx = window.scrollX || 0, sy = window.scrollY || 0;
+  var rectOf = function (e) {
+    var r = e.getBoundingClientRect();
+    var oy; try { oy = getComputedStyle(e).overflowY; } catch (err) {}
+    var h = oy === 'visible' ? Math.max(r.height, e.scrollHeight || 0) : r.height;
+    return { left: r.left + sx, top: r.top + sy, width: r.width, height: h };
+  };
+
+  // Multi-frame: ≥2 visible non-fixed children, each with authored px width
+  // AND height, all within ±2px of each other. Off unless the page opts in
+  // via data-om-multi-frame on the stop element — guards against card grids
+  // and pricing tables that match the geometry but aren't separate canvases.
+  if (el.hasAttribute('data-om-multi-frame')) {
+    var cands = [];
+    for (var k = 0; k < el.children.length; k++) {
+      var ch = el.children[k];
+      var cs; try { cs = getComputedStyle(ch); } catch (e) { continue; }
+      if (cs.display === 'none' || cs.visibility === 'hidden' || cs.position === 'fixed') continue;
+      var rc = rectOf(ch);
+      if (rc.width < 2 || rc.height < 2) continue;
+      if (!authoredPx(ch, 'width') || !authoredPx(ch, 'height')) continue;
+      cands.push(rc);
+    }
+    if (cands.length >= 2) {
+      var w0 = cands[0].width, h0 = cands[0].height, ok = true;
+      for (var q = 1; q < cands.length; q++)
+        if (Math.abs(cands[q].width - w0) > 2 || Math.abs(cands[q].height - h0) > 2) ok = false;
+      if (ok) return { kind: 'multi-frame', doc: doc, signals: signals,
+        frames: cands, authored: cands.map(function(){return{width:true,height:true}}) };
+    }
+  }
+
+  return { kind: 'single-canvas', doc: doc, signals: signals,
+    frames: [rectOf(el)],
+    authored: [{ width: authoredPx(el, 'width'), height: authoredPx(el, 'height') }] };
+})(); } catch (e) {}
+  var frame = null;
+  if (__m && __m.kind === 'single-canvas') {
+    var f = __m.frames && __m.frames[0];
+    if (f && f.width >= 200 && f.height >= 200) {
+      frame = f;
+      var fst = document.createElement('style');
+      fst.textContent = '@media print{@page{size:' + f.width + 'px ' + f.height +
+        'px;margin:0}html,body,[data-om-frame-wrap]{padding:0!important;' +
+        'margin:0!important;background:none!important}}';
+      document.body.appendChild(fst);
+    }
+  }
+  // Relax break-inside on oversized elements. An element taller than a
+  // printable page can't honor break-inside: avoid — browsers either overflow
+  // it or push it whole to the next page, leaving a blank gap, then break it
+  // anyway at an arbitrary point. After the final layout (content revealed,
+  // animations jumped), find elements taller than a page that still compute
+  // break-inside: avoid and reset them to auto, so the browser breaks them at
+  // their children's boundaries instead (children keep their own avoid). PAGE_PX
+  // is a conservative portrait estimate at 96 CSS px/in — Letter/A4 usable
+  // height minus our 0.5in margins — so only clearly-oversized elements are
+  // touched and under-page elements still stay whole. Skipped for decks (slides
+  // are sized to the page) and for fixed-size canvases (frame set, or an author
+  // px-based @page) — runs as before for flowing docs on letter/A4.
+  try {
+    if (!ds && !frame && !(__m && __m.signals && __m.signals.pxPage)) {
+      const PAGE_PX = 1024;
+      // Our print defaults add a real @page margin only when the source has
+      // no @page of its own; computed style can't tell us (it reports screen
+      // media), so read the injected rule directly.
+      const defaults = document.querySelector('style[data-omelette-print-defaults]');
+      const pageInset = /@page\s*\{[^}]*margin/.test(defaults ? defaults.textContent || '' : '');
+      const SEL = 'section,article,figure,table,pre,blockquote,[class~="card" i],[class~="page" i],[class~="sheet" i]';
+      for (const el of document.body.querySelectorAll(SEL)) {
+        if (el instanceof HTMLElement && el.offsetHeight > PAGE_PX) {
+          el.setAttribute('data-om-oversized', '');
+          // Fake-paged docs simulate sheets with over-tall break-after:page
+          // boxes; honoring the break spills half-blank pages and ends a
+          // colored box mid-sheet. Flow them, and (only when we own the page
+          // inset) drop the redundant padding/background via the rule below.
+          const cs = getComputedStyle(el);
+          if (cs.breakAfter === 'page' || cs.pageBreakAfter === 'always') {
+            el.setAttribute('data-om-fakepage', '');
+          }
+        }
+      }
+      const ost = document.createElement('style');
+      ost.textContent = '@media print{' +
+        '[data-om-oversized]{break-inside:auto !important;page-break-inside:auto !important}' +
+        '[data-om-fakepage]{break-after:auto !important;page-break-after:auto !important}' +
+        (pageInset ? '[data-om-fakepage]{padding:0 !important;background:none !important}' : '') +
+        '}';
+      document.head.appendChild(ost);
+    }
+  } catch (e) {}
+  // macOS Preview renders Skia-PDF Luminosity soft-masks as opaque grey boxes;
+  // swap the CSS that triggers them for Preview-safe forms.
+  try {
+    for (const el of document.body.querySelectorAll('*')) {
+      const cs = getComputedStyle(el);
+
+      if (cs.boxShadow !== 'none' && cs.filter === 'none') {
+        const outs = [], kept = [];
+        for (const s of cs.boxShadow.split(/,(?![^(]*[)])/)) {
+          const t = s.trim();
+          const m = t.match(/^(rgba?[(][^)]+[)]) (-?[0-9.]+px) (-?[0-9.]+px) ([0-9.]+px) -?[0-9.]+px$/);
+          if (m && parseFloat(m[4]) > 0) outs.push('drop-shadow(' + m[2] + ' ' + m[3] + ' ' + m[4] + ' ' + m[1] + ')');
+          else kept.push(t);
+        }
+        if (outs.length) {
+          el.style.setProperty('filter', outs.join(' '), 'important');
+          el.style.setProperty('box-shadow', kept.join(', ') || 'none', 'important');
+        }
+      }
+
+      const mask = cs.maskImage && cs.maskImage !== 'none' ? cs.maskImage : cs.webkitMaskImage;
+      if (mask && mask !== 'none' && cs.filter === 'none') el.style.setProperty('filter', 'opacity(1)', 'important');
+    }
+  } catch (e) {}
+  setTimeout(() => { try { window.print(); } catch (e) {} }, 200);
+})();
+</script>
+</body>
+</html>

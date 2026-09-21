@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{background:#edf5f2;font-family:'Figtree',system-ui,sans-serif;color:#1d2b2a;-webkit-font-smoothing:antialiased}
+  a{color:#0e8f74}
+  a:hover{color:#0a6b57}
+  @keyframes floatA{0%,100%{transform:translateY(0) translateX(0)}50%{transform:translateY(-22px) translateX(10px)}}
+  @keyframes floatB{0%,100%{transform:translateY(0)}50%{transform:translateY(26px)}}
+  ::-webkit-scrollbar{width:10px;height:10px}
+  ::-webkit-scrollbar-thumb{background:#c2dcd4;border-radius:8px}
+</style>
+</helmet>
+<div style="min-height:100vh;position:relative;overflow-x:hidden;display:flex;flex-direction:column;align-items:center">
+
+  <div style="position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden">
+    <div style="position:absolute;top:12%;left:6%;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#ffffff,#d3ece3);opacity:.55;filter:blur(2px);animation:floatA 13s ease-in-out infinite"></div>
+    <div style="position:absolute;top:58%;left:80%;width:280px;height:280px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#ffffff,#d7e8ff);opacity:.45;filter:blur(2px);animation:floatB 17s ease-in-out infinite"></div>
+  </div>
+
+  <div style="position:sticky;top:0;z-index:30;width:100%;display:flex;justify-content:center;background:rgba(237,245,242,.85);backdrop-filter:blur(10px);border-bottom:1px solid #d5e6e0">
+    <div style="width:100%;max-width:1180px;display:flex;align-items:center;gap:20px;padding:14px 24px">
+      <div style="display:flex;align-items:center;gap:10px;font-family:'Bricolage Grotesque';font-weight:800;font-size:18px;color:#1d2b2a;white-space:nowrap">
+        <span style="font-size:22px">⌨️</span><span>Mininet Lab</span>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;gap:6px;min-width:0">
+        <div style="height:8px;border-radius:99px;background:#d3e3de;overflow:hidden">
+          <div style="height:100%;border-radius:99px;transition:width .45s cubic-bezier(.22,.9,.3,1);width:{{ progressPct }};background:{{ accent }}"></div>
+        </div>
+        <div style="display:flex;gap:5px;flex-wrap:wrap">
+          <sc-for list="{{ chapters }}" as="c" hint-placeholder-count="18">
+            <button onClick="{{ c.onClick }}" title="{{ c.label }}" style="width:18px;height:18px;border:none;border-radius:50%;cursor:pointer;padding:0;font-size:9px;font-weight:700;color:#fff;line-height:18px;transition:transform .15s;background:{{ c.bg }}" style-hover="transform:scale(1.25)">{{ c.num }}</button>
+          </sc-for>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;white-space:nowrap">
+        <button onClick="{{ toggleGlossary }}" style="display:flex;align-items:center;gap:6px;background:#fff;border:1px solid #d5e6e0;border-radius:11px;padding:9px 14px;font-family:'Figtree';font-weight:600;font-size:14px;color:#33534c;cursor:pointer" style-hover="border-color:#0e8f74;color:#0e8f74">📖 Commands</button>
+        <button onClick="{{ togglePlay }}" style="display:flex;align-items:center;gap:7px;background:{{ accent }};border:none;border-radius:11px;padding:10px 16px;font-family:'Bricolage Grotesque';font-weight:700;font-size:14px;color:#fff;cursor:pointer" style-hover="filter:brightness(1.06)">{{ playLabel }}</button>
+      </div>
+    </div>
+  </div>
+
+  <div style="width:100%;max-width:1180px;padding:30px 24px 16px;z-index:5">
+    <div style="position:relative;width:100%;background:#fff;border-radius:30px;box-shadow:0 24px 60px -28px rgba(20,70,60,.32),0 2px 0 #ffffff inset;padding:52px 56px;min-height:580px;overflow:hidden">
+
+      <section data-scene data-screen-label="Welcome" style="{{ sc0 }}">
+        <div style="position:absolute;top:0;right:8%;font-size:40px;animation:floatA 9s ease-in-out infinite">🖥️</div>
+        <div style="position:absolute;bottom:6%;left:6%;font-size:34px;animation:floatB 11s ease-in-out infinite">🐧</div>
+        <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.22em;text-transform:uppercase;font-weight:700;color:#0e8f74">Hands-on Lab · Terminal only</div>
+        <h1 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:52px;line-height:1.02;margin:0;max-width:15ch;letter-spacing:-.02em">Mininet SDN Lab on <span style="background:linear-gradient(120deg,#0e8f74,#ec7211);-webkit-background-clip:text;background-clip:text;color:transparent">AWS Ubuntu</span></h1>
+        <p style="font-size:19.5px;line-height:1.55;color:#4c6660;max-width:70ch;margin:0">Build a custom multi-switch topology, emulate real bandwidth and delay, then <b>prove</b> it works with ping, iperf and a packet capture. Every command explained before you run it.</p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:4px">
+          <span style="background:#e4f3ee;border:1px solid #c2e4da;border-radius:99px;padding:8px 16px;font-weight:600;font-size:15px;color:#0e8f74">⏱️ ~75 min at the terminal</span>
+          <span style="background:#eaf1fd;border:1px solid #cfdffa;border-radius:99px;padding:8px 16px;font-weight:600;font-size:15px;color:#2e7fd4">📑 18 stages</span>
+          <span style="background:#fef4e8;border:1px solid #ffe6c2;border-radius:99px;padding:8px 16px;font-weight:600;font-size:15px;color:#d98a18">🧮 RTT calculator</span>
+          <span style="background:#fdeeed;border:1px solid #ffd9d5;border-radius:99px;padding:8px 16px;font-weight:600;font-size:15px;color:#e0564a">🔧 Troubleshooting</span>
+        </div>
+        <div style="display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-top:14px">
+          <button onClick="{{ startLesson }}" style="background:#0e8f74;color:#fff;border:none;border-radius:15px;padding:18px 34px;font-family:'Bricolage Grotesque';font-weight:700;font-size:18px;cursor:pointer;box-shadow:0 12px 24px -8px rgba(14,143,116,.6)" style-hover="transform:translateY(-2px)">Start the lab →</button>
+          <button onClick="{{ playFromStart }}" style="background:#fff;color:#0e8f74;border:2px solid #b5ded2;border-radius:15px;padding:16px 30px;font-family:'Bricolage Grotesque';font-weight:700;font-size:18px;cursor:pointer" style-hover="border-color:#0e8f74;background:#f4fbf8">▶ Play as video</button>
+        </div>
+        <div style="margin-top:16px;background:#fff7ef;border:1px solid #ffe0c2;border-radius:16px;padding:13px 22px;max-width:74ch;font-size:14px;color:#8a5f21;line-height:1.5">⚠️ Read each explanation <b>before</b> running the command, then compare it with what you actually observe. That comparison is how you confirm the network behaves as designed — rather than assuming it works.</div>
+        <div style="margin-top:12px;display:flex;align-items:center;gap:10px;background:#f3f9f7;border:1px solid #dcebe6;border-radius:99px;padding:8px 8px 8px 18px">
+          <span style="font-size:14px;color:#6a857f">Prepared by</span>
+          <span style="background:#1d2b2a;color:#fff;border-radius:99px;padding:7px 16px;font-weight:700;font-size:14px;font-family:'Bricolage Grotesque'">Reza Shahabian</span>
+        </div>
+      </section>
+
+      <section data-scene data-screen-label="How the lab works" style="{{ sc1 }}">
+        <div style="display:flex;flex-direction:column;gap:7px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#2e7fd4">Overview · Simple to complex, deliberately</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:36px;line-height:1.04;margin:0;letter-spacing:-.01em">How this lab works</h2>
+          <p style="font-size:16.5px;line-height:1.55;color:#4c6660;margin:0;max-width:88ch">Nothing here is abstract — every concept is verified with real commands and measurable results. <b>Each stage depends on the previous one</b>; skipping steps leads to misunderstanding and invalid results.</p>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:7px">
+          <sc-for list="{{ progression }}" as="p" hint-placeholder-count="6">
+            <div style="display:flex;gap:12px;align-items:center;background:#f6faf9;border:1px solid #dcebe6;border-radius:12px;padding:11px 15px">
+              <span style="width:24px;height:24px;flex-shrink:0;border-radius:50%;background:#0e8f74;color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Bricolage Grotesque';font-weight:800;font-size:12px">{{ p.n }}</span>
+              <span style="font-family:'Bricolage Grotesque';font-weight:800;font-size:14px;color:#1d2b2a;min-width:210px">{{ p.t }}</span>
+              <span style="font-size:13.5px;line-height:1.45;color:#4c6660">{{ p.d }}</span>
+            </div>
+          </sc-for>
+        </div>
+        <div style="background:#eef4fd;border:1px solid #cfdffa;border-radius:16px;padding:16px 20px">
+          <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:14px;color:#2e7fd4;margin-bottom:9px">📦 What you will produce</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+            <sc-for list="{{ deliverables }}" as="d" hint-placeholder-count="5">
+              <div style="display:flex;gap:9px;align-items:flex-start;background:#fff;border:1px solid #cfdffa;border-radius:11px;padding:10px 13px"><span style="font-size:16px;flex-shrink:0">{{ d.icon }}</span><span><b style="font-size:13px;color:#22598f">{{ d.t }}</b><span style="font-size:12.5px;color:#4c6660;display:block;line-height:1.4">{{ d.d }}</span></span></div>
+            </sc-for>
+          </div>
+        </div>
+      </section>
+
+      <section data-scene data-screen-label="Stage 1 verify the environment" style="{{ sc2 }}">
+        <div style="display:flex;flex-direction:column;gap:7px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#e0564a">Stage 1 · Must pass before anything else</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:36px;line-height:1.04;margin:0;letter-spacing:-.01em">Verify the environment</h2>
+        </div>
+        <div style="background:#1d2b2a;border-radius:16px;padding:18px 20px;display:flex;flex-direction:column;gap:5px">
+          <div style="font-size:10px;font-weight:800;letter-spacing:.09em;color:#8fb8ac">STEP 1.1 — CONFIRM MININET RUNS</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:500;color:#7ee0bf">$ sudo mn --test pingall</div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+          <div style="background:#f6faf9;border:1px solid #dcebe6;border-radius:15px;padding:16px 19px">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:13.5px;color:#0e8f74;margin-bottom:7px">What this does</div>
+            <div style="display:flex;flex-direction:column;gap:5px;font-size:13.5px;color:#3c4a58">
+              <div>• Creates Mininet's default topology (1 switch + 2 hosts)</div>
+              <div>• Starts a controller</div>
+              <div>• Runs a full connectivity test</div>
+              <div>• Tears the topology down</div>
+            </div>
+          </div>
+          <div style="background:#e9f6f1;border:2px solid #c2e4da;border-radius:15px;padding:16px 19px">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:13.5px;color:#0a6b50;margin-bottom:7px">✅ Expected result</div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#0a6b50;font-weight:600">*** Results: 0% dropped</div>
+            <div style="font-size:13px;color:#4c6660;margin-top:8px;line-height:1.45">Or an equivalent success message. <b>If this fails, your image is not ready — do not continue until it is fixed.</b></div>
+          </div>
+        </div>
+        <div style="background:#1d2b2a;border-radius:16px;padding:18px 20px;display:flex;flex-direction:column;gap:5px">
+          <div style="font-size:10px;font-weight:800;letter-spacing:.09em;color:#8fb8ac">STEP 1.2 — CLEAN UP MININET STATE</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:500;color:#7ee0bf">$ sudo mn -c</div>
+        </div>
+        <div style="background:#fdf6f4;border:1px solid #fadfd8;border-radius:14px;padding:13px 19px;font-size:13.5px;line-height:1.5;color:#8a4a40">🧹 Removes leftover network namespaces, OVS bridges and controller junk from previous runs. Run this <b>whenever Mininet behaves strangely</b>, and after any aborted session.</div>
+      </section>
+
+      <section data-scene data-screen-label="Stage 2 built-in topology" style="{{ sc3 }}">
+        <div style="display:flex;flex-direction:column;gap:7px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#0e8f74">Stage 2 · No Python yet</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:36px;line-height:1.04;margin:0;letter-spacing:-.01em">Start with a built-in topology</h2>
+          <p style="font-size:16px;line-height:1.55;color:#4c6660;margin:0;max-width:88ch">Before writing any code, understand how Mininet behaves with a simple topology. This builds foundational understanding and avoids blind scripting.</p>
+        </div>
+        <div style="background:#1d2b2a;border-radius:16px;padding:18px 20px;display:flex;flex-direction:column;gap:5px">
+          <div style="font-size:10px;font-weight:800;letter-spacing:.09em;color:#8fb8ac">STEP 2.1 — CREATE A SINGLE-SWITCH TOPOLOGY</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:500;color:#7ee0bf">$ sudo mn --topo single,2</div>
+        </div>
+        <div style="display:flex;gap:12px;flex-wrap:wrap">
+          <div style="flex:1;min-width:230px;background:#f6faf9;border:1px solid #dcebe6;border-radius:14px;padding:14px 17px;font-size:13.5px;color:#3c4a58"><b style="color:#0e8f74">What this creates</b><br/>1 OpenFlow switch · 2 hosts (h1, h2) · both on the same switch. The simplest possible SDN topology.</div>
+          <div style="flex:1;min-width:230px;background:#f6faf9;border:1px solid #dcebe6;border-radius:14px;padding:14px 17px;font-size:13.5px;color:#3c4a58"><b style="color:#0e8f74">Then test connectivity</b><br/><span style="font-family:'JetBrains Mono',monospace;font-size:12.5px;color:#0a6b50">mininet&gt; h1 ping -c 3 h2</span><br/>Confirms IP addressing, switch forwarding, and controller-switch communication.</div>
+        </div>
+        <div style="background:#1d2b2a;border-radius:16px;padding:18px 20px;display:flex;flex-direction:column;gap:5px">
+          <div style="font-size:10px;font-weight:800;letter-spacing:.09em;color:#8fb8ac">STEP 2.3 — EXIT AND CLEAN</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:500;color:#7ee0bf">mininet&gt; exit</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:500;color:#7ee0bf">$ sudo mn -c</div>
+        </div>
+        <div style="background:#fff7ef;border:1px solid #ffe0c2;border-radius:14px;padding:13px 19px;font-size:13.5px;color:#8a5f21">🚦 <b>Only after this works</b> should you move to Python-based topologies.</div>
+      </section>
+
+      <section data-scene data-screen-label="Inspection commands" style="{{ sc4 }}">
+        <div style="display:flex;flex-direction:column;gap:5px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#7a5cf0">🎯 Try it · Reading the running topology</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:33px;line-height:1.05;margin:0">The three inspection commands</h2>
+          <p style="font-size:14.5px;color:#4c6660;margin:0">Run these inside the Mininet prompt. <b>Tap each one</b> to see what it tells you.</p>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <sc-for list="{{ inspectList }}" as="I" hint-placeholder-count="3">
+            <button onClick="{{ I.onClick }}" style="flex:1;min-width:150px;border-radius:12px;padding:13px 18px;cursor:pointer;transition:all .15s;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:14px;border:2px solid {{ I.border }};background:{{ I.bg }};color:{{ I.fg }}">{{ I.cmd }}</button>
+          </sc-for>
+        </div>
+        <div style="background:#f5f2fe;border:2px solid #ded3fb;border-radius:18px;padding:22px;display:flex;flex-direction:column;gap:12px;min-height:250px">
+          <div style="font-family:'JetBrains Mono',monospace;font-weight:700;font-size:19px;color:{{ inspectInfo.color }}">mininet&gt; {{ inspectInfo.cmd }}</div>
+          <p style="margin:0;font-size:15.5px;line-height:1.6;color:#3c4a58">{{ inspectInfo.what }}</p>
+          <div style="background:#1d2b2a;border-radius:13px;padding:14px 17px">
+            <div style="font-size:9.5px;font-weight:800;letter-spacing:.09em;color:#8fb8ac;margin-bottom:6px">TYPICAL OUTPUT</div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:12px;line-height:1.7;color:#7ee0bf;white-space:pre-wrap">{{ inspectInfo.expect }}</div>
+          </div>
+          <div style="background:#fff;border:1px solid #ded3fb;border-radius:12px;padding:12px 16px;font-size:14px;color:#5a4a8f">🎯 <b>Why you run it:</b> {{ inspectInfo.why }}</div>
+        </div>
+      </section>
+
+      <section data-scene data-screen-label="Quick check 1" style="{{ sc5 }}">
+        <div style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#d98a18">🧠 Knowledge check</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:29px;line-height:1.2;margin:0;max-width:42ch">{{ q1.question }}</h2>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:860px;width:100%;margin:0 auto">
+          <sc-for list="{{ q1.options }}" as="o" hint-placeholder-count="4">
+            <button onClick="{{ o.onClick }}" style="display:flex;align-items:center;justify-content:space-between;gap:10px;text-align:left;border-radius:15px;padding:18px 20px;font-family:'Figtree';font-weight:600;font-size:15px;cursor:pointer;transition:all .15s;border:2px solid {{ o.border }};background:{{ o.bg }};color:{{ o.fg }}"><span>{{ o.label }}</span><span style="font-weight:800;font-size:18px">{{ o.mark }}</span></button>
+          </sc-for>
+        </div>
+        <sc-if value="{{ q1.answered }}" hint-placeholder-val="{{ false }}">
+          <div style="max-width:860px;width:100%;margin:0 auto;border-radius:16px;padding:18px 22px;background:{{ q1.bannerBg }}">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:17px;color:{{ q1.bannerFg }};margin-bottom:5px">{{ q1.banner }}</div>
+            <div style="font-size:16px;line-height:1.55;color:#33534c">{{ q1.explanation }}</div>
+          </div>
+        </sc-if>
+      </section>
+
+      <section data-scene data-screen-label="Stage 3 the topology file" style="{{ sc6 }}">
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#2e7fd4">Stage 3 · Python, terminal only</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:34px;line-height:1.05;margin:0;letter-spacing:-.01em">Create the custom topology file</h2>
+        </div>
+        <div style="display:flex;gap:12px;flex-wrap:wrap">
+          <div style="flex:1;min-width:280px;background:#1d2b2a;border-radius:14px;padding:14px 17px;display:flex;flex-direction:column;gap:4px">
+            <div style="font-size:9.5px;font-weight:800;letter-spacing:.09em;color:#8fb8ac">3.1 — GO TO THE CUSTOM DIRECTORY</div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#7ee0bf">$ cd ~/mininet/custom</div>
+            <div style="font-size:10.5px;color:#8fb8ac;margin-top:4px">Not there? Find it:</div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:#a9d8c6">$ find ~ -maxdepth 3 -type d -name "mininet" 2&gt;/dev/null</div>
+          </div>
+          <div style="flex:1;min-width:280px;background:#1d2b2a;border-radius:14px;padding:14px 17px;display:flex;flex-direction:column;gap:4px">
+            <div style="font-size:9.5px;font-weight:800;letter-spacing:.09em;color:#8fb8ac">3.2 / 3.4 / 3.5 — EDIT, SAVE, CONFIRM</div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#7ee0bf">$ nano topo_lab_01.py</div>
+            <div style="font-size:10.5px;color:#8fb8ac;margin-top:2px">Save: <b style="color:#a9d8c6">CTRL+O</b> then ENTER · Exit: <b style="color:#a9d8c6">CTRL+X</b></div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#7ee0bf;margin-top:4px">$ ls -l topo_lab_01.py</div>
+          </div>
+        </div>
+        <div style="background:#0f1a19;border-radius:16px;padding:18px 20px;overflow:auto">
+          <div style="font-size:9.5px;font-weight:800;letter-spacing:.09em;color:#8fb8ac;margin-bottom:9px">3.3 — PASTE THIS CODE EXACTLY · topo_lab_01.py</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:11.5px;line-height:1.75;color:#b9e8d5;white-space:pre">{{ topoCode }}</div>
+        </div>
+        <div style="background:#eef4fd;border:1px solid #cfdffa;border-radius:14px;padding:13px 19px;font-size:13.5px;color:#22598f">🔑 The last line matters: <span style="font-family:'JetBrains Mono',monospace">topos = {'mytopo': MyTopo}</span> is what makes <span style="font-family:'JetBrains Mono',monospace">--topo mytopo</span> work on the command line.</div>
+      </section>
+
+      <section data-scene data-screen-label="Topology map" style="{{ sc7 }}">
+        <div style="display:flex;flex-direction:column;gap:5px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#0e8f74">🎯 Try it · What you just built</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:33px;line-height:1.05;margin:0">The topology map</h2>
+          <p style="font-size:14.5px;color:#4c6660;margin:0"><b>Tap any node</b> to see its role in the design.</p>
+        </div>
+        <div style="background:#1d2b2a;border-radius:18px;padding:24px 20px;display:flex;flex-direction:column;gap:14px;align-items:center">
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:center">
+            <div style="background:#2e7fd4;color:#fff;border-radius:11px;padding:11px 17px;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:13px">h1</div>
+            <div style="height:2px;width:34px;background:#4c6660"></div>
+            <div style="background:#0e8f74;color:#fff;border-radius:11px;padding:11px 17px;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:13px">s1</div>
+            <div style="height:2px;width:34px;background:#4c6660"></div>
+            <div style="background:#0e8f74;color:#fff;border-radius:11px;padding:11px 17px;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:13px">s2</div>
+            <div style="height:2px;width:34px;background:#4c6660"></div>
+            <div style="background:#0e8f74;color:#fff;border-radius:11px;padding:11px 17px;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:13px">s3</div>
+            <div style="height:2px;width:34px;background:#4c6660"></div>
+            <div style="background:#2e7fd4;color:#fff;border-radius:11px;padding:11px 17px;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:13px">h3</div>
+          </div>
+          <div style="color:#8fb8ac;font-size:12px">↑ core path: 4 links · below: extra hosts on the middle switch</div>
+          <div style="display:flex;gap:8px;justify-content:center">
+            <div style="background:#7a5cf0;color:#fff;border-radius:10px;padding:9px 15px;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:12px">h2</div>
+            <div style="background:#7a5cf0;color:#fff;border-radius:10px;padding:9px 15px;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:12px">h4</div>
+            <div style="background:#7a5cf0;color:#fff;border-radius:10px;padding:9px 15px;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:12px">h5</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <sc-for list="{{ nodeList }}" as="N" hint-placeholder-count="8">
+            <button onClick="{{ N.onClick }}" style="border-radius:10px;padding:9px 16px;cursor:pointer;transition:all .15s;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:13px;border:2px solid {{ N.border }};background:{{ N.bg }};color:{{ N.fg }}">{{ N.name }}</button>
+          </sc-for>
+        </div>
+        <div style="background:#f6faf9;border:2px solid #dcebe6;border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:8px;min-height:110px;justify-content:center">
+          <div style="display:flex;align-items:baseline;gap:11px"><div style="font-family:'JetBrains Mono',monospace;font-weight:700;font-size:21px;color:{{ nodeInfo.color }}">{{ nodeInfo.name }}</div><div style="background:{{ nodeInfo.color }};color:#fff;border-radius:99px;padding:4px 12px;font-weight:700;font-size:11px;font-family:'Bricolage Grotesque'">{{ nodeInfo.kind }}</div></div>
+          <p style="margin:0;font-size:15.5px;line-height:1.6;color:#3c4a58">{{ nodeInfo.d }}</p>
+        </div>
+      </section>
+
+      <section data-scene data-screen-label="Stage 4 validate with pingall" style="{{ sc8 }}">
+        <div style="display:flex;flex-direction:column;gap:7px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#ec7211">Stage 4 · The pass/fail gate</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:36px;line-height:1.04;margin:0;letter-spacing:-.01em">Validate the custom topology</h2>
+        </div>
+        <div style="background:#1d2b2a;border-radius:16px;padding:18px 20px;display:flex;flex-direction:column;gap:5px">
+          <div style="font-size:10px;font-weight:800;letter-spacing:.09em;color:#8fb8ac">AUTOMATIC TEST</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:13.5px;font-weight:500;color:#7ee0bf;word-break:break-all">$ sudo mn --custom topo_lab_01.py --topo mytopo --test pingall</div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+          <div style="background:#f6faf9;border:1px solid #dcebe6;border-radius:15px;padding:16px 19px">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:13.5px;color:#ec7211;margin-bottom:7px">What this does</div>
+            <div style="display:flex;flex-direction:column;gap:5px;font-size:13.5px;color:#3c4a58">
+              <div>• Loads your topology file</div>
+              <div>• Builds the custom topology</div>
+              <div>• Pings between all host pairs</div>
+              <div>• Tears everything down</div>
+            </div>
+          </div>
+          <div style="background:#fdf2f0;border:2px solid #f8d6d0;border-radius:15px;padding:16px 19px">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:13.5px;color:#c2453a;margin-bottom:7px">⚠️ Why this matters</div>
+            <div style="font-size:14px;line-height:1.55;color:#3c4a58">If this fails, your topology file is wrong — and <b>everything later becomes meaningless</b>. Fix it here, not three stages downstream.</div>
+          </div>
+        </div>
+        <div style="background:#1d2b2a;border-radius:16px;padding:16px 20px;display:flex;flex-direction:column;gap:4px">
+          <div style="font-size:10px;font-weight:800;letter-spacing:.09em;color:#8fb8ac">AFTER THE TEST, CLEAN</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:13.5px;color:#7ee0bf">$ sudo mn -c</div>
+        </div>
+      </section>
+
+      <section data-scene data-screen-label="Stage 5 run interactively" style="{{ sc9 }}">
+        <div style="display:flex;flex-direction:column;gap:7px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#0e8f74">Stage 5 · Confirm the shape</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:36px;line-height:1.04;margin:0;letter-spacing:-.01em">Run it interactively and inspect</h2>
+        </div>
+        <div style="background:#1d2b2a;border-radius:16px;padding:18px 20px;display:flex;flex-direction:column;gap:6px">
+          <div style="font-size:10px;font-weight:800;letter-spacing:.09em;color:#8fb8ac">START INTERACTIVE MININET</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:13.5px;color:#7ee0bf;word-break:break-all">$ sudo mn --custom topo_lab_01.py --topo mytopo</div>
+          <div style="font-size:10px;font-weight:800;letter-spacing:.09em;color:#8fb8ac;margin-top:8px">THEN, AT THE PROMPT</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:13.5px;color:#7ee0bf">mininet&gt; nodes</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:13.5px;color:#7ee0bf">mininet&gt; net</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:13.5px;color:#7ee0bf">mininet&gt; dump</div>
+        </div>
+        <div style="background:#e9f6f1;border:2px solid #c2e4da;border-radius:15px;padding:17px 20px;font-size:15px;line-height:1.6;color:#3c4a58">🔍 At this stage you are confirming the <b>topology shape is exactly what you intended</b> — five hosts, three switches, the four-link core path, and h2/h4/h5 all hanging off s2. Compare what <span style="font-family:'JetBrains Mono',monospace;font-size:13px">net</span> prints against the map in chapter 8.</div>
+        <div style="background:#1d2b2a;border-radius:16px;padding:16px 20px;display:flex;flex-direction:column;gap:4px">
+          <div style="font-size:10px;font-weight:800;letter-spacing:.09em;color:#8fb8ac">EXIT AND CLEAN</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:13.5px;color:#7ee0bf">mininet&gt; exit</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:13.5px;color:#7ee0bf">$ sudo mn -c</div>
+        </div>
+      </section>
+
+      <section data-scene data-screen-label="Stage 6 network conditions" style="{{ sc10 }}">
+        <div style="display:flex;flex-direction:column;gap:5px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#7a5cf0">🎯 Try it · Stage 6 · Emulating a real network</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:32px;line-height:1.05;margin:0">Apply bandwidth &amp; delay</h2>
+          <p style="font-size:14.5px;color:#4c6660;margin:0"><b>Tap each flag</b> in the full command to see exactly what it contributes.</p>
+        </div>
+        <div style="background:#1d2b2a;border-radius:16px;padding:18px 20px">
+          <div style="font-size:10px;font-weight:800;letter-spacing:.09em;color:#8fb8ac;margin-bottom:6px">THE FULL COMMAND</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#7ee0bf;line-height:1.7;word-break:break-all">$ sudo mn --custom topo_lab_01.py --topo mytopo --mac --link tc,bw=10,delay=10ms</div>
+        </div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <sc-for list="{{ flagList }}" as="F" hint-placeholder-count="5">
+            <button onClick="{{ F.onClick }}" style="border-radius:10px;padding:9px 14px;cursor:pointer;transition:all .15s;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:11.5px;border:2px solid {{ F.border }};background:{{ F.bg }};color:{{ F.fg }}">{{ F.flag }}</button>
+          </sc-for>
+        </div>
+        <div style="background:#f5f2fe;border:2px solid #ded3fb;border-radius:18px;padding:22px;display:flex;flex-direction:column;gap:11px;min-height:150px;justify-content:center">
+          <div style="font-family:'JetBrains Mono',monospace;font-weight:700;font-size:17px;color:{{ flagInfo.color }};word-break:break-all">{{ flagInfo.flag }}</div>
+          <p style="margin:0;font-size:15.5px;line-height:1.6;color:#3c4a58">{{ flagInfo.d }}</p>
+          <div style="background:#fff;border:1px solid #ded3fb;border-radius:12px;padding:12px 16px;font-size:14px;color:#5a4a8f">💡 {{ flagInfo.note }}</div>
+        </div>
+      </section>
+
+      <section data-scene data-screen-label="RTT calculator" style="{{ sc11 }}">
+        <div style="display:flex;flex-direction:column;gap:5px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#ec7211">🎯 Try it · Predict before you measure</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:32px;line-height:1.05;margin:0">RTT calculator</h2>
+          <p style="font-size:14.5px;color:#4c6660;margin:0">Each link adds its delay <b>one way</b>, and a ping goes out <b>and back</b>. Pick a path length and delay.</p>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <sc-for list="{{ linkList }}" as="l" hint-placeholder-count="3">
+            <button onClick="{{ l.onClick }}" style="border-radius:10px;padding:9px 16px;font-family:'Bricolage Grotesque';font-weight:800;font-size:12.5px;cursor:pointer;transition:all .15s;border:2px solid {{ l.border }};background:{{ l.bg }};color:{{ l.fg }}">{{ l.label }}</button>
+          </sc-for>
+          <div style="width:1px;background:#d5e6e0;margin:0 4px"></div>
+          <sc-for list="{{ delayList }}" as="d" hint-placeholder-count="4">
+            <button onClick="{{ d.onClick }}" style="border-radius:10px;padding:9px 16px;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:11.5px;cursor:pointer;transition:all .15s;border:2px solid {{ d.border }};background:{{ d.bg }};color:{{ d.fg }}">{{ d.label }}</button>
+          </sc-for>
+        </div>
+        <div style="background:#1d2b2a;border-radius:18px;padding:22px;display:flex;flex-direction:column;gap:14px">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:12.5px;color:#8fb8ac;text-align:center">{{ pathLabel }}</div>
+          <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:center;justify-content:center">
+            <div style="text-align:center;padding:0 12px"><div style="font-size:10px;font-weight:800;letter-spacing:.07em;color:#8fb8ac">LINKS</div><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:30px;color:#fff">{{ linkCount }}</div></div>
+            <div style="color:#4c6660;font-size:19px">×</div>
+            <div style="text-align:center;padding:0 12px"><div style="font-size:10px;font-weight:800;letter-spacing:.07em;color:#8fb8ac">PER-LINK DELAY</div><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:30px;color:#a89bf5">{{ delayMs }}</div></div>
+            <div style="color:#4c6660;font-size:19px">=</div>
+            <div style="text-align:center;padding:0 12px;border-left:1px solid #3d5350"><div style="font-size:10px;font-weight:800;letter-spacing:.07em;color:#8fb8ac">ONE WAY</div><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:30px;color:#ffb861">{{ oneWay }}</div></div>
+            <div style="color:#4c6660;font-size:19px">×2 →</div>
+            <div style="text-align:center;padding:0 12px"><div style="font-size:10px;font-weight:800;letter-spacing:.07em;color:#8fb8ac">EXPECTED RTT</div><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:34px;color:#19c39a">{{ rtt }}</div></div>
+          </div>
+        </div>
+        <div style="background:#1d2b2a;border-radius:14px;padding:14px 18px;display:flex;flex-direction:column;gap:4px">
+          <div style="font-size:9.5px;font-weight:800;letter-spacing:.09em;color:#8fb8ac">MEASURE IT</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#7ee0bf">mininet&gt; h1 ping -c 10 h3</div>
+        </div>
+        <div style="background:#fff7ef;border:1px solid #ffe0c2;border-radius:14px;padding:13px 19px;font-size:13.5px;line-height:1.5;color:#8a5f21">⚠️ Actual RTT varies with CPU scheduling and virtualisation overhead, but the <b>order of magnitude must match</b>. If it does not, something is wrong — wrong command, wrong topology, or tc was never applied.</div>
+      </section>
+
+      <section data-scene data-screen-label="Quick check 2" style="{{ sc12 }}">
+        <div style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#d98a18">🧠 Knowledge check</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:29px;line-height:1.2;margin:0;max-width:42ch">{{ q2.question }}</h2>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:860px;width:100%;margin:0 auto">
+          <sc-for list="{{ q2.options }}" as="o" hint-placeholder-count="4">
+            <button onClick="{{ o.onClick }}" style="display:flex;align-items:center;justify-content:space-between;gap:10px;text-align:left;border-radius:15px;padding:18px 20px;font-family:'Figtree';font-weight:600;font-size:15px;cursor:pointer;transition:all .15s;border:2px solid {{ o.border }};background:{{ o.bg }};color:{{ o.fg }}"><span>{{ o.label }}</span><span style="font-weight:800;font-size:18px">{{ o.mark }}</span></button>
+          </sc-for>
+        </div>
+        <sc-if value="{{ q2.answered }}" hint-placeholder-val="{{ false }}">
+          <div style="max-width:860px;width:100%;margin:0 auto;border-radius:16px;padding:18px 22px;background:{{ q2.bannerBg }}">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:17px;color:{{ q2.bannerFg }};margin-bottom:5px">{{ q2.banner }}</div>
+            <div style="font-size:16px;line-height:1.55;color:#33534c">{{ q2.explanation }}</div>
+          </div>
+        </sc-if>
+      </section>
+
+      <section data-scene data-screen-label="Stage 7 bandwidth with iperf" style="{{ sc13 }}">
+        <div style="display:flex;flex-direction:column;gap:7px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#2e7fd4">Stage 7 · Validate the bandwidth cap</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:36px;line-height:1.04;margin:0;letter-spacing:-.01em">Measure throughput with iperf</h2>
+        </div>
+        <div style="background:#1d2b2a;border-radius:16px;padding:18px 20px;display:flex;flex-direction:column;gap:6px">
+          <div style="font-size:10px;font-weight:800;letter-spacing:.09em;color:#8fb8ac">7.1 — START A SERVER ON h3 (BACKGROUND)</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:13.5px;color:#7ee0bf">mininet&gt; h3 iperf -s &amp;</div>
+          <div style="font-size:10px;font-weight:800;letter-spacing:.09em;color:#8fb8ac;margin-top:8px">7.2 — RUN THE CLIENT FROM h1</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:13.5px;color:#7ee0bf">mininet&gt; h1 iperf -c h3</div>
+          <div style="font-size:10px;font-weight:800;letter-spacing:.09em;color:#8fb8ac;margin-top:8px">7.3 — STOP THE SERVER WHEN DONE</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:13.5px;color:#7ee0bf">mininet&gt; h3 kill %iperf</div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+          <div style="background:#e9f6f1;border:2px solid #c2e4da;border-radius:15px;padding:16px 19px">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:13.5px;color:#0a6b50;margin-bottom:7px">✅ Expected outcome</div>
+            <div style="font-size:14px;line-height:1.55;color:#3c4a58">Reported throughput close to the configured limit — <b>≈ 10 Mbit/s</b>.</div>
+          </div>
+          <div style="background:#fff7ef;border:1px solid #ffe0c2;border-radius:15px;padding:16px 19px">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:13.5px;color:#8a5f21;margin-bottom:7px">📏 Read it honestly</div>
+            <div style="font-size:14px;line-height:1.55;color:#3c4a58">It will not be exactly 10.00 — protocol overhead and timing get in the way. <b>Near</b> is the correct result; far off is the signal to investigate.</div>
+          </div>
+        </div>
+      </section>
+
+      <section data-scene data-screen-label="Stage 8 MACs and packet capture" style="{{ sc14 }}">
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#0e8f74">Stage 8 · Evidence for marking</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:34px;line-height:1.05;margin:0;letter-spacing:-.01em">Stable MACs &amp; packet capture</h2>
+        </div>
+        <div style="background:#e9f6f1;border:1px solid #c2e4da;border-radius:14px;padding:13px 19px;font-size:13.5px;line-height:1.5;color:#0a6b50">🏷️ Use <span style="font-family:'JetBrains Mono',monospace">--mac</span> for repeatable results. Without it, host MACs change between runs, making debugging and packet correlation far harder. Verify with <span style="font-family:'JetBrains Mono',monospace">h1 ifconfig</span>.</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:13px">
+          <div style="background:#1d2b2a;border-radius:15px;padding:16px 18px;display:flex;flex-direction:column;gap:5px">
+            <div style="font-size:9.5px;font-weight:800;letter-spacing:.09em;color:#8fb8ac">INSTALL TSHARK (REQUIRED)</div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:12.5px;color:#7ee0bf">$ sudo apt update</div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:12.5px;color:#7ee0bf">$ sudo apt install -y tshark</div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:12.5px;color:#a9d8c6">$ tshark --version</div>
+          </div>
+          <div style="background:#1d2b2a;border-radius:15px;padding:16px 18px;display:flex;flex-direction:column;gap:5px">
+            <div style="font-size:9.5px;font-weight:800;letter-spacing:.09em;color:#8fb8ac">TERMINAL 1 — RUN THE TOPOLOGY</div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:#7ee0bf;word-break:break-all">$ sudo mn --custom topo_lab_01.py --topo mytopo --mac</div>
+            <div style="font-size:9.5px;font-weight:800;letter-spacing:.09em;color:#8fb8ac;margin-top:6px">THEN GENERATE TRAFFIC</div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:12.5px;color:#7ee0bf">mininet&gt; h1 ping -c 5 h2</div>
+          </div>
+        </div>
+        <div style="background:#1d2b2a;border-radius:15px;padding:16px 18px;display:flex;flex-direction:column;gap:5px">
+          <div style="font-size:9.5px;font-weight:800;letter-spacing:.09em;color:#8fb8ac">TERMINAL 2 — CAPTURE, AND SAVE A PCAP FOR EVIDENCE</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:12.5px;color:#7ee0bf;word-break:break-all">$ sudo tshark -i any -f "icmp" -a duration:20</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:12.5px;color:#7ee0bf;word-break:break-all">$ sudo tshark -i any -f "icmp" -a duration:20 -w icmp_capture.pcap</div>
+          <div style="font-size:9.5px;font-weight:800;letter-spacing:.09em;color:#8fb8ac;margin-top:6px">FROM YOUR LOCAL MACHINE — NOT THE EC2 SHELL</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:#ffb861;word-break:break-all">$ scp -i &lt;your-key&gt;.pem ubuntu@&lt;EC2_PUBLIC_IP&gt;:~/icmp_capture.pcap .</div>
+        </div>
+        <div style="background:#fdf2f0;border:2px solid #f8d6d0;border-radius:14px;padding:13px 19px;font-size:13.5px;line-height:1.5;color:#8a4a40">🚫 <b>Do not run the Wireshark GUI on EC2</b> unless you have X11 forwarding or a desktop environment — there is no display server, so Qt will fail. Capture with tshark, export the .pcap, open it locally.</div>
+      </section>
+
+      <section data-scene data-screen-label="Troubleshooting" style="{{ sc15 }}">
+        <div style="display:flex;flex-direction:column;gap:5px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#e0564a">🎯 Try it · When it goes wrong</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:32px;line-height:1.05;margin:0">Troubleshooting</h2>
+          <p style="font-size:14.5px;color:#4c6660;margin:0"><b>Tap an error</b> you are seeing to get the cause and the fix.</p>
+        </div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <sc-for list="{{ troubleList }}" as="T" hint-placeholder-count="4">
+            <button onClick="{{ T.onClick }}" style="border-radius:10px;padding:10px 14px;cursor:pointer;transition:all .15s;font-family:'JetBrains Mono',monospace;font-weight:600;font-size:11px;text-align:left;border:2px solid {{ T.border }};background:{{ T.bg }};color:{{ T.fg }}">{{ T.err }}</button>
+          </sc-for>
+        </div>
+        <div style="background:#fdf6f4;border:2px solid #fadfd8;border-radius:18px;padding:22px;display:flex;flex-direction:column;gap:13px;min-height:230px">
+          <div style="font-family:'JetBrains Mono',monospace;font-weight:700;font-size:15px;color:{{ troubleInfo.color }};word-break:break-all">✗ {{ troubleInfo.err }}</div>
+          <div style="background:#fff;border:1px solid #fadfd8;border-radius:12px;padding:13px 16px;font-size:14.5px;line-height:1.55;color:#3c4a58"><b style="color:#8a4a40">Cause:</b> {{ troubleInfo.cause }}</div>
+          <div style="background:#1d2b2a;border-radius:13px;padding:14px 17px">
+            <div style="font-size:9.5px;font-weight:800;letter-spacing:.09em;color:#8fb8ac;margin-bottom:6px">FIX</div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:12.5px;line-height:1.7;color:#7ee0bf;white-space:pre-wrap">{{ troubleInfo.fix }}</div>
+          </div>
+          <div style="background:#fff;border:1px solid #fadfd8;border-radius:12px;padding:12px 16px;font-family:'JetBrains Mono',monospace;font-size:11.5px;line-height:1.6;color:#6a857f;white-space:pre-wrap">{{ troubleInfo.hunt }}</div>
+        </div>
+      </section>
+
+      <section data-scene data-screen-label="Final check" style="{{ sc16 }}">
+        <div style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#d98a18">🧠 Final knowledge check</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:29px;line-height:1.2;margin:0;max-width:42ch">{{ q3.question }}</h2>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:860px;width:100%;margin:0 auto">
+          <sc-for list="{{ q3.options }}" as="o" hint-placeholder-count="4">
+            <button onClick="{{ o.onClick }}" style="display:flex;align-items:center;justify-content:space-between;gap:10px;text-align:left;border-radius:15px;padding:18px 20px;font-family:'Figtree';font-weight:600;font-size:15px;cursor:pointer;transition:all .15s;border:2px solid {{ o.border }};background:{{ o.bg }};color:{{ o.fg }}"><span>{{ o.label }}</span><span style="font-weight:800;font-size:18px">{{ o.mark }}</span></button>
+          </sc-for>
+        </div>
+        <sc-if value="{{ q3.answered }}" hint-placeholder-val="{{ false }}">
+          <div style="max-width:860px;width:100%;margin:0 auto;border-radius:16px;padding:18px 22px;background:{{ q3.bannerBg }}">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:17px;color:{{ q3.bannerFg }};margin-bottom:5px">{{ q3.banner }}</div>
+            <div style="font-size:16px;line-height:1.55;color:#33534c">{{ q3.explanation }}</div>
+          </div>
+        </sc-if>
+      </section>
+
+      <section data-scene data-screen-label="Clean shutdown and wrap-up" style="{{ sc17 }}">
+        <div style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:9px">
+          <div style="font-size:38px">🎉</div>
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#0e8f74">Lab complete</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:36px;line-height:1.04;margin:0;letter-spacing:-.01em">Clean shutdown — mandatory</h2>
+        </div>
+        <div style="background:#1d2b2a;border-radius:16px;padding:18px 20px;display:flex;flex-direction:column;gap:5px">
+          <div style="font-size:10px;font-weight:800;letter-spacing:.09em;color:#8fb8ac">WHEN FINISHED</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:14px;color:#7ee0bf">mininet&gt; exit</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:14px;color:#7ee0bf">$ sudo mn -c</div>
+        </div>
+        <div style="background:#fdf6f4;border:1px solid #fadfd8;border-radius:14px;padding:13px 19px;font-size:13.5px;color:#8a4a40">🧹 <b>Why it matters:</b> Mininet can leave behind namespaces and OVS bridges that interfere with future labs. Skipping this is the most common cause of "it worked last week" problems.</div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:13px">
+          <div style="background:#e9f6f1;border:1px solid #c2e4da;border-radius:16px;padding:18px;display:flex;flex-direction:column;gap:6px">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:14.5px;color:#0e8f74">✅ Built</div>
+            <p style="margin:0;font-size:13.5px;line-height:1.55;color:#3c4a58">A verified environment, a built-in topology, then a custom five-host, three-switch Python topology.</p>
+          </div>
+          <div style="background:#f5f2fe;border:1px solid #ded3fb;border-radius:16px;padding:18px;display:flex;flex-direction:column;gap:6px">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:14.5px;color:#7a5cf0">📏 Measured</div>
+            <p style="margin:0;font-size:13.5px;line-height:1.55;color:#3c4a58">RTT matching your configured per-link delay, and iperf throughput near your bandwidth cap.</p>
+          </div>
+          <div style="background:#eef4fd;border:1px solid #cfdffa;border-radius:16px;padding:18px;display:flex;flex-direction:column;gap:6px">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:14.5px;color:#2e7fd4">🧪 Proved</div>
+            <p style="margin:0;font-size:13.5px;line-height:1.55;color:#3c4a58">A tshark packet capture exported as a .pcap — real evidence that traffic flowed as designed.</p>
+          </div>
+        </div>
+        <div style="background:#f6faf9;border:1px solid #dcebe6;border-radius:16px;padding:17px 21px;font-size:14.5px;line-height:1.6;color:#3c4a58">🎯 <b>The habit to keep:</b> predict the result, run the command, then compare. When the measurement disagrees with the prediction, one of the two is wrong — and finding out which is the actual skill this lab teaches.</div>
+        <div style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap">
+          <button onClick="{{ startLesson }}" style="background:#fff;color:#0e8f74;border:2px solid #b5ded2;border-radius:14px;padding:14px 26px;font-family:'Bricolage Grotesque';font-weight:700;font-size:16px;cursor:pointer" style-hover="background:#f4fbf8">↻ Restart the lab</button>
+          <button onClick="{{ toggleGlossary }}" style="background:#0e8f74;color:#fff;border:none;border-radius:14px;padding:14px 26px;font-family:'Bricolage Grotesque';font-weight:700;font-size:16px;cursor:pointer">📖 Command reference</button>
+        </div>
+        <div style="text-align:center;font-size:14px;color:#8ba39e">Lab prepared by <b style="color:#4c6660">Reza Shahabian</b></div>
+      </section>
+
+    </div>
+  </div>
+
+  <div style="position:sticky;bottom:0;z-index:20;width:100%;display:flex;justify-content:center;background:linear-gradient(to top,#edf5f2 55%,transparent);padding:10px 24px 22px">
+    <div style="width:100%;max-width:1180px;display:flex;align-items:center;justify-content:space-between;gap:14px">
+      <button onClick="{{ prev }}" style="display:flex;align-items:center;gap:8px;background:#fff;border:1px solid #d5e6e0;border-radius:13px;padding:13px 22px;font-family:'Bricolage Grotesque';font-weight:700;font-size:15px;color:#33534c;cursor:pointer" style-hover="border-color:#8fc9b9">← Back</button>
+      <div style="display:flex;align-items:center;gap:12px;font-weight:600;color:#6a857f;font-size:15px">
+        <span style="font-family:'Bricolage Grotesque';color:#1d2b2a;font-size:17px">{{ sceneNum }}</span>
+        <span style="color:#b6ccc6">/</span>
+        <span>{{ total }}</span>
+        <span style="color:#b6ccc6">·</span>
+        <span style="color:#33534c">{{ sceneTitle }}</span>
+      </div>
+      <button onClick="{{ next }}" style="display:flex;align-items:center;gap:8px;background:{{ accent }};border:none;border-radius:13px;padding:13px 26px;font-family:'Bricolage Grotesque';font-weight:700;font-size:15px;color:#fff;cursor:pointer;box-shadow:0 10px 20px -10px rgba(20,70,60,.5)" style-hover="transform:translateY(-2px)">Next →</button>
+    </div>
+  </div>
+
+  <sc-if value="{{ glossaryOpen }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ toggleGlossary }}" style="position:fixed;inset:0;z-index:50;background:rgba(20,40,36,.34);backdrop-filter:blur(2px)"></div>
+    <div style="position:fixed;top:0;right:0;bottom:0;z-index:51;width:min(480px,92vw);background:#fff;box-shadow:-20px 0 60px -20px rgba(20,70,60,.4);display:flex;flex-direction:column">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:24px 26px;border-bottom:1px solid #e8f1ee">
+        <div style="display:flex;flex-direction:column;gap:2px">
+          <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:22px">📖 Command reference</div>
+          <div style="font-size:13px;color:#7b948e">Every command in this lab, in one place</div>
+        </div>
+        <button onClick="{{ toggleGlossary }}" style="background:#eef5f3;border:none;border-radius:10px;width:38px;height:38px;font-size:18px;cursor:pointer;color:#4c6660">✕</button>
+      </div>
+      <div style="overflow-y:auto;padding:18px 26px 40px;display:flex;flex-direction:column;gap:12px">
+        <sc-for list="{{ glossary }}" as="g" hint-placeholder-count="8">
+          <div style="border:1px solid #e8f1ee;border-radius:14px;padding:13px 15px;background:#fafcfb">
+            <div style="font-family:'JetBrains Mono',monospace;font-weight:700;font-size:13px;color:#0a6b50;word-break:break-all">{{ g.term }}</div>
+            <div style="font-size:13.5px;line-height:1.5;color:#4c6660;margin-top:5px">{{ g.def }}</div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:820}}">
+class Component extends DCLogic {
+  state = { idx:0, playing:false, glossary:false, quiz:{q1:null,q2:null,q3:null},
+    inspect:'nodes', flag:'tc', links:4, delay:10, trouble:'path', node:'h1' };
+
+  total = 18;
+  interactive = new Set([4,5,7,10,11,12,15,16]);
+  durations = { 0:5600 };
+
+  chapTitles = ['Welcome','How the lab works','Stage 1 · Verify the environment','Stage 2 · Built-in topology','Inspection commands','Quick check','Stage 3 · The topology file','Topology map','Stage 4 · Validate with pingall','Stage 5 · Run interactively','Stage 6 · Network conditions','RTT calculator','Quick check','Stage 7 · Bandwidth with iperf','Stage 8 · MACs & packet capture','Troubleshooting','Final check','Clean shutdown & wrap-up'];
+  chapColors = ['#0e8f74','#2e7fd4','#e0564a','#0e8f74','#7a5cf0','#ffb43d','#2e7fd4','#0e8f74','#ec7211','#0e8f74','#7a5cf0','#ec7211','#ffb43d','#2e7fd4','#0e8f74','#e0564a','#ffb43d','#0e8f74'];
+
+  progression = [
+    {n:1,t:'Verify the environment',d:'Removes ambiguity later — if this fails, nothing after it is trustworthy.'},
+    {n:2,t:'Basic topology, no Python',d:'Understand what Mininet builds automatically before you script anything.'},
+    {n:3,t:'Custom Python topology',d:'Now you explicitly control hosts, switches and links.'},
+    {n:4,t:'Apply network conditions',d:'Bandwidth and delay, to emulate real-world networks.'},
+    {n:5,t:'Measure the effects',d:'ping for latency, iperf for throughput.'},
+    {n:6,t:'Capture real packets',d:'tshark proves traffic flows exactly as expected.'},
+  ];
+
+  deliverables = [
+    {icon:'📄',t:'A Python topology file',d:'In ~/mininet/custom/, building a multi-switch topology.'},
+    {icon:'🔗',t:'A run with link emulation',d:'The topology running with bandwidth and delay applied.'},
+    {icon:'📊',t:'Verified ping results',d:'RTT consistent with your configured delay.'},
+    {icon:'📈',t:'Verified iperf results',d:'Throughput close to your configured bandwidth cap.'},
+    {icon:'🧪',t:'A packet capture',d:'A .pcap of ICMP traffic as evidence.'},
+  ];
+
+  inspectData = {
+    nodes:{cmd:'nodes',color:'#7a5cf0',
+      what:'Shows all hosts, switches and controller objects in the running topology.',
+      expect:'available nodes are:\nc0 h1 h2 h3 h4 h5 s1 s2 s3',
+      why:'Confirms every node you declared in build() actually exists.'},
+    net:{cmd:'net',color:'#2e7fd4',
+      what:'Shows the links between nodes — who is connected to whom, and on which interface.',
+      expect:'h1 h1-eth0:s1-eth1\ns1 lo:  s1-eth1:h1-eth0 s1-eth2:s2-eth1\ns2 lo:  s2-eth1:s1-eth2 s2-eth2:s3-eth1 ...',
+      why:'This is where you verify the topology SHAPE is what you intended.'},
+    dump:{cmd:'dump',color:'#0e8f74',
+      what:'Prints node details including interfaces, IP and MAC information, and process IDs.',
+      expect:'<Host h1: h1-eth0:10.0.0.1 pid=...>\n<OVSSwitch s1: lo:127.0.0.1,s1-eth1:None,s1-eth2:None pid=...>',
+      why:'Confirms addressing was assigned and switches came up as OpenFlow bridges.'},
+  };
+  inspectOrder = ['nodes','net','dump'];
+
+  flagData = {
+    custom:{flag:'--custom topo_lab_01.py',color:'#2e7fd4',
+      d:'Loads your Python file so Mininet knows about the topologies it defines.',
+      note:'Must be paired with --topo naming a key from the topos dict.'},
+    topo:{flag:'--topo mytopo',color:'#7a5cf0',
+      d:'Selects which topology to build — the key from topos = {\'mytopo\': MyTopo}.',
+      note:'Get this name wrong and Mininet reports an unknown topology.'},
+    tc:{flag:'--link tc,bw=10,delay=10ms',color:'#ec7211',
+      d:'Uses Linux Traffic Control (qdisc) on every link: caps bandwidth at ~10 Mbit/s and adds 10 ms one-way latency.',
+      note:'This is how you emulate real network conditions with no physical hardware.'},
+    mac:{flag:'--mac',color:'#0e8f74',
+      d:'Assigns simple, stable MAC addresses to hosts instead of random ones.',
+      note:'Without it, MACs change between runs — which makes debugging and packet correlation much harder.'},
+    test:{flag:'--test pingall',color:'#e0564a',
+      d:'Builds the topology, pings between all host pairs, then tears everything down automatically.',
+      note:'Your first real pass/fail gate on a custom topology file.'},
+  };
+  flagOrder = ['custom','topo','tc','mac','test'];
+
+  nodeData = {
+    h1:{name:'h1',kind:'Host',color:'#2e7fd4',d:'Connected to s1. The far end of the core path — your usual ping and iperf client.'},
+    s1:{name:'s1',kind:'Switch',color:'#0e8f74',d:'Edge switch for h1. Links onward to s2.'},
+    s2:{name:'s2',kind:'Switch',color:'#0e8f74',d:'The middle switch. Carries the core path AND hosts h2, h4 and h5 directly.'},
+    s3:{name:'s3',kind:'Switch',color:'#0e8f74',d:'Edge switch for h3, linked back to s2.'},
+    h3:{name:'h3',kind:'Host',color:'#2e7fd4',d:'Connected to s3. Four links away from h1 — which is what makes the delay maths interesting.'},
+    h2:{name:'h2',kind:'Host',color:'#7a5cf0',d:'Hangs off s2. Only two links from h1, so its RTT should be roughly half of h1→h3.'},
+    h4:{name:'h4',kind:'Host',color:'#7a5cf0',d:'Also on s2 — useful for generating competing traffic during an iperf run.'},
+    h5:{name:'h5',kind:'Host',color:'#7a5cf0',d:'Also on s2. Handy as a third party when testing bandwidth contention.'},
+  };
+  nodeOrder = ['h1','s1','s2','s3','h3','h2','h4','h5'];
+
+  linkOptions = [2,3,4];
+  delayOptions = [5,10,20,50];
+
+  troubleData = {
+    path:{err:'cd /mininet/custom: No such file or directory',color:'#e0564a',
+      cause:'You used an absolute path. The directory lives under your home directory, not at the filesystem root.',
+      fix:'cd ~/mininet/custom',
+      hunt:'find ~ -maxdepth 3 -type d -name "custom" 2>/dev/null | grep mininet'},
+    tshark:{err:'tshark: command not found',color:'#ec7211',
+      cause:'tshark is not installed on the image.',
+      fix:'sudo apt update\nsudo apt install -y tshark',
+      hunt:'tshark --version'},
+    gui:{err:'Wireshark GUI fails — Qt plugin / no display',color:'#7a5cf0',
+      cause:'Your EC2 session has no GUI display server, so a Qt application cannot start.',
+      fix:'sudo tshark -i any -f "icmp" -a duration:20 -w icmp_capture.pcap',
+      hunt:'Then copy the .pcap locally and open it in Wireshark there.'},
+    stale:{err:'Mininet behaves strangely, or a previous run was aborted',color:'#2e7fd4',
+      cause:'Leftover network namespaces, OVS bridges and controller state from an earlier session.',
+      fix:'sudo mn -c',
+      hunt:'Run this whenever anything is odd — and always at the end of a session.'},
+  };
+  troubleOrder = ['path','tshark','gui','stale'];
+
+  topoCode = "from mininet.topo import Topo\n\nclass MyTopo(Topo):\n    def build(self):\n        # Hosts\n        h1 = self.addHost('h1')\n        h2 = self.addHost('h2')\n        h3 = self.addHost('h3')\n        h4 = self.addHost('h4')\n        h5 = self.addHost('h5')\n\n        # Switches\n        s1 = self.addSwitch('s1')\n        s2 = self.addSwitch('s2')\n        s3 = self.addSwitch('s3')\n\n        # Core path: h1 -- s1 -- s2 -- s3 -- h3\n        self.addLink(h1, s1)\n        self.addLink(s1, s2)\n        self.addLink(s2, s3)\n        self.addLink(s3, h3)\n\n        # Extra hosts on the middle switch\n        self.addLink(h2, s2)\n        self.addLink(h4, s2)\n        self.addLink(h5, s2)\n\ntopos = {'mytopo': MyTopo}";
+
+  quizDefs = {
+    q1:{question:'Why does the lab insist you run sudo mn --test pingall and get 0% dropped before writing any Python?',
+      options:[{label:'It installs the Python dependencies'},{label:'It proves the image and controller work, so later failures point at your topology, not the environment',correct:true},{label:'It generates the custom directory'},{label:'It is required to assign IP addresses'}],
+      explanation:'Verifying the environment first removes ambiguity. If pingall on the default topology fails, your image is not ready — and every result after that is meaningless. Each stage of this lab depends on the previous one.'},
+    q2:{question:'With --link tc,bw=10,delay=10ms, why is the expected h1→h3 RTT around 80 ms rather than 10 ms?',
+      options:[{label:'Mininet doubles all delay values'},{label:'The path crosses 4 links at 10 ms each, and a ping travels out and back: 40 + 40 ms',correct:true},{label:'tc applies delay per host, not per link'},{label:'ICMP has a fixed 70 ms overhead'}],
+      explanation:'delay=10ms is one-way, PER LINK. The h1→h3 path is h1→s1→s2→s3→h3 = 4 links = 40 ms each way, so the round trip is roughly 80 ms. Actual values vary with CPU scheduling and virtualisation overhead, but the order of magnitude must match.'},
+    q3:{question:'You need a packet capture as evidence, but the EC2 instance has no desktop. What is the correct approach?',
+      options:[{label:'Install a desktop environment on the instance'},{label:'Run tshark to write a .pcap on the instance, then scp it down and open it locally in Wireshark',correct:true},{label:'Skip the capture — ping output is sufficient'},{label:'Run the Wireshark GUI with sudo to bypass the display error'}],
+      explanation:'tshark is the headless-friendly tool. Capture with -w icmp_capture.pcap, copy it down with scp, and analyse it in Wireshark on your own machine. Do not attempt the GUI on EC2 unless you have X11 forwarding or a desktop.'},
+  };
+
+  glossary = [
+    {term:'sudo mn --test pingall',def:'Builds the default topology (1 switch, 2 hosts), starts a controller, pings all pairs, tears down. Your environment gate — expect 0% dropped.'},
+    {term:'sudo mn -c',def:'Cleanup. Removes leftover network namespaces, OVS bridges and controller state. Run after any aborted session, and at the end of every lab.'},
+    {term:'sudo mn --topo single,2',def:'Built-in topology: one OpenFlow switch with two hosts attached. The simplest possible SDN topology.'},
+    {term:'h1 ping -c 3 h2',def:'From inside the Mininet prompt: confirms IP addressing, switch forwarding and controller-switch communication are all healthy.'},
+    {term:'nodes',def:'Lists all hosts, switches and controller objects in the running topology.'},
+    {term:'net',def:'Lists the links between nodes and the interfaces on each end.'},
+    {term:'dump',def:'Prints node details: interfaces, IP/MAC information and process IDs.'},
+    {term:'cd ~/mininet/custom',def:'The correct location for your custom topology files. Note the ~ — it is under your home directory.'},
+    {term:'nano topo_lab_01.py',def:'Opens the editor. Save with CTRL+O then ENTER; exit with CTRL+X.'},
+    {term:'ls -l topo_lab_01.py',def:'Confirms the file was actually written before you try to load it.'},
+    {term:'sudo mn --custom topo_lab_01.py --topo mytopo --test pingall',def:'Loads your file, builds mytopo, pings all host pairs, tears down. If this fails, the topology file is wrong.'},
+    {term:'--link tc,bw=10,delay=10ms',def:'Applies Linux Traffic Control per link: ~10 Mbit/s cap and 10 ms one-way delay.'},
+    {term:'--mac',def:'Gives hosts stable, simple MAC addresses across runs — strongly recommended for repeatable debugging.'},
+    {term:'h1 ping -c 10 h3',def:'Measures RTT across the 4-link core path. With delay=10ms expect roughly 80 ms.'},
+    {term:'h3 iperf -s &',def:'Starts an iperf server on h3 in the background, ready to receive a throughput test.'},
+    {term:'h1 iperf -c h3',def:'Runs the iperf client from h1. Expect throughput near the configured cap (≈10 Mbit/s), not exactly it.'},
+    {term:'h3 kill %iperf',def:'Stops the background iperf server on h3 when you are finished.'},
+    {term:'sudo apt install -y tshark',def:'Installs the terminal packet analyser — the right tool on a headless cloud instance.'},
+    {term:'sudo tshark -i any -f "icmp" -a duration:20',def:'Captures ICMP on all interfaces for 20 seconds, printing echo request/reply lines.'},
+    {term:'sudo tshark -i any -f "icmp" -a duration:20 -w icmp_capture.pcap',def:'Same capture, written to a .pcap file for marking evidence.'},
+    {term:'scp -i <your-key>.pem ubuntu@<EC2_PUBLIC_IP>:~/icmp_capture.pcap .',def:'Run this on your LOCAL machine to download the capture, then open it in Wireshark.'},
+  ];
+
+  componentDidMount(){}
+  componentWillUnmount(){ window.removeEventListener('keydown', this.onKey); clearTimeout(this.t); }
+  ensureWiring(){
+    if(!this._kb){ this._kb=true; window.addEventListener('keydown', this.onKey); }
+    if(this._lastIdx!==this.state.idx || this._lastPlay!==this.state.playing){
+      this._lastIdx=this.state.idx; this._lastPlay=this.state.playing; this.scheduleAutoplay();
+    }
+  }
+  onKey = (e)=>{
+    const tag=(e.target&&e.target.tagName)||'';
+    if(tag==='INPUT'||tag==='TEXTAREA') return;
+    if(e.key==='ArrowRight'){ this.next(); }
+    else if(e.key==='ArrowLeft'){ this.prev(); }
+    else if(e.key===' '){ e.preventDefault(); this.togglePlay(); }
+  };
+
+  sceneCfg = [
+    {gap:20,center:true,pos:true},{gap:16},{gap:16},{gap:16},{gap:14},
+    {gap:22,vcenter:true},{gap:14},{gap:14},{gap:16},{gap:16},
+    {gap:14},{gap:14},{gap:22,vcenter:true},{gap:16},{gap:14},
+    {gap:14},{gap:22,vcenter:true},{gap:18},
+  ];
+  sceneStyle(k){
+    const c=this.sceneCfg[k]; const on=this.state.idx===k;
+    const s={display:on?'flex':'none',flexDirection:'column',minHeight:'560px',gap:c.gap+'px',width:'100%'};
+    if(c.center){ s.alignItems='center'; s.justifyContent='center'; s.textAlign='center'; }
+    if(c.vcenter){ s.justifyContent='center'; }
+    if(c.pos){ s.position='relative'; }
+    return s;
+  }
+
+  scheduleAutoplay(){
+    clearTimeout(this.t);
+    const i=this.state.idx;
+    if(this.state.playing && !this.interactive.has(i) && i<this.total-1){
+      this.t=setTimeout(()=>this.next(), this.durations[i]||9500);
+    }
+  }
+
+  next=()=> this.setState(s=> s.idx<this.total-1 ? {idx:s.idx+1} : {playing:false});
+  prev=()=> this.setState(s=> ({idx:Math.max(0,s.idx-1)}));
+  goTo=(i)=>()=> this.setState({idx:i});
+  togglePlay=()=> this.setState(s=>({playing:!s.playing}));
+  startLesson=()=> this.setState({idx:1});
+  playFromStart=()=> this.setState({idx:1, playing:true});
+  toggleGlossary=()=> this.setState(s=>({glossary:!s.glossary}));
+
+  answer=(q,i)=> this.setState(s=> s.quiz[q]!=null ? null : ({quiz:{...s.quiz,[q]:i}}));
+  setInspect=(k)=>()=> this.setState({inspect:k});
+  setFlag=(k)=>()=> this.setState({flag:k});
+  setLinks=(n)=>()=> this.setState({links:n});
+  setDelay=(n)=>()=> this.setState({delay:n});
+  setTrouble=(k)=>()=> this.setState({trouble:k});
+  setNode=(k)=>()=> this.setState({node:k});
+
+  buildQuiz(qKey){
+    const def=this.quizDefs[qKey]; const sel=this.state.quiz[qKey];
+    const options=def.options.map((o,i)=>{
+      let bg='#fff',fg='#1d2b2a',border='#e2ebe8',mark='';
+      if(sel!=null){
+        if(o.correct){ bg='#e4f5ed';fg='#0a6b50';border='#19c39a';mark='✓'; }
+        else if(i===sel){ bg='#fdeceb';fg='#c2362b';border='#ff6b5e';mark='✗'; }
+        else { fg='#97a8a4';border='#eef3f1'; }
+      }
+      return {label:o.label,bg,fg,border,mark,onClick:()=>this.answer(qKey,i)};
+    });
+    const answered=sel!=null;
+    const isCorrect=answered && def.options[sel].correct;
+    return {question:def.question,options,answered,isCorrect,explanation:def.explanation,
+      banner: !answered ? '' : (isCorrect?'✅ Correct!':'❌ Not quite —'),
+      bannerBg: !answered ? '' : (isCorrect?'#e4f5ed':'#fdeceb'),
+      bannerFg: !answered ? '' : (isCorrect?'#0a6b50':'#c2362b')};
+  }
+
+  renderVals(){
+    this.ensureWiring();
+    const i=this.state.idx;
+    const accent=this.chapColors[i]||'#0e8f74';
+    const sc={}; for(let k=0;k<this.total;k++) sc['sc'+k]=this.sceneStyle(k);
+    const chapters=this.chapTitles.map((t,k)=>({num:k+1,label:t,onClick:this.goTo(k),bg: k===i?this.chapColors[k] : (k<i?'#9ab9b1':'#d3e3de')}));
+
+    const inspectList=this.inspectOrder.map(k=>{ const I=this.inspectData[k]; const on=this.state.inspect===k;
+      return {k,cmd:I.cmd,onClick:this.setInspect(k),bg:on?I.color:'#f2f7f5',fg:on?'#fff':'#33534c',border:on?I.color:'#e2ebe8'}; });
+    const id=this.inspectData[this.state.inspect];
+
+    const flagList=this.flagOrder.map(k=>{ const F=this.flagData[k]; const on=this.state.flag===k;
+      return {k,flag:F.flag,onClick:this.setFlag(k),bg:on?F.color:'#f2f7f5',fg:on?'#fff':'#33534c',border:on?F.color:'#e2ebe8'}; });
+    const fd=this.flagData[this.state.flag];
+
+    const L=this.state.links, D=this.state.delay;
+    const oneWay=L*D, rtt=oneWay*2;
+    const linkList=this.linkOptions.map(n=>({n,label:n+' links',onClick:this.setLinks(n),
+      bg:this.state.links===n?'#ec7211':'#f2f7f5',fg:this.state.links===n?'#fff':'#33534c',border:this.state.links===n?'#ec7211':'#e2ebe8'}));
+    const delayList=this.delayOptions.map(n=>({n,label:'delay='+n+'ms',onClick:this.setDelay(n),
+      bg:this.state.delay===n?'#7a5cf0':'#f2f7f5',fg:this.state.delay===n?'#fff':'#33534c',border:this.state.delay===n?'#7a5cf0':'#e2ebe8'}));
+    const pathLabel = L===4 ? 'h1 → s1 → s2 → s3 → h3' : (L===3 ? 'h1 → s1 → s2 → h2' : 'h2 → s2 → h4');
+
+    const troubleList=this.troubleOrder.map(k=>{ const T=this.troubleData[k]; const on=this.state.trouble===k;
+      return {k,err:T.err,onClick:this.setTrouble(k),bg:on?T.color:'#f2f7f5',fg:on?'#fff':'#33534c',border:on?T.color:'#e2ebe8'}; });
+    const trd=this.troubleData[this.state.trouble];
+
+    const nodeList=this.nodeOrder.map(k=>{ const N=this.nodeData[k]; const on=this.state.node===k;
+      return {k,name:N.name,onClick:this.setNode(k),bg:on?N.color:'#f2f7f5',fg:on?'#fff':'#33534c',border:on?N.color:'#e2ebe8'}; });
+    const nd=this.nodeData[this.state.node];
+
+    return {
+      ...sc,
+      progressPct: Math.round(i/(this.total-1)*100)+'%',
+      accent, sceneNum:i+1, total:this.total, sceneTitle:this.chapTitles[i], chapters,
+      next:this.next, prev:this.prev, togglePlay:this.togglePlay,
+      playLabel: this.state.playing?'⏸ Pause':'▶ Play',
+      startLesson:this.startLesson, playFromStart:this.playFromStart,
+      glossaryOpen:this.state.glossary, toggleGlossary:this.toggleGlossary, glossary:this.glossary,
+      progression:this.progression, deliverables:this.deliverables, topoCode:this.topoCode,
+      inspectList, inspectInfo:id,
+      flagList, flagInfo:fd,
+      linkList, delayList, linkCount:String(L), delayMs:D+' ms',
+      oneWay:oneWay+' ms', rtt:'≈ '+rtt+' ms', pathLabel,
+      troubleList, troubleInfo:trd,
+      nodeList, nodeInfo:nd,
+      q1:this.buildQuiz('q1'), q2:this.buildQuiz('q2'), q3:this.buildQuiz('q3'),
+    };
+  }
+}
+</script>
+</body>
+</html>

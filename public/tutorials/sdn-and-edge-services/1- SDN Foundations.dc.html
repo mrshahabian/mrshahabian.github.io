@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{background:#edf5f2;font-family:'Figtree',system-ui,sans-serif;color:#1d2b2a;-webkit-font-smoothing:antialiased}
+  a{color:#0e8f74}
+  a:hover{color:#0a6b57}
+  @keyframes floatA{0%,100%{transform:translateY(0) translateX(0)}50%{transform:translateY(-22px) translateX(10px)}}
+  @keyframes floatB{0%,100%{transform:translateY(0)}50%{transform:translateY(26px)}}
+  ::-webkit-scrollbar{width:10px;height:10px}
+  ::-webkit-scrollbar-thumb{background:#c2dcd4;border-radius:8px}
+</style>
+</helmet>
+<div style="min-height:100vh;position:relative;overflow-x:hidden;display:flex;flex-direction:column;align-items:center">
+
+  <div style="position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden">
+    <div style="position:absolute;top:12%;left:6%;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#ffffff,#d3ece3);opacity:.55;filter:blur(2px);animation:floatA 13s ease-in-out infinite"></div>
+    <div style="position:absolute;top:58%;left:80%;width:280px;height:280px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#ffffff,#d7e8ff);opacity:.45;filter:blur(2px);animation:floatB 17s ease-in-out infinite"></div>
+    <div style="position:absolute;top:74%;left:10%;width:160px;height:160px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#ffffff,#fdeed6);opacity:.5;filter:blur(2px);animation:floatA 15s ease-in-out infinite"></div>
+  </div>
+
+  <div style="position:sticky;top:0;z-index:30;width:100%;display:flex;justify-content:center;background:rgba(237,245,242,.85);backdrop-filter:blur(10px);border-bottom:1px solid #d5e6e0">
+    <div style="width:100%;max-width:1180px;display:flex;align-items:center;gap:20px;padding:14px 24px">
+      <div style="display:flex;align-items:center;gap:10px;font-family:'Bricolage Grotesque';font-weight:800;font-size:18px;color:#1d2b2a;white-space:nowrap">
+        <span style="font-size:22px">🕸️</span><span>SDN &amp; Edge</span>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;gap:6px;min-width:0">
+        <div style="height:8px;border-radius:99px;background:#d3e3de;overflow:hidden">
+          <div style="height:100%;border-radius:99px;transition:width .45s cubic-bezier(.22,.9,.3,1);width:{{ progressPct }};background:{{ accent }}"></div>
+        </div>
+        <div style="display:flex;gap:5px;flex-wrap:wrap">
+          <sc-for list="{{ chapters }}" as="c" hint-placeholder-count="16">
+            <button onClick="{{ c.onClick }}" title="{{ c.label }}" style="width:18px;height:18px;border:none;border-radius:50%;cursor:pointer;padding:0;font-size:9px;font-weight:700;color:#fff;line-height:18px;transition:transform .15s;background:{{ c.bg }}" style-hover="transform:scale(1.25)">{{ c.num }}</button>
+          </sc-for>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;white-space:nowrap">
+        <button onClick="{{ toggleGlossary }}" style="display:flex;align-items:center;gap:6px;background:#fff;border:1px solid #d5e6e0;border-radius:11px;padding:9px 14px;font-family:'Figtree';font-weight:600;font-size:14px;color:#33534c;cursor:pointer" style-hover="border-color:#0e8f74;color:#0e8f74">📖 Glossary</button>
+        <button onClick="{{ togglePlay }}" style="display:flex;align-items:center;gap:7px;background:{{ accent }};border:none;border-radius:11px;padding:10px 16px;font-family:'Bricolage Grotesque';font-weight:700;font-size:14px;color:#fff;cursor:pointer" style-hover="filter:brightness(1.06)">{{ playLabel }}</button>
+      </div>
+    </div>
+  </div>
+
+  <div style="width:100%;max-width:1180px;padding:30px 24px 16px;z-index:5">
+    <div style="position:relative;width:100%;background:#fff;border-radius:30px;box-shadow:0 24px 60px -28px rgba(20,70,60,.32),0 2px 0 #ffffff inset;padding:52px 56px;min-height:580px;overflow:hidden">
+
+      <!-- SCENE 0 — TITLE -->
+      <section data-scene data-screen-label="Welcome" style="{{ sc0 }}">
+        <div style="position:absolute;top:0;right:8%;font-size:40px;animation:floatA 9s ease-in-out infinite">🛰️</div>
+        <div style="position:absolute;bottom:6%;left:6%;font-size:34px;animation:floatB 11s ease-in-out infinite">⚡</div>
+        <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.22em;text-transform:uppercase;font-weight:700;color:#0e8f74">Interactive Lesson</div>
+        <h1 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:56px;line-height:1.02;margin:0;max-width:20ch;letter-spacing:-.02em">Software Defined Networks &amp; <span style="background:linear-gradient(120deg,#0e8f74,#2e7fd4);-webkit-background-clip:text;background-clip:text;color:transparent">Edge Services</span></h1>
+        <p style="font-size:20px;line-height:1.55;color:#4c6660;max-width:68ch;margin:0">The network stops being hardware you configure box-by-box, and becomes software you program from one place. Plus why compute is moving back out to the edge.</p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:4px">
+          <span style="background:#e4f3ee;border:1px solid #c2e4da;border-radius:99px;padding:8px 16px;font-weight:600;font-size:15px;color:#0e8f74">⏱️ ~26 min</span>
+          <span style="background:#eaf1fd;border:1px solid #cfdffa;border-radius:99px;padding:8px 16px;font-weight:600;font-size:15px;color:#2e7fd4">📑 17 chapters</span>
+          <span style="background:#fdeeed;border:1px solid #ffd9d5;border-radius:99px;padding:8px 16px;font-weight:600;font-size:15px;color:#e0564a">🧠 3 quizzes</span>
+          <span style="background:#fef4e8;border:1px solid #ffe6c2;border-radius:99px;padding:8px 16px;font-weight:600;font-size:15px;color:#d98a18">🎯 Packet-flow tracer</span>
+        </div>
+        <div style="display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-top:14px">
+          <button onClick="{{ startLesson }}" style="background:#0e8f74;color:#fff;border:none;border-radius:15px;padding:18px 34px;font-family:'Bricolage Grotesque';font-weight:700;font-size:18px;cursor:pointer;box-shadow:0 12px 24px -8px rgba(14,143,116,.6)" style-hover="transform:translateY(-2px)">Start lesson →</button>
+          <button onClick="{{ playFromStart }}" style="background:#fff;color:#0e8f74;border:2px solid #b5ded2;border-radius:15px;padding:16px 30px;font-family:'Bricolage Grotesque';font-weight:700;font-size:18px;cursor:pointer" style-hover="border-color:#0e8f74;background:#f4fbf8">▶ Play as video</button>
+        </div>
+        <div style="margin-top:18px;display:flex;align-items:center;gap:10px;background:#f3f9f7;border:1px solid #dcebe6;border-radius:99px;padding:8px 8px 8px 18px">
+          <span style="font-size:14px;color:#6a857f">Prepared by</span>
+          <span style="background:#1d2b2a;color:#fff;border-radius:99px;padding:7px 16px;font-weight:700;font-size:14px;font-family:'Bricolage Grotesque'">Reza Shahabian</span>
+        </div>
+      </section>
+
+      <!-- SCENE 1 — TRADITIONAL VS SDN -->
+      <section data-scene data-screen-label="Traditional vs SDN" style="{{ sc1 }}">
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#2e7fd4">Chapter 01 · The problem SDN solves</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:44px;line-height:1.04;margin:0;letter-spacing:-.01em">Why change anything?</h2>
+          <p style="font-size:18px;line-height:1.55;color:#4c6660;margin:0;max-width:82ch">Traditional networks suffer from <b>rigid configurations</b>, <b>poor scalability</b>, and <b>slow response to change</b> — every device holds its own brain, and you configure each one by hand.</p>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+          <div style="background:#fdf2f0;border:2px solid #f8d6d0;border-radius:18px;padding:22px;display:flex;flex-direction:column;gap:12px">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:17px;color:#c2453a">🧱 Traditional network</div>
+            <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+              <div style="background:#fff;border:1px solid #f8d6d0;border-radius:11px;padding:11px 13px;text-align:center"><div style="font-size:20px">🔀</div><div style="font-size:10.5px;font-weight:700;color:#c2453a;margin-top:2px">brain</div></div>
+              <div style="background:#fff;border:1px solid #f8d6d0;border-radius:11px;padding:11px 13px;text-align:center"><div style="font-size:20px">🔀</div><div style="font-size:10.5px;font-weight:700;color:#c2453a;margin-top:2px">brain</div></div>
+              <div style="background:#fff;border:1px solid #f8d6d0;border-radius:11px;padding:11px 13px;text-align:center"><div style="font-size:20px">🔀</div><div style="font-size:10.5px;font-weight:700;color:#c2453a;margin-top:2px">brain</div></div>
+            </div>
+            <div style="font-size:13.5px;color:#7c6560;line-height:1.5">Control logic is <b>baked into every box</b>. A policy change means touching each device individually.</div>
+          </div>
+          <div style="background:#eef8f4;border:2px solid #c2e4da;border-radius:18px;padding:22px;display:flex;flex-direction:column;gap:12px">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:17px;color:#0e8f74">🕸️ Software Defined Network</div>
+            <div style="display:flex;flex-direction:column;gap:7px;align-items:center">
+              <div style="background:#0e8f74;color:#fff;border-radius:11px;padding:9px 18px;font-family:'Bricolage Grotesque';font-weight:800;font-size:13px">🧠 One controller</div>
+              <div style="color:#8fb8ac;font-size:15px">↓ ↓ ↓</div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center">
+                <div style="background:#fff;border:1px solid #c2e4da;border-radius:10px;padding:9px 12px;font-size:18px">🔀</div>
+                <div style="background:#fff;border:1px solid #c2e4da;border-radius:10px;padding:9px 12px;font-size:18px">🔀</div>
+                <div style="background:#fff;border:1px solid #c2e4da;border-radius:10px;padding:9px 12px;font-size:18px">🔀</div>
+              </div>
+            </div>
+            <div style="font-size:13.5px;color:#4c6660;line-height:1.5">Devices become <b>simple forwarders</b>. All the intelligence lives in software, centrally.</div>
+          </div>
+        </div>
+        <div style="background:#f3f9f7;border:1px solid #dcebe6;border-radius:14px;padding:13px 20px;font-size:14.5px;color:#33534c">🔗 You already know the hardware side of networks — OSI layers, switches, routers, VPCs. SDN is about <b>who decides</b> where packets go.</div>
+      </section>
+
+      <!-- SCENE 2 — WHAT IS SDN -->
+      <section data-scene data-screen-label="What is SDN" style="{{ sc2 }}">
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#0e8f74">Chapter 02 · The definition</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:42px;line-height:1.04;margin:0;letter-spacing:-.01em">What is Software-Defined Networking?</h2>
+          <p style="font-size:18px;line-height:1.55;color:#4c6660;margin:0;max-width:84ch">A way of managing networks where <b>control is handled by software</b> instead of being built into physical hardware — letting administrators manage the network more easily and efficiently.</p>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
+          <sc-for list="{{ sdnTraits }}" as="t" hint-placeholder-count="3">
+            <div style="background:#fafcfb;border:1px solid #e2ebe8;border-radius:18px;padding:22px;display:flex;flex-direction:column;gap:9px">
+              <div style="width:44px;height:44px;border-radius:12px;background:{{ t.color }};display:flex;align-items:center;justify-content:center;font-size:22px">{{ t.icon }}</div>
+              <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:17px;color:{{ t.color }}">{{ t.t }}</div>
+              <div style="font-size:14px;line-height:1.5;color:#4c6660">{{ t.d }}</div>
+            </div>
+          </sc-for>
+        </div>
+      </section>
+
+      <!-- SCENE 3 — WHY SDN -->
+      <section data-scene data-screen-label="Why SDN" style="{{ sc3 }}">
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#7a5cf0">Chapter 03 · The payoff</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:42px;line-height:1.04;margin:0;letter-spacing:-.01em">Why SDN?</h2>
+          <p style="font-size:18px;line-height:1.55;color:#4c6660;margin:0;max-width:84ch">SDN exists to solve the problems of traditional networks by making network management <b>more flexible and automated</b>.</p>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
+          <sc-for list="{{ sdnBenefits }}" as="b" hint-placeholder-count="3">
+            <div style="background:#fafcfb;border:1px solid #e2ebe8;border-radius:18px;padding:22px;display:flex;flex-direction:column;gap:9px">
+              <div style="width:44px;height:44px;border-radius:12px;background:{{ b.color }};display:flex;align-items:center;justify-content:center;font-size:22px">{{ b.icon }}</div>
+              <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:17px;color:{{ b.color }}">{{ b.t }}</div>
+              <div style="font-size:14px;line-height:1.5;color:#4c6660">{{ b.d }}</div>
+            </div>
+          </sc-for>
+        </div>
+        <div style="background:#f3f9f7;border:1px solid #dcebe6;border-radius:14px;padding:13px 20px;font-size:14.5px;color:#33534c">💰 Note the cost angle: commodity switches + smart software beats buying proprietary intelligence in every box.</div>
+      </section>
+
+      <!-- SCENE 4 — CONTROL VS DATA PLANE -->
+      <section data-scene data-screen-label="Control plane vs data plane" style="{{ sc4 }}">
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#ec7211">Chapter 04 · The core split</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:42px;line-height:1.04;margin:0;letter-spacing:-.01em">Control plane vs data plane</h2>
+          <p style="font-size:18px;line-height:1.55;color:#4c6660;margin:0;max-width:84ch">This single separation is the whole idea of SDN — and one of your session learning outcomes.</p>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px">
+          <div style="background:#f5f2fe;border:2px solid #ded3fb;border-radius:18px;padding:24px;display:flex;flex-direction:column;gap:10px">
+            <div style="display:flex;align-items:center;gap:10px"><span style="font-size:28px">🧠</span><div><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:19px;color:#7a5cf0">Control Plane</div><div style="font-size:12.5px;font-weight:600;color:#8ba39e">Decision making</div></div></div>
+            <p style="margin:0;font-size:15.5px;line-height:1.6;color:#3c4a58">The SDN controller decides the <b>best path</b> for network traffic, based on rules, policies and current network conditions.</p>
+          </div>
+          <div style="background:#eef4fd;border:2px solid #cfdffa;border-radius:18px;padding:24px;display:flex;flex-direction:column;gap:10px">
+            <div style="display:flex;align-items:center;gap:10px"><span style="font-size:28px">➡️</span><div><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:19px;color:#2e7fd4">Data Plane</div><div style="font-size:12.5px;font-weight:600;color:#8ba39e">Traffic forwarding</div></div></div>
+            <p style="margin:0;font-size:15.5px;line-height:1.6;color:#3c4a58">Switches and routers simply <b>follow the instructions</b> the controller gives them, forwarding packets accordingly.</p>
+          </div>
+        </div>
+        <div style="background:#fff7ef;border:1px solid #ffe0c2;border-radius:16px;padding:18px 22px;display:flex;gap:14px;align-items:center">
+          <span style="font-size:26px">📡</span>
+          <p style="margin:0;font-size:15px;line-height:1.55;color:#8a5f21"><b>How they talk:</b> the controller communicates with devices using protocols such as <b>OpenFlow</b> — sending down rules, and receiving status updates back.</p>
+        </div>
+      </section>
+
+      <!-- SCENE 5 — PACKET FLOW TRACER -->
+      <section data-scene data-screen-label="Packet-flow tracer" style="{{ sc5 }}">
+        <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap">
+          <div style="display:flex;flex-direction:column;gap:4px">
+            <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#0e8f74">🎯 Try it · How SDN actually works</div>
+            <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:34px;line-height:1.05;margin:0">Trace a web request through an SDN</h2>
+            <p style="font-size:15px;color:#4c6660;margin:0">Step through the six stages of a request for <b>www.example.com</b>.</p>
+          </div>
+          <div style="display:flex;gap:9px;align-items:center">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:15px;color:#0e8f74;background:#e4f3ee;border-radius:11px;padding:11px 15px">{{ stepNum }}</div>
+            <button onClick="{{ stepPrev }}" style="background:#fff;border:1px solid #d5e6e0;border-radius:11px;padding:11px 16px;font-family:'Figtree';font-weight:600;font-size:14px;color:#4c6660;cursor:pointer">◀ Prev</button>
+            <button onClick="{{ stepNext }}" style="background:#0e8f74;border:none;border-radius:11px;padding:11px 18px;font-family:'Bricolage Grotesque';font-weight:700;font-size:14px;color:#fff;cursor:pointer">Next ▶</button>
+            <button onClick="{{ stepReset }}" style="background:#fff;border:1px solid #d5e6e0;border-radius:11px;padding:11px 15px;font-family:'Figtree';font-weight:600;font-size:14px;color:#4c6660;cursor:pointer">↺</button>
+          </div>
+        </div>
+        <div style="background:#f6faf9;border:2px solid #dcebe6;border-radius:18px;padding:20px;display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:5px;border-radius:14px;padding:14px 20px;transition:all .25s;background:{{ userBg }};color:{{ userFg }}"><span style="font-size:26px">🧑‍💻</span><span style="font-family:'Bricolage Grotesque';font-weight:800;font-size:12.5px">User</span></div>
+          <span style="color:#a9c4bc;font-size:20px">⇄</span>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:5px;border-radius:14px;padding:14px 20px;transition:all .25s;background:{{ switchBg }};color:{{ switchFg }}"><span style="font-size:26px">🔀</span><span style="font-family:'Bricolage Grotesque';font-weight:800;font-size:12.5px">SDN Switch</span><span style="font-size:10px;opacity:.85">data plane</span></div>
+          <span style="color:#a9c4bc;font-size:20px">⇄</span>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:5px;border-radius:14px;padding:14px 20px;transition:all .25s;background:{{ ctrlBg }};color:{{ ctrlFg }}"><span style="font-size:26px">🧠</span><span style="font-family:'Bricolage Grotesque';font-weight:800;font-size:12.5px">Controller</span><span style="font-size:10px;opacity:.85">control plane</span></div>
+        </div>
+        <div style="display:grid;grid-template-columns:.92fr 1.08fr;gap:18px;align-items:start">
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <sc-for list="{{ flowList }}" as="f" hint-placeholder-count="6">
+              <div style="display:flex;gap:9px;align-items:center;border-radius:11px;padding:10px 13px;border:1.5px solid {{ f.border }};background:{{ f.bg }};color:{{ f.fg }}"><span style="width:20px;height:20px;flex-shrink:0;border-radius:50%;background:rgba(0,0,0,.12);display:flex;align-items:center;justify-content:center;font-family:'Bricolage Grotesque';font-weight:800;font-size:10.5px">{{ f.num }}</span><span style="font-size:12.5px;font-weight:700">{{ f.t }}</span></div>
+            </sc-for>
+          </div>
+          <div style="background:#fff;border:2px solid #dcebe6;border-radius:18px;padding:26px;display:flex;flex-direction:column;gap:12px;min-height:200px;justify-content:center">
+            <div style="font-size:38px">{{ stepIcon }}</div>
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:22px;color:#0e8f74">{{ stepTitle }}</div>
+            <p style="margin:0;font-size:16.5px;line-height:1.6;color:#3c4a58">{{ stepDesc }}</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SCENE 6 — QUIZ 1 -->
+      <section data-scene data-screen-label="Quick check 1" style="{{ sc6 }}">
+        <div style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#d98a18">🧠 Knowledge check</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:32px;line-height:1.18;margin:0;max-width:32ch">{{ q1.question }}</h2>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:780px;width:100%;margin:0 auto">
+          <sc-for list="{{ q1.options }}" as="o" hint-placeholder-count="4">
+            <button onClick="{{ o.onClick }}" style="display:flex;align-items:center;justify-content:space-between;gap:10px;text-align:left;border-radius:15px;padding:18px 20px;font-family:'Figtree';font-weight:600;font-size:16.5px;cursor:pointer;transition:all .15s;border:2px solid {{ o.border }};background:{{ o.bg }};color:{{ o.fg }}"><span>{{ o.label }}</span><span style="font-weight:800;font-size:18px">{{ o.mark }}</span></button>
+          </sc-for>
+        </div>
+        <sc-if value="{{ q1.answered }}" hint-placeholder-val="{{ false }}">
+          <div style="max-width:780px;width:100%;margin:0 auto;border-radius:16px;padding:18px 22px;background:{{ q1.bannerBg }}">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:17px;color:{{ q1.bannerFg }};margin-bottom:5px">{{ q1.banner }}</div>
+            <div style="font-size:16px;line-height:1.55;color:#33534c">{{ q1.explanation }}</div>
+          </div>
+        </sc-if>
+      </section>
+
+      <!-- SCENE 7 — SDN COMPONENTS -->
+      <section data-scene data-screen-label="SDN components" style="{{ sc7 }}">
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#2e7fd4">Chapter 07 · The three pieces</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:40px;line-height:1.04;margin:0;letter-spacing:-.01em">SDN components</h2>
+          <p style="font-size:16px;line-height:1.5;color:#4c6660;margin:0"><b>Tap each component</b> to see its role and which plane it belongs to.</p>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <sc-for list="{{ compList }}" as="C" hint-placeholder-count="3">
+            <button onClick="{{ C.onClick }}" style="flex:1;min-width:190px;display:flex;align-items:center;gap:10px;border-radius:13px;padding:14px 18px;cursor:pointer;transition:all .15s;border:2px solid {{ C.border }};background:{{ C.bg }};color:{{ C.fg }}"><span style="font-size:21px">{{ C.icon }}</span><span style="font-family:'Bricolage Grotesque';font-weight:800;font-size:14.5px;text-align:left">{{ C.name }}</span></button>
+          </sc-for>
+        </div>
+        <div style="background:#f6faf9;border:2px solid #dcebe6;border-radius:20px;padding:26px;display:flex;gap:20px;align-items:center;flex-wrap:wrap;min-height:170px">
+          <div style="width:68px;height:68px;border-radius:17px;background:{{ compInfo.color }};display:flex;align-items:center;justify-content:center;font-size:32px;flex-shrink:0">{{ compInfo.icon }}</div>
+          <div style="flex:1;min-width:280px;display:flex;flex-direction:column;gap:9px">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:23px;color:{{ compInfo.color }}">{{ compInfo.name }}</div>
+            <p style="margin:0;font-size:16.5px;line-height:1.6;color:#3c4a58">{{ compInfo.desc }}</p>
+            <div style="display:inline-flex;align-self:flex-start;align-items:center;gap:7px;background:{{ compInfo.color }};color:#fff;border-radius:99px;padding:6px 15px;font-weight:700;font-size:13px;font-family:'Bricolage Grotesque'">◆ {{ compInfo.plane }}</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SCENE 8 — WHERE SDN MATTERS -->
+      <section data-scene data-screen-label="Where SDN matters" style="{{ sc8 }}">
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#0e8f74">Chapter 08 · Real deployments</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:40px;line-height:1.04;margin:0;letter-spacing:-.01em">Why SDN matters in modern networks</h2>
+          <p style="font-size:17px;line-height:1.55;color:#4c6660;margin:0;max-width:84ch">SDN offers a flexible, scalable and programmable approach that adapts quickly to new requirements — here's where that pays off.</p>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
+          <sc-for list="{{ sdnUseCases }}" as="u" hint-placeholder-count="3">
+            <div style="background:#fafcfb;border:1px solid #e2ebe8;border-radius:18px;padding:22px;display:flex;flex-direction:column;gap:9px">
+              <div style="width:44px;height:44px;border-radius:12px;background:{{ u.color }};display:flex;align-items:center;justify-content:center;font-size:22px">{{ u.icon }}</div>
+              <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:17px;color:{{ u.color }}">{{ u.t }}</div>
+              <div style="font-size:14.5px;line-height:1.5;color:#4c6660">{{ u.d }}</div>
+            </div>
+          </sc-for>
+        </div>
+        <div style="background:#fffaf0;border:2px solid #ffe6c2;border-radius:18px;padding:20px 22px;display:flex;flex-direction:column;gap:12px">
+          <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:15px;color:#d98a18">🧠 Quick check — {{ q2.question }}</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+            <sc-for list="{{ q2.options }}" as="o" hint-placeholder-count="4">
+              <button onClick="{{ o.onClick }}" style="display:flex;align-items:center;justify-content:space-between;gap:8px;text-align:left;border-radius:12px;padding:13px 16px;font-family:'Figtree';font-weight:600;font-size:14.5px;cursor:pointer;transition:all .15s;border:2px solid {{ o.border }};background:{{ o.bg }};color:{{ o.fg }}"><span>{{ o.label }}</span><span style="font-weight:800;font-size:16px">{{ o.mark }}</span></button>
+            </sc-for>
+          </div>
+          <sc-if value="{{ q2.answered }}" hint-placeholder-val="{{ false }}">
+            <div style="border-radius:13px;padding:14px 18px;background:{{ q2.bannerBg }}">
+              <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:15px;color:{{ q2.bannerFg }};margin-bottom:4px">{{ q2.banner }}</div>
+              <div style="font-size:14.5px;line-height:1.55;color:#33534c">{{ q2.explanation }}</div>
+            </div>
+          </sc-if>
+        </div>
+      </section>
+
+      <!-- SCENE 9 — EDGE SERVICES -->
+      <section data-scene data-screen-label="Edge services" style="{{ sc9 }}">
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#7a5cf0">Chapter 09 · Part two of the module</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:42px;line-height:1.04;margin:0;letter-spacing:-.01em">What are Edge Services?</h2>
+          <p style="font-size:18px;line-height:1.55;color:#4c6660;margin:0;max-width:84ch">Handling data and delivering services <b>as close as possible to the end user</b> — reducing delays and improving overall system performance.</p>
+        </div>
+        <div style="background:#f6faf9;border:2px solid #dcebe6;border-radius:20px;padding:24px;display:flex;flex-direction:column;gap:14px">
+          <div style="display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:4px"><div style="font-size:26px">📱</div><div style="font-size:11px;font-weight:700;color:#4c6660">Device</div></div>
+            <span style="color:#a9c4bc">→</span>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:4px;background:#e4f3ee;border:2px solid #0e8f74;border-radius:13px;padding:12px 18px"><div style="font-size:26px">📡</div><div style="font-size:11px;font-weight:800;color:#0e8f74">Edge node</div><div style="font-size:9.5px;color:#4c6660">processes here</div></div>
+            <span style="color:#a9c4bc">→</span>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:4px;opacity:.6"><div style="font-size:26px">☁️</div><div style="font-size:11px;font-weight:700;color:#4c6660">Central cloud</div><div style="font-size:9.5px;color:#8ba39e">far away</div></div>
+          </div>
+          <div style="display:flex;gap:14px;flex-wrap:wrap">
+            <div style="flex:1;min-width:260px;background:#fff;border:1px solid #dcebe6;border-radius:13px;padding:14px 17px;font-size:14.5px;line-height:1.5;color:#3c4a58">Data is processed <b>at or near the edge</b> of the network — close to where it is generated or used.</div>
+            <div style="flex:1;min-width:260px;background:#fff;border:1px solid #dcebe6;border-radius:13px;padding:14px 17px;font-size:14.5px;line-height:1.5;color:#3c4a58">Edge services <b>reduce the workload</b> on centralised cloud data centres by performing processing locally.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SCENE 10 — WHY EDGE: DRIVERS -->
+      <section data-scene data-screen-label="Why edge: the drivers" style="{{ sc10 }}">
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#e0564a">Chapter 10 · The three pressures</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:40px;line-height:1.04;margin:0;letter-spacing:-.01em">Why use Edge Services?</h2>
+          <p style="font-size:16px;line-height:1.5;color:#4c6660;margin:0"><b>Tap each driver</b> to see what it means, with a concrete example.</p>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <sc-for list="{{ driverList }}" as="D" hint-placeholder-count="3">
+            <button onClick="{{ D.onClick }}" style="flex:1;min-width:170px;display:flex;align-items:center;gap:9px;border-radius:13px;padding:14px 18px;cursor:pointer;transition:all .15s;border:2px solid {{ D.border }};background:{{ D.bg }};color:{{ D.fg }}"><span style="font-size:20px">{{ D.icon }}</span><span style="font-family:'Bricolage Grotesque';font-weight:800;font-size:15px">{{ D.name }}</span></button>
+          </sc-for>
+        </div>
+        <div style="background:#fdf6f4;border:2px solid #fadfd8;border-radius:20px;padding:26px;display:flex;flex-direction:column;gap:14px;min-height:180px;justify-content:center">
+          <div style="display:flex;align-items:center;gap:12px"><span style="font-size:30px">{{ driverInfo.icon }}</span><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:23px;color:{{ driverInfo.color }}">{{ driverInfo.name }}</div></div>
+          <p style="margin:0;font-size:17px;line-height:1.6;color:#3c4a58">{{ driverInfo.def }}</p>
+          <div style="background:#fff;border:1px solid #fadfd8;border-radius:13px;padding:13px 17px;font-size:14.5px;line-height:1.55;color:#8a5248">💡 <b>Example:</b> {{ driverInfo.ex }}</div>
+        </div>
+      </section>
+
+      <!-- SCENE 11 — BENEFITS AT THE EDGE -->
+      <section data-scene data-screen-label="Benefits at the edge" style="{{ sc11 }}">
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#0e8f74">Chapter 11 · What you gain</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:40px;line-height:1.04;margin:0;letter-spacing:-.01em">Benefits at the edge</h2>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
+          <sc-for list="{{ edgeBenefits }}" as="b" hint-placeholder-count="3">
+            <div style="background:#fafcfb;border:1px solid #e2ebe8;border-radius:18px;padding:22px;display:flex;flex-direction:column;gap:9px">
+              <div style="width:44px;height:44px;border-radius:12px;background:{{ b.color }};display:flex;align-items:center;justify-content:center;font-size:22px">{{ b.icon }}</div>
+              <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:17px;color:{{ b.color }}">{{ b.t }}</div>
+              <div style="font-size:14px;line-height:1.5;color:#4c6660">{{ b.d }}</div>
+              <div style="background:#f3f9f7;border-radius:11px;padding:11px 13px;font-size:12.5px;line-height:1.5;color:#4c6660">💡 {{ b.ex }}</div>
+            </div>
+          </sc-for>
+        </div>
+      </section>
+
+      <!-- SCENE 12 — EDGE + CLOUD LAYERS -->
+      <section data-scene data-screen-label="Edge and cloud layers" style="{{ sc12 }}">
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#2e7fd4">Chapter 12 · Not either/or</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:38px;line-height:1.04;margin:0;letter-spacing:-.01em">How edge works <i>with</i> centralised cloud</h2>
+          <p style="font-size:16px;line-height:1.5;color:#4c6660;margin:0">Edge <b>complements</b> rather than replaces the cloud. <b>Tap each layer.</b></p>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <sc-for list="{{ layerList }}" as="L" hint-placeholder-count="3">
+            <button onClick="{{ L.onClick }}" style="flex:1;min-width:170px;display:flex;align-items:center;gap:9px;border-radius:13px;padding:13px 18px;cursor:pointer;transition:all .15s;border:2px solid {{ L.border }};background:{{ L.bg }};color:{{ L.fg }}"><span style="font-size:19px">{{ L.icon }}</span><span style="font-family:'Bricolage Grotesque';font-weight:800;font-size:14.5px">{{ L.name }}</span></button>
+          </sc-for>
+        </div>
+        <div style="display:grid;grid-template-columns:.95fr 1.05fr;gap:20px;align-items:stretch">
+          <div style="background:#1d2b2a;border-radius:20px;padding:22px;display:flex;flex-direction:column;gap:9px;justify-content:center">
+            <div style="background:#2e7fd4;color:#fff;border-radius:13px;padding:14px 16px;text-align:center"><div style="font-size:22px">☁️</div><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:13px;margin-top:3px">Cloud Layer</div><div style="font-size:10.5px;opacity:.9">deep analysis · storage</div></div>
+            <div style="display:flex;justify-content:center;gap:16px;color:#7a5cf0;font-size:15px;font-weight:800"><span>↑ insights</span><span>↓ updates</span></div>
+            <div style="background:#0e8f74;color:#fff;border-radius:13px;padding:14px 16px;text-align:center"><div style="font-size:22px">📡</div><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:13px;margin-top:3px">Edge Layer</div><div style="font-size:10.5px;opacity:.9">real-time · local</div></div>
+            <div style="display:flex;justify-content:center;color:#7a9a92;font-size:14px">↑</div>
+            <div style="display:flex;gap:6px;justify-content:center">
+              <div style="background:#2f4340;color:#cfe5df;border-radius:9px;padding:8px 11px;font-size:11px;font-weight:700">📱 IoT</div>
+              <div style="background:#2f4340;color:#cfe5df;border-radius:9px;padding:8px 11px;font-size:11px;font-weight:700">📷 Sensors</div>
+              <div style="background:#2f4340;color:#cfe5df;border-radius:9px;padding:8px 11px;font-size:11px;font-weight:700">🚗 Vehicles</div>
+            </div>
+          </div>
+          <div style="background:#f6faf9;border:2px solid #dcebe6;border-radius:20px;padding:26px;display:flex;flex-direction:column;gap:12px;justify-content:center">
+            <div style="display:flex;align-items:center;gap:12px"><span style="font-size:30px">{{ layerInfo.icon }}</span><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:23px;color:{{ layerInfo.color }}">{{ layerInfo.name }}</div></div>
+            <p style="margin:0;font-size:16.5px;line-height:1.6;color:#3c4a58">{{ layerInfo.desc }}</p>
+          </div>
+        </div>
+        <div style="display:flex;gap:12px;flex-wrap:wrap">
+          <div style="flex:1;min-width:210px;background:#e4f3ee;border:1px solid #c2e4da;border-radius:13px;padding:13px 16px;font-size:13.5px;color:#0a6b50"><b>⚡ Low latency at the edge</b><div style="color:#4c6660;margin-top:3px">Immediate processing where data is generated.</div></div>
+          <div style="flex:1;min-width:210px;background:#eaf1fd;border:1px solid #cfdffa;border-radius:13px;padding:13px 16px;font-size:13.5px;color:#22598f"><b>📈 Scalable compute in the cloud</b><div style="color:#4c6660;margin-top:3px">Complex, large-scale tasks in central data centres.</div></div>
+          <div style="flex:1;min-width:210px;background:#fff7ef;border:1px solid #ffe0c2;border-radius:13px;padding:13px 16px;font-size:13.5px;color:#8a5f21"><b>📉 Efficient bandwidth</b><div style="color:#4c6660;margin-top:3px">Only critical or processed data travels upstream.</div></div>
+        </div>
+      </section>
+
+      <!-- SCENE 13 — EDGE USE CASES -->
+      <section data-scene data-screen-label="Edge use cases" style="{{ sc13 }}">
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#ec7211">Chapter 13 · Where you'll actually meet it</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:40px;line-height:1.04;margin:0;letter-spacing:-.01em">Edge use cases</h2>
+          <p style="font-size:16px;line-height:1.5;color:#4c6660;margin:0"><b>Tap each domain.</b> Note the CDN one — it matters for your video-streaming component.</p>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <sc-for list="{{ useList }}" as="U" hint-placeholder-count="5">
+            <button onClick="{{ U.onClick }}" style="display:flex;align-items:center;gap:8px;border-radius:12px;padding:12px 17px;cursor:pointer;transition:all .15s;border:2px solid {{ U.border }};background:{{ U.bg }};color:{{ U.fg }}"><span style="font-size:17px">{{ U.icon }}</span><span style="font-family:'Bricolage Grotesque';font-weight:800;font-size:13.5px">{{ U.name }}</span></button>
+          </sc-for>
+        </div>
+        <div style="background:#fff7ef;border:2px solid #ffe0c2;border-radius:20px;padding:26px;display:flex;gap:20px;align-items:center;flex-wrap:wrap;min-height:160px">
+          <div style="width:68px;height:68px;border-radius:17px;background:{{ useInfo.color }};display:flex;align-items:center;justify-content:center;font-size:32px;flex-shrink:0">{{ useInfo.icon }}</div>
+          <div style="flex:1;min-width:280px;display:flex;flex-direction:column;gap:8px">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:23px;color:{{ useInfo.color }}">{{ useInfo.name }}</div>
+            <p style="margin:0;font-size:16.5px;line-height:1.6;color:#3c4a58">{{ useInfo.desc }}</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SCENE 14 — DRAG SORT -->
+      <section data-scene data-screen-label="Sort it out" style="{{ sc14 }}">
+        <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap">
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#0e8f74">🎯 Try it · Which layer owns this?</div>
+            <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:34px;line-height:1.05;margin:0">Control plane, data plane, or edge?</h2>
+            <p style="font-size:15px;color:#4c6660;margin:0"><b>Tap a task</b>, then <b>tap the category</b> it belongs to.</p>
+          </div>
+          <div style="display:flex;gap:10px">
+            <sc-if value="{{ dragChecked }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;align-items:center;border-radius:12px;padding:11px 18px;font-family:'Bricolage Grotesque';font-weight:800;font-size:16px;background:{{ dragScoreBg }};color:{{ dragScoreFg }}">{{ dragScore }}</div>
+            </sc-if>
+            <button onClick="{{ resetDrag }}" style="background:#fff;border:1px solid #d5e6e0;border-radius:12px;padding:11px 18px;font-family:'Figtree';font-weight:600;font-size:14px;color:#4c6660;cursor:pointer">↺ Reset</button>
+            <button onClick="{{ checkDrag }}" style="background:#0e8f74;border:none;border-radius:12px;padding:11px 20px;font-family:'Bricolage Grotesque';font-weight:700;font-size:15px;color:#fff;cursor:pointer">Check answers</button>
+          </div>
+        </div>
+        <div style="min-height:54px;background:#f2f7f5;border:2px dashed #c6ddd6;border-radius:16px;padding:12px;display:flex;flex-wrap:wrap;gap:10px;align-items:center">
+          <span style="font-size:13px;font-weight:700;color:#8ba39e;padding:0 6px">TRAY:</span>
+          <sc-for list="{{ dragTray }}" as="it" hint-placeholder-count="6">
+            <button onClick="{{ it.onClick }}" style="border-radius:11px;padding:11px 16px;font-family:'Figtree';font-weight:600;font-size:14px;cursor:pointer;transition:all .15s;border:2px solid {{ it.border }};background:{{ it.bg }};color:{{ it.fg }}">{{ it.label }}</button>
+          </sc-for>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px">
+          <div onClick="{{ dropControl }}" style="background:#f5f2fe;border:2px solid #ded3fb;border-radius:18px;padding:16px;min-height:180px;display:flex;flex-direction:column;gap:10px;cursor:pointer">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:15px;color:#7a5cf0">🧠 Control plane</div>
+            <sc-for list="{{ dragControl }}" as="it" hint-placeholder-count="0">
+              <button onClick="{{ it.onClick }}" style="display:flex;justify-content:space-between;align-items:center;gap:6px;text-align:left;border-radius:10px;padding:10px 13px;font-weight:600;font-size:12.5px;cursor:pointer;border:2px solid {{ it.border }};background:{{ it.bg }};color:{{ it.fg }}"><span>{{ it.label }}</span><span style="font-weight:800">{{ it.mark }}</span></button>
+            </sc-for>
+          </div>
+          <div onClick="{{ dropData }}" style="background:#eef4fd;border:2px solid #cfdffa;border-radius:18px;padding:16px;min-height:180px;display:flex;flex-direction:column;gap:10px;cursor:pointer">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:15px;color:#2e7fd4">➡️ Data plane</div>
+            <sc-for list="{{ dragData }}" as="it" hint-placeholder-count="0">
+              <button onClick="{{ it.onClick }}" style="display:flex;justify-content:space-between;align-items:center;gap:6px;text-align:left;border-radius:10px;padding:10px 13px;font-weight:600;font-size:12.5px;cursor:pointer;border:2px solid {{ it.border }};background:{{ it.bg }};color:{{ it.fg }}"><span>{{ it.label }}</span><span style="font-weight:800">{{ it.mark }}</span></button>
+            </sc-for>
+          </div>
+          <div onClick="{{ dropEdge }}" style="background:#e9f6f1;border:2px solid #c2e4da;border-radius:18px;padding:16px;min-height:180px;display:flex;flex-direction:column;gap:10px;cursor:pointer">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:15px;color:#0e8f74">📡 Edge service</div>
+            <sc-for list="{{ dragEdge }}" as="it" hint-placeholder-count="0">
+              <button onClick="{{ it.onClick }}" style="display:flex;justify-content:space-between;align-items:center;gap:6px;text-align:left;border-radius:10px;padding:10px 13px;font-weight:600;font-size:12.5px;cursor:pointer;border:2px solid {{ it.border }};background:{{ it.bg }};color:{{ it.fg }}"><span>{{ it.label }}</span><span style="font-weight:800">{{ it.mark }}</span></button>
+            </sc-for>
+          </div>
+        </div>
+      </section>
+
+      <!-- SCENE 15 — QUIZ 3 -->
+      <section data-scene data-screen-label="Final check" style="{{ sc15 }}">
+        <div style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#d98a18">🧠 Final knowledge check</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:30px;line-height:1.2;margin:0;max-width:38ch">{{ q3.question }}</h2>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:820px;width:100%;margin:0 auto">
+          <sc-for list="{{ q3.options }}" as="o" hint-placeholder-count="4">
+            <button onClick="{{ o.onClick }}" style="display:flex;align-items:center;justify-content:space-between;gap:10px;text-align:left;border-radius:15px;padding:18px 20px;font-family:'Figtree';font-weight:600;font-size:15.5px;cursor:pointer;transition:all .15s;border:2px solid {{ o.border }};background:{{ o.bg }};color:{{ o.fg }}"><span>{{ o.label }}</span><span style="font-weight:800;font-size:18px">{{ o.mark }}</span></button>
+          </sc-for>
+        </div>
+        <sc-if value="{{ q3.answered }}" hint-placeholder-val="{{ false }}">
+          <div style="max-width:820px;width:100%;margin:0 auto;border-radius:16px;padding:18px 22px;background:{{ q3.bannerBg }}">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:17px;color:{{ q3.bannerFg }};margin-bottom:5px">{{ q3.banner }}</div>
+            <div style="font-size:16px;line-height:1.55;color:#33534c">{{ q3.explanation }}</div>
+          </div>
+        </sc-if>
+      </section>
+
+      <!-- SCENE 16 — WRAP-UP + WEEK ROADMAP -->
+      <section data-scene data-screen-label="Wrap-up" style="{{ sc16 }}">
+        <div style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px">
+          <div style="font-size:42px">🎉</div>
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#0e8f74">Session wrap-up</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:40px;line-height:1.04;margin:0;letter-spacing:-.01em">Software controls the network; the edge shortens the trip</h2>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
+          <div style="background:#e9f6f1;border:1px solid #c2e4da;border-radius:18px;padding:22px;display:flex;flex-direction:column;gap:8px">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:16px;color:#0e8f74">✅ Covered</div>
+            <p style="margin:0;font-size:14.5px;line-height:1.55;color:#3c4a58">What SDN is, why it beats rigid traditional networks, and the control-plane / data-plane split.</p>
+          </div>
+          <div style="background:#eef4fd;border:1px solid #cfdffa;border-radius:18px;padding:22px;display:flex;flex-direction:column;gap:8px">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:16px;color:#2e7fd4">🛠️ Traced</div>
+            <p style="margin:0;font-size:14.5px;line-height:1.55;color:#3c4a58">A live web request through controller, OpenFlow and switch — plus the three SDN components.</p>
+          </div>
+          <div style="background:#fff7ef;border:1px solid #ffe0c2;border-radius:18px;padding:22px;display:flex;flex-direction:column;gap:8px">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:16px;color:#ec7211">🤔 Connected</div>
+            <p style="margin:0;font-size:14.5px;line-height:1.55;color:#3c4a58">Edge services, their drivers (latency, bandwidth, privacy), and how edge and cloud work together.</p>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:16px;color:#1d2b2a">📘 The 6-week road ahead — <span style="font-weight:600;color:#6a857f;font-size:14px">tap a week</span></div>
+          <div style="display:flex;gap:7px;flex-wrap:wrap">
+            <sc-for list="{{ weekList }}" as="W" hint-placeholder-count="6">
+              <button onClick="{{ W.onClick }}" style="border-radius:11px;padding:10px 16px;font-family:'Bricolage Grotesque';font-weight:800;font-size:13px;cursor:pointer;transition:all .15s;border:2px solid {{ W.border }};background:{{ W.bg }};color:{{ W.fg }}">{{ W.num }}</button>
+            </sc-for>
+          </div>
+          <div style="background:#f6faf9;border:2px solid #dcebe6;border-radius:16px;padding:18px 22px;display:flex;flex-direction:column;gap:6px;min-height:92px;justify-content:center">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:19px;color:{{ weekInfo.color }}">{{ weekInfo.name }}</div>
+            <p style="margin:0;font-size:15px;line-height:1.55;color:#3c4a58">{{ weekInfo.desc }}</p>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+          <div style="background:#f3f9f7;border:1px solid #dcebe6;border-radius:18px;padding:20px">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:15px;margin-bottom:9px;color:#0e8f74">🎯 Your goals</div>
+            <div style="display:flex;flex-direction:column;gap:7px;font-size:14px;color:#3c4a58">
+              <div>• <b>Master the brief</b> — requirements and the AI "Amber" policy</div>
+              <div>• <b>Grasp the concept</b> — control plane vs data plane</div>
+              <div>• <b>Build the lab</b> — AWS Academy, Azure CLI, FFmpeg</div>
+            </div>
+          </div>
+          <div style="background:#fff7ef;border:1px solid #ffe0c2;border-radius:18px;padding:20px">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:15px;margin-bottom:9px;color:#ec7211">📌 After this session</div>
+            <div style="display:flex;flex-direction:column;gap:7px;font-size:14px;color:#3c4a58">
+              <div>• Add the Week 3, 4, 5 &amp; 6 deadlines to your calendar <b>now</b></div>
+              <div>• Confirm OneDrive &amp; GitHub access — you need both to evidence work and version history</div>
+              <div>• Re-read the "InnovateCore" scenario, especially the video-streaming requirements</div>
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:2px">
+          <button onClick="{{ startLesson }}" style="background:#fff;color:#0e8f74;border:2px solid #b5ded2;border-radius:14px;padding:14px 26px;font-family:'Bricolage Grotesque';font-weight:700;font-size:16px;cursor:pointer" style-hover="background:#f4fbf8">↻ Review from the start</button>
+          <button onClick="{{ toggleGlossary }}" style="background:#0e8f74;color:#fff;border:none;border-radius:14px;padding:14px 26px;font-family:'Bricolage Grotesque';font-weight:700;font-size:16px;cursor:pointer">📖 Open glossary</button>
+        </div>
+        <div style="text-align:center;font-size:14px;color:#8ba39e;margin-top:4px">Lesson prepared by <b style="color:#4c6660">Reza Shahabian</b></div>
+      </section>
+
+    </div>
+  </div>
+
+  <div style="position:sticky;bottom:0;z-index:20;width:100%;display:flex;justify-content:center;background:linear-gradient(to top,#edf5f2 55%,transparent);padding:10px 24px 22px">
+    <div style="width:100%;max-width:1180px;display:flex;align-items:center;justify-content:space-between;gap:14px">
+      <button onClick="{{ prev }}" style="display:flex;align-items:center;gap:8px;background:#fff;border:1px solid #d5e6e0;border-radius:13px;padding:13px 22px;font-family:'Bricolage Grotesque';font-weight:700;font-size:15px;color:#33534c;cursor:pointer" style-hover="border-color:#8fc9b9">← Back</button>
+      <div style="display:flex;align-items:center;gap:12px;font-weight:600;color:#6a857f;font-size:15px">
+        <span style="font-family:'Bricolage Grotesque';color:#1d2b2a;font-size:17px">{{ sceneNum }}</span>
+        <span style="color:#b6ccc6">/</span>
+        <span>{{ total }}</span>
+        <span style="color:#b6ccc6">·</span>
+        <span style="color:#33534c">{{ sceneTitle }}</span>
+      </div>
+      <button onClick="{{ next }}" style="display:flex;align-items:center;gap:8px;background:{{ accent }};border:none;border-radius:13px;padding:13px 26px;font-family:'Bricolage Grotesque';font-weight:700;font-size:15px;color:#fff;cursor:pointer;box-shadow:0 10px 20px -10px rgba(20,70,60,.5)" style-hover="transform:translateY(-2px)">Next →</button>
+    </div>
+  </div>
+
+  <sc-if value="{{ glossaryOpen }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ toggleGlossary }}" style="position:fixed;inset:0;z-index:50;background:rgba(20,40,36,.34);backdrop-filter:blur(2px)"></div>
+    <div style="position:fixed;top:0;right:0;bottom:0;z-index:51;width:min(460px,92vw);background:#fff;box-shadow:-20px 0 60px -20px rgba(20,70,60,.4);display:flex;flex-direction:column">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:24px 26px;border-bottom:1px solid #e8f1ee">
+        <div style="display:flex;flex-direction:column;gap:2px">
+          <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:22px">📖 Glossary</div>
+          <div style="font-size:13px;color:#7b948e">SDN &amp; Edge terms, plain English</div>
+        </div>
+        <button onClick="{{ toggleGlossary }}" style="background:#eef5f3;border:none;border-radius:10px;width:38px;height:38px;font-size:18px;cursor:pointer;color:#4c6660">✕</button>
+      </div>
+      <div style="overflow-y:auto;padding:18px 26px 40px;display:flex;flex-direction:column;gap:14px">
+        <sc-for list="{{ glossary }}" as="g" hint-placeholder-count="6">
+          <div style="border:1px solid #e8f1ee;border-radius:14px;padding:14px 16px;background:#fafcfb">
+            <div style="display:flex;align-items:center;gap:8px;font-family:'Bricolage Grotesque';font-weight:700;font-size:16px;color:#1d2b2a"><span>{{ g.icon }}</span>{{ g.term }}</div>
+            <div style="font-size:14.5px;line-height:1.5;color:#4c6660;margin-top:5px">{{ g.def }}</div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:820}}">
+class Component extends DCLogic {
+  state = {
+    idx: 0, playing: false, glossary: false,
+    quiz: { q1: null, q2: null, q3: null },
+    step: 0, comp: 'controller', driver: 'latency', use: 'iot', layer: 'edge', week: 1,
+    drops: { route:null, policy:null, forward:null, camera:null, game:null, cdn:null },
+    sel: null, dragChecked: false,
+  };
+
+  total = 17;
+  interactive = new Set([5,6,7,8,10,12,13,14,15]);
+  durations = { 0:5200 };
+
+  chapTitles = ['Welcome','Traditional vs SDN','What is SDN','Why SDN','Control plane vs data plane','Packet-flow tracer','Quick check','SDN components','Where SDN matters','Edge services','Why edge: the drivers','Benefits at the edge','Edge + cloud layers','Edge use cases','Sort it out','Final check','Wrap-up'];
+  chapColors = ['#0e8f74','#2e7fd4','#0e8f74','#7a5cf0','#ec7211','#0e8f74','#ffb43d','#2e7fd4','#0e8f74','#7a5cf0','#e0564a','#0e8f74','#2e7fd4','#ec7211','#0e8f74','#ffb43d','#0e8f74'];
+
+  sdnTraits = [
+    {icon:'🎯',color:'#0e8f74',t:'Centralised Control',d:'The decision-making part (control plane) is separated from the traffic-forwarding part (data plane), so the whole network is managed from a single central controller.'},
+    {icon:'⌨️',color:'#2e7fd4',t:'Programmability',d:'Network behaviour is controlled and changed using software, rather than manually configuring each device.'},
+    {icon:'⚡',color:'#7a5cf0',t:'Agility',d:'Network settings can be updated quickly to respond to new requirements or changes.'},
+  ];
+
+  sdnBenefits = [
+    {icon:'🗂️',color:'#0e8f74',t:'Centralised Management',d:'A single controller manages and monitors the entire network from one place.'},
+    {icon:'🔄',color:'#2e7fd4',t:'Dynamic Configuration',d:'Routes and settings change instantly in software, without touching physical devices.'},
+    {icon:'💰',color:'#ec7211',t:'Cost Efficiency',d:'Less reliance on expensive, specialised hardware — most control is handled in software.'},
+  ];
+
+  flowSteps = [
+    {t:'A user requests a website',d:'Someone opens www.example.com. The request hits the nearest SDN switch.',who:'user',icon:'🧑‍💻'},
+    {t:'The switch asks the controller',d:'The switch has no matching rule — it does not know where to send this traffic, so it queries the SDN controller.',who:'switch',icon:'🔀'},
+    {t:'The control plane decides',d:'The controller picks the best route based on current traffic conditions and network policies.',who:'controller',icon:'🧠'},
+    {t:'Instructions sent via OpenFlow',d:'The controller pushes a flow rule down to the switch using the OpenFlow protocol.',who:'controller',icon:'📡'},
+    {t:'The data plane forwards',d:'The switch forwards the traffic along the path the controller defined.',who:'switch',icon:'➡️'},
+    {t:'Future packets follow automatically',d:'The rule is now installed — subsequent packets take the same path with no controller round-trip.',who:'switch',icon:'✅'},
+  ];
+
+  compData = {
+    controller:{name:'Controller',icon:'🧠',color:'#0e8f74',plane:'Control plane',
+      desc:'The central intelligence of the network — it decides how traffic should flow and enforces network policies.'},
+    devices:{name:'SDN Switches / Routers',icon:'🔀',color:'#2e7fd4',plane:'Data plane',
+      desc:'Network devices that follow the instructions sent by the controller to forward data. They no longer make routing decisions themselves.'},
+    apis:{name:'APIs',icon:'🔌',color:'#7a5cf0',plane:'Application interface',
+      desc:'Communication interfaces that let software applications interact with the controller and control network behaviour programmatically.'},
+  };
+  compOrder = ['controller','devices','apis'];
+
+  sdnUseCases = [
+    {icon:'🏢',color:'#0e8f74',t:'Data Centres',d:'Efficiently managing large, fast-changing network environments.'},
+    {icon:'🏬',color:'#2e7fd4',t:'Enterprise Networks',d:'Reducing complexity and simplifying day-to-day network management.'},
+    {icon:'☁️',color:'#7a5cf0',t:'Cloud Computing',d:'Supporting scalable, automated, high-performance network infrastructure.'},
+  ];
+
+  driverData = {
+    latency:{name:'Latency',icon:'⏱️',color:'#e0564a',
+      def:'The delay while data travels to a cloud server and back.',
+      ex:'Pressing a button in an online game, but the action only appears after a short pause.'},
+    bandwidth:{name:'Bandwidth',icon:'📶',color:'#2e7fd4',
+      def:'The amount of data the network can carry. Sending lots of data to the cloud can slow the whole network.',
+      ex:'Streaming 4K video from the cloud can congest the network when many people do it at once.'},
+    privacy:{name:'Data Privacy',icon:'🔐',color:'#7a5cf0',
+      def:'The risk of sensitive data being exposed when it is sent far away to cloud servers.',
+      ex:'Sending patient records to a distant cloud server could be intercepted if not properly secured.'},
+  };
+  driverOrder = ['latency','bandwidth','privacy'];
+
+  edgeBenefits = [
+    {icon:'⚡',color:'#0e8f74',t:'Reduced Latency',d:'Processing data near the user decreases delays.',ex:'A security camera analyses footage locally instead of shipping it to a distant cloud, so alerts appear instantly.'},
+    {icon:'🚀',color:'#2e7fd4',t:'Improved Performance',d:'Applications respond faster, especially real-time services.',ex:'In an online multiplayer game, local processing makes player movement smoother and more responsive.'},
+    {icon:'📉',color:'#ec7211',t:'Bandwidth Efficiency',d:'Less data needs to travel to the cloud, saving network capacity.',ex:'A factory sensor sends only summarised data upstream instead of the full raw stream.'},
+  ];
+
+  layerData = {
+    edge:{name:'Edge Layer',icon:'📡',color:'#0e8f74',
+      desc:'Data is processed locally, at or near its source (IoT devices, edge servers) — enabling real-time responses while cutting latency and bandwidth usage.'},
+    cloud:{name:'Cloud Layer',icon:'☁️',color:'#2e7fd4',
+      desc:'Aggregated data or insights from many edge nodes are sent to the centralised cloud for deeper analysis, long-term storage and large-scale processing.'},
+    feedback:{name:'Feedback Loop',icon:'🔁',color:'#7a5cf0',
+      desc:'The cloud sends updates, configurations or advanced analytics back down to the edge for immediate implementation or user-facing actions.'},
+  };
+  layerOrder = ['edge','cloud','feedback'];
+
+  edgeUseData = {
+    iot:{name:'IoT',icon:'🏙️',color:'#0e8f74',desc:'Edge services let smart cities, connected vehicles and smart homes process data in real time, improving efficiency and responsiveness.'},
+    gaming:{name:'Gaming',icon:'🎮',color:'#7a5cf0',desc:'Latency-sensitive games benefit from edge processing — faster response times and a smoother experience.'},
+    health:{name:'Healthcare',icon:'🩺',color:'#e0564a',desc:'Edge devices allow real-time patient monitoring, enabling quicker decisions by processing medical sensor data on the spot.'},
+    vehicles:{name:'Autonomous Vehicles',icon:'🚗',color:'#2e7fd4',desc:'Rapid data processing at the edge is critical for vehicles to make immediate, safe decisions on the road.'},
+    cdn:{name:'CDNs',icon:'🌍',color:'#ec7211',desc:'Content Delivery Networks use edge locations to store and serve videos, images and pages closer to users — cutting latency for global audiences.'},
+  };
+  edgeUseOrder = ['iot','gaming','health','vehicles','cdn'];
+
+  weekData = {
+    1:{name:'Foundations',color:'#0e8f74',desc:'Introduce core concepts, set expectations and goals — SDN theory, the business scenario, and building your lab environment.'},
+    2:{name:'Exploration',color:'#2e7fd4',desc:'Deep dive into key topics, group discussions and activities.'},
+    3:{name:'Application',color:'#7a5cf0',desc:'Practical exercises and real-world examples.'},
+    4:{name:'Critical Thinking',color:'#ec7211',desc:'Analytical tasks and student-led insights.'},
+    5:{name:'Reflection & Assessment',color:'#e0564a',desc:'Review, evaluations, feedback and next steps.'},
+    6:{name:'Draft & Final Submission',color:'#ffb43d',desc:'Submit work, review drafts and finalise projects.'},
+  };
+  weekOrder = [1,2,3,4,5,6];
+
+  dragMeta = {
+    route:{label:'Choosing the best path for traffic',cat:'control'},
+    policy:{label:'Enforcing network policies',cat:'control'},
+    forward:{label:'Pushing packets out of a port',cat:'data'},
+    camera:{label:'Analysing CCTV footage on-site',cat:'edge'},
+    game:{label:'Smoothing multiplayer game input',cat:'edge'},
+    cdn:{label:'Serving a cached video near the user',cat:'edge'},
+  };
+  dragOrder = ['route','policy','forward','camera','game','cdn'];
+
+  quizDefs = {
+    q1:{question:'In an SDN architecture, which plane decides the best path for network traffic?',
+      options:[{label:'The data plane'},{label:'The control plane',correct:true},{label:'The physical plane'},{label:'Both decide equally'}],
+      explanation:'The control plane — embodied by the SDN controller — makes the decisions based on rules, policies and current network conditions. The data plane simply forwards packets according to the instructions it receives.'},
+    q2:{question:'Which protocol does an SDN controller commonly use to push flow rules down to switches?',
+      options:[{label:'OpenFlow',correct:true},{label:'HTTP'},{label:'Kerberos'},{label:'NFS'}],
+      explanation:'OpenFlow is the standard southbound protocol used by the controller to send rules to network devices and receive status updates from them.'},
+    q3:{question:'A hospital wants patient-monitoring alerts to appear instantly and avoid shipping raw records off-site. Which approach fits best?',
+      options:[{label:'Send everything to a distant central cloud'},{label:'Process at the edge, near the devices',correct:true},{label:'Disable monitoring during peak hours'},{label:'Increase cloud storage capacity'}],
+      explanation:'Edge processing handles time-sensitive, local tasks — cutting latency and keeping sensitive data close to its source — while the central cloud is still used for heavy analysis and long-term storage.'},
+  };
+
+  glossary = [
+    {icon:'🕸️',term:'SDN',def:'Software-Defined Networking — managing networks through software rather than logic built into each piece of hardware.'},
+    {icon:'🧠',term:'Control plane',def:'The decision-making layer — decides the best path for traffic based on rules, policies and conditions.'},
+    {icon:'➡️',term:'Data plane',def:'The forwarding layer — switches and routers that move packets according to the controller\u2019s instructions.'},
+    {icon:'📡',term:'OpenFlow',def:'A protocol the controller uses to send flow rules to devices and receive status updates back.'},
+    {icon:'🎛️',term:'SDN controller',def:'The central intelligence that decides how traffic flows and enforces policy across the whole network.'},
+    {icon:'🔌',term:'API',def:'An interface letting software applications interact with the controller to change network behaviour programmatically.'},
+    {icon:'⌨️',term:'Programmability',def:'The ability to change network behaviour in software instead of device-by-device manual configuration.'},
+    {icon:'⚡',term:'Agility',def:'How quickly network settings can be updated in response to new requirements.'},
+    {icon:'📡',term:'Edge services',def:'Handling data and delivering services as close as possible to the end user, to cut delay and improve performance.'},
+    {icon:'⏱️',term:'Latency',def:'The delay incurred while data travels to a server and back.'},
+    {icon:'📶',term:'Bandwidth',def:'The amount of data a network can carry at once.'},
+    {icon:'🏭',term:'Edge node',def:'A device or small server at the network edge that processes data locally, near its source.'},
+    {icon:'🌍',term:'CDN',def:'Content Delivery Network — uses edge locations to cache and serve content nearer to users.'},
+    {icon:'🔁',term:'Feedback loop',def:'The cloud pushing updates, configuration or analytics back down to edge nodes.'},
+    {icon:'🏙️',term:'IoT',def:'Internet of Things — networked devices (sensors, vehicles, appliances) generating data at the edge.'},
+    {icon:'🤖',term:'AI policy (Amber)',def:'This module\u2019s stated AI-use category — check the assignment brief for exactly what is allowed and declare any use.'},
+  ];
+
+  componentDidMount(){}
+  componentWillUnmount(){ window.removeEventListener('keydown', this.onKey); clearTimeout(this.t); }
+  ensureWiring(){
+    if(!this._kb){ this._kb=true; window.addEventListener('keydown', this.onKey); }
+    if(this._lastIdx!==this.state.idx || this._lastPlay!==this.state.playing){
+      this._lastIdx=this.state.idx; this._lastPlay=this.state.playing; this.scheduleAutoplay();
+    }
+  }
+  onKey = (e)=>{
+    const tag=(e.target&&e.target.tagName)||'';
+    if(tag==='INPUT'||tag==='TEXTAREA') return;
+    if(e.key==='ArrowRight'){ this.next(); }
+    else if(e.key==='ArrowLeft'){ this.prev(); }
+    else if(e.key===' '){ e.preventDefault(); this.togglePlay(); }
+  };
+
+  sceneCfg = [
+    {gap:22,center:true,pos:true},{gap:18},{gap:18},{gap:18},{gap:18},
+    {gap:16},{gap:22,vcenter:true},{gap:18},{gap:18},{gap:18},
+    {gap:18},{gap:18},{gap:18},{gap:18},{gap:18},{gap:22,vcenter:true},{gap:22},
+  ];
+  sceneStyle(k){
+    const c=this.sceneCfg[k]; const on=this.state.idx===k;
+    const s={display:on?'flex':'none',flexDirection:'column',minHeight:'560px',gap:c.gap+'px',width:'100%'};
+    if(c.center){ s.alignItems='center'; s.justifyContent='center'; s.textAlign='center'; }
+    if(c.vcenter){ s.justifyContent='center'; }
+    if(c.pos){ s.position='relative'; }
+    return s;
+  }
+
+  scheduleAutoplay(){
+    clearTimeout(this.t);
+    const i=this.state.idx;
+    if(this.state.playing && !this.interactive.has(i) && i<this.total-1){
+      this.t=setTimeout(()=>this.next(), this.durations[i]||9000);
+    }
+  }
+
+  next=()=> this.setState(s=> s.idx<this.total-1 ? {idx:s.idx+1} : {playing:false});
+  prev=()=> this.setState(s=> ({idx:Math.max(0,s.idx-1)}));
+  goTo=(i)=>()=> this.setState({idx:i});
+  togglePlay=()=> this.setState(s=>({playing:!s.playing}));
+  startLesson=()=> this.setState({idx:1});
+  playFromStart=()=> this.setState({idx:1, playing:true});
+  toggleGlossary=()=> this.setState(s=>({glossary:!s.glossary}));
+
+  answer=(q,i)=> this.setState(s=> s.quiz[q]!=null ? null : ({quiz:{...s.quiz,[q]:i}}));
+  setComp=(k)=>()=> this.setState({comp:k});
+  setDriver=(k)=>()=> this.setState({driver:k});
+  setUse=(k)=>()=> this.setState({use:k});
+  setLayer=(k)=>()=> this.setState({layer:k});
+  setWeek=(k)=>()=> this.setState({week:k});
+  stepNext=()=> this.setState(s=>({step: Math.min(s.step+1, 5)}));
+  stepPrev=()=> this.setState(s=>({step: Math.max(s.step-1, 0)}));
+  stepReset=()=> this.setState({step:0});
+
+  pick=(id)=>()=> this.setState(s=>({sel: s.sel===id?null:id}));
+  drop=(b)=>()=> this.setState(s=>{ if(!s.sel) return null; return {drops:{...s.drops,[s.sel]:b}, sel:null}; });
+  toTray=(id)=>()=> this.setState(s=>({drops:{...s.drops,[id]:null}, sel:null}));
+  checkDrag=()=> this.setState({dragChecked:true, sel:null});
+  resetDrag=()=> this.setState({drops:{route:null,policy:null,forward:null,camera:null,game:null,cdn:null}, dragChecked:false, sel:null});
+
+  buildQuiz(qKey){
+    const def=this.quizDefs[qKey]; const sel=this.state.quiz[qKey];
+    const options=def.options.map((o,i)=>{
+      let bg='#fff',fg='#1d2b2a',border='#e2ebe8',mark='';
+      if(sel!=null){
+        if(o.correct){ bg='#e4f5ed';fg='#0a6b50';border='#19c39a';mark='✓'; }
+        else if(i===sel){ bg='#fdeceb';fg='#c2362b';border='#ff6b5e';mark='✗'; }
+        else { fg='#97a8a4';border='#eef3f1'; }
+      }
+      return {label:o.label,bg,fg,border,mark,onClick:()=>this.answer(qKey,i)};
+    });
+    const answered=sel!=null;
+    const isCorrect=answered && def.options[sel].correct;
+    return {question:def.question,options,answered,isCorrect,explanation:def.explanation,
+      banner: !answered ? '' : (isCorrect?'✅ Correct!':'❌ Not quite —'),
+      bannerBg: !answered ? '' : (isCorrect?'#e4f5ed':'#fdeceb'),
+      bannerFg: !answered ? '' : (isCorrect?'#0a6b50':'#c2362b')};
+  }
+
+  buildDragItem(id, place){
+    const m=this.dragMeta[id]; const drops=this.state.drops; const checked=this.state.dragChecked;
+    const selected=this.state.sel===id;
+    let bg='#fff',fg='#1d2b2a',border='#d5e6e0',mark='';
+    if(checked && place!=='tray'){
+      const ok=drops[id]===m.cat;
+      bg=ok?'#e4f5ed':'#fdeceb'; fg=ok?'#0a6b50':'#c2362b'; border=ok?'#19c39a':'#ff6b5e'; mark=ok?'✓':'✗';
+    } else if(selected){ bg='#e4f3ee'; border='#0e8f74'; }
+    const onClick = place==='tray' ? this.pick(id) : this.toTray(id);
+    return {id,label:m.label,bg,fg,border,mark,selected,onClick};
+  }
+
+  renderVals(){
+    this.ensureWiring();
+    const i=this.state.idx;
+    const accent=this.chapColors[i]||'#0e8f74';
+    const sc={}; for(let k=0;k<this.total;k++) sc['sc'+k]=this.sceneStyle(k);
+    const chapters=this.chapTitles.map((t,k)=>({num:k+1,label:t,onClick:this.goTo(k),bg: k===i?this.chapColors[k] : (k<i?'#9ab9b1':'#d3e3de')}));
+
+    const st=this.state.step;
+    const flowList=this.flowSteps.map((s,ix)=>({...s,num:ix+1,
+      done: ix<st, active: ix===st,
+      bg: ix===st ? '#0e8f74' : (ix<st ? '#e4f3ee' : '#f6f9f8'),
+      fg: ix===st ? '#fff' : (ix<st ? '#0a6b50' : '#8ba39e'),
+      border: ix===st ? '#0e8f74' : (ix<st ? '#c2e4da' : '#e8f1ee')}));
+    const cur=this.flowSteps[st];
+    const userLit = st===0, switchLit = st===1||st===4||st===5, ctrlLit = st===2||st===3;
+
+    const compList=this.compOrder.map(k=>{ const C=this.compData[k]; const on=this.state.comp===k;
+      return {k,name:C.name,icon:C.icon,onClick:this.setComp(k),bg:on?C.color:'#f2f7f5',fg:on?'#fff':'#33534c',border:on?C.color:'#e2ebe8'}; });
+    const cd=this.compData[this.state.comp];
+
+    const driverList=this.driverOrder.map(k=>{ const D=this.driverData[k]; const on=this.state.driver===k;
+      return {k,name:D.name,icon:D.icon,onClick:this.setDriver(k),bg:on?D.color:'#f2f7f5',fg:on?'#fff':'#33534c',border:on?D.color:'#e2ebe8'}; });
+    const dd=this.driverData[this.state.driver];
+
+    const layerList=this.layerOrder.map(k=>{ const L=this.layerData[k]; const on=this.state.layer===k;
+      return {k,name:L.name,icon:L.icon,onClick:this.setLayer(k),bg:on?L.color:'#f2f7f5',fg:on?'#fff':'#33534c',border:on?L.color:'#e2ebe8'}; });
+    const ld=this.layerData[this.state.layer];
+
+    const useList=this.edgeUseOrder.map(k=>{ const U=this.edgeUseData[k]; const on=this.state.use===k;
+      return {k,name:U.name,icon:U.icon,onClick:this.setUse(k),bg:on?U.color:'#f2f7f5',fg:on?'#fff':'#33534c',border:on?U.color:'#e2ebe8'}; });
+    const ud=this.edgeUseData[this.state.use];
+
+    const weekList=this.weekOrder.map(k=>{ const W=this.weekData[k]; const on=this.state.week===k;
+      return {k,num:'Week '+k,onClick:this.setWeek(k),bg:on?W.color:'#f2f7f5',fg:on?'#fff':'#33534c',border:on?W.color:'#e2ebe8'}; });
+    const wd=this.weekData[this.state.week];
+
+    const tray=this.dragOrder.filter(id=>this.state.drops[id]==null).map(id=>this.buildDragItem(id,'tray'));
+    const bucket=(b)=>this.dragOrder.filter(id=>this.state.drops[id]===b).map(id=>this.buildDragItem(id,b));
+    const correct=this.dragOrder.filter(id=>this.state.drops[id]===this.dragMeta[id].cat).length;
+
+    return {
+      ...sc,
+      progressPct: Math.round(i/(this.total-1)*100)+'%',
+      accent, sceneNum:i+1, total:this.total, sceneTitle:this.chapTitles[i], chapters,
+      next:this.next, prev:this.prev, togglePlay:this.togglePlay,
+      playLabel: this.state.playing?'⏸ Pause':'▶ Play',
+      startLesson:this.startLesson, playFromStart:this.playFromStart,
+      glossaryOpen:this.state.glossary, toggleGlossary:this.toggleGlossary, glossary:this.glossary,
+      sdnTraits:this.sdnTraits, sdnBenefits:this.sdnBenefits, sdnUseCases:this.sdnUseCases,
+      edgeBenefits:this.edgeBenefits,
+      flowList, stepTitle:cur.t, stepDesc:cur.d, stepIcon:cur.icon,
+      stepNum:(st+1)+' / 6', stepNext:this.stepNext, stepPrev:this.stepPrev, stepReset:this.stepReset,
+      userBg: userLit?'#0e8f74':'#f2f7f5', userFg: userLit?'#fff':'#6a857f',
+      switchBg: switchLit?'#2e7fd4':'#f2f7f5', switchFg: switchLit?'#fff':'#6a857f',
+      ctrlBg: ctrlLit?'#7a5cf0':'#f2f7f5', ctrlFg: ctrlLit?'#fff':'#6a857f',
+      compList, compInfo:cd,
+      driverList, driverInfo:dd,
+      layerList, layerInfo:ld,
+      useList, useInfo:ud,
+      weekList, weekInfo:wd,
+      q1:this.buildQuiz('q1'), q2:this.buildQuiz('q2'), q3:this.buildQuiz('q3'),
+      dragTray:tray, dragControl:bucket('control'), dragData:bucket('data'), dragEdge:bucket('edge'),
+      dropControl:this.drop('control'), dropData:this.drop('data'), dropEdge:this.drop('edge'),
+      checkDrag:this.checkDrag, resetDrag:this.resetDrag, dragChecked:this.state.dragChecked,
+      dragScore:correct+' / 6 correct', dragScoreBg: correct===6?'#e4f5ed':'#fff4e8', dragScoreFg: correct===6?'#0a6b50':'#d98a18',
+    };
+  }
+}
+</script>
+</body>
+</html>

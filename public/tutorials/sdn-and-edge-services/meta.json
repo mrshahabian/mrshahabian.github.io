@@ -1,0 +1,17 @@
+{
+  "title": "SDN and Edge Services",
+  "description": "Software-defined networking and edge services: network virtualisation, control and data planes, OpenFlow flow tables, a hands-on Mininet lab, addressing and subnetting, BGP and VPC peering, edge/fog/mist computing, and the cloud automation toolkit (AWS CLI, CloudFormation, GitHub Actions, Well-Architected).",
+  "order": 3,
+  "videos": [
+    { "title": "Professor Messer — SDN Introduction (short overview)", "url": "https://youtu.be/wNiDqwCoojI" }
+  ],
+  "books": [
+    { "title": "Open Networking Foundation — OpenFlow switch specification", "url": "https://opennetworking.org/software-defined-standards/specifications/" },
+    { "title": "Mininet — walkthrough and documentation", "url": "https://mininet.org/walkthrough/" },
+    { "title": "AWS Documentation — VPC peering", "url": "https://docs.aws.amazon.com/vpc/latest/peering/what-is-vpc-peering.html" },
+    { "title": "AWS Documentation — Transit Gateway", "url": "https://docs.aws.amazon.com/vpc/latest/tgw/what-is-transit-gateway.html" },
+    { "title": "AWS CloudFormation User Guide", "url": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/Welcome.html" },
+    { "title": "AWS Well-Architected Framework", "url": "https://docs.aws.amazon.com/wellarchitected/latest/framework/welcome.html" },
+    { "title": "GitHub Actions documentation", "url": "https://docs.github.com/en/actions" }
+  ]
+}

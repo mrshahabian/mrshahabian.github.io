@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{background:#edf5f2;font-family:'Figtree',system-ui,sans-serif;color:#1d2b2a;-webkit-font-smoothing:antialiased}
+  a{color:#0e8f74}
+  a:hover{color:#0a6b57}
+  @keyframes floatA{0%,100%{transform:translateY(0) translateX(0)}50%{transform:translateY(-22px) translateX(10px)}}
+  @keyframes floatB{0%,100%{transform:translateY(0)}50%{transform:translateY(26px)}}
+  ::-webkit-scrollbar{width:10px;height:10px}
+  ::-webkit-scrollbar-thumb{background:#c2dcd4;border-radius:8px}
+</style>
+</helmet>
+<div style="min-height:100vh;position:relative;overflow-x:hidden;display:flex;flex-direction:column;align-items:center">
+
+  <div style="position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden">
+    <div style="position:absolute;top:12%;left:6%;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#ffffff,#d3ece3);opacity:.55;filter:blur(2px);animation:floatA 13s ease-in-out infinite"></div>
+    <div style="position:absolute;top:58%;left:80%;width:280px;height:280px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#ffffff,#fdeed6);opacity:.45;filter:blur(2px);animation:floatB 17s ease-in-out infinite"></div>
+  </div>
+
+  <div style="position:sticky;top:0;z-index:30;width:100%;display:flex;justify-content:center;background:rgba(237,245,242,.85);backdrop-filter:blur(10px);border-bottom:1px solid #d5e6e0">
+    <div style="width:100%;max-width:1180px;display:flex;align-items:center;gap:20px;padding:14px 24px">
+      <div style="display:flex;align-items:center;gap:10px;font-family:'Bricolage Grotesque';font-weight:800;font-size:18px;color:#1d2b2a;white-space:nowrap">
+        <span style="font-size:22px">🏛️</span><span>Well-Architected</span>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;gap:6px;min-width:0">
+        <div style="height:8px;border-radius:99px;background:#d3e3de;overflow:hidden">
+          <div style="height:100%;border-radius:99px;transition:width .45s cubic-bezier(.22,.9,.3,1);width:{{ progressPct }};background:{{ accent }}"></div>
+        </div>
+        <div style="display:flex;gap:5px;flex-wrap:wrap">
+          <sc-for list="{{ chapters }}" as="c" hint-placeholder-count="14">
+            <button onClick="{{ c.onClick }}" title="{{ c.label }}" style="width:18px;height:18px;border:none;border-radius:50%;cursor:pointer;padding:0;font-size:9px;font-weight:700;color:#fff;line-height:18px;transition:transform .15s;background:{{ c.bg }}" style-hover="transform:scale(1.25)">{{ c.num }}</button>
+          </sc-for>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;white-space:nowrap">
+        <button onClick="{{ toggleGlossary }}" style="display:flex;align-items:center;gap:6px;background:#fff;border:1px solid #d5e6e0;border-radius:11px;padding:9px 14px;font-family:'Figtree';font-weight:600;font-size:14px;color:#33534c;cursor:pointer" style-hover="border-color:#0e8f74;color:#0e8f74">📖 Glossary</button>
+        <button onClick="{{ togglePlay }}" style="display:flex;align-items:center;gap:7px;background:{{ accent }};border:none;border-radius:11px;padding:10px 16px;font-family:'Bricolage Grotesque';font-weight:700;font-size:14px;color:#fff;cursor:pointer" style-hover="filter:brightness(1.06)">{{ playLabel }}</button>
+      </div>
+    </div>
+  </div>
+
+  <div style="width:100%;max-width:1180px;padding:30px 24px 16px;z-index:5">
+    <div style="position:relative;width:100%;background:#fff;border-radius:30px;box-shadow:0 24px 60px -28px rgba(20,70,60,.32),0 2px 0 #ffffff inset;padding:52px 56px;min-height:580px;overflow:hidden">
+
+      <section data-scene data-screen-label="Welcome" style="{{ sc0 }}">
+        <div style="position:absolute;top:0;right:8%;font-size:40px;animation:floatA 9s ease-in-out infinite">🏛️</div>
+        <div style="position:absolute;bottom:6%;left:6%;font-size:34px;animation:floatB 11s ease-in-out infinite">☁️</div>
+        <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.22em;text-transform:uppercase;font-weight:700;color:#0e8f74">Interactive Lesson</div>
+        <h1 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:54px;line-height:1.02;margin:0;max-width:19ch;letter-spacing:-.02em">The Well-Architected <span style="background:linear-gradient(120deg,#0e8f74,#ec7211);-webkit-background-clip:text;background-clip:text;color:transparent">Framework</span></h1>
+        <p style="font-size:20px;line-height:1.55;color:#4c6660;max-width:70ch;margin:0">Six pillars that hold up a cloud architecture. Not a checklist — a structured way to make informed design decisions, and to see the trade-offs you're already making.</p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:4px">
+          <span style="background:#e4f3ee;border:1px solid #c2e4da;border-radius:99px;padding:8px 16px;font-weight:600;font-size:15px;color:#0e8f74">⏱️ ~26 min</span>
+          <span style="background:#fef4e8;border:1px solid #ffe6c2;border-radius:99px;padding:8px 16px;font-weight:600;font-size:15px;color:#d98a18">📑 14 chapters</span>
+          <span style="background:#fdeeed;border:1px solid #ffd9d5;border-radius:99px;padding:8px 16px;font-weight:600;font-size:15px;color:#e0564a">🧠 3 quizzes</span>
+          <span style="background:#eaf1fd;border:1px solid #cfdffa;border-radius:99px;padding:8px 16px;font-weight:600;font-size:15px;color:#2e7fd4">🎯 Pillar explorer</span>
+        </div>
+        <div style="display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-top:14px">
+          <button onClick="{{ startLesson }}" style="background:#0e8f74;color:#fff;border:none;border-radius:15px;padding:18px 34px;font-family:'Bricolage Grotesque';font-weight:700;font-size:18px;cursor:pointer;box-shadow:0 12px 24px -8px rgba(14,143,116,.6)" style-hover="transform:translateY(-2px)">Start lesson →</button>
+          <button onClick="{{ playFromStart }}" style="background:#fff;color:#0e8f74;border:2px solid #b5ded2;border-radius:15px;padding:16px 30px;font-family:'Bricolage Grotesque';font-weight:700;font-size:18px;cursor:pointer" style-hover="border-color:#0e8f74;background:#f4fbf8">▶ Play as video</button>
+        </div>
+        <div style="margin-top:18px;display:flex;align-items:center;gap:10px;background:#f3f9f7;border:1px solid #dcebe6;border-radius:99px;padding:8px 8px 8px 18px">
+          <span style="font-size:14px;color:#6a857f">Prepared by</span>
+          <span style="background:#1d2b2a;color:#fff;border-radius:99px;padding:7px 16px;font-weight:700;font-size:14px;font-family:'Bricolage Grotesque'">Reza Shahabian</span>
+        </div>
+      </section>
+
+      <section data-scene data-screen-label="What the framework is" style="{{ sc1 }}">
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#2e7fd4">Chapter 01 · The idea</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:40px;line-height:1.04;margin:0;letter-spacing:-.01em">What the framework is</h2>
+          <p style="font-size:17.5px;line-height:1.55;color:#4c6660;margin:0;max-width:86ch">A clear set of best practices for designing, building and operating cloud systems — so your architecture is properly structured, optimised for performance, and aligned with what your application actually needs.</p>
+        </div>
+        <div style="background:#1d2b2a;border-radius:20px;padding:26px;display:flex;flex-direction:column;gap:14px;align-items:center">
+          <div style="font-size:11.5px;font-weight:800;letter-spacing:.1em;color:#8fb8ac">IT DEFINES BEST PRACTICES FOR WORKLOADS THAT ARE</div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center">
+            <sc-for list="{{ qualities }}" as="q" hint-placeholder-count="5">
+              <div style="border-radius:13px;padding:13px 20px;text-align:center;background:{{ q.c }}"><div style="font-size:21px">{{ q.icon }}</div><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:13px;color:#fff;margin-top:4px">{{ q.t }}</div></div>
+            </sc-for>
+          </div>
+        </div>
+        <div style="background:#f6faf9;border:1px solid #dcebe6;border-radius:16px;padding:18px 22px">
+          <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:15px;color:#0e8f74;margin-bottom:6px">📦 What is a "workload"?</div>
+          <p style="margin:0;font-size:15px;line-height:1.6;color:#3c4a58">A specific application, system or set of components that delivers business value. It is typically the level at which business and technology leaders discuss design, performance and operational requirements — so it is the level the framework applies to.</p>
+        </div>
+      </section>
+
+      <section data-scene data-screen-label="Not a checklist" style="{{ sc2 }}">
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#7a5cf0">Chapter 02 · A common misconception</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:42px;line-height:1.04;margin:0;letter-spacing:-.01em">It is not a checklist</h2>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+          <div style="background:#fdf2f0;border:2px solid #f8d6d0;border-radius:18px;padding:24px;display:flex;flex-direction:column;gap:11px">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:17px;color:#c2453a">✗ What it isn't</div>
+            <div style="display:flex;flex-direction:column;gap:7px;font-size:15px;color:#3c4a58">
+              <div>• A checklist of tasks to tick off</div>
+              <div>• An audit</div>
+              <div>• A compliance exercise</div>
+              <div>• A one-time gate you pass and forget</div>
+            </div>
+          </div>
+          <div style="background:#e9f6f1;border:2px solid #c2e4da;border-radius:18px;padding:24px;display:flex;flex-direction:column;gap:11px">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:17px;color:#0e8f74">✓ What it is</div>
+            <div style="display:flex;flex-direction:column;gap:7px;font-size:15px;color:#3c4a58">
+              <div>• A structured, holistic approach to building systems</div>
+              <div>• Guidance for informed architectural decisions</div>
+              <div>• A collaborative, constructive discussion</div>
+              <div>• Continuously refined by real customer experience</div>
+            </div>
+          </div>
+        </div>
+        <div style="background:#f5f2fe;border:1px solid #ded3fb;border-radius:14px;padding:14px 20px;font-size:14.5px;color:#5a4a8f">💡 The point is not to <i>pass</i> — it is to understand the design decisions you have made, and improve them over time.</div>
+      </section>
+
+      <section data-scene data-screen-label="Why it helps" style="{{ sc3 }}">
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#ec7211">Chapter 03 · The payoff</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:40px;line-height:1.04;margin:0;letter-spacing:-.01em">Why it helps</h2>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <sc-for list="{{ benefits }}" as="b" hint-placeholder-count="5">
+            <div style="display:flex;gap:14px;align-items:flex-start;background:#fff7ef;border:1px solid #ffe0c2;border-radius:14px;padding:14px 18px">
+              <div style="font-size:22px;flex-shrink:0">{{ b.icon }}</div>
+              <div><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:15px;color:#ec7211">{{ b.t }}</div><div style="font-size:14px;line-height:1.5;color:#3c4a58;margin-top:3px">{{ b.d }}</div></div>
+            </div>
+          </sc-for>
+        </div>
+      </section>
+
+      <section data-scene data-screen-label="Pillars across platforms" style="{{ sc4 }}">
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#2e7fd4">Chapter 04 · Not just AWS</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:38px;line-height:1.04;margin:0;letter-spacing:-.01em">Pillars across cloud platforms</h2>
+          <p style="font-size:16px;line-height:1.5;color:#4c6660;margin:0">The first five pillars are shared by all three major providers. <b>Tap each platform.</b></p>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <sc-for list="{{ platformList }}" as="P" hint-placeholder-count="3">
+            <button onClick="{{ P.onClick }}" style="flex:1;min-width:170px;border-radius:13px;padding:14px 18px;cursor:pointer;transition:all .15s;font-family:'Bricolage Grotesque';font-weight:800;font-size:15px;border:2px solid {{ P.border }};background:{{ P.bg }};color:{{ P.fg }}">{{ P.name }}</button>
+          </sc-for>
+        </div>
+        <div style="background:#f6faf9;border:2px solid #dcebe6;border-radius:20px;padding:24px;display:flex;flex-direction:column;gap:14px;min-height:200px">
+          <div style="display:flex;align-items:baseline;gap:12px;flex-wrap:wrap"><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:23px;color:{{ platformInfo.color }}">{{ platformInfo.name }}</div><div style="background:{{ platformInfo.color }};color:#fff;border-radius:99px;padding:5px 14px;font-weight:700;font-size:12.5px;font-family:'Bricolage Grotesque'">{{ platformInfo.count }}</div></div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <sc-for list="{{ platformInfo.list }}" as="l" hint-placeholder-count="6">
+              <span style="background:#fff;border:1px solid #dcebe6;border-radius:99px;padding:8px 16px;font-weight:600;font-size:13.5px;color:#3c4a58">{{ l.t }}</span>
+            </sc-for>
+          </div>
+        </div>
+        <div style="background:#eef4fd;border:1px solid #cfdffa;border-radius:14px;padding:13px 20px;font-size:14.5px;color:#22598f">🌍 Learn the pillars once and the thinking transfers — the shared five reflect the core principles of building secure, reliable, efficient, high-performing cloud architectures anywhere.</div>
+      </section>
+
+      <section data-scene data-screen-label="The six pillars" style="{{ sc5 }}">
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#0e8f74">Chapter 05 · The structure</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:40px;line-height:1.04;margin:0;letter-spacing:-.01em">The six pillars</h2>
+          <p style="font-size:16.5px;line-height:1.55;color:#4c6660;margin:0;max-width:86ch">In building construction, pillars carry the weight and keep the structure stable. The framework uses the same metaphor — each pillar supports a critical area of system design.</p>
+        </div>
+        <div style="background:#1d2b2a;border-radius:20px;padding:26px 22px;display:flex;flex-direction:column;gap:10px">
+          <div style="display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:7px;align-items:end">
+            <sc-for list="{{ sixPillars }}" as="p" hint-placeholder-count="6">
+              <div style="display:flex;flex-direction:column;align-items:center;gap:7px;border-radius:12px 12px 0 0;padding:16px 7px;background:{{ p.color }}"><div style="font-size:24px">{{ p.icon }}</div><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:11px;color:#fff;text-align:center;line-height:1.25">{{ p.name }}</div></div>
+            </sc-for>
+          </div>
+          <div style="height:14px;border-radius:7px;background:#4c6660"></div>
+          <div style="text-align:center;font-size:11.5px;font-weight:700;color:#8fb8ac;letter-spacing:.06em">A ROBUST, EFFICIENT, WELL-MANAGED CLOUD ENVIRONMENT</div>
+        </div>
+      </section>
+
+      <section data-scene data-screen-label="Pillar explorer" style="{{ sc6 }}">
+        <div style="display:flex;flex-direction:column;gap:5px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#0e8f74">🎯 Try it · All six in depth</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:36px;line-height:1.04;margin:0;letter-spacing:-.01em">Pillar explorer</h2>
+          <p style="font-size:15.5px;line-height:1.5;color:#4c6660;margin:0"><b>Tap a pillar</b> for its definition and key components.</p>
+        </div>
+        <div style="display:flex;gap:7px;flex-wrap:wrap">
+          <sc-for list="{{ pillarList }}" as="P" hint-placeholder-count="6">
+            <button onClick="{{ P.onClick }}" style="display:flex;align-items:center;gap:7px;border-radius:11px;padding:11px 15px;cursor:pointer;transition:all .15s;border:2px solid {{ P.border }};background:{{ P.bg }};color:{{ P.fg }}"><span style="font-size:15px">{{ P.icon }}</span><span style="font-family:'Bricolage Grotesque';font-weight:800;font-size:12.5px">{{ P.name }}</span></button>
+          </sc-for>
+        </div>
+        <div style="background:#f6faf9;border:2px solid #dcebe6;border-radius:20px;padding:24px;display:flex;flex-direction:column;gap:14px;min-height:280px">
+          <div style="display:flex;align-items:center;gap:13px"><div style="width:52px;height:52px;border-radius:14px;background:{{ pillarInfo.color }};display:flex;align-items:center;justify-content:center;font-size:25px">{{ pillarInfo.icon }}</div><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:23px;color:{{ pillarInfo.color }}">{{ pillarInfo.name }}</div></div>
+          <p style="margin:0;font-size:16px;line-height:1.6;color:#3c4a58">{{ pillarInfo.desc }}</p>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <sc-for list="{{ pillarKeys }}" as="k" hint-placeholder-count="3">
+              <div style="background:#fff;border:1px solid #dcebe6;border-radius:12px;padding:12px 16px"><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:14px;color:{{ pillarInfo.color }}">{{ k.t }}</div><div style="font-size:13.5px;line-height:1.5;color:#4c6660;margin-top:3px">{{ k.d }}</div></div>
+            </sc-for>
+          </div>
+        </div>
+      </section>
+
+      <section data-scene data-screen-label="Quick check" style="{{ sc7 }}">
+        <div style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#d98a18">🧠 Knowledge check</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:30px;line-height:1.2;margin:0;max-width:40ch">{{ q1.question }}</h2>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:820px;width:100%;margin:0 auto">
+          <sc-for list="{{ q1.options }}" as="o" hint-placeholder-count="4">
+            <button onClick="{{ o.onClick }}" style="display:flex;align-items:center;justify-content:space-between;gap:10px;text-align:left;border-radius:15px;padding:18px 20px;font-family:'Figtree';font-weight:600;font-size:15.5px;cursor:pointer;transition:all .15s;border:2px solid {{ o.border }};background:{{ o.bg }};color:{{ o.fg }}"><span>{{ o.label }}</span><span style="font-weight:800;font-size:18px">{{ o.mark }}</span></button>
+          </sc-for>
+        </div>
+        <sc-if value="{{ q1.answered }}" hint-placeholder-val="{{ false }}">
+          <div style="max-width:820px;width:100%;margin:0 auto;border-radius:16px;padding:18px 22px;background:{{ q1.bannerBg }}">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:17px;color:{{ q1.bannerFg }};margin-bottom:5px">{{ q1.banner }}</div>
+            <div style="font-size:16px;line-height:1.55;color:#33534c">{{ q1.explanation }}</div>
+          </div>
+        </sc-if>
+      </section>
+
+      <section data-scene data-screen-label="Trade-offs in practice" style="{{ sc8 }}">
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#e0564a">Chapter 08 · Where the pillars pull against each other</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:38px;line-height:1.04;margin:0;letter-spacing:-.01em">Trade-offs in practice</h2>
+          <p style="font-size:16px;line-height:1.5;color:#4c6660;margin:0;max-width:86ch">You cannot maximise all six at once. The framework's value is making the trade-off <b>visible and deliberate</b> instead of accidental.</p>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+          <sc-for list="{{ tradeoffs }}" as="t" hint-placeholder-count="4">
+            <div style="background:#f6faf9;border:1px solid #dcebe6;border-radius:16px;padding:18px;display:flex;flex-direction:column;gap:8px">
+              <div style="display:flex;align-items:center;gap:8px;font-family:'Bricolage Grotesque';font-weight:800;font-size:13px"><span style="color:{{ t.color }}">{{ t.a }}</span><span style="color:#b6ccc6">⇄</span><span style="color:#8ba39e">{{ t.b }}</span></div>
+              <div style="font-size:14.5px;line-height:1.5;color:#3c4a58">{{ t.q }}</div>
+              <div style="background:#fff;border:1px solid #dcebe6;border-radius:11px;padding:10px 13px;font-size:13px;line-height:1.5;color:#4c6660">→ {{ t.note }}</div>
+            </div>
+          </sc-for>
+        </div>
+      </section>
+
+      <section data-scene data-screen-label="Applying it to a design" style="{{ sc9 }}">
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#ec7211">Chapter 09 · Six questions to ask</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:38px;line-height:1.04;margin:0;letter-spacing:-.01em">Applying it to your own design</h2>
+          <p style="font-size:16px;line-height:1.5;color:#4c6660;margin:0;max-width:86ch">Point these at any architecture — including your own assignment work.</p>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:9px">
+          <sc-for list="{{ designChecks }}" as="d" hint-placeholder-count="6">
+            <div style="display:flex;gap:14px;align-items:center;background:#f6faf9;border:1px solid #dcebe6;border-radius:13px;padding:13px 17px;flex-wrap:wrap">
+              <span style="font-family:'Bricolage Grotesque';font-weight:800;font-size:12.5px;color:{{ d.c }};min-width:180px">{{ d.p }}</span>
+              <span style="flex:1;min-width:280px;font-size:14.5px;line-height:1.5;color:#3c4a58">{{ d.q }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </section>
+
+      <section data-scene data-screen-label="Sort it out" style="{{ sc10 }}">
+        <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap">
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#0e8f74">🎯 Try it · Which pillar?</div>
+            <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:34px;line-height:1.05;margin:0">Match the practice to its pillar</h2>
+            <p style="font-size:15px;color:#4c6660;margin:0"><b>Tap a practice</b>, then <b>tap the pillar</b> it belongs to.</p>
+          </div>
+          <div style="display:flex;gap:10px">
+            <sc-if value="{{ dragChecked }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;align-items:center;border-radius:12px;padding:11px 18px;font-family:'Bricolage Grotesque';font-weight:800;font-size:16px;background:{{ dragScoreBg }};color:{{ dragScoreFg }}">{{ dragScore }}</div>
+            </sc-if>
+            <button onClick="{{ resetDrag }}" style="background:#fff;border:1px solid #d5e6e0;border-radius:12px;padding:11px 18px;font-family:'Figtree';font-weight:600;font-size:14px;color:#4c6660;cursor:pointer">↺ Reset</button>
+            <button onClick="{{ checkDrag }}" style="background:#0e8f74;border:none;border-radius:12px;padding:11px 20px;font-family:'Bricolage Grotesque';font-weight:700;font-size:15px;color:#fff;cursor:pointer">Check answers</button>
+          </div>
+        </div>
+        <div style="min-height:54px;background:#f2f7f5;border:2px dashed #c6ddd6;border-radius:16px;padding:12px;display:flex;flex-wrap:wrap;gap:10px;align-items:center">
+          <span style="font-size:13px;font-weight:700;color:#8ba39e;padding:0 6px">TRAY:</span>
+          <sc-for list="{{ dragTray }}" as="it" hint-placeholder-count="6">
+            <button onClick="{{ it.onClick }}" style="border-radius:11px;padding:11px 16px;font-family:'Figtree';font-weight:600;font-size:13.5px;cursor:pointer;transition:all .15s;border:2px solid {{ it.border }};background:{{ it.bg }};color:{{ it.fg }}">{{ it.label }}</button>
+          </sc-for>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
+          <sc-for list="{{ buckets }}" as="b" hint-placeholder-count="6">
+            <div onClick="{{ b.onDrop }}" style="border-radius:16px;padding:14px;min-height:120px;display:flex;flex-direction:column;gap:9px;cursor:pointer;background:{{ b.bg }};border:2px solid {{ b.border }}">
+              <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:12.5px;color:{{ b.color }}">{{ b.label }}</div>
+              <sc-for list="{{ b.items }}" as="it" hint-placeholder-count="0">
+                <button onClick="{{ it.onClick }}" style="display:flex;justify-content:space-between;align-items:center;gap:6px;text-align:left;border-radius:10px;padding:9px 12px;font-weight:600;font-size:11.5px;cursor:pointer;border:2px solid {{ it.border }};background:{{ it.bg }};color:{{ it.fg }}"><span>{{ it.label }}</span><span style="font-weight:800">{{ it.mark }}</span></button>
+              </sc-for>
+            </div>
+          </sc-for>
+        </div>
+      </section>
+
+      <section data-scene data-screen-label="Final check" style="{{ sc11 }}">
+        <div style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#d98a18">🧠 Final knowledge check</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:30px;line-height:1.2;margin:0;max-width:40ch">{{ q3.question }}</h2>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:820px;width:100%;margin:0 auto">
+          <sc-for list="{{ q3.options }}" as="o" hint-placeholder-count="4">
+            <button onClick="{{ o.onClick }}" style="display:flex;align-items:center;justify-content:space-between;gap:10px;text-align:left;border-radius:15px;padding:18px 20px;font-family:'Figtree';font-weight:600;font-size:15.5px;cursor:pointer;transition:all .15s;border:2px solid {{ o.border }};background:{{ o.bg }};color:{{ o.fg }}"><span>{{ o.label }}</span><span style="font-weight:800;font-size:18px">{{ o.mark }}</span></button>
+          </sc-for>
+        </div>
+        <sc-if value="{{ q3.answered }}" hint-placeholder-val="{{ false }}">
+          <div style="max-width:820px;width:100%;margin:0 auto;border-radius:16px;padding:18px 22px;background:{{ q3.bannerBg }}">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:17px;color:{{ q3.bannerFg }};margin-bottom:5px">{{ q3.banner }}</div>
+            <div style="font-size:16px;line-height:1.55;color:#33534c">{{ q3.explanation }}</div>
+          </div>
+        </sc-if>
+      </section>
+
+      <section data-scene data-screen-label="Reviewing a workload" style="{{ sc12 }}">
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#7a5cf0">Chapter 12 · How a review actually goes</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:38px;line-height:1.04;margin:0;letter-spacing:-.01em">Reviewing a workload</h2>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+          <sc-for list="{{ reviewPoints }}" as="r" hint-placeholder-count="4">
+            <div style="background:#f5f2fe;border:1px solid #ded3fb;border-radius:16px;padding:18px;display:flex;gap:13px;align-items:flex-start">
+              <div style="font-size:22px;flex-shrink:0">{{ r.icon }}</div>
+              <div><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:15px;color:#7a5cf0">{{ r.t }}</div><div style="font-size:14px;line-height:1.5;color:#3c4a58;margin-top:4px">{{ r.d }}</div></div>
+            </div>
+          </sc-for>
+        </div>
+        <div style="background:#fffaf0;border:2px solid #ffe6c2;border-radius:18px;padding:20px 22px;display:flex;flex-direction:column;gap:12px">
+          <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:15px;color:#d98a18">🧠 Quick check — {{ q2.question }}</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+            <sc-for list="{{ q2.options }}" as="o" hint-placeholder-count="4">
+              <button onClick="{{ o.onClick }}" style="display:flex;align-items:center;justify-content:space-between;gap:8px;text-align:left;border-radius:12px;padding:13px 16px;font-family:'Figtree';font-weight:600;font-size:14px;cursor:pointer;transition:all .15s;border:2px solid {{ o.border }};background:{{ o.bg }};color:{{ o.fg }}"><span>{{ o.label }}</span><span style="font-weight:800;font-size:16px">{{ o.mark }}</span></button>
+            </sc-for>
+          </div>
+          <sc-if value="{{ q2.answered }}" hint-placeholder-val="{{ false }}">
+            <div style="border-radius:13px;padding:14px 18px;background:{{ q2.bannerBg }}">
+              <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:15px;color:{{ q2.bannerFg }};margin-bottom:4px">{{ q2.banner }}</div>
+              <div style="font-size:14.5px;line-height:1.55;color:#33534c">{{ q2.explanation }}</div>
+            </div>
+          </sc-if>
+        </div>
+      </section>
+
+      <section data-scene data-screen-label="Wrap-up" style="{{ sc13 }}">
+        <div style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px">
+          <div style="font-size:42px">🎉</div>
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#0e8f74">Session wrap-up</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:40px;line-height:1.04;margin:0;letter-spacing:-.01em">Six pillars, one set of deliberate decisions</h2>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
+          <div style="background:#e9f6f1;border:1px solid #c2e4da;border-radius:18px;padding:22px;display:flex;flex-direction:column;gap:8px">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:16px;color:#0e8f74">✅ Covered</div>
+            <p style="margin:0;font-size:14.5px;line-height:1.55;color:#3c4a58">What the framework is, why it is not a checklist, and the benefits of applying it.</p>
+          </div>
+          <div style="background:#eef4fd;border:1px solid #cfdffa;border-radius:18px;padding:22px;display:flex;flex-direction:column;gap:8px">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:16px;color:#2e7fd4">🏛️ Explored</div>
+            <p style="margin:0;font-size:14.5px;line-height:1.55;color:#3c4a58">All six pillars in depth, and how the shared five carry across AWS, Azure and Google Cloud.</p>
+          </div>
+          <div style="background:#fff7ef;border:1px solid #ffe0c2;border-radius:18px;padding:22px;display:flex;flex-direction:column;gap:8px">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:16px;color:#ec7211">⚖️ Applied</div>
+            <p style="margin:0;font-size:14.5px;line-height:1.55;color:#3c4a58">Real trade-offs between pillars, and six questions to point at any design you build.</p>
+          </div>
+        </div>
+        <div style="background:#f6faf9;border:1px solid #dcebe6;border-radius:18px;padding:20px 24px">
+          <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:15px;margin-bottom:9px;color:#0e8f74">🎯 You should now be able to…</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:14.5px;color:#3c4a58">
+            <div>• Explain the purpose and structure of the framework</div>
+            <div>• Identify and explain all six pillars</div>
+            <div>• Apply best practices to design secure, reliable, efficient workloads</div>
+            <div>• Evaluate a workload to identify risks, trade-offs and improvements</div>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:2px">
+          <button onClick="{{ startLesson }}" style="background:#fff;color:#0e8f74;border:2px solid #b5ded2;border-radius:14px;padding:14px 26px;font-family:'Bricolage Grotesque';font-weight:700;font-size:16px;cursor:pointer" style-hover="background:#f4fbf8">↻ Review from the start</button>
+          <button onClick="{{ toggleGlossary }}" style="background:#0e8f74;color:#fff;border:none;border-radius:14px;padding:14px 26px;font-family:'Bricolage Grotesque';font-weight:700;font-size:16px;cursor:pointer">📖 Open glossary</button>
+        </div>
+        <div style="text-align:center;font-size:14px;color:#8ba39e;margin-top:4px">Lesson prepared by <b style="color:#4c6660">Reza Shahabian</b></div>
+      </section>
+
+    </div>
+  </div>
+
+  <div style="position:sticky;bottom:0;z-index:20;width:100%;display:flex;justify-content:center;background:linear-gradient(to top,#edf5f2 55%,transparent);padding:10px 24px 22px">
+    <div style="width:100%;max-width:1180px;display:flex;align-items:center;justify-content:space-between;gap:14px">
+      <button onClick="{{ prev }}" style="display:flex;align-items:center;gap:8px;background:#fff;border:1px solid #d5e6e0;border-radius:13px;padding:13px 22px;font-family:'Bricolage Grotesque';font-weight:700;font-size:15px;color:#33534c;cursor:pointer" style-hover="border-color:#8fc9b9">← Back</button>
+      <div style="display:flex;align-items:center;gap:12px;font-weight:600;color:#6a857f;font-size:15px">
+        <span style="font-family:'Bricolage Grotesque';color:#1d2b2a;font-size:17px">{{ sceneNum }}</span>
+        <span style="color:#b6ccc6">/</span>
+        <span>{{ total }}</span>
+        <span style="color:#b6ccc6">·</span>
+        <span style="color:#33534c">{{ sceneTitle }}</span>
+      </div>
+      <button onClick="{{ next }}" style="display:flex;align-items:center;gap:8px;background:{{ accent }};border:none;border-radius:13px;padding:13px 26px;font-family:'Bricolage Grotesque';font-weight:700;font-size:15px;color:#fff;cursor:pointer;box-shadow:0 10px 20px -10px rgba(20,70,60,.5)" style-hover="transform:translateY(-2px)">Next →</button>
+    </div>
+  </div>
+
+  <sc-if value="{{ glossaryOpen }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ toggleGlossary }}" style="position:fixed;inset:0;z-index:50;background:rgba(20,40,36,.34);backdrop-filter:blur(2px)"></div>
+    <div style="position:fixed;top:0;right:0;bottom:0;z-index:51;width:min(460px,92vw);background:#fff;box-shadow:-20px 0 60px -20px rgba(20,70,60,.4);display:flex;flex-direction:column">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:24px 26px;border-bottom:1px solid #e8f1ee">
+        <div style="display:flex;flex-direction:column;gap:2px">
+          <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:22px">📖 Glossary</div>
+          <div style="font-size:13px;color:#7b948e">Well-Architected terms</div>
+        </div>
+        <button onClick="{{ toggleGlossary }}" style="background:#eef5f3;border:none;border-radius:10px;width:38px;height:38px;font-size:18px;cursor:pointer;color:#4c6660">✕</button>
+      </div>
+      <div style="overflow-y:auto;padding:18px 26px 40px;display:flex;flex-direction:column;gap:14px">
+        <sc-for list="{{ glossary }}" as="g" hint-placeholder-count="6">
+          <div style="border:1px solid #e8f1ee;border-radius:14px;padding:14px 16px;background:#fafcfb">
+            <div style="display:flex;align-items:center;gap:8px;font-family:'Bricolage Grotesque';font-weight:700;font-size:16px;color:#1d2b2a"><span>{{ g.icon }}</span>{{ g.term }}</div>
+            <div style="font-size:14.5px;line-height:1.5;color:#4c6660;margin-top:5px">{{ g.def }}</div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:820}}">
+class Component extends DCLogic {
+  state = { idx:0, playing:false, glossary:false, quiz:{q1:null,q2:null,q3:null},
+    pillar:'ops', platform:'aws',
+    drops:{cicd:null,iam:null,multiaz:null,rightsize:null,unused:null,region:null}, sel:null, dragChecked:false };
+
+  total = 14;
+  interactive = new Set([4,6,7,10,11,12]);
+  durations = { 0:5200 };
+
+  chapTitles = ['Welcome','What the framework is','Not a checklist','Why it helps','Pillars across platforms','The six pillars','Pillar explorer','Quick check','Trade-offs in practice','Applying it to a design','Sort it out','Final check','Reviewing a workload','Wrap-up'];
+  chapColors = ['#0e8f74','#2e7fd4','#7a5cf0','#ec7211','#2e7fd4','#0e8f74','#0e8f74','#ffb43d','#e0564a','#ec7211','#0e8f74','#ffb43d','#7a5cf0','#0e8f74'];
+
+  qualities = [
+    {icon:'🔐',t:'Secure',c:'#e0564a'},
+    {icon:'🛡️',t:'Reliable',c:'#2e7fd4'},
+    {icon:'⚡',t:'Efficient',c:'#7a5cf0'},
+    {icon:'💰',t:'Cost-effective',c:'#ec7211'},
+    {icon:'🌱',t:'Sustainable',c:'#0e8f74'},
+  ];
+
+  benefits = [
+    {icon:'⚖️',t:'Understand your trade-offs',d:'See clearly the advantages and costs of each decision made while designing and building systems.'},
+    {icon:'📐',t:'Evaluate systematically',d:'A structured way to assess whether a system is efficient and effective, and aligned to technical and business goals.'},
+    {icon:'🎯',t:'Keep delivering value',d:'Proactively meet customer needs and design workloads that continue delivering business value over time.'},
+    {icon:'🔄',t:'Improve continuously',d:'A culture of regular review, identifying opportunities for enhancement rather than waiting for failures.'},
+    {icon:'🚑',t:'Catch issues early',d:'Address problems before they grow — maintaining smooth operations and a reliable customer experience.'},
+  ];
+
+  platformData = {
+    aws:{name:'AWS',count:'6 pillars',color:'#ec7211',list:['Operational Excellence','Security','Reliability','Performance Efficiency','Cost Optimization','Sustainability']},
+    azure:{name:'Microsoft Azure',count:'5 pillars',color:'#2e7fd4',list:['Operational Excellence','Security','Reliability','Performance Efficiency','Cost Optimization']},
+    gcp:{name:'Google Cloud',count:'5 pillars',color:'#0e8f74',list:['Operational Excellence','Security','Reliability','Performance Efficiency','Cost Optimization']},
+  };
+  platformOrder = ['aws','azure','gcp'];
+
+  pillarData = {
+    ops:{name:'Operational Excellence',icon:'⚙️',color:'#2e7fd4',
+      desc:'The ability to effectively support development and run cloud workloads, gain clear visibility into system operations, and continuously improve processes to deliver ongoing business value.',
+      keys:[{t:'Automation of processes',d:'Reduce manual effort by automating routine tasks such as backups, scaling and workflow execution.'},{t:'Monitoring and alerting',d:'Gain visibility into system health by tracking metrics, logs and events.'},{t:'Continuous improvement',d:'Implement DevOps practices including CI/CD — automation, faster deployments and strong dev-ops collaboration.'}]},
+    sec:{name:'Security',icon:'🔐',color:'#e0564a',
+      desc:'Maximises protection of data and workloads, designs systems with privacy in mind, and aligns with regulatory requirements — addressing both external threats such as cyberattacks and internal ones like misconfiguration.',
+      keys:[{t:'Data encryption',d:'Protect data at rest and in transit, managed through a key management service.'},{t:'Identity and access management',d:'Define who can access what, applying least-privilege principles.'},{t:'Threat detection',d:'Continuously monitor for suspicious activity, analysing logs and events.'},{t:'Incident response',d:'Establish clear procedures and automate actions to reduce response time.'}]},
+    rel:{name:'Reliability',icon:'🛡️',color:'#2e7fd4',
+      desc:'A workload\u2019s ability to perform its intended function correctly and consistently whenever required — covering operating, testing and managing workloads across their entire lifecycle.',
+      keys:[{t:'Redundancy and fault tolerance',d:'Design with multiple components and backups to eliminate single points of failure.'},{t:'Scalability',d:'Automatically adjust capacity to match demand, maintaining performance during traffic changes.'},{t:'Recovery strategies',d:'Disaster recovery plans so data is restored and operations resume quickly.'}]},
+    perf:{name:'Performance Efficiency',icon:'⚡',color:'#7a5cf0',
+      desc:'Using computing resources effectively to meet system requirements, and maintaining that efficiency as demand changes and technologies evolve — through compute efficiency and storage efficiency.',
+      keys:[{t:'Resource selection',d:'Choose the most suitable compute, storage and database resources for the workload.'},{t:'Performance monitoring',d:'Continuously track system performance and behaviour.'},{t:'Continuous optimisation',d:'Review metrics and adjust to improve efficiency, scalability and responsiveness.'}]},
+    cost:{name:'Cost Optimization',icon:'💰',color:'#ec7211',
+      desc:'Running cloud systems in a way that delivers maximum business value at the lowest possible cost — fundamentally about spending wisely: informed decisions on resource usage, pricing models and architecture.',
+      keys:[{t:'Resource management',d:'Regularly identify and eliminate unused or underutilised resources.'},{t:'Cost analysis and monitoring',d:'Track and analyse cloud spending to maintain financial control.'},{t:'Reserved Instances and Savings Plans',d:'Reduce long-term costs with discounted pricing for committed usage.'}]},
+    sus:{name:'Sustainability',icon:'🌱',color:'#0e8f74',
+      desc:'Continuously reducing environmental impact by lowering energy consumption and increasing efficiency across all components — maximising the value of provisioned resources while minimising the total resources required.',
+      keys:[{t:'Energy-efficient architectures',d:'Run workloads on efficient infrastructure and choose regions supporting sustainability goals.'},{t:'Resource optimisation',d:'Dynamically scale on actual demand to avoid overprovisioning and energy waste.'},{t:'Environmental impact reduction',d:'Practices that lower carbon emissions and resource consumption.'}]},
+  };
+  pillarOrder = ['ops','sec','rel','perf','cost','sus'];
+
+  tradeoffs = [
+    {a:'Reliability',b:'Cost',color:'#2e7fd4',q:'Multi-AZ redundancy roughly doubles your database cost.',note:'For a production e-commerce database, worth it. For a dev sandbox, not.'},
+    {a:'Performance',b:'Cost',color:'#7a5cf0',q:'A larger instance responds faster but costs more per hour.',note:'Right-size against measured demand rather than guessing — then revisit as the workload changes.'},
+    {a:'Security',b:'Operations',color:'#e0564a',q:'Stricter least-privilege access can slow a team down day to day.',note:'Automate the access-request path rather than loosening the policy.'},
+    {a:'Sustainability',b:'Performance',color:'#0e8f74',q:'Fewer, better-utilised instances lower energy use but leave less headroom.',note:'Auto-scaling gives you both — capacity when demand arrives, nothing idling when it does not.'},
+  ];
+
+  designChecks = [
+    {p:'Operational Excellence',c:'#2e7fd4',q:'Is deployment automated, and can you see what the system is doing in production?'},
+    {p:'Security',c:'#e0564a',q:'Is data encrypted at rest and in transit, and does every role have least privilege?'},
+    {p:'Reliability',c:'#2e7fd4',q:'What happens when one component fails? Is there a single point of failure left?'},
+    {p:'Performance Efficiency',c:'#7a5cf0',q:'Are resource types and sizes chosen from measurements, or from habit?'},
+    {p:'Cost Optimization',c:'#ec7211',q:'Is anything running that nobody uses? Could committed-use pricing apply?'},
+    {p:'Sustainability',c:'#0e8f74',q:'Is capacity matched to real demand, or is idle infrastructure burning energy?'},
+  ];
+
+  reviewPoints = [
+    {icon:'🤝',t:'A conversation, not an audit',d:'Evaluating an architecture is designed to be a collaborative and constructive discussion about architectural choices — not a compliance exercise.'},
+    {icon:'📏',t:'A consistent method',d:'It offers a repeatable way to evaluate systems against the key qualities expected of modern cloud architectures.'},
+    {icon:'🛠️',t:'It identifies remediation',d:'The review surfaces the specific improvements and remediation steps needed to reach those qualities.'},
+    {icon:'♾️',t:'Continuously refined',d:'Defining and refining the framework is an ongoing process, largely shaped by real customer experiences and evolving best practices.'},
+  ];
+
+  dragMeta = {
+    cicd:{label:'Automating deployments with CI/CD',cat:'ops'},
+    iam:{label:'Applying least-privilege access',cat:'sec'},
+    multiaz:{label:'Removing single points of failure',cat:'rel'},
+    rightsize:{label:'Choosing the right instance size',cat:'perf'},
+    unused:{label:'Deleting unused resources',cat:'cost'},
+    region:{label:'Choosing energy-efficient regions',cat:'sus'},
+  };
+  dragOrder = ['cicd','iam','multiaz','rightsize','unused','region'];
+  bucketDefs = [
+    {k:'ops',label:'⚙️ Operational Excellence',bg:'#eef4fd',border:'#cfdffa',color:'#2e7fd4'},
+    {k:'sec',label:'🔐 Security',bg:'#fdf2f0',border:'#f8d6d0',color:'#c2453a'},
+    {k:'rel',label:'🛡️ Reliability',bg:'#e9f1fb',border:'#cfdffa',color:'#2e7fd4'},
+    {k:'perf',label:'⚡ Performance',bg:'#f5f2fe',border:'#ded3fb',color:'#7a5cf0'},
+    {k:'cost',label:'💰 Cost',bg:'#fff7ef',border:'#ffe0c2',color:'#ec7211'},
+    {k:'sus',label:'🌱 Sustainability',bg:'#e9f6f1',border:'#c2e4da',color:'#0e8f74'},
+  ];
+
+  quizDefs = {
+    q1:{question:'Which pillar is unique to AWS, and not among the five shared across Azure and Google Cloud?',
+      options:[{label:'Security'},{label:'Cost Optimization'},{label:'Sustainability',correct:true},{label:'Reliability'}],
+      explanation:'AWS defines six pillars; Azure and Google Cloud each define five. The first five are common across all three platforms — Sustainability is the additional AWS pillar.'},
+    q2:{question:'A team says "we passed the Well-Architected Review, so we\u2019re compliant." What is wrong with that framing?',
+      options:[{label:'Nothing — it is a compliance exercise'},{label:'It is not an audit; it is a collaborative discussion about design decisions and improvement',correct:true},{label:'Reviews can only be run by AWS staff'},{label:'The framework only applies to new systems'}],
+      explanation:'The framework is not simply a checklist of tasks, and the review is not an audit or compliance exercise — it is a collaborative, constructive discussion about architectural choices, continuously refined by real customer experience.'},
+    q3:{question:'A workload has no single points of failure and recovers quickly from component outages. Which pillar does this primarily demonstrate?',
+      options:[{label:'Performance Efficiency'},{label:'Reliability',correct:true},{label:'Cost Optimization'},{label:'Operational Excellence'}],
+      explanation:'Reliability covers redundancy and fault tolerance, scalability, and recovery strategies — a workload performing its function correctly and consistently, and recovering quickly when something fails.'},
+  };
+
+  glossary = [
+    {icon:'🏛️',term:'Well-Architected Framework',def:'A set of best practices for designing, building and operating secure, reliable, efficient and cost-effective cloud systems.'},
+    {icon:'📦',term:'Workload',def:'A specific application, system or set of components delivering business value — the level at which design and performance are discussed.'},
+    {icon:'🏗️',term:'Pillar',def:'A core principle supporting a strong cloud architecture, like a structural pillar in a building.'},
+    {icon:'⚙️',term:'Operational Excellence',def:'Running and monitoring systems to deliver business value, and continuously improving processes.'},
+    {icon:'🔐',term:'Security',def:'Protecting data, systems and assets through controls, encryption, access management and risk management.'},
+    {icon:'🛡️',term:'Reliability',def:'A workload performing correctly and consistently, and recovering quickly from failure.'},
+    {icon:'⚡',term:'Performance Efficiency',def:'Using computing resources effectively and maintaining that as demand and technology change.'},
+    {icon:'💰',term:'Cost Optimization',def:'Delivering maximum business value at the lowest possible cost.'},
+    {icon:'🌱',term:'Sustainability',def:'Continuously reducing environmental impact by lowering energy use and increasing efficiency.'},
+    {icon:'⚖️',term:'Trade-off',def:'An architectural decision that improves one pillar at the expense of another.'},
+    {icon:'🔄',term:'Continuous improvement',def:'Regularly reviewing systems and identifying enhancements rather than waiting for problems.'},
+    {icon:'🧯',term:'Fault tolerance',def:'Designing so the system keeps operating even when a component fails.'},
+    {icon:'📈',term:'Right-sizing',def:'Matching resource type and size to measured workload requirements.'},
+    {icon:'💳',term:'Savings Plans',def:'Discounted pricing in exchange for committed usage, reducing long-term cost.'},
+    {icon:'🔁',term:'CI/CD',def:'Continuous integration and delivery — core to the Operational Excellence pillar.'},
+    {icon:'🔑',term:'Least privilege',def:'Granting each identity only the access its job requires, and no more.'},
+  ];
+
+  componentDidMount(){}
+  componentWillUnmount(){ window.removeEventListener('keydown', this.onKey); clearTimeout(this.t); }
+  ensureWiring(){
+    if(!this._kb){ this._kb=true; window.addEventListener('keydown', this.onKey); }
+    if(this._lastIdx!==this.state.idx || this._lastPlay!==this.state.playing){
+      this._lastIdx=this.state.idx; this._lastPlay=this.state.playing; this.scheduleAutoplay();
+    }
+  }
+  onKey = (e)=>{
+    const tag=(e.target&&e.target.tagName)||'';
+    if(tag==='INPUT'||tag==='TEXTAREA') return;
+    if(e.key==='ArrowRight'){ this.next(); }
+    else if(e.key==='ArrowLeft'){ this.prev(); }
+    else if(e.key===' '){ e.preventDefault(); this.togglePlay(); }
+  };
+
+  sceneCfg = [
+    {gap:22,center:true,pos:true},{gap:18},{gap:18},{gap:16},{gap:18},
+    {gap:16},{gap:16},{gap:22,vcenter:true},{gap:16},{gap:16},
+    {gap:18},{gap:22,vcenter:true},{gap:18},{gap:22},
+  ];
+  sceneStyle(k){
+    const c=this.sceneCfg[k]; const on=this.state.idx===k;
+    const s={display:on?'flex':'none',flexDirection:'column',minHeight:'560px',gap:c.gap+'px',width:'100%'};
+    if(c.center){ s.alignItems='center'; s.justifyContent='center'; s.textAlign='center'; }
+    if(c.vcenter){ s.justifyContent='center'; }
+    if(c.pos){ s.position='relative'; }
+    return s;
+  }
+
+  scheduleAutoplay(){
+    clearTimeout(this.t);
+    const i=this.state.idx;
+    if(this.state.playing && !this.interactive.has(i) && i<this.total-1){
+      this.t=setTimeout(()=>this.next(), this.durations[i]||9000);
+    }
+  }
+
+  next=()=> this.setState(s=> s.idx<this.total-1 ? {idx:s.idx+1} : {playing:false});
+  prev=()=> this.setState(s=> ({idx:Math.max(0,s.idx-1)}));
+  goTo=(i)=>()=> this.setState({idx:i});
+  togglePlay=()=> this.setState(s=>({playing:!s.playing}));
+  startLesson=()=> this.setState({idx:1});
+  playFromStart=()=> this.setState({idx:1, playing:true});
+  toggleGlossary=()=> this.setState(s=>({glossary:!s.glossary}));
+
+  answer=(q,i)=> this.setState(s=> s.quiz[q]!=null ? null : ({quiz:{...s.quiz,[q]:i}}));
+  setPillar=(k)=>()=> this.setState({pillar:k});
+  setPlatform=(k)=>()=> this.setState({platform:k});
+
+  pick=(id)=>()=> this.setState(s=>({sel: s.sel===id?null:id}));
+  drop=(b)=>()=> this.setState(s=>{ if(!s.sel) return null; return {drops:{...s.drops,[s.sel]:b}, sel:null}; });
+  toTray=(id)=>()=> this.setState(s=>({drops:{...s.drops,[id]:null}, sel:null}));
+  checkDrag=()=> this.setState({dragChecked:true, sel:null});
+  resetDrag=()=> this.setState({drops:{cicd:null,iam:null,multiaz:null,rightsize:null,unused:null,region:null}, dragChecked:false, sel:null});
+
+  buildQuiz(qKey){
+    const def=this.quizDefs[qKey]; const sel=this.state.quiz[qKey];
+    const options=def.options.map((o,i)=>{
+      let bg='#fff',fg='#1d2b2a',border='#e2ebe8',mark='';
+      if(sel!=null){
+        if(o.correct){ bg='#e4f5ed';fg='#0a6b50';border='#19c39a';mark='✓'; }
+        else if(i===sel){ bg='#fdeceb';fg='#c2362b';border='#ff6b5e';mark='✗'; }
+        else { fg='#97a8a4';border='#eef3f1'; }
+      }
+      return {label:o.label,bg,fg,border,mark,onClick:()=>this.answer(qKey,i)};
+    });
+    const answered=sel!=null;
+    const isCorrect=answered && def.options[sel].correct;
+    return {question:def.question,options,answered,isCorrect,explanation:def.explanation,
+      banner: !answered ? '' : (isCorrect?'✅ Correct!':'❌ Not quite —'),
+      bannerBg: !answered ? '' : (isCorrect?'#e4f5ed':'#fdeceb'),
+      bannerFg: !answered ? '' : (isCorrect?'#0a6b50':'#c2362b')};
+  }
+
+  buildDragItem(id, place){
+    const m=this.dragMeta[id]; const drops=this.state.drops; const checked=this.state.dragChecked;
+    const selected=this.state.sel===id;
+    let bg='#fff',fg='#1d2b2a',border='#d5e6e0',mark='';
+    if(checked && place!=='tray'){
+      const ok=drops[id]===m.cat;
+      bg=ok?'#e4f5ed':'#fdeceb'; fg=ok?'#0a6b50':'#c2362b'; border=ok?'#19c39a':'#ff6b5e'; mark=ok?'✓':'✗';
+    } else if(selected){ bg='#e4f3ee'; border='#0e8f74'; }
+    const onClick = place==='tray' ? this.pick(id) : this.toTray(id);
+    return {id,label:m.label,bg,fg,border,mark,selected,onClick};
+  }
+
+  renderVals(){
+    this.ensureWiring();
+    const i=this.state.idx;
+    const accent=this.chapColors[i]||'#0e8f74';
+    const sc={}; for(let k=0;k<this.total;k++) sc['sc'+k]=this.sceneStyle(k);
+    const chapters=this.chapTitles.map((t,k)=>({num:k+1,label:t,onClick:this.goTo(k),bg: k===i?this.chapColors[k] : (k<i?'#9ab9b1':'#d3e3de')}));
+
+    const platformList=this.platformOrder.map(k=>{ const P=this.platformData[k]; const on=this.state.platform===k;
+      return {k,name:P.name,onClick:this.setPlatform(k),bg:on?P.color:'#f2f7f5',fg:on?'#fff':'#33534c',border:on?P.color:'#e2ebe8'}; });
+    const pf=this.platformData[this.state.platform];
+    const platformInfo={...pf, list:pf.list.map(t=>({t}))};
+
+    const pillarList=this.pillarOrder.map(k=>{ const P=this.pillarData[k]; const on=this.state.pillar===k;
+      return {k,name:P.name,icon:P.icon,onClick:this.setPillar(k),bg:on?P.color:'#f2f7f5',fg:on?'#fff':'#33534c',border:on?P.color:'#e2ebe8'}; });
+    const pl=this.pillarData[this.state.pillar];
+
+    const sixPillars=this.pillarOrder.map(k=>{ const P=this.pillarData[k];
+      return {name:P.name,icon:P.icon,color:P.color,short:P.keys[0].t}; });
+
+    const buckets=this.bucketDefs.map(b=>({...b,
+      items:this.dragOrder.filter(id=>this.state.drops[id]===b.k).map(id=>this.buildDragItem(id,b.k)),
+      onDrop:this.drop(b.k)}));
+    const tray=this.dragOrder.filter(id=>this.state.drops[id]==null).map(id=>this.buildDragItem(id,'tray'));
+    const correct=this.dragOrder.filter(id=>this.state.drops[id]===this.dragMeta[id].cat).length;
+
+    return {
+      ...sc,
+      progressPct: Math.round(i/(this.total-1)*100)+'%',
+      accent, sceneNum:i+1, total:this.total, sceneTitle:this.chapTitles[i], chapters,
+      next:this.next, prev:this.prev, togglePlay:this.togglePlay,
+      playLabel: this.state.playing?'⏸ Pause':'▶ Play',
+      startLesson:this.startLesson, playFromStart:this.playFromStart,
+      glossaryOpen:this.state.glossary, toggleGlossary:this.toggleGlossary, glossary:this.glossary,
+      qualities:this.qualities, benefits:this.benefits, tradeoffs:this.tradeoffs,
+      designChecks:this.designChecks, reviewPoints:this.reviewPoints,
+      platformList, platformInfo,
+      pillarList, pillarInfo:pl, pillarKeys:pl.keys, sixPillars,
+      q1:this.buildQuiz('q1'), q2:this.buildQuiz('q2'), q3:this.buildQuiz('q3'),
+      dragTray:tray, buckets,
+      checkDrag:this.checkDrag, resetDrag:this.resetDrag, dragChecked:this.state.dragChecked,
+      dragScore:correct+' / 6 correct', dragScoreBg: correct===6?'#e4f5ed':'#fff4e8', dragScoreFg: correct===6?'#0a6b50':'#d98a18',
+    };
+  }
+}
+</script>
+</body>
+</html>
