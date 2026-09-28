@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{background:#edf5f2;font-family:'Figtree',system-ui,sans-serif;color:#1d2b2a;-webkit-font-smoothing:antialiased}
+  a{color:#0e8f74}
+  a:hover{color:#0a6b57}
+  @keyframes floatA{0%,100%{transform:translateY(0) translateX(0)}50%{transform:translateY(-22px) translateX(10px)}}
+  @keyframes floatB{0%,100%{transform:translateY(0)}50%{transform:translateY(26px)}}
+  ::-webkit-scrollbar{width:10px;height:10px}
+  ::-webkit-scrollbar-thumb{background:#c2dcd4;border-radius:8px}
+</style>
+</helmet>
+<div style="min-height:100vh;position:relative;overflow-x:hidden;display:flex;flex-direction:column;align-items:center">
+
+  <div style="position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden">
+    <div style="position:absolute;top:12%;left:6%;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#ffffff,#d3ece3);opacity:.55;filter:blur(2px);animation:floatA 13s ease-in-out infinite"></div>
+    <div style="position:absolute;top:58%;left:80%;width:280px;height:280px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#ffffff,#fde2dd);opacity:.45;filter:blur(2px);animation:floatB 17s ease-in-out infinite"></div>
+  </div>
+
+  <div style="position:sticky;top:0;z-index:30;width:100%;display:flex;justify-content:center;background:rgba(237,245,242,.85);backdrop-filter:blur(10px);border-bottom:1px solid #d5e6e0">
+    <div style="width:100%;max-width:1180px;display:flex;align-items:center;gap:20px;padding:14px 24px">
+      <div style="display:flex;align-items:center;gap:10px;font-family:'Bricolage Grotesque';font-weight:800;font-size:18px;color:#1d2b2a;white-space:nowrap">
+        <span style="font-size:22px">🛡️</span><span>Edge Services &amp; Security</span>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;gap:6px;min-width:0">
+        <div style="height:8px;border-radius:99px;background:#d3e3de;overflow:hidden">
+          <div style="height:100%;border-radius:99px;transition:width .45s cubic-bezier(.22,.9,.3,1);width:{{ progressPct }};background:{{ accent }}"></div>
+        </div>
+        <div style="display:flex;gap:5px;flex-wrap:wrap">
+          <sc-for list="{{ chapters }}" as="c" hint-placeholder-count="17">
+            <button onClick="{{ c.onClick }}" title="{{ c.label }}" style="width:18px;height:18px;border:none;border-radius:50%;cursor:pointer;padding:0;font-size:9px;font-weight:700;color:#fff;line-height:18px;transition:transform .15s;background:{{ c.bg }}" style-hover="transform:scale(1.25)">{{ c.num }}</button>
+          </sc-for>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;white-space:nowrap">
+        <button onClick="{{ toggleGlossary }}" style="display:flex;align-items:center;gap:6px;background:#fff;border:1px solid #d5e6e0;border-radius:11px;padding:9px 14px;font-family:'Figtree';font-weight:600;font-size:14px;color:#33534c;cursor:pointer" style-hover="border-color:#0e8f74;color:#0e8f74">📖 Glossary</button>
+        <button onClick="{{ togglePlay }}" style="display:flex;align-items:center;gap:7px;background:{{ accent }};border:none;border-radius:11px;padding:10px 16px;font-family:'Bricolage Grotesque';font-weight:700;font-size:14px;color:#fff;cursor:pointer" style-hover="filter:brightness(1.06)">{{ playLabel }}</button>
+      </div>
+    </div>
+  </div>
+
+  <div style="width:100%;max-width:1180px;padding:30px 24px 16px;z-index:5">
+    <div style="position:relative;width:100%;background:#fff;border-radius:30px;box-shadow:0 24px 60px -28px rgba(20,70,60,.32),0 2px 0 #ffffff inset;padding:52px 56px;min-height:580px;overflow:hidden">
+
+      <section data-scene data-screen-label="Welcome" style="{{ sc0 }}">
+        <div style="position:absolute;top:0;right:8%;font-size:40px;animation:floatA 9s ease-in-out infinite">🔐</div>
+        <div style="position:absolute;bottom:6%;left:6%;font-size:34px;animation:floatB 11s ease-in-out infinite">📡</div>
+        <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.22em;text-transform:uppercase;font-weight:700;color:#0e8f74">Interactive Lesson</div>
+        <h1 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:54px;line-height:1.02;margin:0;max-width:18ch;letter-spacing:-.02em">AWS Edge Services &amp; <span style="background:linear-gradient(120deg,#0e8f74,#e0564a);-webkit-background-clip:text;background-clip:text;color:transparent">Security</span></h1>
+        <p style="font-size:20px;line-height:1.55;color:#4c6660;max-width:68ch;margin:0">Once data leaves the data centre, the old security perimeter is gone. How AWS protects content, devices and applications at the edge — layer by layer.</p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:4px">
+          <span style="background:#e4f3ee;border:1px solid #c2e4da;border-radius:99px;padding:8px 16px;font-weight:600;font-size:15px;color:#0e8f74">⏱️ ~30 min</span>
+          <span style="background:#eaf1fd;border:1px solid #cfdffa;border-radius:99px;padding:8px 16px;font-weight:600;font-size:15px;color:#2e7fd4">📑 17 chapters</span>
+          <span style="background:#fdeeed;border:1px solid #ffd9d5;border-radius:99px;padding:8px 16px;font-weight:600;font-size:15px;color:#e0564a">🧠 3 quizzes</span>
+          <span style="background:#fef4e8;border:1px solid #ffe6c2;border-radius:99px;padding:8px 16px;font-weight:600;font-size:15px;color:#d98a18">🎯 Attack inspector</span>
+        </div>
+        <div style="display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-top:14px">
+          <button onClick="{{ startLesson }}" style="background:#0e8f74;color:#fff;border:none;border-radius:15px;padding:18px 34px;font-family:'Bricolage Grotesque';font-weight:700;font-size:18px;cursor:pointer;box-shadow:0 12px 24px -8px rgba(14,143,116,.6)" style-hover="transform:translateY(-2px)">Start lesson →</button>
+          <button onClick="{{ playFromStart }}" style="background:#fff;color:#0e8f74;border:2px solid #b5ded2;border-radius:15px;padding:16px 30px;font-family:'Bricolage Grotesque';font-weight:700;font-size:18px;cursor:pointer" style-hover="border-color:#0e8f74;background:#f4fbf8">▶ Play as video</button>
+        </div>
+        <div style="margin-top:18px;display:flex;align-items:center;gap:10px;background:#f3f9f7;border:1px solid #dcebe6;border-radius:99px;padding:8px 8px 8px 18px">
+          <span style="font-size:14px;color:#6a857f">Prepared by</span>
+          <span style="background:#1d2b2a;color:#fff;border-radius:99px;padding:7px 16px;font-weight:700;font-size:14px;font-family:'Bricolage Grotesque'">Reza Shahabian</span>
+        </div>
+      </section>
+
+      <section data-scene data-screen-label="Recap CDNs" style="{{ sc1 }}">
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#2e7fd4">Chapter 01 · Recap</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:40px;line-height:1.04;margin:0;letter-spacing:-.01em">Where we left off: CDNs</h2>
+          <p style="font-size:17.5px;line-height:1.55;color:#4c6660;margin:0;max-width:86ch">A CDN uses <b>origin servers</b>, <b>edge servers</b> and a <b>distribution network</b>. Edge servers cache content close to users — improving speed, performance and reliability.</p>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <div style="flex:1;min-width:160px;background:#eef4fd;border:1px solid #cfdffa;border-radius:13px;padding:14px;text-align:center"><div style="font-size:20px">🌐</div><b style="font-size:13.5px;color:#2e7fd4">Akamai</b></div>
+          <div style="flex:1;min-width:160px;background:#fff7ef;border:1px solid #ffe0c2;border-radius:13px;padding:14px;text-align:center"><div style="font-size:20px">☁️</div><b style="font-size:13.5px;color:#ec7211">Cloudflare</b></div>
+          <div style="flex:1;min-width:160px;background:#fdf2f0;border:1px solid #f8d6d0;border-radius:13px;padding:14px;text-align:center"><div style="font-size:20px">📡</div><b style="font-size:13.5px;color:#e0564a">Amazon CloudFront</b></div>
+          <div style="flex:1;min-width:160px;background:#f5f2fe;border:1px solid #ded3fb;border-radius:13px;padding:14px;text-align:center"><div style="font-size:20px">🚪</div><b style="font-size:13.5px;color:#7a5cf0">Azure Front Door</b></div>
+        </div>
+        <div style="background:#fdf2f0;border:2px solid #f8d6d0;border-radius:16px;padding:18px 22px;display:flex;gap:14px;align-items:center">
+          <span style="font-size:28px">🤔</span>
+          <p style="margin:0;font-size:15.5px;line-height:1.55;color:#8a4a40">Today's question: if content and processing are now spread across hundreds of edge locations and devices, <b>how do you keep all of it secure?</b></p>
+        </div>
+      </section>
+
+      <section data-scene data-screen-label="Why security at the edge" style="{{ sc2 }}">
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#e0564a">Chapter 02 · The perimeter moved</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:38px;line-height:1.04;margin:0;letter-spacing:-.01em">Why security matters at the edge</h2>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+          <sc-for list="{{ whyPoints }}" as="w" hint-placeholder-count="4">
+            <div style="background:#f6faf9;border:1px solid #dcebe6;border-radius:16px;padding:18px;display:flex;gap:13px;align-items:flex-start">
+              <div style="width:40px;height:40px;flex-shrink:0;border-radius:11px;background:{{ w.c }};display:flex;align-items:center;justify-content:center;font-size:20px">{{ w.icon }}</div>
+              <div><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:15px;color:{{ w.c }}">{{ w.t }}</div><div style="font-size:13.5px;line-height:1.5;color:#3c4a58;margin-top:3px">{{ w.d }}</div></div>
+            </div>
+          </sc-for>
+        </div>
+      </section>
+
+      <section data-scene data-screen-label="Edge locations and concerns" style="{{ sc3 }}">
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#0e8f74">Chapter 03 · The ground we're defending</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:36px;line-height:1.04;margin:0;letter-spacing:-.01em">Edge locations &amp; key concerns</h2>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
+          <div style="background:#e9f6f1;border:1px solid #c2e4da;border-radius:15px;padding:16px;font-size:13.5px;line-height:1.5;color:#3c4a58"><b style="color:#0e8f74;font-family:'Bricolage Grotesque';font-size:14.5px">📍 Edge locations</b><br/>A global network of data centres closer to end users — faster content, lower latency, more responsive apps.</div>
+          <div style="background:#eef4fd;border:1px solid #cfdffa;border-radius:15px;padding:16px;font-size:13.5px;line-height:1.5;color:#3c4a58"><b style="color:#2e7fd4;font-family:'Bricolage Grotesque';font-size:14.5px">🔒 Built-in protection</b><br/>Part of AWS global infrastructure — encryption, access controls and physical security apply there too.</div>
+          <div style="background:#f5f2fe;border:1px solid #ded3fb;border-radius:15px;padding:16px;font-size:13.5px;line-height:1.5;color:#3c4a58"><b style="color:#7a5cf0;font-family:'Bricolage Grotesque';font-size:14.5px">⚙️ Managed services</b><br/>CloudFront and IoT Greengrass let you deploy, manage and secure workloads close to users and devices.</div>
+        </div>
+        <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:15px;color:#1d2b2a">⚠️ The three concerns</div>
+        <div style="display:flex;flex-direction:column;gap:9px">
+          <div style="background:#fdf2f0;border:1px solid #f8d6d0;border-radius:13px;padding:13px 17px;font-size:14px;line-height:1.5;color:#3c4a58"><b style="color:#c2453a">Distributed attack surface</b> — many locations, often with less physical control than a central data centre; data in transit between edge and cloud can be exposed.</div>
+          <div style="background:#fff7ef;border:1px solid #ffe0c2;border-radius:13px;padding:13px 17px;font-size:14px;line-height:1.5;color:#3c4a58"><b style="color:#8a5f21">Secure content delivery</b> — encryption and access control keep confidentiality, integrity and availability, especially for streaming, real-time analytics and autonomous systems.</div>
+          <div style="background:#eef4fd;border:1px solid #cfdffa;border-radius:13px;padding:13px 17px;font-size:14px;line-height:1.5;color:#3c4a58"><b style="color:#22598f">Security vs responsiveness</b> — protection must be strong <i>without</i> adding latency; the whole point of the edge is speed.</div>
+        </div>
+      </section>
+
+      <section data-scene data-screen-label="Attack inspector" style="{{ sc4 }}">
+        <div style="display:flex;flex-direction:column;gap:5px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#e0564a">🎯 Try it · Defence in depth, live</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:32px;line-height:1.05;margin:0">Attack inspector</h2>
+          <p style="font-size:14.5px;color:#4c6660;margin:0"><b>Send a request</b> and watch which layer of the AWS edge stops it — or lets it through.</p>
+        </div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <sc-for list="{{ reqList }}" as="r" hint-placeholder-count="7">
+            <button onClick="{{ r.onClick }}" style="display:flex;align-items:center;gap:6px;border-radius:10px;padding:10px 14px;cursor:pointer;transition:all .15s;border:2px solid {{ r.border }};background:{{ r.bg }};color:{{ r.fg }}"><span style="font-size:14px">{{ r.icon }}</span><span style="font-family:'Bricolage Grotesque';font-weight:800;font-size:12.5px">{{ r.name }}</span></button>
+          </sc-for>
+        </div>
+        <div style="background:#1d2b2a;border-radius:14px;padding:12px 16px;font-family:'JetBrains Mono',monospace;font-size:12.5px;color:#ffb861;word-break:break-all">{{ reqInfo.sample }}</div>
+        <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px">
+          <sc-for list="{{ layerList }}" as="l" hint-placeholder-count="4">
+            <div style="border-radius:14px;padding:14px 12px;display:flex;flex-direction:column;gap:5px;transition:all .25s;background:{{ l.bg }};border:2px solid {{ l.border }}">
+              <div style="font-size:20px">{{ l.icon }}</div>
+              <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:13px;color:#1d2b2a">{{ l.name }}</div>
+              <div style="font-size:11px;line-height:1.4;color:#4c6660">{{ l.role }}</div>
+              <div style="font-size:11.5px;font-weight:800;margin-top:3px;color:{{ l.sfg }}">{{ l.status }}</div>
+            </div>
+          </sc-for>
+        </div>
+        <div style="border-radius:16px;padding:16px 20px;display:flex;flex-direction:column;gap:5px;background:{{ reqInfo.vBg }}">
+          <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:16px;color:{{ reqInfo.vFg }}">{{ reqInfo.verdict }}</div>
+          <div style="font-size:14px;line-height:1.55;color:#3c4a58">{{ reqInfo.why }}</div>
+        </div>
+      </section>
+
+      <section data-scene data-screen-label="Quick check 1" style="{{ sc5 }}">
+        <div style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#d98a18">🧠 Knowledge check</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:30px;line-height:1.2;margin:0;max-width:40ch">{{ q1.question }}</h2>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:840px;width:100%;margin:0 auto">
+          <sc-for list="{{ q1.options }}" as="o" hint-placeholder-count="4">
+            <button onClick="{{ o.onClick }}" style="display:flex;align-items:center;justify-content:space-between;gap:10px;text-align:left;border-radius:15px;padding:18px 20px;font-family:'Figtree';font-weight:600;font-size:15.5px;cursor:pointer;transition:all .15s;border:2px solid {{ o.border }};background:{{ o.bg }};color:{{ o.fg }}"><span>{{ o.label }}</span><span style="font-weight:800;font-size:18px">{{ o.mark }}</span></button>
+          </sc-for>
+        </div>
+        <sc-if value="{{ q1.answered }}" hint-placeholder-val="{{ false }}">
+          <div style="max-width:840px;width:100%;margin:0 auto;border-radius:16px;padding:18px 22px;background:{{ q1.bannerBg }}">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:17px;color:{{ q1.bannerFg }};margin-bottom:5px">{{ q1.banner }}</div>
+            <div style="font-size:16px;line-height:1.55;color:#33534c">{{ q1.explanation }}</div>
+          </div>
+        </sc-if>
+      </section>
+
+      <section data-scene data-screen-label="DDoS and AWS Shield" style="{{ sc6 }}">
+        <div style="display:flex;flex-direction:column;gap:5px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#7a5cf0">🎯 Try it · DDoS mitigation</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:32px;line-height:1.05;margin:0">DDoS attacks &amp; AWS Shield</h2>
+          <p style="font-size:14.5px;color:#4c6660;margin:0">DDoS attacks try to overwhelm a system with traffic so legitimate users cannot reach it.</p>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
+          <sc-for list="{{ ddosTypes }}" as="d" hint-placeholder-count="3">
+            <div style="background:#f6faf9;border:1px solid #dcebe6;border-radius:13px;padding:13px 15px"><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:14px;color:{{ d.c }}">{{ d.t }}</div><div style="font-size:12.5px;line-height:1.45;color:#3c4a58;margin-top:3px">{{ d.d }}</div></div>
+          </sc-for>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <sc-for list="{{ shieldTabs }}" as="s" hint-placeholder-count="2">
+            <button onClick="{{ s.onClick }}" style="flex:1;min-width:220px;border-radius:13px;padding:13px 18px;cursor:pointer;transition:all .15s;font-family:'Bricolage Grotesque';font-weight:800;font-size:15px;border:2px solid {{ s.border }};background:{{ s.bg }};color:{{ s.fg }}">🛡️ {{ s.name }}</button>
+          </sc-for>
+        </div>
+        <div style="background:#f5f2fe;border:2px solid #ded3fb;border-radius:18px;padding:22px;display:flex;flex-direction:column;gap:9px">
+          <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:20px;color:{{ shieldInfo.color }}">{{ shieldInfo.name }}</div>
+          <sc-for list="{{ shieldPoints }}" as="p" hint-placeholder-count="4">
+            <div style="display:flex;gap:9px;align-items:flex-start;background:#fff;border:1px solid #ded3fb;border-radius:10px;padding:10px 14px"><span style="color:{{ shieldInfo.color }};font-weight:800">✓</span><span style="font-size:14px;color:#3c4a58">{{ p.t }}</span></div>
+          </sc-for>
+        </div>
+        <div style="background:#e9f6f1;border:1px solid #c2e4da;border-radius:14px;padding:13px 19px;font-size:13.5px;color:#33534c">📈 <b>Scale and filter:</b> AWS services scale to absorb extra traffic during an attack, while AWS WAF filters or blocks suspicious requests — cutting the attack's impact.</div>
+      </section>
+
+      <section data-scene data-screen-label="Security principles" style="{{ sc7 }}">
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#0e8f74">Chapter 07 · Foundations &amp; best practice</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:38px;line-height:1.04;margin:0;letter-spacing:-.01em">Foundational security principles</h2>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px">
+          <sc-for list="{{ principles }}" as="p" hint-placeholder-count="3">
+            <div style="background:#f6faf9;border:1px solid #dcebe6;border-radius:18px;padding:20px;display:flex;flex-direction:column;gap:8px">
+              <div style="width:44px;height:44px;border-radius:12px;background:{{ p.c }};display:flex;align-items:center;justify-content:center;font-size:22px">{{ p.icon }}</div>
+              <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:16px;color:{{ p.c }}">{{ p.t }}</div>
+              <div style="font-size:14px;line-height:1.5;color:#3c4a58">{{ p.d }}</div>
+            </div>
+          </sc-for>
+        </div>
+        <div style="background:#1d2b2a;border-radius:18px;padding:20px;display:flex;gap:8px;align-items:center;justify-content:center;flex-wrap:wrap">
+          <div style="background:#2f4340;color:#cfe5df;border-radius:10px;padding:9px 13px;font-size:12px;font-weight:800">📱 Devices</div><span style="color:#4c6660">›</span>
+          <div style="background:#2f4340;color:#cfe5df;border-radius:10px;padding:9px 13px;font-size:12px;font-weight:800">🌐 Network</div><span style="color:#4c6660">›</span>
+          <div style="background:#2f4340;color:#cfe5df;border-radius:10px;padding:9px 13px;font-size:12px;font-weight:800">🧩 Application</div><span style="color:#4c6660">›</span>
+          <div style="background:#2f4340;color:#cfe5df;border-radius:10px;padding:9px 13px;font-size:12px;font-weight:800">🗄️ Data</div><span style="color:#4c6660">›</span>
+          <div style="background:#0e8f74;color:#fff;border-radius:10px;padding:9px 13px;font-size:12px;font-weight:800">☁️ Cloud infrastructure</div>
+        </div>
+        <div style="font-size:13px;color:#4c6660;text-align:center">🧅 Defence in depth: a control at every layer — the attack inspector in chapter 5 was this, live.</div>
+      </section>
+
+      <section data-scene data-screen-label="Shared responsibility" style="{{ sc8 }}">
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#2e7fd4">Chapter 08 · Who secures what</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:38px;line-height:1.04;margin:0;letter-spacing:-.01em">Compliance &amp; shared responsibility</h2>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+          <div style="background:#fff7ef;border:2px solid #ffe0c2;border-radius:18px;padding:22px;display:flex;flex-direction:column;gap:9px">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:17px;color:#ec7211">☁️ AWS — security OF the cloud</div>
+            <div style="font-size:14px;line-height:1.55;color:#3c4a58">Secures the underlying cloud infrastructure: facilities and edge locations, hardware, the global network, and the services themselves.</div>
+          </div>
+          <div style="background:#eef4fd;border:2px solid #cfdffa;border-radius:18px;padding:22px;display:flex;flex-direction:column;gap:9px">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:17px;color:#2e7fd4">🧑‍💻 Customer — security IN the cloud</div>
+            <div style="font-size:14px;line-height:1.55;color:#3c4a58">Secures your data, applications and configurations: encryption, access management, data retention, and meeting security and regulatory requirements.</div>
+          </div>
+        </div>
+        <div style="background:#e9f6f1;border:1px solid #c2e4da;border-radius:16px;padding:16px 20px;font-size:14px;line-height:1.55;color:#3c4a58">🌍 <b>Data residency &amp; compliance:</b> AWS provides services and controls so organisations can manage <b>where</b> data is stored and processed, according to the regulations that apply to them.</div>
+      </section>
+
+      <section data-scene data-screen-label="Quick check 2" style="{{ sc9 }}">
+        <div style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#d98a18">🧠 Knowledge check</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:30px;line-height:1.2;margin:0;max-width:40ch">{{ q2.question }}</h2>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:840px;width:100%;margin:0 auto">
+          <sc-for list="{{ q2.options }}" as="o" hint-placeholder-count="4">
+            <button onClick="{{ o.onClick }}" style="display:flex;align-items:center;justify-content:space-between;gap:10px;text-align:left;border-radius:15px;padding:18px 20px;font-family:'Figtree';font-weight:600;font-size:15.5px;cursor:pointer;transition:all .15s;border:2px solid {{ o.border }};background:{{ o.bg }};color:{{ o.fg }}"><span>{{ o.label }}</span><span style="font-weight:800;font-size:18px">{{ o.mark }}</span></button>
+          </sc-for>
+        </div>
+        <sc-if value="{{ q2.answered }}" hint-placeholder-val="{{ false }}">
+          <div style="max-width:840px;width:100%;margin:0 auto;border-radius:16px;padding:18px 22px;background:{{ q2.bannerBg }}">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:17px;color:{{ q2.bannerFg }};margin-bottom:5px">{{ q2.banner }}</div>
+            <div style="font-size:16px;line-height:1.55;color:#33534c">{{ q2.explanation }}</div>
+          </div>
+        </sc-if>
+      </section>
+
+      <section data-scene data-screen-label="Edge services explorer" style="{{ sc10 }}">
+        <div style="display:flex;flex-direction:column;gap:5px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#ec7211">🎯 Try it · Security-related edge services</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:32px;line-height:1.05;margin:0">AWS edge services explorer</h2>
+          <p style="font-size:14.5px;color:#4c6660;margin:0"><b>Tap each service</b> for what it does, its security role, and a real-world example.</p>
+        </div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <sc-for list="{{ svcList }}" as="s" hint-placeholder-count="6">
+            <button onClick="{{ s.onClick }}" style="display:flex;align-items:center;gap:6px;border-radius:10px;padding:10px 14px;cursor:pointer;transition:all .15s;border:2px solid {{ s.border }};background:{{ s.bg }};color:{{ s.fg }}"><span style="font-size:14px">{{ s.icon }}</span><span style="font-family:'Bricolage Grotesque';font-weight:800;font-size:12.5px">{{ s.name }}</span></button>
+          </sc-for>
+        </div>
+        <div style="background:#f6faf9;border:2px solid #dcebe6;border-radius:20px;padding:24px;display:flex;flex-direction:column;gap:13px;min-height:260px">
+          <div style="display:flex;align-items:center;gap:13px"><div style="width:52px;height:52px;border-radius:14px;background:{{ svcInfo.color }};display:flex;align-items:center;justify-content:center;font-size:25px">{{ svcInfo.icon }}</div><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:22px;color:{{ svcInfo.color }}">{{ svcInfo.name }}</div></div>
+          <p style="margin:0;font-size:15.5px;line-height:1.6;color:#3c4a58">{{ svcInfo.what }}</p>
+          <div style="background:#fff;border:1px solid #dcebe6;border-radius:12px;padding:12px 16px;font-size:14px;line-height:1.5;color:#3c4a58"><b style="color:#0a6b50">🔒 Security role:</b> {{ svcInfo.security }}</div>
+          <div style="background:#fff7ef;border:1px solid #ffe0c2;border-radius:12px;padding:12px 16px;font-size:14px;line-height:1.5;color:#8a5f21"><b>🏭 Example:</b> {{ svcInfo.ex }}</div>
+        </div>
+      </section>
+
+      <section data-scene data-screen-label="Monitoring and incident response" style="{{ sc11 }}">
+        <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:14px;flex-wrap:wrap">
+          <div style="display:flex;flex-direction:column;gap:4px">
+            <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#7a5cf0">🎯 Try it · From log to block</div>
+            <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:32px;line-height:1.05;margin:0">Monitoring &amp; incident response</h2>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:14px;color:#7a5cf0;background:#f2eefe;border-radius:10px;padding:10px 14px">{{ irNum }}</div>
+            <button onClick="{{ irPrev }}" style="background:#fff;border:1px solid #d5e6e0;border-radius:10px;padding:10px 15px;font-family:'Figtree';font-weight:600;font-size:13.5px;color:#4c6660;cursor:pointer">◀</button>
+            <button onClick="{{ irNext }}" style="background:#7a5cf0;border:none;border-radius:10px;padding:10px 17px;font-family:'Bricolage Grotesque';font-weight:700;font-size:13.5px;color:#fff;cursor:pointer">Next ▶</button>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px">
+          <sc-for list="{{ irList }}" as="s" hint-placeholder-count="4">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:5px;border-radius:13px;padding:14px 10px;transition:all .2s;text-align:center;background:{{ s.bg }};color:{{ s.fg }};border:2px solid {{ s.border }}"><span style="font-size:21px">{{ s.icon }}</span><span style="font-family:'Bricolage Grotesque';font-weight:800;font-size:12.5px">{{ s.t }}</span></div>
+          </sc-for>
+        </div>
+        <div style="background:#fff;border:2px solid #ded3fb;border-radius:18px;padding:22px;display:flex;flex-direction:column;gap:9px;min-height:130px;justify-content:center">
+          <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:21px;color:{{ irColor }}">{{ irIcon }} {{ irTitle }}</div>
+          <p style="margin:0;font-size:16px;line-height:1.6;color:#3c4a58">{{ irDesc }}</p>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px">
+          <div style="background:#eef4fd;border:1px solid #cfdffa;border-radius:12px;padding:12px;font-size:12.5px;line-height:1.45;color:#3c4a58"><b style="color:#2e7fd4">CloudTrail</b><br/>Account activity &amp; API actions</div>
+          <div style="background:#eef4fd;border:1px solid #cfdffa;border-radius:12px;padding:12px;font-size:12.5px;line-height:1.45;color:#3c4a58"><b style="color:#2e7fd4">AWS Config</b><br/>Configuration changes &amp; compliance</div>
+          <div style="background:#fdf2f0;border:1px solid #f8d6d0;border-radius:12px;padding:12px;font-size:12.5px;line-height:1.45;color:#3c4a58"><b style="color:#c2453a">GuardDuty</b><br/>Continuous threat detection</div>
+          <div style="background:#e9f6f1;border:1px solid #c2e4da;border-radius:12px;padding:12px;font-size:12.5px;line-height:1.45;color:#3c4a58"><b style="color:#0a6b50">Detective</b><br/>Incident investigation</div>
+        </div>
+      </section>
+
+      <section data-scene data-screen-label="Protecting data" style="{{ sc12 }}">
+        <div style="display:flex;flex-direction:column;gap:5px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#2e7fd4">🎯 Try it · Encryption everywhere</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:32px;line-height:1.05;margin:0">Protecting data at the edge</h2>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <sc-for list="{{ dpTabs }}" as="d" hint-placeholder-count="2">
+            <button onClick="{{ d.onClick }}" style="flex:1;min-width:200px;display:flex;align-items:center;justify-content:center;gap:9px;border-radius:13px;padding:14px 18px;cursor:pointer;transition:all .15s;border:2px solid {{ d.border }};background:{{ d.bg }};color:{{ d.fg }}"><span style="font-size:19px">{{ d.icon }}</span><span style="font-family:'Bricolage Grotesque';font-weight:800;font-size:15px">{{ d.name }}</span></button>
+          </sc-for>
+        </div>
+        <div style="background:#f6faf9;border:2px solid #dcebe6;border-radius:20px;padding:24px;display:flex;flex-direction:column;gap:13px;min-height:230px">
+          <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:21px;color:{{ dpInfo.color }}">{{ dpInfo.icon }} {{ dpInfo.name }}</div>
+          <p style="margin:0;font-size:15.5px;line-height:1.6;color:#3c4a58">{{ dpInfo.d }}</p>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+            <sc-for list="{{ dpInfo.tools }}" as="t" hint-placeholder-count="2">
+              <div style="background:#fff;border:1px solid #dcebe6;border-radius:13px;padding:14px 16px"><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:14.5px;color:{{ dpInfo.color }}">{{ t.t }}</div><div style="font-size:13.5px;line-height:1.5;color:#3c4a58;margin-top:4px">{{ t.d }}</div></div>
+            </sc-for>
+          </div>
+        </div>
+        <div style="background:#fff7ef;border:1px solid #ffe0c2;border-radius:14px;padding:13px 19px;font-size:13.5px;color:#8a5f21">🔑 Access to KMS keys is itself controlled with IAM policies — encryption is only as strong as who can use the key.</div>
+      </section>
+
+      <section data-scene data-screen-label="Who is responsible" style="{{ sc13 }}">
+        <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap">
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#0e8f74">🎯 Try it · Shared responsibility</div>
+            <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:33px;line-height:1.05;margin:0">Who is responsible?</h2>
+            <p style="font-size:15px;color:#4c6660;margin:0"><b>Tap a task</b>, then <b>tap who owns it</b>.</p>
+          </div>
+          <div style="display:flex;gap:10px">
+            <sc-if value="{{ dragChecked }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;align-items:center;border-radius:12px;padding:11px 18px;font-family:'Bricolage Grotesque';font-weight:800;font-size:16px;background:{{ dragScoreBg }};color:{{ dragScoreFg }}">{{ dragScore }}</div>
+            </sc-if>
+            <button onClick="{{ resetDrag }}" style="background:#fff;border:1px solid #d5e6e0;border-radius:12px;padding:11px 18px;font-family:'Figtree';font-weight:600;font-size:14px;color:#4c6660;cursor:pointer">↺ Reset</button>
+            <button onClick="{{ checkDrag }}" style="background:#0e8f74;border:none;border-radius:12px;padding:11px 20px;font-family:'Bricolage Grotesque';font-weight:700;font-size:15px;color:#fff;cursor:pointer">Check answers</button>
+          </div>
+        </div>
+        <div style="min-height:54px;background:#f2f7f5;border:2px dashed #c6ddd6;border-radius:16px;padding:12px;display:flex;flex-wrap:wrap;gap:10px;align-items:center">
+          <span style="font-size:13px;font-weight:700;color:#8ba39e;padding:0 6px">TRAY:</span>
+          <sc-for list="{{ dragTray }}" as="it" hint-placeholder-count="6">
+            <button onClick="{{ it.onClick }}" style="border-radius:11px;padding:11px 16px;font-family:'Figtree';font-weight:600;font-size:13.5px;cursor:pointer;transition:all .15s;border:2px solid {{ it.border }};background:{{ it.bg }};color:{{ it.fg }}">{{ it.label }}</button>
+          </sc-for>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+          <div onClick="{{ dropAws }}" style="background:#fff7ef;border:2px solid #ffe0c2;border-radius:18px;padding:16px;min-height:170px;display:flex;flex-direction:column;gap:10px;cursor:pointer">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:15px;color:#ec7211">☁️ AWS</div>
+            <sc-for list="{{ dragAws }}" as="it" hint-placeholder-count="0">
+              <button onClick="{{ it.onClick }}" style="display:flex;justify-content:space-between;align-items:center;gap:6px;text-align:left;border-radius:10px;padding:10px 13px;font-weight:600;font-size:12.5px;cursor:pointer;border:2px solid {{ it.border }};background:{{ it.bg }};color:{{ it.fg }}"><span>{{ it.label }}</span><span style="font-weight:800">{{ it.mark }}</span></button>
+            </sc-for>
+          </div>
+          <div onClick="{{ dropCust }}" style="background:#eef4fd;border:2px solid #cfdffa;border-radius:18px;padding:16px;min-height:170px;display:flex;flex-direction:column;gap:10px;cursor:pointer">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:15px;color:#2e7fd4">🧑‍💻 Customer</div>
+            <sc-for list="{{ dragCust }}" as="it" hint-placeholder-count="0">
+              <button onClick="{{ it.onClick }}" style="display:flex;justify-content:space-between;align-items:center;gap:6px;text-align:left;border-radius:10px;padding:10px 13px;font-weight:600;font-size:12.5px;cursor:pointer;border:2px solid {{ it.border }};background:{{ it.bg }};color:{{ it.fg }}"><span>{{ it.label }}</span><span style="font-weight:800">{{ it.mark }}</span></button>
+            </sc-for>
+          </div>
+        </div>
+      </section>
+
+      <section data-scene data-screen-label="Final check" style="{{ sc14 }}">
+        <div style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#d98a18">🧠 Final knowledge check</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:30px;line-height:1.2;margin:0;max-width:40ch">{{ q3.question }}</h2>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:840px;width:100%;margin:0 auto">
+          <sc-for list="{{ q3.options }}" as="o" hint-placeholder-count="4">
+            <button onClick="{{ o.onClick }}" style="display:flex;align-items:center;justify-content:space-between;gap:10px;text-align:left;border-radius:15px;padding:18px 20px;font-family:'Figtree';font-weight:600;font-size:15.5px;cursor:pointer;transition:all .15s;border:2px solid {{ o.border }};background:{{ o.bg }};color:{{ o.fg }}"><span>{{ o.label }}</span><span style="font-weight:800;font-size:18px">{{ o.mark }}</span></button>
+          </sc-for>
+        </div>
+        <sc-if value="{{ q3.answered }}" hint-placeholder-val="{{ false }}">
+          <div style="max-width:840px;width:100%;margin:0 auto;border-radius:16px;padding:18px 22px;background:{{ q3.bannerBg }}">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:17px;color:{{ q3.bannerFg }};margin-bottom:5px">{{ q3.banner }}</div>
+            <div style="font-size:16px;line-height:1.55;color:#33534c">{{ q3.explanation }}</div>
+          </div>
+        </sc-if>
+      </section>
+
+      <section data-scene data-screen-label="Research activity" style="{{ sc15 }}">
+        <div style="display:flex;flex-direction:column;gap:7px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#ec7211">📝 Activity · Independent research</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:36px;line-height:1.04;margin:0;letter-spacing:-.01em">Security research activity</h2>
+        </div>
+        <div style="display:flex;gap:7px;flex-wrap:wrap">
+          <sc-for list="{{ researchServices }}" as="r" hint-placeholder-count="8">
+            <span style="border-radius:99px;padding:7px 14px;font-weight:700;font-size:12.5px;color:#fff;background:{{ r.c }}">{{ r.t }}</span>
+          </sc-for>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:9px">
+          <div style="background:#fff;border:1px solid #dcebe6;border-radius:13px;padding:13px 17px;font-size:14.5px;line-height:1.5;color:#3c4a58"><b>1.</b> Research the services above and their role in <b>securing edge environments</b>.</div>
+          <div style="background:#fff;border:1px solid #dcebe6;border-radius:13px;padding:13px 17px;font-size:14.5px;line-height:1.5;color:#3c4a58"><b>2.</b> Research AWS services that <b>support security at the edge</b> — for example Amazon API Gateway and AWS Certificate Manager.</div>
+          <div style="background:#fff;border:1px solid #dcebe6;border-radius:13px;padding:13px 17px;font-size:14.5px;line-height:1.5;color:#3c4a58"><b>3.</b> Identify <b>real-world applications</b> in industries such as media, IoT or healthcare — focusing on how they enhance security and performance.</div>
+          <div style="background:#fff;border:1px solid #dcebe6;border-radius:13px;padding:13px 17px;font-size:14.5px;line-height:1.5;color:#3c4a58"><b>4.</b> Give examples of how they <b>reduce latency</b>, <b>improve data management</b> and <b>protect data</b> at the edge.</div>
+        </div>
+        <div style="background:#e9f6f1;border:1px solid #c2e4da;border-radius:14px;padding:13px 19px;font-size:13.5px;color:#33534c">💡 Chapter 11's explorer gives you a starting example for each service — build your research out from those.</div>
+      </section>
+
+      <section data-scene data-screen-label="Wrap-up" style="{{ sc16 }}">
+        <div style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px">
+          <div style="font-size:40px">🎉</div>
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#0e8f74">Session wrap-up</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:38px;line-height:1.04;margin:0;letter-spacing:-.01em">Many layers, one consistent approach</h2>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px">
+          <div style="background:#e9f6f1;border:1px solid #c2e4da;border-radius:18px;padding:20px;display:flex;flex-direction:column;gap:7px">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:15px;color:#0e8f74">🔒 Why edge security</div>
+            <p style="margin:0;font-size:14px;line-height:1.55;color:#3c4a58">Protects data processed near users and devices, keeps mission-critical apps available, and secures devices, networks and applications.</p>
+          </div>
+          <div style="background:#f5f2fe;border:1px solid #ded3fb;border-radius:18px;padding:20px;display:flex;flex-direction:column;gap:7px">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:15px;color:#7a5cf0">🧰 AWS tools</div>
+            <p style="margin:0;font-size:14px;line-height:1.55;color:#3c4a58">Encryption, DDoS protection, access control, monitoring and automated incident response — CloudFront, Shield, WAF, GuardDuty, KMS, ACM.</p>
+          </div>
+          <div style="background:#eef4fd;border:1px solid #cfdffa;border-radius:18px;padding:20px;display:flex;flex-direction:column;gap:7px">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:15px;color:#2e7fd4">🧅 Defence in depth</div>
+            <p style="margin:0;font-size:14px;line-height:1.55;color:#3c4a58">Multiple layers instead of one control — if one layer is bypassed, the next still protects the system.</p>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap">
+          <button onClick="{{ startLesson }}" style="background:#fff;color:#0e8f74;border:2px solid #b5ded2;border-radius:14px;padding:14px 26px;font-family:'Bricolage Grotesque';font-weight:700;font-size:16px;cursor:pointer" style-hover="background:#f4fbf8">↻ Review from the start</button>
+          <button onClick="{{ toggleGlossary }}" style="background:#0e8f74;color:#fff;border:none;border-radius:14px;padding:14px 26px;font-family:'Bricolage Grotesque';font-weight:700;font-size:16px;cursor:pointer">📖 Open glossary</button>
+        </div>
+        <div style="text-align:center;font-size:14px;color:#8ba39e">Lesson prepared by <b style="color:#4c6660">Reza Shahabian</b></div>
+      </section>
+
+    </div>
+  </div>
+
+  <div style="position:sticky;bottom:0;z-index:20;width:100%;display:flex;justify-content:center;background:linear-gradient(to top,#edf5f2 55%,transparent);padding:10px 24px 22px">
+    <div style="width:100%;max-width:1180px;display:flex;align-items:center;justify-content:space-between;gap:14px">
+      <button onClick="{{ prev }}" style="display:flex;align-items:center;gap:8px;background:#fff;border:1px solid #d5e6e0;border-radius:13px;padding:13px 22px;font-family:'Bricolage Grotesque';font-weight:700;font-size:15px;color:#33534c;cursor:pointer" style-hover="border-color:#8fc9b9">← Back</button>
+      <div style="display:flex;align-items:center;gap:12px;font-weight:600;color:#6a857f;font-size:15px">
+        <span style="font-family:'Bricolage Grotesque';color:#1d2b2a;font-size:17px">{{ sceneNum }}</span>
+        <span style="color:#b6ccc6">/</span>
+        <span>{{ total }}</span>
+        <span style="color:#b6ccc6">·</span>
+        <span style="color:#33534c">{{ sceneTitle }}</span>
+      </div>
+      <button onClick="{{ next }}" style="display:flex;align-items:center;gap:8px;background:{{ accent }};border:none;border-radius:13px;padding:13px 26px;font-family:'Bricolage Grotesque';font-weight:700;font-size:15px;color:#fff;cursor:pointer;box-shadow:0 10px 20px -10px rgba(20,70,60,.5)" style-hover="transform:translateY(-2px)">Next →</button>
+    </div>
+  </div>
+
+  <sc-if value="{{ glossaryOpen }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ toggleGlossary }}" style="position:fixed;inset:0;z-index:50;background:rgba(20,40,36,.34);backdrop-filter:blur(2px)"></div>
+    <div style="position:fixed;top:0;right:0;bottom:0;z-index:51;width:min(460px,92vw);background:#fff;box-shadow:-20px 0 60px -20px rgba(20,70,60,.4);display:flex;flex-direction:column">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:24px 26px;border-bottom:1px solid #e8f1ee">
+        <div style="display:flex;flex-direction:column;gap:2px">
+          <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:22px">📖 Glossary</div>
+          <div style="font-size:13px;color:#7b948e">Edge security terms &amp; AWS services</div>
+        </div>
+        <button onClick="{{ toggleGlossary }}" style="background:#eef5f3;border:none;border-radius:10px;width:38px;height:38px;font-size:18px;cursor:pointer;color:#4c6660">✕</button>
+      </div>
+      <div style="overflow-y:auto;padding:18px 26px 40px;display:flex;flex-direction:column;gap:14px">
+        <sc-for list="{{ glossary }}" as="g" hint-placeholder-count="6">
+          <div style="border:1px solid #e8f1ee;border-radius:14px;padding:14px 16px;background:#fafcfb">
+            <div style="display:flex;align-items:center;gap:8px;font-family:'Bricolage Grotesque';font-weight:700;font-size:16px;color:#1d2b2a"><span>{{ g.icon }}</span>{{ g.term }}</div>
+            <div style="font-size:14.5px;line-height:1.5;color:#4c6660;margin-top:5px">{{ g.def }}</div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:820}}">
+class Component extends DCLogic {
+  state = { idx:0, playing:false, glossary:false, quiz:{q1:null,q2:null,q3:null},
+    req:'normal', shield:'std', svc:'greengrass', ir:0, dp:'transit',
+    drops:{phys:null,infra:null,net:null,enc:null,iam:null,waf:null}, sel:null, dragChecked:false };
+
+  total = 17;
+  interactive = new Set([4,5,6,9,10,11,12,13,14]);
+  durations = { 0:5200 };
+
+  chapTitles = ['Welcome','Recap: CDNs','Why security at the edge','Edge locations & concerns','Attack inspector','Quick check','DDoS & AWS Shield','Security principles','Shared responsibility','Quick check','Edge services explorer','Monitoring & incident response','Protecting data','Who is responsible?','Final check','Research activity','Wrap-up'];
+  chapColors = ['#0e8f74','#2e7fd4','#e0564a','#0e8f74','#e0564a','#ffb43d','#7a5cf0','#0e8f74','#2e7fd4','#ffb43d','#ec7211','#7a5cf0','#2e7fd4','#0e8f74','#ffb43d','#ec7211','#0e8f74'];
+
+  whyPoints = [
+    {icon:'🧭',t:'New security challenges',d:'Data is processed outside the traditional cloud perimeter — on devices and at sites with fewer physical and network controls.',c:'#e0564a'},
+    {icon:'📦',t:'Protecting data & applications',d:'Data must stay secure while processed, stored and transferred between edge locations and the cloud.',c:'#ec7211'},
+    {icon:'🧰',t:'AWS security services',d:'A wide range of AWS tools extend cloud security controls to edge environments — workloads, data, devices and connections.',c:'#2e7fd4'},
+    {icon:'🔁',t:'Consistent security',d:'The same controls apply whether computing runs in the cloud, at the edge, or across hybrid environments.',c:'#0e8f74'},
+  ];
+
+  layers = [
+    {name:'AWS Shield',icon:'🛡️',role:'Network & transport layer DDoS protection'},
+    {name:'AWS WAF',icon:'🧱',role:'Application-layer rules: SQLi, XSS, rate limits'},
+    {name:'CloudFront',icon:'📡',role:'TLS encryption + signed URLs / cookies'},
+    {name:'Origin',icon:'🗄️',role:'Your application and data'},
+  ];
+
+  reqData = {
+    normal:{name:'Normal visitor',icon:'🧑',blocked:-1,sample:'GET https://shop.example.com/products  (TLS 1.3)',
+      verdict:'✅ Served — every layer let it through',why:'A legitimate HTTPS request passes Shield, matches no WAF rule, and is served from the CloudFront edge cache or forwarded to the origin.'},
+    syn:{name:'SYN flood',icon:'🌊',blocked:0,sample:'SYN SYN SYN SYN ... (millions of half-open TCP connections)',
+      verdict:'⛔ Stopped at AWS Shield',why:'A network/transport-layer DDoS. Shield Standard automatically detects and absorbs it at the edge before it ever reaches your application.'},
+    udp:{name:'UDP amplification',icon:'📢',blocked:0,sample:'UDP reflected traffic from open DNS/NTP servers → your IP',
+      verdict:'⛔ Stopped at AWS Shield',why:'Attackers bounce small queries off open servers to flood you with large replies. Shield mitigates this layer 3/4 volume attack automatically.'},
+    http:{name:'HTTP flood',icon:'🔥',blocked:1,sample:'GET /search?q=... × 50,000 requests/min from one IP range',
+      verdict:'⛔ Stopped at AWS WAF',why:'These are valid-looking layer 7 requests, so they pass network defences. A WAF rate-based rule blocks sources exceeding the request threshold.'},
+    sqli:{name:'SQL injection',icon:'💉',blocked:1,sample:"GET /login?user=admin'--&pass=x",
+      verdict:'⛔ Stopped at AWS WAF',why:'An application-layer attack trying to manipulate the database query. WAF\u2019s SQL-injection rules match the pattern and block it.'},
+    xss:{name:'Cross-site scripting',icon:'📜',blocked:1,sample:'POST /comment  body=\u003cscr'+'ipt\u003esteal(document.cookie)\u003c/scr'+'ipt\u003e',
+      verdict:'⛔ Stopped at AWS WAF',why:'An attempt to inject script that runs in other users\u2019 browsers. WAF\u2019s XSS rules inspect the request body and block it.'},
+    unsigned:{name:'Unsigned premium video',icon:'🎬',blocked:2,sample:'GET https://cdn.example.com/premium/ep1.mp4  (no signature)',
+      verdict:'⛔ Stopped at CloudFront',why:'Not an attack pattern, so Shield and WAF pass it — but the content requires a signed URL or signed cookie. CloudFront refuses the unauthorised request.'},
+  };
+  reqOrder = ['normal','syn','udp','http','sqli','xss','unsigned'];
+
+  shieldData = {
+    std:{name:'AWS Shield Standard',color:'#0e8f74',
+      points:['Automatic protection against common DDoS attacks','Covers the network and transport layers (L3/L4)','Always on — no configuration required','Included for AWS customers at no additional charge']},
+    adv:{name:'AWS Shield Advanced',color:'#7a5cf0',
+      points:['Everything in Standard, plus additional protection','Detailed attack monitoring and visibility','Access to the AWS Shield Response Team for advanced attacks','A paid subscription — for high-value, high-risk applications']},
+  };
+  shieldOrder = ['std','adv'];
+  ddosTypes = [
+    {t:'SYN flood',d:'Floods a server with half-open TCP connection requests.',c:'#e0564a'},
+    {t:'UDP amplification',d:'Reflects small queries off open servers to generate huge replies.',c:'#ec7211'},
+    {t:'HTTP flood',d:'Overwhelms the application layer with many valid-looking requests.',c:'#7a5cf0'},
+  ];
+
+  principles = [
+    {icon:'🏛️',t:'Well-Architected Security Pillar',d:'Protect systems and data at every layer — from cloud infrastructure out to edge locations.',c:'#2e7fd4'},
+    {icon:'🧅',t:'Defence in depth',d:'Multiple layers of security, so if one control is compromised, others still protect the system.',c:'#0e8f74'},
+    {icon:'🤖',t:'Automating security',d:'Apply controls consistently, keep them updated, reduce human error, and respond faster to new threats.',c:'#7a5cf0'},
+  ];
+
+  svcData = {
+    greengrass:{name:'AWS IoT Greengrass',icon:'🌱',color:'#0e8f74',what:'Extends AWS to IoT devices so they process data locally while communicating securely with the AWS Cloud.',
+      security:'Secure device-to-cloud communication and local processing, so raw data need not leave the site.',ex:'A smart farm barn server running anomaly detection on livestock sensors.'},
+    freertos:{name:'FreeRTOS',icon:'🔌',color:'#2e7fd4',what:'A real-time operating system for low-power microcontroller devices.',
+      security:'Provides the connectivity and security features needed to connect tiny edge devices safely to AWS.',ex:'Wearable health monitors and industrial sensors on microcontrollers.'},
+    snow:{name:'AWS Snow Family',icon:'❄️',color:'#7a5cf0',what:'Secure, portable devices for environments with limited or no connectivity.',
+      security:'Collect, process and physically transfer large amounts of data between edge locations and AWS securely.',ex:'A remote research station or disaster zone moving terabytes with no reliable link.'},
+    outposts:{name:'AWS Outposts',icon:'🏢',color:'#ec7211',what:'Extends AWS infrastructure and services to on-premises environments.',
+      security:'Run workloads locally with familiar AWS tools, security controls and management features.',ex:'A hospital keeping patient data on-site for data-residency rules.'},
+    wavelength:{name:'AWS Wavelength',icon:'📶',color:'#e0564a',what:'Places AWS compute and storage at the 5G network edge.',
+      security:'Low-latency processing inside the carrier network, keeping traffic off the wider internet.',ex:'Real-time multiplayer gaming, AR/VR and live video streaming.'},
+    gateway:{name:'AWS Storage Gateway',icon:'🔁',color:'#12a87f',what:'Connects on-premises environments with AWS cloud storage.',
+      security:'Transfers data between local systems and AWS as part of a controlled hybrid setup.',ex:'An office backing up local file shares to Amazon S3.'},
+  };
+  svcOrder = ['greengrass','freertos','snow','outposts','wavelength','gateway'];
+
+  irSteps = [
+    {t:'Record everything',d:'AWS CloudTrail records account activity and API calls; AWS Config tracks resource configurations and changes — who changed what, when.',icon:'📝',c:'#2e7fd4'},
+    {t:'Detect the threat',d:'Amazon GuardDuty continuously monitors accounts, workloads and data — and raises a finding, e.g. traffic from a known malicious IP.',icon:'🚨',c:'#e0564a'},
+    {t:'Respond automatically',d:'The finding triggers an automated response — for example updating an AWS WAF rule so the offending IP\u2019s requests are blocked at the edge.',icon:'🤖',c:'#7a5cf0'},
+    {t:'Investigate',d:'Amazon Detective analyses the related activity to help you understand the incident\u2019s scope and root cause.',icon:'🔍',c:'#0e8f74'},
+  ];
+
+  dpData = {
+    transit:{name:'Data in transit',icon:'🚚',color:'#2e7fd4',
+      d:'Data moving between devices, applications and AWS services is protected with encryption such as TLS.',
+      tools:[{t:'TLS / HTTPS',d:'Encrypts the connection between user, edge and origin.'},{t:'AWS Certificate Manager (ACM)',d:'Obtains, deploys and manages the SSL/TLS certificates that enable HTTPS.'}]},
+    rest:{name:'Data at rest',icon:'🗄️',color:'#7a5cf0',
+      d:'Stored data is encrypted so that even if storage is accessed, the information stays unreadable.',
+      tools:[{t:'AWS KMS',d:'Create, manage and control encryption keys; integrates with AWS services; key access governed by IAM policies.'},{t:'AWS CloudHSM',d:'Dedicated hardware security modules for customers needing their own key hardware.'}]},
+  };
+  dpOrder = ['transit','rest'];
+
+  dragMeta = {
+    phys:{label:'Physical security of edge locations',cat:'aws'},
+    infra:{label:'The underlying global infrastructure',cat:'aws'},
+    net:{label:'Network hardware in AWS data centres',cat:'aws'},
+    enc:{label:'Choosing to encrypt your S3 data',cat:'cust'},
+    iam:{label:'IAM permissions for your users',cat:'cust'},
+    waf:{label:'Writing your WAF rules',cat:'cust'},
+  };
+  dragOrder = ['phys','enc','infra','iam','net','waf'];
+
+  researchServices = [
+    {t:'Amazon CloudFront',c:'#e0564a'},{t:'FreeRTOS',c:'#2e7fd4'},{t:'AWS IoT Greengrass',c:'#0e8f74'},
+    {t:'AWS Snow Family',c:'#7a5cf0'},{t:'AWS Outposts',c:'#ec7211'},{t:'AWS Wavelength',c:'#e0564a'},
+    {t:'Amazon API Gateway',c:'#2e7fd4'},{t:'AWS Certificate Manager',c:'#0e8f74'},
+  ];
+
+  quizDefs = {
+    q1:{question:'An attacker sends GET /login?user=admin\'-- to your web app behind CloudFront. Which service is designed to block it?',
+      options:[{label:'AWS Shield Standard'},{label:'AWS WAF',correct:true},{label:'AWS Snow Family'},{label:'AWS Storage Gateway'}],
+      explanation:'That is SQL injection — an application-layer attack. It looks like a normal request at the network level, so Shield passes it. AWS WAF inspects the request and blocks it with SQL-injection rules.'},
+    q2:{question:'Under the shared responsibility model, who is responsible for configuring encryption and access management for your data?',
+      options:[{label:'AWS'},{label:'The customer',correct:true},{label:'The CDN provider'},{label:'Nobody — it is automatic'}],
+      explanation:'AWS secures the underlying cloud infrastructure. The customer controls security IN the cloud — encryption settings, access management, data retention, and meeting regulatory requirements.'},
+    q3:{question:'A remote mining site with no reliable connectivity needs to securely collect terabytes of sensor data and move it to AWS. Which service fits?',
+      options:[{label:'AWS Wavelength'},{label:'AWS Snow Family',correct:true},{label:'Amazon CloudFront'},{label:'AWS Shield Advanced'}],
+      explanation:'The Snow Family provides secure, portable devices built for places with limited or no network connectivity — data is collected and processed locally, then physically and securely transferred to AWS.'},
+  };
+
+  glossary = [
+    {icon:'🧭',term:'Security perimeter',def:'The boundary traditionally protected around a data centre — edge computing extends beyond it.'},
+    {icon:'📡',term:'Amazon CloudFront',def:'AWS\u2019s CDN — low-latency delivery with TLS, signed URLs/cookies and Shield integration.'},
+    {icon:'✍️',term:'Signed URL / cookie',def:'A time-limited credential that restricts CloudFront content to authorised users.'},
+    {icon:'🛡️',term:'AWS Shield',def:'Managed DDoS protection; Standard is automatic, Advanced adds monitoring and the Shield Response Team.'},
+    {icon:'🧱',term:'AWS WAF',def:'Web Application Firewall that filters and blocks malicious HTTP requests.'},
+    {icon:'💉',term:'SQL injection',def:'Inserting malicious SQL into input fields to manipulate a database.'},
+    {icon:'📜',term:'XSS',def:'Cross-Site Scripting — injecting script that runs in other users\u2019 browsers.'},
+    {icon:'🌊',term:'SYN flood',def:'A DDoS that exhausts servers with half-open TCP connections.'},
+    {icon:'🧅',term:'Defence in depth',def:'Layered security so no single failed control exposes the system.'},
+    {icon:'🤝',term:'Shared responsibility',def:'AWS secures the cloud; customers secure what they put in it.'},
+    {icon:'🌱',term:'IoT Greengrass',def:'Runs AWS capabilities on IoT devices for secure local processing.'},
+    {icon:'❄️',term:'Snow Family',def:'Rugged, secure devices for data collection and transfer without connectivity.'},
+    {icon:'🏢',term:'Outposts',def:'AWS infrastructure installed on-premises.'},
+    {icon:'📶',term:'Wavelength',def:'AWS compute and storage at the 5G network edge.'},
+    {icon:'📝',term:'CloudTrail',def:'Records AWS account activity and API calls.'},
+    {icon:'🚨',term:'GuardDuty',def:'Continuous threat detection across AWS accounts, workloads and data.'},
+    {icon:'🔑',term:'AWS KMS',def:'Key Management Service for creating and controlling encryption keys.'},
+    {icon:'📃',term:'ACM',def:'AWS Certificate Manager — issues and manages SSL/TLS certificates.'},
+  ];
+
+  componentDidMount(){}
+  componentWillUnmount(){ window.removeEventListener('keydown', this.onKey); clearTimeout(this.t); }
+  ensureWiring(){
+    if(!this._kb){ this._kb=true; window.addEventListener('keydown', this.onKey); }
+    if(this._lastIdx!==this.state.idx || this._lastPlay!==this.state.playing){
+      this._lastIdx=this.state.idx; this._lastPlay=this.state.playing; this.scheduleAutoplay();
+    }
+  }
+  onKey = (e)=>{
+    const tag=(e.target&&e.target.tagName)||'';
+    if(tag==='INPUT'||tag==='TEXTAREA') return;
+    if(e.key==='ArrowRight'){ this.next(); }
+    else if(e.key==='ArrowLeft'){ this.prev(); }
+    else if(e.key===' '){ e.preventDefault(); this.togglePlay(); }
+  };
+
+  sceneCfg = [
+    {gap:22,center:true,pos:true},{gap:18},{gap:18},{gap:14},{gap:14},
+    {gap:22,vcenter:true},{gap:14},{gap:18},{gap:16},{gap:22,vcenter:true},
+    {gap:14},{gap:14},{gap:14},{gap:16},{gap:22,vcenter:true},{gap:16},{gap:18},
+  ];
+  sceneStyle(k){
+    const c=this.sceneCfg[k]; const on=this.state.idx===k;
+    const s={display:on?'flex':'none',flexDirection:'column',minHeight:'560px',gap:c.gap+'px',width:'100%'};
+    if(c.center){ s.alignItems='center'; s.justifyContent='center'; s.textAlign='center'; }
+    if(c.vcenter){ s.justifyContent='center'; }
+    if(c.pos){ s.position='relative'; }
+    return s;
+  }
+
+  scheduleAutoplay(){
+    clearTimeout(this.t);
+    const i=this.state.idx;
+    if(this.state.playing && !this.interactive.has(i) && i<this.total-1){
+      this.t=setTimeout(()=>this.next(), this.durations[i]||9000);
+    }
+  }
+
+  next=()=> this.setState(s=> s.idx<this.total-1 ? {idx:s.idx+1} : {playing:false});
+  prev=()=> this.setState(s=> ({idx:Math.max(0,s.idx-1)}));
+  goTo=(i)=>()=> this.setState({idx:i});
+  togglePlay=()=> this.setState(s=>({playing:!s.playing}));
+  startLesson=()=> this.setState({idx:1});
+  playFromStart=()=> this.setState({idx:1, playing:true});
+  toggleGlossary=()=> this.setState(s=>({glossary:!s.glossary}));
+
+  answer=(q,i)=> this.setState(s=> s.quiz[q]!=null ? null : ({quiz:{...s.quiz,[q]:i}}));
+  setReq=(k)=>()=> this.setState({req:k});
+  setShield=(k)=>()=> this.setState({shield:k});
+  setSvc=(k)=>()=> this.setState({svc:k});
+  irNext=()=> this.setState(s=>({ir:Math.min(s.ir+1,3)}));
+  irPrev=()=> this.setState(s=>({ir:Math.max(s.ir-1,0)}));
+  setDp=(k)=>()=> this.setState({dp:k});
+
+  pick=(id)=>()=> this.setState(s=>({sel: s.sel===id?null:id}));
+  drop=(b)=>()=> this.setState(s=>{ if(!s.sel) return null; return {drops:{...s.drops,[s.sel]:b}, sel:null}; });
+  toTray=(id)=>()=> this.setState(s=>({drops:{...s.drops,[id]:null}, sel:null}));
+  checkDrag=()=> this.setState({dragChecked:true, sel:null});
+  resetDrag=()=> this.setState({drops:{phys:null,infra:null,net:null,enc:null,iam:null,waf:null}, dragChecked:false, sel:null});
+
+  buildQuiz(qKey){
+    const def=this.quizDefs[qKey]; const sel=this.state.quiz[qKey];
+    const options=def.options.map((o,i)=>{
+      let bg='#fff',fg='#1d2b2a',border='#e2ebe8',mark='';
+      if(sel!=null){
+        if(o.correct){ bg='#e4f5ed';fg='#0a6b50';border='#19c39a';mark='✓'; }
+        else if(i===sel){ bg='#fdeceb';fg='#c2362b';border='#ff6b5e';mark='✗'; }
+        else { fg='#97a8a4';border='#eef3f1'; }
+      }
+      return {label:o.label,bg,fg,border,mark,onClick:()=>this.answer(qKey,i)};
+    });
+    const answered=sel!=null;
+    const isCorrect=answered && def.options[sel].correct;
+    return {question:def.question,options,answered,isCorrect,explanation:def.explanation,
+      banner: !answered ? '' : (isCorrect?'✅ Correct!':'❌ Not quite —'),
+      bannerBg: !answered ? '' : (isCorrect?'#e4f5ed':'#fdeceb'),
+      bannerFg: !answered ? '' : (isCorrect?'#0a6b50':'#c2362b')};
+  }
+
+  buildDragItem(id, place){
+    const m=this.dragMeta[id]; const drops=this.state.drops; const checked=this.state.dragChecked;
+    const selected=this.state.sel===id;
+    let bg='#fff',fg='#1d2b2a',border='#d5e6e0',mark='';
+    if(checked && place!=='tray'){
+      const ok=drops[id]===m.cat;
+      bg=ok?'#e4f5ed':'#fdeceb'; fg=ok?'#0a6b50':'#c2362b'; border=ok?'#19c39a':'#ff6b5e'; mark=ok?'✓':'✗';
+    } else if(selected){ bg='#e4f3ee'; border='#0e8f74'; }
+    const onClick = place==='tray' ? this.pick(id) : this.toTray(id);
+    return {id,label:m.label,bg,fg,border,mark,selected,onClick};
+  }
+
+  renderVals(){
+    this.ensureWiring();
+    const i=this.state.idx;
+    const accent=this.chapColors[i]||'#0e8f74';
+    const sc={}; for(let k=0;k<this.total;k++) sc['sc'+k]=this.sceneStyle(k);
+    const chapters=this.chapTitles.map((t,k)=>({num:k+1,label:t,onClick:this.goTo(k),bg: k===i?this.chapColors[k] : (k<i?'#9ab9b1':'#d3e3de')}));
+
+    const rd=this.reqData[this.state.req];
+    const reqList=this.reqOrder.map(k=>{ const R=this.reqData[k]; const on=this.state.req===k; const bad=R.blocked>=0;
+      const col = bad?'#e0564a':'#0e8f74';
+      return {k,name:R.name,icon:R.icon,onClick:this.setReq(k),bg:on?col:'#f2f7f5',fg:on?'#fff':'#33534c',border:on?col:'#e2ebe8'}; });
+    const b=rd.blocked;
+    const layerList=this.layers.map((L,ix)=>{
+      let status,bg,border,sfg;
+      if(b===-1 || ix<b){ status=(b===-1&&ix===3)?'✓ served':'✓ passed'; bg='#e9f6f1'; border='#c2e4da'; sfg='#0a6b50'; }
+      else if(ix===b){ status='⛔ BLOCKED HERE'; bg='#fdeceb'; border='#e0564a'; sfg='#c2362b'; }
+      else { status='— never reached'; bg='#f8fafa'; border='#e8f1ee'; sfg='#a9bcb7'; }
+      return {...L,status,bg,border,sfg};
+    });
+    const reqInfo={sample:rd.sample,verdict:rd.verdict,why:rd.why,
+      vBg: b===-1?'#e4f5ed':'#fdf2f0', vFg: b===-1?'#0a6b50':'#c2362b'};
+
+    const shieldTabs=this.shieldOrder.map(k=>{ const S=this.shieldData[k]; const on=this.state.shield===k;
+      return {k,name:S.name,onClick:this.setShield(k),bg:on?S.color:'#f2f7f5',fg:on?'#fff':'#33534c',border:on?S.color:'#e2ebe8'}; });
+    const sd=this.shieldData[this.state.shield];
+    const shieldPoints=sd.points.map(t=>({t}));
+
+    const svcList=this.svcOrder.map(k=>{ const S=this.svcData[k]; const on=this.state.svc===k;
+      return {k,name:S.name,icon:S.icon,onClick:this.setSvc(k),bg:on?S.color:'#f2f7f5',fg:on?'#fff':'#33534c',border:on?S.color:'#e2ebe8'}; });
+
+    const ir=this.state.ir;
+    const irList=this.irSteps.map((s,ix)=>({...s,num:ix+1,
+      bg: ix===ir ? s.c : (ix<ir?'#f2f7f5':'#f8fafa'),
+      fg: ix===ir ? '#fff' : (ix<ir?'#4c6660':'#a9bcb7'),
+      border: ix===ir ? s.c : '#e8f1ee'}));
+    const irCur=this.irSteps[ir];
+
+    const dpTabs=this.dpOrder.map(k=>{ const D=this.dpData[k]; const on=this.state.dp===k;
+      return {k,name:D.name,icon:D.icon,onClick:this.setDp(k),bg:on?D.color:'#f2f7f5',fg:on?'#fff':'#33534c',border:on?D.color:'#e2ebe8'}; });
+
+    const tray=this.dragOrder.filter(id=>this.state.drops[id]==null).map(id=>this.buildDragItem(id,'tray'));
+    const bucket=(x)=>this.dragOrder.filter(id=>this.state.drops[id]===x).map(id=>this.buildDragItem(id,x));
+    const correct=this.dragOrder.filter(id=>this.state.drops[id]===this.dragMeta[id].cat).length;
+
+    return {
+      ...sc,
+      progressPct: Math.round(i/(this.total-1)*100)+'%',
+      accent, sceneNum:i+1, total:this.total, sceneTitle:this.chapTitles[i], chapters,
+      next:this.next, prev:this.prev, togglePlay:this.togglePlay,
+      playLabel: this.state.playing?'⏸ Pause':'▶ Play',
+      startLesson:this.startLesson, playFromStart:this.playFromStart,
+      glossaryOpen:this.state.glossary, toggleGlossary:this.toggleGlossary, glossary:this.glossary,
+      whyPoints:this.whyPoints, principles:this.principles, ddosTypes:this.ddosTypes, researchServices:this.researchServices,
+      reqList, layerList, reqInfo,
+      shieldTabs, shieldInfo:sd, shieldPoints,
+      svcList, svcInfo:this.svcData[this.state.svc],
+      irList, irTitle:irCur.t, irDesc:irCur.d, irIcon:irCur.icon, irColor:irCur.c,
+      irNum:(ir+1)+' / 4', irNext:this.irNext, irPrev:this.irPrev,
+      dpTabs, dpInfo:this.dpData[this.state.dp],
+      q1:this.buildQuiz('q1'), q2:this.buildQuiz('q2'), q3:this.buildQuiz('q3'),
+      dragTray:tray, dragAws:bucket('aws'), dragCust:bucket('cust'),
+      dropAws:this.drop('aws'), dropCust:this.drop('cust'),
+      checkDrag:this.checkDrag, resetDrag:this.resetDrag, dragChecked:this.state.dragChecked,
+      dragScore:correct+' / 6 correct', dragScoreBg: correct===6?'#e4f5ed':'#fff4e8', dragScoreFg: correct===6?'#0a6b50':'#d98a18',
+    };
+  }
+}
+</script>
+</body>
+</html>

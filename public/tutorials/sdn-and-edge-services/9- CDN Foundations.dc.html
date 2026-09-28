@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{background:#edf5f2;font-family:'Figtree',system-ui,sans-serif;color:#1d2b2a;-webkit-font-smoothing:antialiased}
+  a{color:#0e8f74}
+  a:hover{color:#0a6b57}
+  @keyframes floatA{0%,100%{transform:translateY(0) translateX(0)}50%{transform:translateY(-22px) translateX(10px)}}
+  @keyframes floatB{0%,100%{transform:translateY(0)}50%{transform:translateY(26px)}}
+  ::-webkit-scrollbar{width:10px;height:10px}
+  ::-webkit-scrollbar-thumb{background:#c2dcd4;border-radius:8px}
+</style>
+</helmet>
+<div style="min-height:100vh;position:relative;overflow-x:hidden;display:flex;flex-direction:column;align-items:center">
+
+  <div style="position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden">
+    <div style="position:absolute;top:12%;left:6%;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#ffffff,#d3ece3);opacity:.55;filter:blur(2px);animation:floatA 13s ease-in-out infinite"></div>
+    <div style="position:absolute;top:58%;left:80%;width:280px;height:280px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#ffffff,#d7e8ff);opacity:.45;filter:blur(2px);animation:floatB 17s ease-in-out infinite"></div>
+  </div>
+
+  <div style="position:sticky;top:0;z-index:30;width:100%;display:flex;justify-content:center;background:rgba(237,245,242,.85);backdrop-filter:blur(10px);border-bottom:1px solid #d5e6e0">
+    <div style="width:100%;max-width:1180px;display:flex;align-items:center;gap:20px;padding:14px 24px">
+      <div style="display:flex;align-items:center;gap:10px;font-family:'Bricolage Grotesque';font-weight:800;font-size:18px;color:#1d2b2a;white-space:nowrap">
+        <span style="font-size:22px">🌍</span><span>Content Delivery Networks</span>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;gap:6px;min-width:0">
+        <div style="height:8px;border-radius:99px;background:#d3e3de;overflow:hidden">
+          <div style="height:100%;border-radius:99px;transition:width .45s cubic-bezier(.22,.9,.3,1);width:{{ progressPct }};background:{{ accent }}"></div>
+        </div>
+        <div style="display:flex;gap:5px;flex-wrap:wrap">
+          <sc-for list="{{ chapters }}" as="c" hint-placeholder-count="17">
+            <button onClick="{{ c.onClick }}" title="{{ c.label }}" style="width:18px;height:18px;border:none;border-radius:50%;cursor:pointer;padding:0;font-size:9px;font-weight:700;color:#fff;line-height:18px;transition:transform .15s;background:{{ c.bg }}" style-hover="transform:scale(1.25)">{{ c.num }}</button>
+          </sc-for>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;white-space:nowrap">
+        <button onClick="{{ toggleGlossary }}" style="display:flex;align-items:center;gap:6px;background:#fff;border:1px solid #d5e6e0;border-radius:11px;padding:9px 14px;font-family:'Figtree';font-weight:600;font-size:14px;color:#33534c;cursor:pointer" style-hover="border-color:#0e8f74;color:#0e8f74">📖 Glossary</button>
+        <button onClick="{{ togglePlay }}" style="display:flex;align-items:center;gap:7px;background:{{ accent }};border:none;border-radius:11px;padding:10px 16px;font-family:'Bricolage Grotesque';font-weight:700;font-size:14px;color:#fff;cursor:pointer" style-hover="filter:brightness(1.06)">{{ playLabel }}</button>
+      </div>
+    </div>
+  </div>
+
+  <div style="width:100%;max-width:1180px;padding:30px 24px 16px;z-index:5">
+    <div style="position:relative;width:100%;background:#fff;border-radius:30px;box-shadow:0 24px 60px -28px rgba(20,70,60,.32),0 2px 0 #ffffff inset;padding:52px 56px;min-height:580px;overflow:hidden">
+
+      <section data-scene data-screen-label="Welcome" style="{{ sc0 }}">
+        <div style="position:absolute;top:0;right:8%;font-size:40px;animation:floatA 9s ease-in-out infinite">📦</div>
+        <div style="position:absolute;bottom:6%;left:6%;font-size:34px;animation:floatB 11s ease-in-out infinite">⚡</div>
+        <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.22em;text-transform:uppercase;font-weight:700;color:#0e8f74">Interactive Lesson</div>
+        <h1 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:56px;line-height:1.02;margin:0;max-width:18ch;letter-spacing:-.02em">Content Delivery <span style="background:linear-gradient(120deg,#0e8f74,#2e7fd4);-webkit-background-clip:text;background-clip:text;color:transparent">Networks</span></h1>
+        <p style="font-size:20px;line-height:1.55;color:#4c6660;max-width:68ch;margin:0">Why Netflix starts instantly in Mumbai when the files live in America — origin and edge servers, caching, request routing, and the security and scale that come with them.</p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:4px">
+          <span style="background:#e4f3ee;border:1px solid #c2e4da;border-radius:99px;padding:8px 16px;font-weight:600;font-size:15px;color:#0e8f74">⏱️ ~28 min</span>
+          <span style="background:#eaf1fd;border:1px solid #cfdffa;border-radius:99px;padding:8px 16px;font-weight:600;font-size:15px;color:#2e7fd4">📑 17 chapters</span>
+          <span style="background:#fdeeed;border:1px solid #ffd9d5;border-radius:99px;padding:8px 16px;font-weight:600;font-size:15px;color:#e0564a">🧠 3 quizzes</span>
+          <span style="background:#fef4e8;border:1px solid #ffe6c2;border-radius:99px;padding:8px 16px;font-weight:600;font-size:15px;color:#d98a18">🎯 Cache simulator</span>
+        </div>
+        <div style="display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-top:14px">
+          <button onClick="{{ startLesson }}" style="background:#0e8f74;color:#fff;border:none;border-radius:15px;padding:18px 34px;font-family:'Bricolage Grotesque';font-weight:700;font-size:18px;cursor:pointer;box-shadow:0 12px 24px -8px rgba(14,143,116,.6)" style-hover="transform:translateY(-2px)">Start lesson →</button>
+          <button onClick="{{ playFromStart }}" style="background:#fff;color:#0e8f74;border:2px solid #b5ded2;border-radius:15px;padding:16px 30px;font-family:'Bricolage Grotesque';font-weight:700;font-size:18px;cursor:pointer" style-hover="border-color:#0e8f74;background:#f4fbf8">▶ Play as video</button>
+        </div>
+        <div style="margin-top:18px;display:flex;align-items:center;gap:10px;background:#f3f9f7;border:1px solid #dcebe6;border-radius:99px;padding:8px 8px 8px 18px">
+          <span style="font-size:14px;color:#6a857f">Prepared by</span>
+          <span style="background:#1d2b2a;color:#fff;border-radius:99px;padding:7px 16px;font-weight:700;font-size:14px;font-family:'Bricolage Grotesque'">Reza Shahabian</span>
+        </div>
+      </section>
+
+      <section data-scene data-screen-label="What is a CDN" style="{{ sc1 }}">
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#2e7fd4">Chapter 01 · The definition</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:42px;line-height:1.04;margin:0;letter-spacing:-.01em">What is a CDN?</h2>
+          <p style="font-size:18px;line-height:1.55;color:#4c6660;margin:0;max-width:86ch">A network of servers in different geographical locations that deliver website content to users <b>from a server closer to them</b>.</p>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px">
+          <div style="background:#f6faf9;border:1px solid #dcebe6;border-radius:18px;padding:22px;display:flex;flex-direction:column;gap:8px">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:16px;color:#0e8f74">🎯 A CDN helps to…</div>
+            <div style="display:flex;flex-direction:column;gap:6px;font-size:14.5px;color:#3c4a58">
+              <div>• Reduce loading time and latency</div>
+              <div>• Improve website speed and performance</div>
+              <div>• Handle high levels of traffic</div>
+              <div>• Reduce the workload on the origin server</div>
+            </div>
+          </div>
+          <div style="background:#eef4fd;border:1px solid #cfdffa;border-radius:18px;padding:22px;display:flex;flex-direction:column;gap:10px">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:16px;color:#2e7fd4">🌏 Example</div>
+            <div style="display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap">
+              <div style="background:#fff;border:1px solid #cfdffa;border-radius:11px;padding:9px 13px;text-align:center;font-size:12px;font-weight:700;color:#4c6660">🇬🇧 Origin<br/>UK</div>
+              <span style="color:#a9c4bc">· · · far · · ·</span>
+              <div style="background:#0e8f74;color:#fff;border-radius:11px;padding:9px 13px;text-align:center;font-size:12px;font-weight:700">📡 Edge<br/>near India</div>
+              <span style="color:#0e8f74">→</span>
+              <div style="background:#fff;border:1px solid #cfdffa;border-radius:11px;padding:9px 13px;text-align:center;font-size:12px;font-weight:700;color:#4c6660">🧑 User<br/>India</div>
+            </div>
+            <div style="font-size:14px;line-height:1.5;color:#3c4a58">The main server is in the UK and the user is in India — the CDN delivers from a nearby server, so the page loads faster.</div>
+          </div>
+        </div>
+        <div style="background:#f3f9f7;border:1px solid #dcebe6;border-radius:14px;padding:13px 20px;font-size:14.5px;color:#33534c">🔗 This is edge services in practice — the same "move it closer to the user" idea from the edge-computing lessons, applied to content.</div>
+      </section>
+
+      <section data-scene data-screen-label="Benefits of a CDN" style="{{ sc2 }}">
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#0e8f74">Chapter 02 · Why bother</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:40px;line-height:1.04;margin:0;letter-spacing:-.01em">Benefits of a CDN</h2>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px">
+          <sc-for list="{{ benefits }}" as="b" hint-placeholder-count="5">
+            <div style="background:#f6faf9;border:1px solid #dcebe6;border-radius:16px;padding:18px;display:flex;flex-direction:column;gap:7px">
+              <div style="width:40px;height:40px;border-radius:11px;background:{{ b.c }};display:flex;align-items:center;justify-content:center;font-size:20px">{{ b.icon }}</div>
+              <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:15px;color:{{ b.c }}">{{ b.t }}</div>
+              <div style="font-size:13.5px;line-height:1.5;color:#3c4a58">{{ b.d }}</div>
+            </div>
+          </sc-for>
+        </div>
+      </section>
+
+      <section data-scene data-screen-label="CDN architecture" style="{{ sc3 }}">
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#7a5cf0">Chapter 03 · The three parts</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:40px;line-height:1.04;margin:0;letter-spacing:-.01em">CDN architecture</h2>
+        </div>
+        <div style="background:#1d2b2a;border-radius:20px;padding:24px;display:flex;flex-direction:column;align-items:center;gap:12px">
+          <div style="background:#7a5cf0;color:#fff;border-radius:14px;padding:13px 24px;text-align:center"><div style="font-size:22px">🗄️</div><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:14px">Origin server</div><div style="font-size:11px;opacity:.85">the original files</div></div>
+          <div style="color:#8fb8ac;font-size:12px;font-weight:700;letter-spacing:.06em">▼ DISTRIBUTION NETWORK ▼</div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center">
+            <div style="background:#0e8f74;color:#fff;border-radius:12px;padding:11px 16px;text-align:center"><div style="font-size:18px">📡</div><div style="font-size:12px;font-weight:800">Edge · London</div></div>
+            <div style="background:#0e8f74;color:#fff;border-radius:12px;padding:11px 16px;text-align:center"><div style="font-size:18px">📡</div><div style="font-size:12px;font-weight:800">Edge · Mumbai</div></div>
+            <div style="background:#0e8f74;color:#fff;border-radius:12px;padding:11px 16px;text-align:center"><div style="font-size:18px">📡</div><div style="font-size:12px;font-weight:800">Edge · Sydney</div></div>
+            <div style="background:#0e8f74;color:#fff;border-radius:12px;padding:11px 16px;text-align:center"><div style="font-size:18px">📡</div><div style="font-size:12px;font-weight:800">Edge · São Paulo</div></div>
+          </div>
+          <div style="color:#8fb8ac;font-size:15px">▼ ▼ ▼ ▼</div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center">
+            <div style="background:#2f4340;color:#cfe5df;border-radius:9px;padding:7px 12px;font-size:11.5px;font-weight:700">🧑 users, served locally</div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
+          <div style="background:#f5f2fe;border:1px solid #ded3fb;border-radius:14px;padding:15px;font-size:13.5px;line-height:1.5;color:#3c4a58"><b style="color:#7a5cf0">Origin server</b><br/>The main server where the original website files and content are stored.</div>
+          <div style="background:#e9f6f1;border:1px solid #c2e4da;border-radius:14px;padding:15px;font-size:13.5px;line-height:1.5;color:#3c4a58"><b style="color:#0e8f74">Edge servers</b><br/>Close to users, holding cached copies — faster delivery and fewer requests to the origin.</div>
+          <div style="background:#eef4fd;border:1px solid #cfdffa;border-radius:14px;padding:15px;font-size:13.5px;line-height:1.5;color:#3c4a58"><b style="color:#2e7fd4">Distribution network</b><br/>Connects origin to edges and moves content efficiently between locations.</div>
+        </div>
+      </section>
+
+      <section data-scene data-screen-label="Request routing simulator" style="{{ sc4 }}">
+        <div style="display:flex;flex-direction:column;gap:5px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#ec7211">🎯 Try it · Where does your request go?</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:33px;line-height:1.05;margin:0">Request routing simulator</h2>
+          <p style="font-size:14.5px;color:#4c6660;margin:0">The origin is in <b>New York</b>. <b>Pick where the user is</b> — the CDN routes them to the nearest edge.</p>
+        </div>
+        <div style="display:flex;gap:7px;flex-wrap:wrap">
+          <sc-for list="{{ cityList }}" as="c" hint-placeholder-count="5">
+            <button onClick="{{ c.onClick }}" style="display:flex;align-items:center;gap:7px;border-radius:11px;padding:11px 16px;cursor:pointer;transition:all .15s;border:2px solid {{ c.border }};background:{{ c.bg }};color:{{ c.fg }}"><span style="font-size:15px">{{ c.flag }}</span><span style="font-family:'Bricolage Grotesque';font-weight:800;font-size:13px">{{ c.name }}</span></button>
+          </sc-for>
+        </div>
+        <div style="background:#1d2b2a;border-radius:18px;padding:22px;display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap">
+          <div style="background:#2f4340;color:#fff;border-radius:12px;padding:12px 16px;text-align:center"><div style="font-size:20px">{{ routeInfo.flag }}</div><div style="font-size:12px;font-weight:800">User · {{ routeInfo.name }}</div></div>
+          <div style="color:#19c39a;font-size:18px;font-weight:800">→</div>
+          <div style="background:#0e8f74;color:#fff;border-radius:12px;padding:12px 16px;text-align:center"><div style="font-size:20px">📡</div><div style="font-size:12px;font-weight:800">Edge · {{ routeInfo.edge }}</div></div>
+          <div style="color:#4c6660;font-size:13px">· · · instead of · · ·</div>
+          <div style="background:#2f4340;color:#cfe5df;border-radius:12px;padding:12px 16px;text-align:center;opacity:.7"><div style="font-size:20px">🗄️</div><div style="font-size:12px;font-weight:800">Origin · New York</div></div>
+        </div>
+        <div style="background:#fff7ef;border:2px solid #ffe0c2;border-radius:18px;padding:20px 22px;display:flex;flex-direction:column;gap:12px">
+          <div style="display:flex;flex-direction:column;gap:5px">
+            <div style="display:flex;justify-content:space-between;font-size:12.5px;font-weight:700;color:#8a5f21"><span>Direct to origin</span><span>{{ routeInfo.originLabel }}</span></div>
+            <div style="height:14px;border-radius:99px;background:#f6ead8;overflow:hidden"><div style="height:100%;border-radius:99px;background:#e0564a;transition:width .4s;width:{{ routeInfo.originW }}"></div></div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:5px">
+            <div style="display:flex;justify-content:space-between;font-size:12.5px;font-weight:700;color:#0a6b50"><span>Via nearest edge</span><span>{{ routeInfo.edgeLabel }}</span></div>
+            <div style="height:14px;border-radius:99px;background:#dcefe8;overflow:hidden"><div style="height:100%;border-radius:99px;background:#0e8f74;transition:width .4s;width:{{ routeInfo.edgeW }}"></div></div>
+          </div>
+          <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:15px;color:#1d2b2a">{{ routeInfo.note }}</div>
+        </div>
+        <div style="font-size:12.5px;color:#8ba39e">Round-trip times are illustrative approximations, for comparison only.</div>
+      </section>
+
+      <section data-scene data-screen-label="Quick check 1" style="{{ sc5 }}">
+        <div style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#d98a18">🧠 Knowledge check</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:29px;line-height:1.2;margin:0;max-width:42ch">{{ q1.question }}</h2>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:840px;width:100%;margin:0 auto">
+          <sc-for list="{{ q1.options }}" as="o" hint-placeholder-count="4">
+            <button onClick="{{ o.onClick }}" style="display:flex;align-items:center;justify-content:space-between;gap:10px;text-align:left;border-radius:15px;padding:18px 20px;font-family:'Figtree';font-weight:600;font-size:15.5px;cursor:pointer;transition:all .15s;border:2px solid {{ o.border }};background:{{ o.bg }};color:{{ o.fg }}"><span>{{ o.label }}</span><span style="font-weight:800;font-size:18px">{{ o.mark }}</span></button>
+          </sc-for>
+        </div>
+        <sc-if value="{{ q1.answered }}" hint-placeholder-val="{{ false }}">
+          <div style="max-width:840px;width:100%;margin:0 auto;border-radius:16px;padding:18px 22px;background:{{ q1.bannerBg }}">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:17px;color:{{ q1.bannerFg }};margin-bottom:5px">{{ q1.banner }}</div>
+            <div style="font-size:16px;line-height:1.55;color:#33534c">{{ q1.explanation }}</div>
+          </div>
+        </sc-if>
+      </section>
+
+      <section data-scene data-screen-label="Features and content types" style="{{ sc6 }}">
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#2e7fd4">Chapter 06 · What it does, what it carries</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:38px;line-height:1.04;margin:0;letter-spacing:-.01em">Key features &amp; content types</h2>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
+          <sc-for list="{{ features }}" as="f" hint-placeholder-count="3">
+            <div style="background:#eef4fd;border:1px solid #cfdffa;border-radius:15px;padding:16px;display:flex;flex-direction:column;gap:6px">
+              <div style="font-size:20px">{{ f.icon }}</div>
+              <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:14.5px;color:#2e7fd4">{{ f.t }}</div>
+              <div style="font-size:13px;line-height:1.5;color:#3c4a58">{{ f.d }}</div>
+            </div>
+          </sc-for>
+        </div>
+        <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:15px;color:#1d2b2a;margin-top:4px">Three kinds of content</div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
+          <sc-for list="{{ contentTypes }}" as="t" hint-placeholder-count="3">
+            <div style="background:#f6faf9;border:2px solid {{ t.border }};border-radius:15px;padding:16px;display:flex;flex-direction:column;gap:6px">
+              <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:15px;color:{{ t.c }}">{{ t.icon }} {{ t.t }}</div>
+              <div style="font-size:13px;line-height:1.5;color:#3c4a58">{{ t.d }}</div>
+              <div style="font-size:12px;font-weight:700;color:{{ t.c }}">{{ t.cache }}</div>
+            </div>
+          </sc-for>
+        </div>
+      </section>
+
+      <section data-scene data-screen-label="Cache hit miss simulator" style="{{ sc7 }}">
+        <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:14px;flex-wrap:wrap">
+          <div style="display:flex;flex-direction:column;gap:4px">
+            <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#0e8f74">🎯 Try it · How caching pays off</div>
+            <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:32px;line-height:1.05;margin:0">Cache hit / miss simulator</h2>
+            <p style="font-size:14.5px;color:#4c6660;margin:0"><b>Request each file a few times</b> and watch misses turn into hits.</p>
+          </div>
+          <button onClick="{{ purgeCache }}" style="background:#fff;border:1px solid #d5e6e0;border-radius:11px;padding:10px 16px;font-family:'Figtree';font-weight:600;font-size:13.5px;color:#4c6660;cursor:pointer">🧹 Purge edge cache</button>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
+          <sc-for list="{{ fileList }}" as="f" hint-placeholder-count="3">
+            <button onClick="{{ f.onClick }}" style="display:flex;flex-direction:column;align-items:flex-start;gap:5px;border-radius:14px;padding:15px 17px;cursor:pointer;text-align:left;transition:all .15s;border:2px solid {{ f.border }};background:{{ f.bg }}">
+              <span style="font-size:22px">{{ f.icon }}</span>
+              <span style="font-family:'JetBrains Mono',monospace;font-weight:600;font-size:13.5px;color:#1d2b2a">GET {{ f.name }}</span>
+              <span style="font-size:11.5px;font-weight:700;color:{{ f.sfg }}">{{ f.status }}</span>
+            </button>
+          </sc-for>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px">
+          <div style="background:#e9f6f1;border:1px solid #c2e4da;border-radius:13px;padding:12px;text-align:center"><div style="font-size:10.5px;font-weight:800;color:#0a6b50;letter-spacing:.06em">HITS</div><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:26px;color:#0e8f74">{{ hitCount }}</div></div>
+          <div style="background:#fdf2f0;border:1px solid #f8d6d0;border-radius:13px;padding:12px;text-align:center"><div style="font-size:10.5px;font-weight:800;color:#c2453a;letter-spacing:.06em">MISSES</div><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:26px;color:#e0564a">{{ missCount }}</div></div>
+          <div style="background:#f5f2fe;border:1px solid #ded3fb;border-radius:13px;padding:12px;text-align:center"><div style="font-size:10.5px;font-weight:800;color:#5a4a8f;letter-spacing:.06em">ORIGIN REQUESTS</div><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:26px;color:#7a5cf0">{{ originReq }}</div></div>
+          <div style="background:#fff7ef;border:1px solid #ffe0c2;border-radius:13px;padding:12px;text-align:center"><div style="font-size:10.5px;font-weight:800;color:#8a5f21;letter-spacing:.06em">HIT RATIO</div><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:26px;color:#ec7211">{{ hitRatio }}</div></div>
+        </div>
+        <div style="background:#1d2b2a;border-radius:15px;padding:14px 16px;display:flex;flex-direction:column;gap:6px;min-height:120px">
+          <div style="font-size:9.5px;font-weight:800;letter-spacing:.09em;color:#8fb8ac">EDGE LOG (NEWEST FIRST)</div>
+          <sc-if value="{{ hasLog }}" hint-placeholder-val="{{ false }}">
+            <sc-for list="{{ cacheLog }}" as="l" hint-placeholder-count="0">
+              <div style="border-radius:8px;padding:7px 11px;font-family:'JetBrains Mono',monospace;font-size:11.5px;font-weight:600;background:{{ l.bg }};color:{{ l.fg }}">{{ l.t }}</div>
+            </sc-for>
+          </sc-if>
+        </div>
+        <div style="font-size:13px;color:#4c6660">💡 Only misses reach the origin. A high hit ratio is exactly how a CDN cuts origin load and bandwidth cost.</div>
+      </section>
+
+      <section data-scene data-screen-label="Push vs pull" style="{{ sc8 }}">
+        <div style="display:flex;flex-direction:column;gap:5px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#7a5cf0">🎯 Try it · Content delivery strategy</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:33px;line-height:1.05;margin:0">Push vs pull</h2>
+          <p style="font-size:14.5px;color:#4c6660;margin:0"><b>Switch strategies</b> to compare how content reaches the edge.</p>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <sc-for list="{{ modeTabs }}" as="m" hint-placeholder-count="2">
+            <button onClick="{{ m.onClick }}" style="flex:1;min-width:200px;display:flex;align-items:center;justify-content:center;gap:9px;border-radius:13px;padding:14px 18px;cursor:pointer;transition:all .15s;border:2px solid {{ m.border }};background:{{ m.bg }};color:{{ m.fg }}"><span style="font-size:19px">{{ m.icon }}</span><span style="font-family:'Bricolage Grotesque';font-weight:800;font-size:15px">{{ m.name }}</span></button>
+          </sc-for>
+        </div>
+        <div style="background:#f6faf9;border:2px solid #dcebe6;border-radius:18px;padding:22px;display:flex;flex-direction:column;gap:9px">
+          <sc-for list="{{ modeSteps }}" as="s" hint-placeholder-count="4">
+            <div style="display:flex;gap:11px;align-items:center;background:#fff;border:1px solid #dcebe6;border-radius:11px;padding:11px 15px"><span style="width:24px;height:24px;flex-shrink:0;border-radius:50%;background:{{ modeInfo.color }};color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Bricolage Grotesque';font-weight:800;font-size:12px">{{ s.num }}</span><span style="font-size:14.5px;color:#3c4a58">{{ s.t }}</span></div>
+          </sc-for>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <div style="background:#e9f6f1;border:1px solid #c2e4da;border-radius:14px;padding:14px 17px;font-size:14px;line-height:1.5;color:#3c4a58"><b style="color:#0a6b50">✓ Best for</b><br/>{{ modeInfo.best }}</div>
+          <div style="background:#fff7ef;border:1px solid #ffe0c2;border-radius:14px;padding:14px 17px;font-size:14px;line-height:1.5;color:#3c4a58"><b style="color:#8a5f21">⚖️ Trade-off</b><br/>{{ modeInfo.trade }}</div>
+        </div>
+      </section>
+
+      <section data-scene data-screen-label="Routing and brokerage" style="{{ sc9 }}">
+        <div style="display:flex;flex-direction:column;gap:5px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#e0564a">🎯 Try it · Choosing a server, and a CDN</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:32px;line-height:1.05;margin:0">Request routing &amp; CDN brokerage</h2>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
+          <sc-for list="{{ routingTypes }}" as="r" hint-placeholder-count="3">
+            <div style="background:#f6faf9;border:1px solid #dcebe6;border-radius:13px;padding:13px 15px"><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:13.5px;color:{{ r.c }}">{{ r.t }}</div><div style="font-size:12.5px;line-height:1.45;color:#3c4a58;margin-top:3px">{{ r.d }}</div></div>
+          </sc-for>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap">
+          <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:15px;color:#1d2b2a">🤝 A CDN broker sits between the content provider and multiple CDNs</div>
+          <button onClick="{{ toggleCdn }}" style="background:#e0564a;border:none;border-radius:11px;padding:10px 17px;font-family:'Bricolage Grotesque';font-weight:700;font-size:13.5px;color:#fff;cursor:pointer">{{ brokerLabel }}</button>
+        </div>
+        <div style="background:#1d2b2a;border-radius:18px;padding:22px;display:flex;flex-direction:column;align-items:center;gap:12px">
+          <div style="background:#2f4340;color:#fff;border-radius:12px;padding:10px 18px;font-size:12.5px;font-weight:800">🧑 User request</div>
+          <div style="color:#8fb8ac">▼</div>
+          <div style="background:#ec7211;color:#fff;border-radius:12px;padding:11px 20px;font-family:'Bricolage Grotesque';font-weight:800;font-size:14px">🤝 CDN broker · monitors load &amp; availability</div>
+          <div style="color:#8fb8ac">▼ ▼</div>
+          <div style="display:flex;gap:14px">
+            <div style="border-radius:12px;padding:12px 22px;text-align:center;transition:all .25s;background:{{ cdnABg }};color:{{ cdnAFg }}"><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:14px">CDN A</div><div style="font-size:10.5px;font-weight:700">{{ cdnAState }}</div></div>
+            <div style="border-radius:12px;padding:12px 22px;text-align:center;transition:all .25s;background:{{ cdnBBg }};color:{{ cdnBFg }}"><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:14px">CDN B</div><div style="font-size:10.5px;font-weight:700">{{ cdnBState }}</div></div>
+          </div>
+        </div>
+        <div style="border-radius:14px;padding:14px 19px;font-family:'Bricolage Grotesque';font-weight:700;font-size:14.5px;background:{{ brokerBg }};color:{{ brokerFg }}">{{ brokerMsg }}</div>
+      </section>
+
+      <section data-scene data-screen-label="Quick check 2" style="{{ sc10 }}">
+        <div style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#d98a18">🧠 Knowledge check</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:30px;line-height:1.2;margin:0;max-width:40ch">{{ q2.question }}</h2>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:840px;width:100%;margin:0 auto">
+          <sc-for list="{{ q2.options }}" as="o" hint-placeholder-count="4">
+            <button onClick="{{ o.onClick }}" style="display:flex;align-items:center;justify-content:space-between;gap:10px;text-align:left;border-radius:15px;padding:18px 20px;font-family:'Figtree';font-weight:600;font-size:15px;cursor:pointer;transition:all .15s;border:2px solid {{ o.border }};background:{{ o.bg }};color:{{ o.fg }}"><span>{{ o.label }}</span><span style="font-weight:800;font-size:18px">{{ o.mark }}</span></button>
+          </sc-for>
+        </div>
+        <sc-if value="{{ q2.answered }}" hint-placeholder-val="{{ false }}">
+          <div style="max-width:840px;width:100%;margin:0 auto;border-radius:16px;padding:18px 22px;background:{{ q2.bannerBg }}">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:17px;color:{{ q2.bannerFg }};margin-bottom:5px">{{ q2.banner }}</div>
+            <div style="font-size:16px;line-height:1.55;color:#33534c">{{ q2.explanation }}</div>
+          </div>
+        </sc-if>
+      </section>
+
+      <section data-scene data-screen-label="Security and SaaS" style="{{ sc11 }}">
+        <div style="display:flex;flex-direction:column;gap:7px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#e0564a">Chapter 11 · More than speed</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:36px;line-height:1.04;margin:0;letter-spacing:-.01em">Security features &amp; SaaS</h2>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
+          <sc-for list="{{ security }}" as="s" hint-placeholder-count="3">
+            <div style="background:#f6faf9;border:1px solid #dcebe6;border-radius:15px;padding:16px;display:flex;flex-direction:column;gap:6px">
+              <div style="width:38px;height:38px;border-radius:10px;background:{{ s.c }};display:flex;align-items:center;justify-content:center;font-size:19px">{{ s.icon }}</div>
+              <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:14.5px;color:{{ s.c }}">{{ s.t }}</div>
+              <div style="font-size:13px;line-height:1.5;color:#3c4a58">{{ s.d }}</div>
+            </div>
+          </sc-for>
+        </div>
+        <div style="background:#eef4fd;border:1px solid #cfdffa;border-radius:16px;padding:17px 20px;display:flex;flex-direction:column;gap:9px">
+          <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:15px;color:#2e7fd4">☁️ CDNs in the SaaS ecosystem</div>
+          <sc-for list="{{ saas }}" as="x" hint-placeholder-count="3">
+            <div style="font-size:14px;line-height:1.5;color:#3c4a58"><b>{{ x.t }}</b> — {{ x.d }}</div>
+          </sc-for>
+        </div>
+      </section>
+
+      <section data-scene data-screen-label="Availability calculator" style="{{ sc12 }}">
+        <div style="display:flex;flex-direction:column;gap:5px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#ec7211">🎯 Try it · Performance metrics</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:32px;line-height:1.05;margin:0">What does "99.9% available" really mean?</h2>
+          <p style="font-size:14.5px;color:#4c6660;margin:0">CDNs are measured on <b>latency</b>, <b>throughput</b> (Gbps) and <b>availability</b>. <b>Pick a target</b> to see the downtime it allows.</p>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <sc-for list="{{ availList }}" as="a" hint-placeholder-count="4">
+            <button onClick="{{ a.onClick }}" style="flex:1;min-width:120px;border-radius:12px;padding:13px 16px;font-family:'Bricolage Grotesque';font-weight:800;font-size:16px;cursor:pointer;transition:all .15s;border:2px solid {{ a.border }};background:{{ a.bg }};color:{{ a.fg }}">{{ a.label }}</button>
+          </sc-for>
+        </div>
+        <div style="background:#1d2b2a;border-radius:18px;padding:24px;display:flex;gap:14px;flex-wrap:wrap;justify-content:center;align-items:center">
+          <div style="text-align:center;padding:0 16px"><div style="font-size:10.5px;font-weight:800;letter-spacing:.07em;color:#8fb8ac">TARGET</div><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:32px;color:#fff">{{ availInfo.label }}</div></div>
+          <div style="text-align:center;padding:0 16px;border-left:1px solid #3d5350"><div style="font-size:10.5px;font-weight:800;letter-spacing:.07em;color:#8fb8ac">DOWNTIME / YEAR</div><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:28px;color:#ffb861">{{ availInfo.year }}</div></div>
+          <div style="text-align:center;padding:0 16px;border-left:1px solid #3d5350"><div style="font-size:10.5px;font-weight:800;letter-spacing:.07em;color:#8fb8ac">PER MONTH</div><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:28px;color:#19c39a">{{ availInfo.month }}</div></div>
+          <div style="text-align:center;padding:0 16px;border-left:1px solid #3d5350"><div style="font-size:10.5px;font-weight:800;letter-spacing:.07em;color:#8fb8ac">PER WEEK</div><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:28px;color:#a89bf5">{{ availInfo.week }}</div></div>
+        </div>
+        <div style="background:#fff7ef;border:1px solid #ffe0c2;border-radius:14px;padding:13px 19px;font-size:13.5px;line-height:1.5;color:#8a5f21">💡 Each extra "nine" cuts allowed downtime by a factor of ten — and is far harder to achieve. That is why CDNs spread content across many edges: losing one location does not take the site down.</div>
+      </section>
+
+      <section data-scene data-screen-label="Providers and use cases" style="{{ sc13 }}">
+        <div style="display:flex;flex-direction:column;gap:5px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#2e7fd4">🎯 Try it · Who runs CDNs</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:32px;line-height:1.05;margin:0">Providers &amp; use cases</h2>
+        </div>
+        <div style="display:flex;gap:7px;flex-wrap:wrap">
+          <sc-for list="{{ provList }}" as="p" hint-placeholder-count="5">
+            <button onClick="{{ p.onClick }}" style="display:flex;align-items:center;gap:7px;border-radius:11px;padding:11px 15px;cursor:pointer;transition:all .15s;border:2px solid {{ p.border }};background:{{ p.bg }};color:{{ p.fg }}"><span style="font-size:15px">{{ p.icon }}</span><span style="font-family:'Bricolage Grotesque';font-weight:800;font-size:13px">{{ p.name }}</span></button>
+          </sc-for>
+        </div>
+        <div style="background:#f6faf9;border:2px solid #dcebe6;border-radius:18px;padding:22px;display:flex;gap:18px;align-items:center;min-height:120px">
+          <div style="width:60px;height:60px;flex-shrink:0;border-radius:15px;background:{{ provInfo.color }};display:flex;align-items:center;justify-content:center;font-size:28px">{{ provInfo.icon }}</div>
+          <div><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:21px;color:{{ provInfo.color }}">{{ provInfo.name }}</div><p style="margin:5px 0 0;font-size:15px;line-height:1.55;color:#3c4a58">{{ provInfo.d }}</p></div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
+          <sc-for list="{{ useCases }}" as="u" hint-placeholder-count="3">
+            <div style="background:#eef4fd;border:1px solid #cfdffa;border-radius:14px;padding:15px"><div style="font-size:20px">{{ u.icon }}</div><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:14.5px;color:#2e7fd4;margin-top:4px">{{ u.t }}</div><div style="font-size:13px;line-height:1.5;color:#3c4a58;margin-top:3px">{{ u.d }}</div></div>
+          </sc-for>
+        </div>
+        <div style="background:#e9f6f1;border:1px solid #c2e4da;border-radius:14px;padding:14px 19px;font-size:13.5px;line-height:1.55;color:#33534c">🎬 <b>Case study — Netflix:</b> millions of viewers need high-quality video with minimal buffering. Netflix built its own CDN, <b>Open Connect</b>, storing video close to viewers — giving faster start times and smoother streaming.</div>
+      </section>
+
+      <section data-scene data-screen-label="Sort the content" style="{{ sc14 }}">
+        <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap">
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#0e8f74">🎯 Try it · What kind of content?</div>
+            <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:33px;line-height:1.05;margin:0">Static, dynamic or streaming?</h2>
+            <p style="font-size:15px;color:#4c6660;margin:0"><b>Tap an item</b>, then <b>tap the category</b> it belongs to.</p>
+          </div>
+          <div style="display:flex;gap:10px">
+            <sc-if value="{{ dragChecked }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;align-items:center;border-radius:12px;padding:11px 18px;font-family:'Bricolage Grotesque';font-weight:800;font-size:16px;background:{{ dragScoreBg }};color:{{ dragScoreFg }}">{{ dragScore }}</div>
+            </sc-if>
+            <button onClick="{{ resetDrag }}" style="background:#fff;border:1px solid #d5e6e0;border-radius:12px;padding:11px 18px;font-family:'Figtree';font-weight:600;font-size:14px;color:#4c6660;cursor:pointer">↺ Reset</button>
+            <button onClick="{{ checkDrag }}" style="background:#0e8f74;border:none;border-radius:12px;padding:11px 20px;font-family:'Bricolage Grotesque';font-weight:700;font-size:15px;color:#fff;cursor:pointer">Check answers</button>
+          </div>
+        </div>
+        <div style="min-height:54px;background:#f2f7f5;border:2px dashed #c6ddd6;border-radius:16px;padding:12px;display:flex;flex-wrap:wrap;gap:10px;align-items:center">
+          <span style="font-size:13px;font-weight:700;color:#8ba39e;padding:0 6px">TRAY:</span>
+          <sc-for list="{{ dragTray }}" as="it" hint-placeholder-count="6">
+            <button onClick="{{ it.onClick }}" style="border-radius:11px;padding:11px 16px;font-family:'Figtree';font-weight:600;font-size:14px;cursor:pointer;transition:all .15s;border:2px solid {{ it.border }};background:{{ it.bg }};color:{{ it.fg }}">{{ it.label }}</button>
+          </sc-for>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px">
+          <div onClick="{{ dropStatic }}" style="background:#e9f6f1;border:2px solid #c2e4da;border-radius:18px;padding:16px;min-height:170px;display:flex;flex-direction:column;gap:10px;cursor:pointer">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:15px;color:#0e8f74">🖼️ Static</div>
+            <sc-for list="{{ dragStatic }}" as="it" hint-placeholder-count="0">
+              <button onClick="{{ it.onClick }}" style="display:flex;justify-content:space-between;align-items:center;gap:6px;text-align:left;border-radius:10px;padding:10px 13px;font-weight:600;font-size:12.5px;cursor:pointer;border:2px solid {{ it.border }};background:{{ it.bg }};color:{{ it.fg }}"><span>{{ it.label }}</span><span style="font-weight:800">{{ it.mark }}</span></button>
+            </sc-for>
+          </div>
+          <div onClick="{{ dropDynamic }}" style="background:#fdf2f0;border:2px solid #f8d6d0;border-radius:18px;padding:16px;min-height:170px;display:flex;flex-direction:column;gap:10px;cursor:pointer">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:15px;color:#e0564a">📊 Dynamic</div>
+            <sc-for list="{{ dragDynamic }}" as="it" hint-placeholder-count="0">
+              <button onClick="{{ it.onClick }}" style="display:flex;justify-content:space-between;align-items:center;gap:6px;text-align:left;border-radius:10px;padding:10px 13px;font-weight:600;font-size:12.5px;cursor:pointer;border:2px solid {{ it.border }};background:{{ it.bg }};color:{{ it.fg }}"><span>{{ it.label }}</span><span style="font-weight:800">{{ it.mark }}</span></button>
+            </sc-for>
+          </div>
+          <div onClick="{{ dropStream }}" style="background:#f5f2fe;border:2px solid #ded3fb;border-radius:18px;padding:16px;min-height:170px;display:flex;flex-direction:column;gap:10px;cursor:pointer">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:15px;color:#7a5cf0">🎬 Streaming</div>
+            <sc-for list="{{ dragStream }}" as="it" hint-placeholder-count="0">
+              <button onClick="{{ it.onClick }}" style="display:flex;justify-content:space-between;align-items:center;gap:6px;text-align:left;border-radius:10px;padding:10px 13px;font-weight:600;font-size:12.5px;cursor:pointer;border:2px solid {{ it.border }};background:{{ it.bg }};color:{{ it.fg }}"><span>{{ it.label }}</span><span style="font-weight:800">{{ it.mark }}</span></button>
+            </sc-for>
+          </div>
+        </div>
+      </section>
+
+      <section data-scene data-screen-label="Final check" style="{{ sc15 }}">
+        <div style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#d98a18">🧠 Final knowledge check</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:30px;line-height:1.2;margin:0;max-width:40ch">{{ q3.question }}</h2>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:840px;width:100%;margin:0 auto">
+          <sc-for list="{{ q3.options }}" as="o" hint-placeholder-count="4">
+            <button onClick="{{ o.onClick }}" style="display:flex;align-items:center;justify-content:space-between;gap:10px;text-align:left;border-radius:15px;padding:18px 20px;font-family:'Figtree';font-weight:600;font-size:15px;cursor:pointer;transition:all .15s;border:2px solid {{ o.border }};background:{{ o.bg }};color:{{ o.fg }}"><span>{{ o.label }}</span><span style="font-weight:800;font-size:18px">{{ o.mark }}</span></button>
+          </sc-for>
+        </div>
+        <sc-if value="{{ q3.answered }}" hint-placeholder-val="{{ false }}">
+          <div style="max-width:840px;width:100%;margin:0 auto;border-radius:16px;padding:18px 22px;background:{{ q3.bannerBg }}">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:17px;color:{{ q3.bannerFg }};margin-bottom:5px">{{ q3.banner }}</div>
+            <div style="font-size:16px;line-height:1.55;color:#33534c">{{ q3.explanation }}</div>
+          </div>
+        </sc-if>
+      </section>
+
+      <section data-scene data-screen-label="Wrap-up" style="{{ sc16 }}">
+        <div style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px">
+          <div style="font-size:40px">🎉</div>
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#0e8f74">Session wrap-up</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:38px;line-height:1.04;margin:0;letter-spacing:-.01em">Fast, reliable, secure — by being close</h2>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px">
+          <div style="background:#e9f6f1;border:1px solid #c2e4da;border-radius:18px;padding:20px;display:flex;flex-direction:column;gap:7px">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:15px;color:#0e8f74">✅ Covered</div>
+            <p style="margin:0;font-size:14px;line-height:1.55;color:#3c4a58">What a CDN is, origin vs edge servers, and how request routing sends users to a nearby edge.</p>
+          </div>
+          <div style="background:#f5f2fe;border:1px solid #ded3fb;border-radius:18px;padding:20px;display:flex;flex-direction:column;gap:7px">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:15px;color:#7a5cf0">🛠️ Simulated</div>
+            <p style="margin:0;font-size:14px;line-height:1.55;color:#3c4a58">Cache hits and misses, push vs pull, broker failover, and what availability targets allow.</p>
+          </div>
+          <div style="background:#eef4fd;border:1px solid #cfdffa;border-radius:18px;padding:20px;display:flex;flex-direction:column;gap:7px">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:15px;color:#2e7fd4">🌍 Applied</div>
+            <p style="margin:0;font-size:14px;line-height:1.55;color:#3c4a58">Security (DDoS, TLS, tokens), SaaS delivery, providers, and Netflix's Open Connect.</p>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
+          <div style="background:#f6faf9;border:1px solid #dcebe6;border-radius:14px;padding:15px;font-size:13px;line-height:1.5;color:#3c4a58"><b style="color:#1d2b2a">📜 Evolution</b><br/>From static images and documents, to dynamic content and streaming, to edge computing inside the CDN.</div>
+          <div style="background:#fdf2f0;border:1px solid #f8d6d0;border-radius:14px;padding:15px;font-size:13px;line-height:1.5;color:#3c4a58"><b style="color:#1d2b2a">⚠️ Challenges</b><br/>Regions with weak infrastructure, hard-to-cache personalised content, and the cost of running many locations.</div>
+          <div style="background:#fff7ef;border:1px solid #ffe0c2;border-radius:14px;padding:15px;font-size:13px;line-height:1.5;color:#3c4a58"><b style="color:#1d2b2a">🔮 Future</b><br/>Edge computing, AI predicting requests for smarter caching, and 5G enabling real-time delivery.</div>
+        </div>
+        <div style="background:#e9f6f1;border:2px solid #c2e4da;border-radius:16px;padding:16px 20px;font-size:14.5px;line-height:1.55;color:#33534c">🎥 <b>Link it to your assessment:</b> the video-streaming component of the InnovateCore scenario is exactly a CDN problem — think about origin placement, pull vs push for the video catalogue, and which provider (CloudFront, Front Door) fits your architecture.</div>
+        <div style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap">
+          <button onClick="{{ startLesson }}" style="background:#fff;color:#0e8f74;border:2px solid #b5ded2;border-radius:14px;padding:14px 26px;font-family:'Bricolage Grotesque';font-weight:700;font-size:16px;cursor:pointer" style-hover="background:#f4fbf8">↻ Review from the start</button>
+          <button onClick="{{ toggleGlossary }}" style="background:#0e8f74;color:#fff;border:none;border-radius:14px;padding:14px 26px;font-family:'Bricolage Grotesque';font-weight:700;font-size:16px;cursor:pointer">📖 Open glossary</button>
+        </div>
+        <div style="text-align:center;font-size:14px;color:#8ba39e">Lesson prepared by <b style="color:#4c6660">Reza Shahabian</b></div>
+      </section>
+
+    </div>
+  </div>
+
+  <div style="position:sticky;bottom:0;z-index:20;width:100%;display:flex;justify-content:center;background:linear-gradient(to top,#edf5f2 55%,transparent);padding:10px 24px 22px">
+    <div style="width:100%;max-width:1180px;display:flex;align-items:center;justify-content:space-between;gap:14px">
+      <button onClick="{{ prev }}" style="display:flex;align-items:center;gap:8px;background:#fff;border:1px solid #d5e6e0;border-radius:13px;padding:13px 22px;font-family:'Bricolage Grotesque';font-weight:700;font-size:15px;color:#33534c;cursor:pointer" style-hover="border-color:#8fc9b9">← Back</button>
+      <div style="display:flex;align-items:center;gap:12px;font-weight:600;color:#6a857f;font-size:15px">
+        <span style="font-family:'Bricolage Grotesque';color:#1d2b2a;font-size:17px">{{ sceneNum }}</span>
+        <span style="color:#b6ccc6">/</span>
+        <span>{{ total }}</span>
+        <span style="color:#b6ccc6">·</span>
+        <span style="color:#33534c">{{ sceneTitle }}</span>
+      </div>
+      <button onClick="{{ next }}" style="display:flex;align-items:center;gap:8px;background:{{ accent }};border:none;border-radius:13px;padding:13px 26px;font-family:'Bricolage Grotesque';font-weight:700;font-size:15px;color:#fff;cursor:pointer;box-shadow:0 10px 20px -10px rgba(20,70,60,.5)" style-hover="transform:translateY(-2px)">Next →</button>
+    </div>
+  </div>
+
+  <sc-if value="{{ glossaryOpen }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ toggleGlossary }}" style="position:fixed;inset:0;z-index:50;background:rgba(20,40,36,.34);backdrop-filter:blur(2px)"></div>
+    <div style="position:fixed;top:0;right:0;bottom:0;z-index:51;width:min(460px,92vw);background:#fff;box-shadow:-20px 0 60px -20px rgba(20,70,60,.4);display:flex;flex-direction:column">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:24px 26px;border-bottom:1px solid #e8f1ee">
+        <div style="display:flex;flex-direction:column;gap:2px">
+          <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:22px">📖 Glossary</div>
+          <div style="font-size:13px;color:#7b948e">CDN terms, plain English</div>
+        </div>
+        <button onClick="{{ toggleGlossary }}" style="background:#eef5f3;border:none;border-radius:10px;width:38px;height:38px;font-size:18px;cursor:pointer;color:#4c6660">✕</button>
+      </div>
+      <div style="overflow-y:auto;padding:18px 26px 40px;display:flex;flex-direction:column;gap:14px">
+        <sc-for list="{{ glossary }}" as="g" hint-placeholder-count="6">
+          <div style="border:1px solid #e8f1ee;border-radius:14px;padding:14px 16px;background:#fafcfb">
+            <div style="display:flex;align-items:center;gap:8px;font-family:'Bricolage Grotesque';font-weight:700;font-size:16px;color:#1d2b2a"><span>{{ g.icon }}</span>{{ g.term }}</div>
+            <div style="font-size:14.5px;line-height:1.5;color:#4c6660;margin-top:5px">{{ g.def }}</div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:820}}">
+class Component extends DCLogic {
+  state = { idx:0, playing:false, glossary:false, quiz:{q1:null,q2:null,q3:null},
+    city:'london', cached:{}, log:[], hits:0, misses:0, mode:'pull', cdnDown:false,
+    avail:'999', prov:'cloudfront',
+    drops:{img:null,css:null,scores:null,dash:null,episode:null,lecture:null}, sel:null, dragChecked:false };
+
+  total = 17;
+  interactive = new Set([4,5,7,8,9,10,12,13,14,15]);
+  durations = { 0:5200 };
+
+  chapTitles = ['Welcome','What is a CDN','Benefits','Architecture','Request routing simulator','Quick check','Features & content types','Cache hit / miss simulator','Push vs pull','Routing & brokerage','Quick check','Security & SaaS','Availability calculator','Providers & use cases','Sort the content','Final check','Wrap-up'];
+  chapColors = ['#0e8f74','#2e7fd4','#0e8f74','#7a5cf0','#ec7211','#ffb43d','#2e7fd4','#0e8f74','#7a5cf0','#e0564a','#ffb43d','#e0564a','#ec7211','#2e7fd4','#0e8f74','#ffb43d','#0e8f74'];
+
+  benefits = [
+    {icon:'😊',t:'Better user experience',d:'Reduced loading time — websites load faster.',c:'#0e8f74'},
+    {icon:'⚡',t:'Reduced latency',d:'Content comes from a server closer to the user, so data travels less distance.',c:'#2e7fd4'},
+    {icon:'🛣️',t:'Network efficiency',d:'Spreading content across servers reduces congestion and bandwidth use.',c:'#7a5cf0'},
+    {icon:'📈',t:'Scalability & reliability',d:'Handles high traffic and keeps sites available during spikes.',c:'#ec7211'},
+    {icon:'💰',t:'Lower costs',d:'Fewer requests hit the origin, cutting bandwidth and server costs.',c:'#e0564a'},
+  ];
+
+  cityData = {
+    london:{name:'London',flag:'🇬🇧',edge:'Manchester',origin:75,edgeMs:8},
+    mumbai:{name:'Mumbai',flag:'🇮🇳',edge:'Mumbai',origin:190,edgeMs:10},
+    sydney:{name:'Sydney',flag:'🇦🇺',edge:'Sydney',origin:200,edgeMs:8},
+    saopaulo:{name:'São Paulo',flag:'🇧🇷',edge:'São Paulo',origin:120,edgeMs:9},
+    newyork:{name:'New York',flag:'🇺🇸',edge:'New York',origin:6,edgeMs:5},
+  };
+  cityOrder = ['london','mumbai','sydney','saopaulo','newyork'];
+
+  features = [
+    {icon:'⚖️',t:'Load balancing',d:'Distributes requests across servers so none is overloaded.'},
+    {icon:'📑',t:'Content replication',d:'Stores copies of content on servers in many locations.'},
+    {icon:'🗺️',t:'Geo-distribution',d:'Places edge servers worldwide so users reach a nearby one.'},
+  ];
+  contentTypes = [
+    {icon:'🖼️',t:'Static',d:'Rarely changes — images, HTML, CSS and JavaScript files.',cache:'Easiest to cache',c:'#0e8f74',border:'#c2e4da'},
+    {icon:'📊',t:'Dynamic',d:'Changes per user or frequently — dashboards, live scores, real-time data.',cache:'Hardest to cache',c:'#e0564a',border:'#f8d6d0'},
+    {icon:'🎬',t:'Streaming media',d:'Video and audio over the internet — Netflix, YouTube, live streams.',cache:'Cached in segments',c:'#7a5cf0',border:'#ded3fb'},
+  ];
+
+  files = [
+    {id:'logo',name:'logo.png',icon:'🖼️'},
+    {id:'css',name:'styles.css',icon:'🎨'},
+    {id:'video',name:'intro.mp4',icon:'🎬'},
+  ];
+
+  modeData = {
+    push:{name:'Push CDN',color:'#7a5cf0',icon:'📤',
+      steps:['You upload content to the origin','The origin PUSHES it to edge servers in advance','Content is waiting at the edge before anyone asks','Every request — even the first — is a cache hit'],
+      best:'A static website with content that changes rarely.',
+      trade:'You must manage what gets pushed, and storage is used even for content nobody requests.'},
+    pull:{name:'Pull CDN',color:'#0e8f74',icon:'📥',
+      steps:['A user requests content from the edge','The edge does not have it — a cache miss','The edge PULLS it from the origin and delivers it','It is cached, so later requests are hits'],
+      best:'A media website with a large, changing catalogue.',
+      trade:'The very first request in each location is slower, while the edge fetches from the origin.'},
+  };
+  modeOrder = ['push','pull'];
+
+  routingTypes = [
+    {t:'Proximity awareness',d:'Identifies a suitable nearby server to reduce latency.',c:'#0e8f74'},
+    {t:'Passive routing',d:'Requests go to a server based mainly on user location and network conditions.',c:'#2e7fd4'},
+    {t:'Active routing',d:'The CDN monitors traffic and changes routes when needed to improve performance.',c:'#7a5cf0'},
+  ];
+
+  security = [
+    {icon:'🛡️',t:'DDoS protection',d:'Absorbs and filters large volumes of malicious traffic across the whole network.',c:'#e0564a'},
+    {icon:'🔐',t:'SSL/TLS encryption',d:'Encrypts data between users and servers during transmission.',c:'#2e7fd4'},
+    {icon:'🎟️',t:'Token authentication',d:'Secure tokens ensure only authorised users reach restricted content, like premium videos.',c:'#7a5cf0'},
+  ];
+  saas = [
+    {t:'Optimised delivery',d:'Microsoft 365 and Salesforce serve content from nearby edges, reducing latency.'},
+    {t:'Real-time collaboration',d:'Fast delivery between distant users supports shared document editing.'},
+    {t:'Scalability & global reach',d:'Traffic spreads across servers, so busy periods and far-away users still get a fast app.'},
+  ];
+
+  availData = {
+    '99':{label:'99%',a:0.99}, '999':{label:'99.9%',a:0.999}, '9999':{label:'99.99%',a:0.9999}, '99999':{label:'99.999%',a:0.99999},
+  };
+  availOrder = ['99','999','9999','99999'];
+
+  provData = {
+    akamai:{name:'Akamai',icon:'🌐',color:'#2e7fd4',d:'A major CDN provider offering content delivery, security and performance services.'},
+    cloudflare:{name:'Cloudflare',icon:'☁️',color:'#ec7211',d:'CDN services together with security features such as DDoS protection.'},
+    cloudfront:{name:'Amazon CloudFront',icon:'📡',color:'#e0564a',d:'AWS\u2019s CDN, integrated with other AWS services (such as S3 origins) for fast, secure delivery.'},
+    afd:{name:'Azure Front Door',icon:'🚪',color:'#7a5cf0',d:'Microsoft\u2019s global application delivery service for fast, reliable and secure access to apps.'},
+    openconnect:{name:'Netflix Open Connect',icon:'🎬',color:'#0e8f74',d:'Netflix\u2019s own CDN — stores video close to viewers, giving faster start times and smoother streaming.'},
+  };
+  provOrder = ['akamai','cloudflare','cloudfront','afd','openconnect'];
+
+  useCases = [
+    {icon:'🛒',t:'E-commerce',d:'Product images and pages load faster — Amazon uses CDN technology.'},
+    {icon:'🎬',t:'Video streaming',d:'Netflix and YouTube deliver video quickly to viewers everywhere.'},
+    {icon:'🎮',t:'Online gaming',d:'Game downloads, updates and content arrive fast, with less delay.'},
+  ];
+
+  dragMeta = {
+    img:{label:'Product photos',cat:'static'}, css:{label:'Site stylesheet',cat:'static'},
+    scores:{label:'Live football scores',cat:'dynamic'}, dash:{label:'Personal user dashboard',cat:'dynamic'},
+    episode:{label:'On-demand TV episode',cat:'stream'}, lecture:{label:'Live-streamed lecture',cat:'stream'},
+  };
+  dragOrder = ['img','css','scores','dash','episode','lecture'];
+
+  quizDefs = {
+    q1:{question:'A user in London requests a page. The origin is in New York, and the content is cached on an edge in Manchester. Where is it served from?',
+      options:[{label:'The origin in New York'},{label:'The Manchester edge server',correct:true},{label:'A random edge server'},{label:'The user\u2019s own ISP'}],
+      explanation:'Request routing directs the user to a nearby edge. Because Manchester already has the content cached, it is delivered from there — without contacting the New York origin at all.'},
+    q2:{question:'What happens on a cache MISS?',
+      options:[{label:'The request fails and the user sees an error'},{label:'The edge fetches it from the origin, delivers it, and can keep a copy for next time',correct:true},{label:'The user is redirected to the origin permanently'},{label:'The CDN waits until the content is pushed'}],
+      explanation:'On a miss the CDN requests the content from the origin, delivers it to the user, and can store a copy — so the next request for the same file becomes a fast cache hit.'},
+    q3:{question:'A company uses a CDN broker across two providers. CDN A becomes overloaded. What does the broker do?',
+      options:[{label:'Shuts the website down until A recovers'},{label:'Redirects requests to CDN B to maintain service',correct:true},{label:'Sends all traffic straight to the origin'},{label:'Nothing — brokers only handle billing'}],
+      explanation:'A CDN broker monitors performance across multiple CDNs and picks one per request. If one is overloaded or unavailable it switches to another — giving high availability and helping control cost.'},
+  };
+
+  glossary = [
+    {icon:'🌍',term:'CDN',def:'Content Delivery Network — geographically spread servers delivering content from near the user.'},
+    {icon:'🗄️',term:'Origin server',def:'The main server holding the original website files and content.'},
+    {icon:'📡',term:'Edge server',def:'A server close to users that stores cached copies and delivers them quickly.'},
+    {icon:'🔀',term:'Request routing',def:'Directing a user\u2019s request to a suitable, usually nearby, edge server.'},
+    {icon:'📦',term:'Caching',def:'Storing a copy of content at the edge so future requests can use it.'},
+    {icon:'✅',term:'Cache hit',def:'The content is already cached — delivered without contacting the origin.'},
+    {icon:'❌',term:'Cache miss',def:'The content is not cached — fetched from the origin, delivered, then cached.'},
+    {icon:'📤',term:'Push CDN',def:'The origin sends content to edges in advance, before users ask.'},
+    {icon:'📥',term:'Pull CDN',def:'Edges fetch content from the origin on first request, then cache it.'},
+    {icon:'🤝',term:'CDN broker',def:'A middle layer that chooses between multiple CDNs per request and fails over.'},
+    {icon:'🛡️',term:'DDoS protection',def:'Filtering and absorbing floods of malicious traffic across the CDN.'},
+    {icon:'🎟️',term:'Token authentication',def:'Secure tokens that restrict content to authorised users.'},
+    {icon:'⏱️',term:'Latency',def:'Time taken for content to reach the user after a request.'},
+    {icon:'📶',term:'Throughput',def:'Data transferred over time, usually in Gbps.'},
+    {icon:'🟢',term:'Availability',def:'The percentage of time the CDN is reachable — often 99.9% or more.'},
+    {icon:'🎬',term:'Open Connect',def:'Netflix\u2019s own CDN, serving video from locations close to viewers.'},
+  ];
+
+  componentDidMount(){}
+  componentWillUnmount(){ window.removeEventListener('keydown', this.onKey); clearTimeout(this.t); }
+  ensureWiring(){
+    if(!this._kb){ this._kb=true; window.addEventListener('keydown', this.onKey); }
+    if(this._lastIdx!==this.state.idx || this._lastPlay!==this.state.playing){
+      this._lastIdx=this.state.idx; this._lastPlay=this.state.playing; this.scheduleAutoplay();
+    }
+  }
+  onKey = (e)=>{
+    const tag=(e.target&&e.target.tagName)||'';
+    if(tag==='INPUT'||tag==='TEXTAREA') return;
+    if(e.key==='ArrowRight'){ this.next(); }
+    else if(e.key==='ArrowLeft'){ this.prev(); }
+    else if(e.key===' '){ e.preventDefault(); this.togglePlay(); }
+  };
+
+  sceneCfg = [
+    {gap:22,center:true,pos:true},{gap:18},{gap:18},{gap:16},{gap:14},
+    {gap:22,vcenter:true},{gap:14},{gap:14},{gap:14},{gap:14},
+    {gap:22,vcenter:true},{gap:14},{gap:14},{gap:14},{gap:16},
+    {gap:22,vcenter:true},{gap:18},
+  ];
+  sceneStyle(k){
+    const c=this.sceneCfg[k]; const on=this.state.idx===k;
+    const s={display:on?'flex':'none',flexDirection:'column',minHeight:'560px',gap:c.gap+'px',width:'100%'};
+    if(c.center){ s.alignItems='center'; s.justifyContent='center'; s.textAlign='center'; }
+    if(c.vcenter){ s.justifyContent='center'; }
+    if(c.pos){ s.position='relative'; }
+    return s;
+  }
+
+  scheduleAutoplay(){
+    clearTimeout(this.t);
+    const i=this.state.idx;
+    if(this.state.playing && !this.interactive.has(i) && i<this.total-1){
+      this.t=setTimeout(()=>this.next(), this.durations[i]||9000);
+    }
+  }
+
+  next=()=> this.setState(s=> s.idx<this.total-1 ? {idx:s.idx+1} : {playing:false});
+  prev=()=> this.setState(s=> ({idx:Math.max(0,s.idx-1)}));
+  goTo=(i)=>()=> this.setState({idx:i});
+  togglePlay=()=> this.setState(s=>({playing:!s.playing}));
+  startLesson=()=> this.setState({idx:1});
+  playFromStart=()=> this.setState({idx:1, playing:true});
+  toggleGlossary=()=> this.setState(s=>({glossary:!s.glossary}));
+
+  answer=(q,i)=> this.setState(s=> s.quiz[q]!=null ? null : ({quiz:{...s.quiz,[q]:i}}));
+  setCity=(k)=>()=> this.setState({city:k});
+  requestFile=(f)=>()=> this.setState(s=>{
+    const hit=!!s.cached[f.id];
+    const entry = hit
+      ? {t:'HIT · '+f.name+' served straight from the edge', hit:true}
+      : {t:'MISS · '+f.name+' fetched from origin, delivered, cached at the edge', hit:false};
+    return { cached:{...s.cached,[f.id]:true}, log:[entry,...s.log].slice(0,6),
+      hits:s.hits+(hit?1:0), misses:s.misses+(hit?0:1) };
+  });
+  purgeCache=()=> this.setState({cached:{}, log:[], hits:0, misses:0});
+  setMode=(k)=>()=> this.setState({mode:k});
+  toggleCdn=()=> this.setState(s=>({cdnDown:!s.cdnDown}));
+  setAvail=(k)=>()=> this.setState({avail:k});
+  setProv=(k)=>()=> this.setState({prov:k});
+
+  pick=(id)=>()=> this.setState(s=>({sel: s.sel===id?null:id}));
+  drop=(b)=>()=> this.setState(s=>{ if(!s.sel) return null; return {drops:{...s.drops,[s.sel]:b}, sel:null}; });
+  toTray=(id)=>()=> this.setState(s=>({drops:{...s.drops,[id]:null}, sel:null}));
+  checkDrag=()=> this.setState({dragChecked:true, sel:null});
+  resetDrag=()=> this.setState({drops:{img:null,css:null,scores:null,dash:null,episode:null,lecture:null}, dragChecked:false, sel:null});
+
+  fmtDuration(min){
+    if(min>=1440) return (min/1440).toFixed(2)+' days';
+    if(min>=60) return (min/60).toFixed(1)+' hours';
+    if(min>=1) return min.toFixed(1)+' minutes';
+    return Math.round(min*60)+' seconds';
+  }
+
+  buildQuiz(qKey){
+    const def=this.quizDefs[qKey]; const sel=this.state.quiz[qKey];
+    const options=def.options.map((o,i)=>{
+      let bg='#fff',fg='#1d2b2a',border='#e2ebe8',mark='';
+      if(sel!=null){
+        if(o.correct){ bg='#e4f5ed';fg='#0a6b50';border='#19c39a';mark='✓'; }
+        else if(i===sel){ bg='#fdeceb';fg='#c2362b';border='#ff6b5e';mark='✗'; }
+        else { fg='#97a8a4';border='#eef3f1'; }
+      }
+      return {label:o.label,bg,fg,border,mark,onClick:()=>this.answer(qKey,i)};
+    });
+    const answered=sel!=null;
+    const isCorrect=answered && def.options[sel].correct;
+    return {question:def.question,options,answered,isCorrect,explanation:def.explanation,
+      banner: !answered ? '' : (isCorrect?'✅ Correct!':'❌ Not quite —'),
+      bannerBg: !answered ? '' : (isCorrect?'#e4f5ed':'#fdeceb'),
+      bannerFg: !answered ? '' : (isCorrect?'#0a6b50':'#c2362b')};
+  }
+
+  buildDragItem(id, place){
+    const m=this.dragMeta[id]; const drops=this.state.drops; const checked=this.state.dragChecked;
+    const selected=this.state.sel===id;
+    let bg='#fff',fg='#1d2b2a',border='#d5e6e0',mark='';
+    if(checked && place!=='tray'){
+      const ok=drops[id]===m.cat;
+      bg=ok?'#e4f5ed':'#fdeceb'; fg=ok?'#0a6b50':'#c2362b'; border=ok?'#19c39a':'#ff6b5e'; mark=ok?'✓':'✗';
+    } else if(selected){ bg='#e4f3ee'; border='#0e8f74'; }
+    const onClick = place==='tray' ? this.pick(id) : this.toTray(id);
+    return {id,label:m.label,bg,fg,border,mark,selected,onClick};
+  }
+
+  renderVals(){
+    this.ensureWiring();
+    const i=this.state.idx;
+    const accent=this.chapColors[i]||'#0e8f74';
+    const sc={}; for(let k=0;k<this.total;k++) sc['sc'+k]=this.sceneStyle(k);
+    const chapters=this.chapTitles.map((t,k)=>({num:k+1,label:t,onClick:this.goTo(k),bg: k===i?this.chapColors[k] : (k<i?'#9ab9b1':'#d3e3de')}));
+
+    const cityList=this.cityOrder.map(k=>{ const C=this.cityData[k]; const on=this.state.city===k;
+      return {k,name:C.name,flag:C.flag,onClick:this.setCity(k),bg:on?'#ec7211':'#f2f7f5',fg:on?'#fff':'#33534c',border:on?'#ec7211':'#e2ebe8'}; });
+    const cd=this.cityData[this.state.city];
+    const factor = cd.origin>cd.edgeMs ? Math.round(cd.origin/cd.edgeMs) : 1;
+    const routeInfo={name:cd.name,flag:cd.flag,edge:cd.edge,
+      originLabel:'≈ '+cd.origin+' ms', edgeLabel:'≈ '+cd.edgeMs+' ms',
+      originW:Math.max(3,Math.round(cd.origin/200*100))+'%', edgeW:Math.max(3,Math.round(cd.edgeMs/200*100))+'%',
+      note: factor>1 ? '⚡ Roughly '+factor+'× faster via the edge.' : 'Already next to the origin — the edge gives little extra speed here, but still takes load off the origin.'};
+
+    const fileList=this.files.map(f=>{ const c=!!this.state.cached[f.id];
+      return {...f,onClick:this.requestFile(f),status:c?'cached at edge':'not cached',
+        bg:c?'#e4f5ed':'#fff',border:c?'#19c39a':'#d5e6e0',sfg:c?'#0a6b50':'#8ba39e'}; });
+    const cacheLog=this.state.log.map(l=>({t:l.t,bg:l.hit?'#e4f5ed':'#fdf2f0',fg:l.hit?'#0a6b50':'#c2453a'}));
+    const tot=this.state.hits+this.state.misses;
+    const hitRatio = tot ? Math.round(this.state.hits/tot*100)+'%' : '—';
+    const hasLog = this.state.log.length>0;
+
+    const modeTabs=this.modeOrder.map(k=>{ const M=this.modeData[k]; const on=this.state.mode===k;
+      return {k,name:M.name,icon:M.icon,onClick:this.setMode(k),bg:on?M.color:'#f2f7f5',fg:on?'#fff':'#33534c',border:on?M.color:'#e2ebe8'}; });
+    const md=this.modeData[this.state.mode];
+    const modeSteps=md.steps.map((t,ix)=>({t,num:ix+1}));
+
+    const down=this.state.cdnDown;
+    const brokerMsg = down ? '🔁 CDN A is overloaded — the broker redirects every request to CDN B. Users notice nothing.' : '✅ Both CDNs healthy — the broker sends this request to CDN A (best score for this user right now).';
+    const brokerLabel = down ? '↺ Restore CDN A' : '⚠️ Overload CDN A';
+
+    const availList=this.availOrder.map(k=>{ const A=this.availData[k]; const on=this.state.avail===k;
+      return {k,label:A.label,onClick:this.setAvail(k),bg:on?'#ec7211':'#f2f7f5',fg:on?'#fff':'#33534c',border:on?'#ec7211':'#e2ebe8'}; });
+    const av=this.availData[this.state.avail];
+    const downMin=525600*(1-av.a);
+    const availInfo={label:av.label, year:this.fmtDuration(downMin), month:this.fmtDuration(downMin/12), week:this.fmtDuration(downMin/52)};
+
+    const provList=this.provOrder.map(k=>{ const P=this.provData[k]; const on=this.state.prov===k;
+      return {k,name:P.name,icon:P.icon,onClick:this.setProv(k),bg:on?P.color:'#f2f7f5',fg:on?'#fff':'#33534c',border:on?P.color:'#e2ebe8'}; });
+
+    const tray=this.dragOrder.filter(id=>this.state.drops[id]==null).map(id=>this.buildDragItem(id,'tray'));
+    const bucket=(b)=>this.dragOrder.filter(id=>this.state.drops[id]===b).map(id=>this.buildDragItem(id,b));
+    const correct=this.dragOrder.filter(id=>this.state.drops[id]===this.dragMeta[id].cat).length;
+
+    return {
+      ...sc,
+      progressPct: Math.round(i/(this.total-1)*100)+'%',
+      accent, sceneNum:i+1, total:this.total, sceneTitle:this.chapTitles[i], chapters,
+      next:this.next, prev:this.prev, togglePlay:this.togglePlay,
+      playLabel: this.state.playing?'⏸ Pause':'▶ Play',
+      startLesson:this.startLesson, playFromStart:this.playFromStart,
+      glossaryOpen:this.state.glossary, toggleGlossary:this.toggleGlossary, glossary:this.glossary,
+      benefits:this.benefits, features:this.features, contentTypes:this.contentTypes,
+      routingTypes:this.routingTypes, security:this.security, saas:this.saas, useCases:this.useCases,
+      cityList, routeInfo,
+      fileList, cacheLog, hasLog, hitCount:String(this.state.hits), missCount:String(this.state.misses),
+      originReq:String(this.state.misses), hitRatio, purgeCache:this.purgeCache,
+      modeTabs, modeInfo:md, modeSteps,
+      toggleCdn:this.toggleCdn, brokerMsg, brokerLabel,
+      cdnABg: down?'#fdeceb':'#0e8f74', cdnAFg: down?'#c2362b':'#fff', cdnAState: down?'OVERLOADED':'serving',
+      cdnBBg: down?'#0e8f74':'#f2f7f5', cdnBFg: down?'#fff':'#6a857f', cdnBState: down?'serving':'standby',
+      brokerBg: down?'#fdf2f0':'#e9f6f1', brokerFg: down?'#8a4a40':'#0a6b50',
+      availList, availInfo,
+      provList, provInfo:this.provData[this.state.prov],
+      q1:this.buildQuiz('q1'), q2:this.buildQuiz('q2'), q3:this.buildQuiz('q3'),
+      dragTray:tray, dragStatic:bucket('static'), dragDynamic:bucket('dynamic'), dragStream:bucket('stream'),
+      dropStatic:this.drop('static'), dropDynamic:this.drop('dynamic'), dropStream:this.drop('stream'),
+      checkDrag:this.checkDrag, resetDrag:this.resetDrag, dragChecked:this.state.dragChecked,
+      dragScore:correct+' / 6 correct', dragScoreBg: correct===6?'#e4f5ed':'#fff4e8', dragScoreFg: correct===6?'#0a6b50':'#d98a18',
+    };
+  }
+}
+</script>
+</body>
+</html>
