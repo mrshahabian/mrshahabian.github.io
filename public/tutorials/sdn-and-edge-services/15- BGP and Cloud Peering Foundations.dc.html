@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{background:#edf5f2;font-family:'Figtree',system-ui,sans-serif;color:#1d2b2a;-webkit-font-smoothing:antialiased}
+  a{color:#0e8f74}
+  a:hover{color:#0a6b57}
+  @keyframes floatA{0%,100%{transform:translateY(0) translateX(0)}50%{transform:translateY(-22px) translateX(10px)}}
+  @keyframes floatB{0%,100%{transform:translateY(0)}50%{transform:translateY(26px)}}
+  ::-webkit-scrollbar{width:10px;height:10px}
+  ::-webkit-scrollbar-thumb{background:#c2dcd4;border-radius:8px}
+</style>
+</helmet>
+<div style="min-height:100vh;position:relative;overflow-x:hidden;display:flex;flex-direction:column;align-items:center">
+
+  <div style="position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden">
+    <div style="position:absolute;top:12%;left:6%;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#ffffff,#d3ece3);opacity:.55;filter:blur(2px);animation:floatA 13s ease-in-out infinite"></div>
+    <div style="position:absolute;top:58%;left:80%;width:280px;height:280px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#ffffff,#d7e8ff);opacity:.45;filter:blur(2px);animation:floatB 17s ease-in-out infinite"></div>
+  </div>
+
+  <div style="position:sticky;top:0;z-index:30;width:100%;display:flex;justify-content:center;background:rgba(237,245,242,.85);backdrop-filter:blur(10px);border-bottom:1px solid #d5e6e0">
+    <div style="width:100%;max-width:1180px;display:flex;align-items:center;gap:20px;padding:14px 24px">
+      <div style="display:flex;align-items:center;gap:10px;font-family:'Bricolage Grotesque';font-weight:800;font-size:18px;color:#1d2b2a;white-space:nowrap">
+        <span style="font-size:22px">🔗</span><span>BGP &amp; Cloud Peering</span>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;gap:6px;min-width:0">
+        <div style="height:8px;border-radius:99px;background:#d3e3de;overflow:hidden">
+          <div style="height:100%;border-radius:99px;transition:width .45s cubic-bezier(.22,.9,.3,1);width:{{ progressPct }};background:{{ accent }}"></div>
+        </div>
+        <div style="display:flex;gap:5px;flex-wrap:wrap">
+          <sc-for list="{{ chapters }}" as="c" hint-placeholder-count="17">
+            <button onClick="{{ c.onClick }}" title="{{ c.label }}" style="width:18px;height:18px;border:none;border-radius:50%;cursor:pointer;padding:0;font-size:9px;font-weight:700;color:#fff;line-height:18px;transition:transform .15s;background:{{ c.bg }}" style-hover="transform:scale(1.25)">{{ c.num }}</button>
+          </sc-for>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;white-space:nowrap">
+        <button onClick="{{ toggleGlossary }}" style="display:flex;align-items:center;gap:6px;background:#fff;border:1px solid #d5e6e0;border-radius:11px;padding:9px 14px;font-family:'Figtree';font-weight:600;font-size:14px;color:#33534c;cursor:pointer" style-hover="border-color:#0e8f74;color:#0e8f74">📖 Glossary</button>
+        <button onClick="{{ togglePlay }}" style="display:flex;align-items:center;gap:7px;background:{{ accent }};border:none;border-radius:11px;padding:10px 16px;font-family:'Bricolage Grotesque';font-weight:700;font-size:14px;color:#fff;cursor:pointer" style-hover="filter:brightness(1.06)">{{ playLabel }}</button>
+      </div>
+    </div>
+  </div>
+
+  <div style="width:100%;max-width:1180px;padding:30px 24px 16px;z-index:5">
+    <div style="position:relative;width:100%;background:#fff;border-radius:30px;box-shadow:0 24px 60px -28px rgba(20,70,60,.32),0 2px 0 #ffffff inset;padding:52px 56px;min-height:580px;overflow:hidden">
+
+      <section data-scene data-screen-label="Welcome" style="{{ sc0 }}">
+        <div style="position:absolute;top:0;right:8%;font-size:40px;animation:floatA 9s ease-in-out infinite">🌐</div>
+        <div style="position:absolute;bottom:6%;left:6%;font-size:34px;animation:floatB 11s ease-in-out infinite">🤝</div>
+        <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.22em;text-transform:uppercase;font-weight:700;color:#0e8f74">Interactive Lesson</div>
+        <h1 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:56px;line-height:1.02;margin:0;max-width:18ch;letter-spacing:-.02em">BGP &amp; <span style="background:linear-gradient(120deg,#0e8f74,#2e7fd4);-webkit-background-clip:text;background-clip:text;color:transparent">Cloud Peering</span></h1>
+        <p style="font-size:20px;line-height:1.55;color:#4c6660;max-width:68ch;margin:0">How networks agree on routes across the Internet — and how that same idea connects VPCs, data centres and clouds on AWS and Azure.</p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:4px">
+          <span style="background:#e4f3ee;border:1px solid #c2e4da;border-radius:99px;padding:8px 16px;font-weight:600;font-size:15px;color:#0e8f74">⏱️ ~30 min</span>
+          <span style="background:#eaf1fd;border:1px solid #cfdffa;border-radius:99px;padding:8px 16px;font-weight:600;font-size:15px;color:#2e7fd4">📑 17 chapters</span>
+          <span style="background:#fdeeed;border:1px solid #ffd9d5;border-radius:99px;padding:8px 16px;font-weight:600;font-size:15px;color:#e0564a">🧠 3 quizzes</span>
+          <span style="background:#fef4e8;border:1px solid #ffe6c2;border-radius:99px;padding:8px 16px;font-weight:600;font-size:15px;color:#d98a18">🎯 Path-selection simulator</span>
+        </div>
+        <div style="display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-top:14px">
+          <button onClick="{{ startLesson }}" style="background:#0e8f74;color:#fff;border:none;border-radius:15px;padding:18px 34px;font-family:'Bricolage Grotesque';font-weight:700;font-size:18px;cursor:pointer;box-shadow:0 12px 24px -8px rgba(14,143,116,.6)" style-hover="transform:translateY(-2px)">Start lesson →</button>
+          <button onClick="{{ playFromStart }}" style="background:#fff;color:#0e8f74;border:2px solid #b5ded2;border-radius:15px;padding:16px 30px;font-family:'Bricolage Grotesque';font-weight:700;font-size:18px;cursor:pointer" style-hover="border-color:#0e8f74;background:#f4fbf8">▶ Play as video</button>
+        </div>
+        <div style="margin-top:18px;display:flex;align-items:center;gap:10px;background:#f3f9f7;border:1px solid #dcebe6;border-radius:99px;padding:8px 8px 8px 18px">
+          <span style="font-size:14px;color:#6a857f">Prepared by</span>
+          <span style="background:#1d2b2a;color:#fff;border-radius:99px;padding:7px 16px;font-weight:700;font-size:14px;font-family:'Bricolage Grotesque'">Reza Shahabian</span>
+        </div>
+      </section>
+
+      <section data-scene data-screen-label="What is BGP" style="{{ sc1 }}">
+        <div style="display:flex;flex-direction:column;gap:7px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#2e7fd4">Chapter 01 · The Internet's routing protocol</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:40px;line-height:1.04;margin:0;letter-spacing:-.01em">What is BGP peering?</h2>
+          <p style="font-size:17px;line-height:1.55;color:#4c6660;margin:0;max-width:86ch"><b>Border Gateway Protocol</b> shares routing information between networks called <b>Autonomous Systems (AS)</b>. <b>Peering</b> is when two routers connect to exchange those routes. <b>Tap a type</b> to see who talks to whom.</p>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <sc-for list="{{ bgpTypeTabs }}" as="t" hint-placeholder-count="2">
+            <button onClick="{{ t.onClick }}" style="flex:1;min-width:220px;border-radius:13px;padding:13px 18px;cursor:pointer;transition:all .15s;font-family:'Bricolage Grotesque';font-weight:800;font-size:15px;border:2px solid {{ t.border }};background:{{ t.bg }};color:{{ t.fg }}">{{ t.name }}</button>
+          </sc-for>
+        </div>
+        <div style="display:grid;grid-template-columns:1.05fr .95fr;gap:18px;align-items:stretch">
+          <div style="background:#1d2b2a;border-radius:18px;padding:22px;display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap">
+            <div style="border:2px dashed #2e7fd4;border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:8px;align-items:center">
+              <div style="font-size:10.5px;font-weight:800;color:#9fc2f0;letter-spacing:.06em">AS 65001 · {{ bgpType.leftOrg }}</div>
+              <div style="display:flex;gap:8px">
+                <div style="background:#2e7fd4;color:#fff;border-radius:10px;padding:9px 12px;font-size:11.5px;font-weight:800">📶 R1</div>
+                <div style="border-radius:10px;padding:9px 12px;font-size:11.5px;font-weight:800;background:{{ bgpType.r2bg }};color:{{ bgpType.r2fg }}">📶 R2</div>
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:3px">
+              <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:12px;color:#19c39a">{{ bgpType.linkLabel }}</div>
+              <div style="color:#19c39a;font-size:18px;font-weight:800">⇄</div>
+            </div>
+            <div style="border:2px dashed #ec7211;border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:8px;align-items:center;opacity:{{ bgpType.rightOpacity }}">
+              <div style="font-size:10.5px;font-weight:800;color:#ffcf9e;letter-spacing:.06em">AS 65002 · ISP</div>
+              <div style="background:#ec7211;color:#fff;border-radius:10px;padding:9px 12px;font-size:11.5px;font-weight:800">📶 R3</div>
+            </div>
+          </div>
+          <div style="background:#f6faf9;border:2px solid #dcebe6;border-radius:18px;padding:22px;display:flex;flex-direction:column;gap:10px;justify-content:center">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:20px;color:{{ bgpType.color }}">{{ bgpType.name }}</div>
+            <p style="margin:0;font-size:15px;line-height:1.6;color:#3c4a58">{{ bgpType.d }}</p>
+            <div style="background:#fff;border:1px solid #dcebe6;border-radius:11px;padding:11px 14px;font-size:13.5px;color:#4c6660">💡 {{ bgpType.ex }}</div>
+          </div>
+        </div>
+        <div style="background:#f3f9f7;border:1px solid #dcebe6;border-radius:14px;padding:13px 20px;font-size:14px;color:#33534c">🌍 BGP decides which path data takes across the Internet — letting ISPs control traffic, choose the best routes and keep the network stable. In SDN, a central controller can make those decisions from one place.</div>
+      </section>
+
+      <section data-scene data-screen-label="Session setup" style="{{ sc2 }}">
+        <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:14px;flex-wrap:wrap">
+          <div style="display:flex;flex-direction:column;gap:4px">
+            <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#7a5cf0">🎯 Try it · The BGP finite state machine</div>
+            <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:32px;line-height:1.05;margin:0">Bringing a BGP session up</h2>
+            <p style="font-size:14.5px;color:#4c6660;margin:0">BGP runs over <b>TCP port 179</b>. Step through the states — try the TCP failure path too.</p>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+            <button onClick="{{ fsmToggleFail }}" style="background:#fff;border:2px solid {{ fsmFailBorder }};border-radius:10px;padding:9px 14px;font-family:'Figtree';font-weight:700;font-size:13px;color:{{ fsmFailFg }};cursor:pointer">{{ fsmFailLabel }}</button>
+            <button onClick="{{ fsmReset }}" style="background:#fff;border:1px solid #d5e6e0;border-radius:10px;padding:9px 13px;font-family:'Figtree';font-weight:600;font-size:13px;color:#4c6660;cursor:pointer">↺</button>
+            <button onClick="{{ fsmNext }}" style="background:#7a5cf0;border:none;border-radius:10px;padding:10px 17px;font-family:'Bricolage Grotesque';font-weight:700;font-size:13.5px;color:#fff;cursor:pointer">Next ▶</button>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+          <sc-for list="{{ fsmPath }}" as="s" hint-placeholder-count="4">
+            <div style="display:flex;align-items:center;gap:8px">
+              <div style="border-radius:12px;padding:12px 16px;text-align:center;transition:all .2s;background:{{ s.bg }};color:{{ s.fg }};border:2px solid {{ s.border }}"><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:14px">{{ s.name }}</div></div>
+              <span style="color:#a9c4bc;font-weight:800">{{ s.arrow }}</span>
+            </div>
+          </sc-for>
+        </div>
+        <div style="background:#f5f2fe;border:2px solid #ded3fb;border-radius:18px;padding:22px;display:flex;flex-direction:column;gap:8px;min-height:120px;justify-content:center">
+          <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:20px;color:#7a5cf0">{{ fsmCur.name }}</div>
+          <p style="margin:0;font-size:15.5px;line-height:1.6;color:#3c4a58">{{ fsmCur.d }}</p>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <div style="background:#f6faf9;border:1px solid #dcebe6;border-radius:14px;padding:15px 17px;font-size:13.5px;line-height:1.55;color:#3c4a58"><b style="color:#0e8f74">📨 OPEN message</b><br/>Starts the session: both sides agree on the AS number and BGP version.</div>
+          <div style="background:#fff7ef;border:1px solid #ffe0c2;border-radius:14px;padding:15px 17px;font-size:13.5px;line-height:1.55;color:#3c4a58"><b style="color:#8a5f21">✅ Peering requirements</b><br/>Each router knows the other's IP address · correct AS numbers on both sides · routing policies configured on both.</div>
+        </div>
+      </section>
+
+      <section data-scene data-screen-label="Quick check 1" style="{{ sc3 }}">
+        <div style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#d98a18">🧠 Knowledge check</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:30px;line-height:1.2;margin:0;max-width:40ch">{{ q1.question }}</h2>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:840px;width:100%;margin:0 auto">
+          <sc-for list="{{ q1.options }}" as="o" hint-placeholder-count="4">
+            <button onClick="{{ o.onClick }}" style="display:flex;align-items:center;justify-content:space-between;gap:10px;text-align:left;border-radius:15px;padding:18px 20px;font-family:'Figtree';font-weight:600;font-size:15.5px;cursor:pointer;transition:all .15s;border:2px solid {{ o.border }};background:{{ o.bg }};color:{{ o.fg }}"><span>{{ o.label }}</span><span style="font-weight:800;font-size:18px">{{ o.mark }}</span></button>
+          </sc-for>
+        </div>
+        <sc-if value="{{ q1.answered }}" hint-placeholder-val="{{ false }}">
+          <div style="max-width:840px;width:100%;margin:0 auto;border-radius:16px;padding:18px 22px;background:{{ q1.bannerBg }}">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:17px;color:{{ q1.bannerFg }};margin-bottom:5px">{{ q1.banner }}</div>
+            <div style="font-size:16px;line-height:1.55;color:#33534c">{{ q1.explanation }}</div>
+          </div>
+        </sc-if>
+      </section>
+
+      <section data-scene data-screen-label="Path selection simulator" style="{{ sc4 }}">
+        <div style="display:flex;flex-direction:column;gap:5px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#ec7211">🎯 Try it · How BGP picks a winner</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:32px;line-height:1.05;margin:0">Path selection simulator</h2>
+          <p style="font-size:14.5px;color:#4c6660;margin:0">Two routes reach the same network. BGP checks attributes <b>top to bottom</b> and stops at the first one that differs. <b>Pick a scenario.</b></p>
+        </div>
+        <div style="display:flex;gap:7px;flex-wrap:wrap">
+          <sc-for list="{{ pathTabs }}" as="p" hint-placeholder-count="4">
+            <button onClick="{{ p.onClick }}" style="border-radius:11px;padding:10px 15px;cursor:pointer;transition:all .15s;font-family:'Bricolage Grotesque';font-weight:800;font-size:13px;border:2px solid {{ p.border }};background:{{ p.bg }};color:{{ p.fg }}">{{ p.name }}</button>
+          </sc-for>
+        </div>
+        <div style="border:2px solid #dcebe6;border-radius:16px;overflow:hidden">
+          <div style="display:grid;grid-template-columns:1.3fr 1.2fr 1fr 1fr 1.1fr;background:#1d2b2a;color:#cfe5df;font-size:11px;font-weight:800;letter-spacing:.05em">
+            <div style="padding:10px 14px">ATTRIBUTE</div><div style="padding:10px 14px">RULE</div><div style="padding:10px 14px">ROUTE A · {{ pathInfo.aVia }}</div><div style="padding:10px 14px">ROUTE B · {{ pathInfo.bVia }}</div><div style="padding:10px 14px">RESULT</div>
+          </div>
+          <sc-for list="{{ pathRows }}" as="r" hint-placeholder-count="5">
+            <div style="display:grid;grid-template-columns:1.3fr 1.2fr 1fr 1fr 1.1fr;border-top:1px solid #e8f1ee;font-size:13px;transition:background .2s;background:{{ r.bg }}">
+              <div style="padding:10px 14px;font-weight:800;color:#1d2b2a">{{ r.name }}</div>
+              <div style="padding:10px 14px;color:#4c6660">{{ r.rule }}</div>
+              <div style="padding:10px 14px;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;color:{{ r.aFg }}">{{ r.a }}</div>
+              <div style="padding:10px 14px;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;color:{{ r.bFg }}">{{ r.b }}</div>
+              <div style="padding:10px 14px;font-weight:800;color:{{ r.sFg }}">{{ r.state }}</div>
+            </div>
+          </sc-for>
+        </div>
+        <div style="background:#fff7ef;border:2px solid #ffe0c2;border-radius:16px;padding:16px 20px;display:flex;flex-direction:column;gap:5px">
+          <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:16px;color:#8a5f21">🏆 {{ pathInfo.verdict }}</div>
+          <div style="font-size:14px;line-height:1.55;color:#3c4a58">{{ pathInfo.why }}</div>
+        </div>
+      </section>
+
+      <section data-scene data-screen-label="Advertisement and filtering" style="{{ sc5 }}">
+        <div style="display:flex;flex-direction:column;gap:7px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#0e8f74">Chapter 05 · What peers tell each other</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:38px;line-height:1.04;margin:0;letter-spacing:-.01em">Route advertisement &amp; filtering</h2>
+        </div>
+        <div style="background:#1d2b2a;border-radius:16px;padding:16px 20px;font-family:'JetBrains Mono',monospace;font-size:12.5px;line-height:1.8;color:#cfe5df">
+          <div style="color:#8fb8ac">UPDATE message  AS 65002 → AS 65001</div>
+          <div><span style="color:#19c39a">NLRI:</span> 203.0.113.0/24, 198.51.100.0/24</div>
+          <div><span style="color:#ffb861">AS_PATH:</span> 65002 65010</div>
+          <div><span style="color:#ffb861">NEXT_HOP:</span> 192.0.2.1   <span style="color:#ffb861">MED:</span> 20</div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
+          <div style="background:#e9f6f1;border:1px solid #c2e4da;border-radius:15px;padding:16px;font-size:13.5px;line-height:1.5;color:#3c4a58"><b style="color:#0e8f74;font-family:'Bricolage Grotesque';font-size:14.5px">📨 UPDATE contents</b><br/><b>NLRI</b> — the destination networks. <b>Path attributes</b> — the data used to choose the best route.</div>
+          <div style="background:#eef4fd;border:1px solid #cfdffa;border-radius:15px;padding:16px;font-size:13.5px;line-height:1.5;color:#3c4a58"><b style="color:#2e7fd4;font-family:'Bricolage Grotesque';font-size:14.5px">📦 Route aggregation</b><br/>Combine prefixes into one summary — e.g. 10.1.0.0/24 … 10.1.3.0/24 advertised as <b>10.1.0.0/22</b>. Smaller tables, better performance.</div>
+          <div style="background:#fdf2f0;border:1px solid #f8d6d0;border-radius:15px;padding:16px;font-size:13.5px;line-height:1.5;color:#3c4a58"><b style="color:#c2453a;font-family:'Bricolage Grotesque';font-size:14.5px">🚧 Prefix filtering</b><br/><b>Inbound</b> — block unwanted or incorrect routes coming in. <b>Outbound</b> — limit what you advertise to others.</div>
+        </div>
+        <div style="background:#fff7ef;border:1px solid #ffe0c2;border-radius:14px;padding:13px 19px;font-size:13.5px;line-height:1.5;color:#8a5f21">⚠️ <b>Why filtering matters:</b> without inbound filters, one network mistakenly advertising someone else's prefixes can pull Internet traffic the wrong way — a "route leak". In SDN, filters are managed centrally from the controller.</div>
+      </section>
+
+      <section data-scene data-screen-label="Scaling iBGP" style="{{ sc6 }}">
+        <div style="display:flex;flex-direction:column;gap:5px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#e0564a">🎯 Try it · The full-mesh problem</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:32px;line-height:1.05;margin:0">Scaling iBGP: full mesh vs route reflector</h2>
+          <p style="font-size:14.5px;color:#4c6660;margin:0">In iBGP every router must peer with every other. <b>Pick how many routers</b> are in your AS.</p>
+        </div>
+        <div style="display:flex;gap:7px;flex-wrap:wrap;align-items:center">
+          <span style="font-size:13px;font-weight:700;color:#4c6660">Routers:</span>
+          <sc-for list="{{ nChips }}" as="c" hint-placeholder-count="6">
+            <button onClick="{{ c.onClick }}" style="min-width:52px;border-radius:10px;padding:9px 14px;cursor:pointer;font-family:'Bricolage Grotesque';font-weight:800;font-size:14px;border:2px solid {{ c.border }};background:{{ c.bg }};color:{{ c.fg }}">{{ c.v }}</button>
+          </sc-for>
+        </div>
+        <div style="background:#1d2b2a;border-radius:18px;padding:22px;display:flex;flex-direction:column;gap:14px">
+          <div style="display:flex;flex-direction:column;gap:5px">
+            <div style="display:flex;justify-content:space-between;font-size:12.5px;font-weight:800;color:#ffb3a8"><span>Full mesh · n(n−1)/2</span><span>{{ meshInfo.mesh }} sessions</span></div>
+            <div style="height:16px;border-radius:99px;background:#2f4340;overflow:hidden"><div style="height:100%;width:100%;border-radius:99px;background:#e0564a"></div></div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:5px">
+            <div style="display:flex;justify-content:space-between;font-size:12.5px;font-weight:800;color:#9be3cc"><span>Route reflector · n − 1</span><span>{{ meshInfo.rr }} sessions</span></div>
+            <div style="height:16px;border-radius:99px;background:#2f4340;overflow:hidden"><div style="height:100%;border-radius:99px;background:#19c39a;transition:width .4s;width:{{ meshInfo.rrW }}"></div></div>
+          </div>
+          <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:15px;color:#fff">📉 {{ meshInfo.saved }}</div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
+          <div style="background:#e9f6f1;border:1px solid #c2e4da;border-radius:14px;padding:14px;font-size:13px;line-height:1.5;color:#3c4a58"><b style="color:#0e8f74">🪞 Route reflectors</b><br/>Routers peer with the reflector, which shares routes with the rest.</div>
+          <div style="background:#eef4fd;border:1px solid #cfdffa;border-radius:14px;padding:14px;font-size:13px;line-height:1.5;color:#3c4a58"><b style="color:#2e7fd4">🧩 Confederations</b><br/>Split one big AS into sub-ASes; outsiders still see a single AS.</div>
+          <div style="background:#fff7ef;border:1px solid #ffe0c2;border-radius:14px;padding:14px;font-size:13px;line-height:1.5;color:#3c4a58"><b style="color:#8a5f21">🛟 Redundancy</b><br/>Dual-homed peers for failover; Graceful Restart keeps routes during a reboot.</div>
+        </div>
+      </section>
+
+      <section data-scene data-screen-label="BGP in SDN" style="{{ sc7 }}">
+        <div style="display:flex;flex-direction:column;gap:7px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#7a5cf0">Chapter 07 · Centralising the decisions</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:38px;line-height:1.04;margin:0;letter-spacing:-.01em">BGP in Software-Defined Networking</h2>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+          <div style="background:#fdf2f0;border:2px solid #f8d6d0;border-radius:16px;padding:18px;display:flex;flex-direction:column;gap:7px">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:16px;color:#c2453a">🧱 Traditional BGP</div>
+            <div style="font-size:13.5px;line-height:1.55;color:#3c4a58">BGP runs independently on every router; each decides from its own local configuration. Changes are slow and hard to coordinate.</div>
+          </div>
+          <div style="background:#e9f6f1;border:2px solid #c2e4da;border-radius:16px;padding:18px;display:flex;flex-direction:column;gap:7px">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:16px;color:#0e8f74">🧠 SDN-based BGP</div>
+            <div style="font-size:13.5px;line-height:1.55;color:#3c4a58">A central controller with a full network view manages BGP decisions, talking to routers via <b>southbound APIs</b> and changing routes in real time.</div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px">
+          <div style="background:#f6faf9;border:1px solid #dcebe6;border-radius:13px;padding:13px;font-size:12.5px;line-height:1.45;color:#3c4a58"><b style="color:#0e8f74">Dynamic path selection</b><br/>Monitors delay &amp; congestion, updates attributes live.</div>
+          <div style="background:#f6faf9;border:1px solid #dcebe6;border-radius:13px;padding:13px;font-size:12.5px;line-height:1.45;color:#3c4a58"><b style="color:#2e7fd4">Application-aware</b><br/>Prioritises VoIP and video streaming.</div>
+          <div style="background:#f6faf9;border:1px solid #dcebe6;border-radius:13px;padding:13px;font-size:12.5px;line-height:1.45;color:#3c4a58"><b style="color:#7a5cf0">Cross-layer</b><br/>Combines BGP with MPLS for QoS and bandwidth.</div>
+          <div style="background:#f6faf9;border:1px solid #dcebe6;border-radius:13px;padding:13px;font-size:12.5px;line-height:1.45;color:#3c4a58"><b style="color:#ec7211">Orchestration</b><br/>Policy-based control of flows across many devices.</div>
+        </div>
+        <div style="background:#f5f2fe;border:1px solid #ded3fb;border-radius:14px;padding:14px 19px;font-size:13.5px;line-height:1.55;color:#3c4a58">🏢 <b>Multi-tenant clouds:</b> each tenant gets isolated BGP sessions — often <b>virtual BGP instances</b> in software instead of physical routers — with per-tenant, policy-based routing and strict traffic segmentation.</div>
+      </section>
+
+      <section data-scene data-screen-label="Quick check 2" style="{{ sc8 }}">
+        <div style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#d98a18">🧠 Knowledge check</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:29px;line-height:1.2;margin:0;max-width:42ch">{{ q2.question }}</h2>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:840px;width:100%;margin:0 auto">
+          <sc-for list="{{ q2.options }}" as="o" hint-placeholder-count="4">
+            <button onClick="{{ o.onClick }}" style="display:flex;align-items:center;justify-content:space-between;gap:10px;text-align:left;border-radius:15px;padding:18px 20px;font-family:'Figtree';font-weight:600;font-size:15.5px;cursor:pointer;transition:all .15s;border:2px solid {{ o.border }};background:{{ o.bg }};color:{{ o.fg }}"><span>{{ o.label }}</span><span style="font-weight:800;font-size:18px">{{ o.mark }}</span></button>
+          </sc-for>
+        </div>
+        <sc-if value="{{ q2.answered }}" hint-placeholder-val="{{ false }}">
+          <div style="max-width:840px;width:100%;margin:0 auto;border-radius:16px;padding:18px 22px;background:{{ q2.bannerBg }}">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:17px;color:{{ q2.bannerFg }};margin-bottom:5px">{{ q2.banner }}</div>
+            <div style="font-size:16px;line-height:1.55;color:#33534c">{{ q2.explanation }}</div>
+          </div>
+        </sc-if>
+      </section>
+
+      <section data-scene data-screen-label="Cloud peering" style="{{ sc9 }}">
+        <div style="display:flex;flex-direction:column;gap:7px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#2e7fd4">Chapter 09 · From the Internet to the cloud</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:38px;line-height:1.04;margin:0;letter-spacing:-.01em">Cloud peering</h2>
+          <p style="font-size:16.5px;line-height:1.55;color:#4c6660;margin:0;max-width:86ch">A direct network connection between cloud providers, or between a provider and an enterprise — <b>bypassing the public Internet</b>.</p>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
+          <div style="background:#e9f6f1;border:1px solid #c2e4da;border-radius:14px;padding:15px;font-size:13.5px;line-height:1.5;color:#3c4a58"><b style="color:#0e8f74">⚡ Lower latency</b><br/>No public Internet hops.</div>
+          <div style="background:#eef4fd;border:1px solid #cfdffa;border-radius:14px;padding:15px;font-size:13.5px;line-height:1.5;color:#3c4a58"><b style="color:#2e7fd4">🔒 Higher security</b><br/>Data stays on private networks.</div>
+          <div style="background:#fff7ef;border:1px solid #ffe0c2;border-radius:14px;padding:15px;font-size:13.5px;line-height:1.5;color:#3c4a58"><b style="color:#8a5f21">💰 Cost efficiency</b><br/>Fewer Internet transfer charges.</div>
+        </div>
+        <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:15px;color:#1d2b2a">Four peering models</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <div style="background:#f6faf9;border:1px solid #dcebe6;border-radius:13px;padding:13px 16px;font-size:13.5px;line-height:1.5;color:#3c4a58"><b>🔗 VPC peering</b> — two VPCs privately, same or cross-region.</div>
+          <div style="background:#f6faf9;border:1px solid #dcebe6;border-radius:13px;padding:13px 16px;font-size:13.5px;line-height:1.5;color:#3c4a58"><b>☁️ Inter-cloud peering</b> — AWS ↔ Azure, for multi-cloud workloads.</div>
+          <div style="background:#f6faf9;border:1px solid #dcebe6;border-radius:13px;padding:13px 16px;font-size:13.5px;line-height:1.5;color:#3c4a58"><b>🛤️ Direct (private) peering</b> — dedicated physical link, no Internet at all.</div>
+          <div style="background:#f6faf9;border:1px solid #dcebe6;border-radius:13px;padding:13px 16px;font-size:13.5px;line-height:1.5;color:#3c4a58"><b>🎯 Transit peering</b> — a transit gateway joins many VPCs or clouds.</div>
+        </div>
+      </section>
+
+      <section data-scene data-screen-label="Hub and spoke vs mesh" style="{{ sc10 }}">
+        <div style="display:flex;flex-direction:column;gap:5px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#0e8f74">🎯 Try it · Multi-VPC architectures</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:32px;line-height:1.05;margin:0">Many-to-many vs hub-and-spoke</h2>
+          <p style="font-size:14.5px;color:#4c6660;margin:0">Multi-VPC designs separate prod from dev, scale cleanly and simplify compliance. <b>Pick how many VPCs</b> must all talk to each other.</p>
+        </div>
+        <div style="display:flex;gap:7px;flex-wrap:wrap;align-items:center">
+          <span style="font-size:13px;font-weight:700;color:#4c6660">VPCs:</span>
+          <sc-for list="{{ vChips }}" as="c" hint-placeholder-count="6">
+            <button onClick="{{ c.onClick }}" style="min-width:52px;border-radius:10px;padding:9px 14px;cursor:pointer;font-family:'Bricolage Grotesque';font-weight:800;font-size:14px;border:2px solid {{ c.border }};background:{{ c.bg }};color:{{ c.fg }}">{{ c.v }}</button>
+          </sc-for>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+          <div style="background:#fdf2f0;border:2px solid #f8d6d0;border-radius:18px;padding:20px;display:flex;flex-direction:column;gap:8px">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:16px;color:#c2453a">🕸️ VPC peering mesh</div>
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:34px;color:#e0564a">{{ vpcInfo.mesh }}</div>
+            <div style="font-size:12.5px;font-weight:700;color:#8a4a40">peering connections · n(n−1)/2</div>
+            <div style="font-size:13px;line-height:1.5;color:#3c4a58">+ {{ vpcInfo.routes }} route-table entries to maintain by hand. No transitive routing.</div>
+          </div>
+          <div style="background:#e9f6f1;border:2px solid #c2e4da;border-radius:18px;padding:20px;display:flex;flex-direction:column;gap:8px">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:16px;color:#0e8f74">🎯 Transit Gateway hub</div>
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:34px;color:#0e8f74">{{ vpcInfo.tgw }}</div>
+            <div style="font-size:12.5px;font-weight:700;color:#0a6b50">attachments · one per VPC</div>
+            <div style="font-size:13px;line-height:1.5;color:#3c4a58">Transitive routing through the hub; routing and policy managed centrally.</div>
+          </div>
+        </div>
+        <div style="font-size:13px;color:#4c6660">💡 Mesh works for a handful of VPCs. Past that, hub-and-spoke wins — one gateway can connect thousands of VPCs.</div>
+      </section>
+
+      <section data-scene data-screen-label="Connectivity explorer" style="{{ sc11 }}">
+        <div style="display:flex;flex-direction:column;gap:5px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#ec7211">🎯 Try it · AWS connectivity options</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:32px;line-height:1.05;margin:0">Connectivity explorer</h2>
+          <p style="font-size:14.5px;color:#4c6660;margin:0">VPC-to-VPC and network-to-VPC options. <b>Tap each one.</b></p>
+        </div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <sc-for list="{{ connList }}" as="c" hint-placeholder-count="6">
+            <button onClick="{{ c.onClick }}" style="display:flex;align-items:center;gap:6px;border-radius:10px;padding:10px 14px;cursor:pointer;transition:all .15s;border:2px solid {{ c.border }};background:{{ c.bg }};color:{{ c.fg }}"><span style="font-size:14px">{{ c.icon }}</span><span style="font-family:'Bricolage Grotesque';font-weight:800;font-size:12.5px">{{ c.name }}</span></button>
+          </sc-for>
+        </div>
+        <div style="background:#f6faf9;border:2px solid #dcebe6;border-radius:20px;padding:22px;display:flex;flex-direction:column;gap:12px;min-height:290px">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
+            <div style="display:flex;align-items:center;gap:12px"><div style="width:50px;height:50px;border-radius:13px;background:{{ connInfo.color }};display:flex;align-items:center;justify-content:center;font-size:24px">{{ connInfo.icon }}</div><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:22px;color:{{ connInfo.color }}">{{ connInfo.name }}</div></div>
+            <div style="background:#fff;border:1px solid #dcebe6;border-radius:99px;padding:6px 14px;font-size:12.5px;font-weight:800;color:#33534c">Transitive: {{ connInfo.trans }}</div>
+          </div>
+          <p style="margin:0;font-size:15px;line-height:1.6;color:#3c4a58">{{ connInfo.what }}</p>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
+            <div style="background:#e9f6f1;border:1px solid #c2e4da;border-radius:12px;padding:12px 14px;font-size:13px;line-height:1.5;color:#3c4a58"><b style="color:#0a6b50">✓ Strengths</b><br/>{{ connInfo.pros }}</div>
+            <div style="background:#fdf2f0;border:1px solid #f8d6d0;border-radius:12px;padding:12px 14px;font-size:13px;line-height:1.5;color:#3c4a58"><b style="color:#c2453a">✗ Limits</b><br/>{{ connInfo.cons }}</div>
+            <div style="background:#fff7ef;border:1px solid #ffe0c2;border-radius:12px;padding:12px 14px;font-size:13px;line-height:1.5;color:#3c4a58"><b style="color:#8a5f21">🎯 Use for</b><br/>{{ connInfo.use }}</div>
+          </div>
+        </div>
+      </section>
+
+      <section data-scene data-screen-label="Egress security and global WAN" style="{{ sc12 }}">
+        <div style="display:flex;flex-direction:column;gap:7px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#e0564a">Chapter 12 · Centralise to simplify</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:36px;line-height:1.04;margin:0;letter-spacing:-.01em">Centralised egress, security &amp; global WAN</h2>
+        </div>
+        <div style="background:#1d2b2a;border-radius:18px;padding:20px;display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap">
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <div style="background:#2f4340;color:#cfe5df;border-radius:9px;padding:7px 12px;font-size:11.5px;font-weight:800">VPC · Prod</div>
+            <div style="background:#2f4340;color:#cfe5df;border-radius:9px;padding:7px 12px;font-size:11.5px;font-weight:800">VPC · Dev</div>
+            <div style="background:#2f4340;color:#cfe5df;border-radius:9px;padding:7px 12px;font-size:11.5px;font-weight:800">VPC · Data</div>
+          </div>
+          <span style="color:#8fb8ac;font-weight:800">→</span>
+          <div style="background:#7a5cf0;color:#fff;border-radius:12px;padding:12px 16px;font-family:'Bricolage Grotesque';font-weight:800;font-size:13px;text-align:center">🎯 Transit<br/>Gateway</div>
+          <span style="color:#8fb8ac;font-weight:800">→</span>
+          <div style="background:#e0564a;color:#fff;border-radius:12px;padding:12px 16px;font-family:'Bricolage Grotesque';font-weight:800;font-size:13px;text-align:center">🔥 Inspection<br/>firewall / IDS</div>
+          <span style="color:#8fb8ac;font-weight:800">→</span>
+          <div style="background:#0e8f74;color:#fff;border-radius:12px;padding:12px 16px;font-family:'Bricolage Grotesque';font-weight:800;font-size:13px;text-align:center">🚪 Egress VPC<br/>shared NAT</div>
+          <span style="color:#8fb8ac;font-weight:800">→</span>
+          <div style="background:#2f4340;color:#fff;border-radius:12px;padding:12px 16px;font-size:13px;font-weight:800">🌍 Internet</div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px">
+          <div style="background:#e9f6f1;border:1px solid #c2e4da;border-radius:13px;padding:13px;font-size:12.5px;line-height:1.45;color:#3c4a58"><b style="color:#0e8f74">Centralised egress</b><br/>Shared NAT Gateways cut cost; one place to log outbound traffic.</div>
+          <div style="background:#fdf2f0;border:1px solid #f8d6d0;border-radius:13px;padding:13px;font-size:12.5px;line-height:1.45;color:#3c4a58"><b style="color:#c2453a">Central inspection</b><br/>No need for security appliances in every VPC.</div>
+          <div style="background:#eef4fd;border:1px solid #cfdffa;border-radius:13px;padding:13px;font-size:12.5px;line-height:1.45;color:#3c4a58"><b style="color:#2e7fd4">Route 53 Resolver</b><br/>Hybrid DNS between on-prem and AWS.</div>
+          <div style="background:#f5f2fe;border:1px solid #ded3fb;border-radius:13px;padding:13px;font-size:12.5px;line-height:1.45;color:#3c4a58"><b style="color:#7a5cf0">AWS Cloud WAN</b><br/>Declarative, policy-based global network across regions.</div>
+        </div>
+      </section>
+
+      <section data-scene data-screen-label="AWS vs Azure" style="{{ sc13 }}">
+        <div style="display:flex;flex-direction:column;gap:5px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#2e7fd4">🎯 Try it · Same ideas, two clouds</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:32px;line-height:1.05;margin:0">AWS vs Azure</h2>
+          <p style="font-size:14.5px;color:#4c6660;margin:0"><b>Pick a pattern</b> to see each provider's equivalent.</p>
+        </div>
+        <div style="display:flex;gap:7px;flex-wrap:wrap">
+          <sc-for list="{{ cloudTabs }}" as="c" hint-placeholder-count="4">
+            <button onClick="{{ c.onClick }}" style="flex:1;min-width:150px;border-radius:12px;padding:12px 16px;cursor:pointer;transition:all .15s;font-family:'Bricolage Grotesque';font-weight:800;font-size:13.5px;border:2px solid {{ c.border }};background:{{ c.bg }};color:{{ c.fg }}">{{ c.name }}</button>
+          </sc-for>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+          <div style="background:#fff7ef;border:2px solid #ffe0c2;border-radius:18px;padding:22px;display:flex;flex-direction:column;gap:9px;min-height:170px">
+            <div style="font-size:11px;font-weight:800;letter-spacing:.08em;color:#ec7211">AWS</div>
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:20px;color:#1d2b2a">{{ cloudInfo.aws.t }}</div>
+            <div style="font-size:14px;line-height:1.55;color:#3c4a58">{{ cloudInfo.aws.d }}</div>
+          </div>
+          <div style="background:#eef4fd;border:2px solid #cfdffa;border-radius:18px;padding:22px;display:flex;flex-direction:column;gap:9px;min-height:170px">
+            <div style="font-size:11px;font-weight:800;letter-spacing:.08em;color:#2e7fd4">AZURE</div>
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:20px;color:#1d2b2a">{{ cloudInfo.az.t }}</div>
+            <div style="font-size:14px;line-height:1.55;color:#3c4a58">{{ cloudInfo.az.d }}</div>
+          </div>
+        </div>
+        <div style="background:#f3f9f7;border:1px solid #dcebe6;border-radius:14px;padding:13px 19px;font-size:13.5px;color:#33534c">🔁 Neither provider's direct peering is transitive by default — both solve it with a hub (Transit Gateway / Virtual WAN).</div>
+      </section>
+
+      <section data-scene data-screen-label="Pick the connection" style="{{ sc14 }}">
+        <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap">
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#0e8f74">🎯 Try it · Design decisions</div>
+            <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:32px;line-height:1.05;margin:0">Pick the right connection</h2>
+            <p style="font-size:14.5px;color:#4c6660;margin:0"><b>Tap a scenario</b>, then <b>tap the service</b> that fits best.</p>
+          </div>
+          <div style="display:flex;gap:10px">
+            <sc-if value="{{ dragChecked }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;align-items:center;border-radius:12px;padding:11px 18px;font-family:'Bricolage Grotesque';font-weight:800;font-size:16px;background:{{ dragScoreBg }};color:{{ dragScoreFg }}">{{ dragScore }}</div>
+            </sc-if>
+            <button onClick="{{ resetDrag }}" style="background:#fff;border:1px solid #d5e6e0;border-radius:12px;padding:11px 18px;font-family:'Figtree';font-weight:600;font-size:14px;color:#4c6660;cursor:pointer">↺ Reset</button>
+            <button onClick="{{ checkDrag }}" style="background:#0e8f74;border:none;border-radius:12px;padding:11px 20px;font-family:'Bricolage Grotesque';font-weight:700;font-size:15px;color:#fff;cursor:pointer">Check answers</button>
+          </div>
+        </div>
+        <div style="min-height:54px;background:#f2f7f5;border:2px dashed #c6ddd6;border-radius:16px;padding:12px;display:flex;flex-wrap:wrap;gap:8px;align-items:center">
+          <span style="font-size:13px;font-weight:700;color:#8ba39e;padding:0 6px">TRAY:</span>
+          <sc-for list="{{ dragTray }}" as="it" hint-placeholder-count="8">
+            <button onClick="{{ it.onClick }}" style="border-radius:11px;padding:10px 14px;font-family:'Figtree';font-weight:600;font-size:13px;text-align:left;cursor:pointer;transition:all .15s;border:2px solid {{ it.border }};background:{{ it.bg }};color:{{ it.fg }}">{{ it.label }}</button>
+          </sc-for>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px">
+          <sc-for list="{{ bucketList }}" as="b" hint-placeholder-count="4">
+            <div onClick="{{ b.onClick }}" style="border-radius:16px;padding:13px;min-height:190px;display:flex;flex-direction:column;gap:8px;cursor:pointer;background:{{ b.bg }};border:2px solid {{ b.border }}">
+              <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:13.5px;color:{{ b.fg }}">{{ b.name }}</div>
+              <sc-for list="{{ b.items }}" as="it" hint-placeholder-count="0">
+                <button onClick="{{ it.onClick }}" style="display:flex;justify-content:space-between;align-items:flex-start;gap:6px;text-align:left;border-radius:9px;padding:9px 10px;font-weight:600;font-size:11.5px;line-height:1.35;cursor:pointer;border:2px solid {{ it.border }};background:{{ it.bg }};color:{{ it.fg }}"><span>{{ it.label }}</span><span style="font-weight:800">{{ it.mark }}</span></button>
+              </sc-for>
+            </div>
+          </sc-for>
+        </div>
+      </section>
+
+      <section data-scene data-screen-label="Final check" style="{{ sc15 }}">
+        <div style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#d98a18">🧠 Final knowledge check</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:29px;line-height:1.2;margin:0;max-width:42ch">{{ q3.question }}</h2>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:840px;width:100%;margin:0 auto">
+          <sc-for list="{{ q3.options }}" as="o" hint-placeholder-count="4">
+            <button onClick="{{ o.onClick }}" style="display:flex;align-items:center;justify-content:space-between;gap:10px;text-align:left;border-radius:15px;padding:18px 20px;font-family:'Figtree';font-weight:600;font-size:15.5px;cursor:pointer;transition:all .15s;border:2px solid {{ o.border }};background:{{ o.bg }};color:{{ o.fg }}"><span>{{ o.label }}</span><span style="font-weight:800;font-size:18px">{{ o.mark }}</span></button>
+          </sc-for>
+        </div>
+        <sc-if value="{{ q3.answered }}" hint-placeholder-val="{{ false }}">
+          <div style="max-width:840px;width:100%;margin:0 auto;border-radius:16px;padding:18px 22px;background:{{ q3.bannerBg }}">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:17px;color:{{ q3.bannerFg }};margin-bottom:5px">{{ q3.banner }}</div>
+            <div style="font-size:16px;line-height:1.55;color:#33534c">{{ q3.explanation }}</div>
+          </div>
+        </sc-if>
+      </section>
+
+      <section data-scene data-screen-label="Wrap-up" style="{{ sc16 }}">
+        <div style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px">
+          <div style="font-size:40px">🎉</div>
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#0e8f74">Session wrap-up</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:38px;line-height:1.04;margin:0;letter-spacing:-.01em">From Internet routing to multi-VPC design</h2>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px">
+          <div style="background:#e9f6f1;border:1px solid #c2e4da;border-radius:18px;padding:20px;display:flex;flex-direction:column;gap:7px">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:15px;color:#0e8f74">🌐 BGP</div>
+            <p style="margin:0;font-size:14px;line-height:1.55;color:#3c4a58">eBGP vs iBGP, session setup on TCP 179, path selection, filtering, and scaling with route reflectors.</p>
+          </div>
+          <div style="background:#f5f2fe;border:1px solid #ded3fb;border-radius:18px;padding:20px;display:flex;flex-direction:column;gap:7px">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:15px;color:#7a5cf0">🧠 BGP + SDN</div>
+            <p style="margin:0;font-size:14px;line-height:1.55;color:#3c4a58">Central controllers, southbound APIs, dynamic traffic engineering and multi-tenant isolation.</p>
+          </div>
+          <div style="background:#eef4fd;border:1px solid #cfdffa;border-radius:18px;padding:20px;display:flex;flex-direction:column;gap:7px">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:15px;color:#2e7fd4">☁️ Cloud connectivity</div>
+            <p style="margin:0;font-size:14px;line-height:1.55;color:#3c4a58">Peering, Transit Gateway, PrivateLink, VPN, Direct Connect, Cloud WAN — and their Azure equivalents.</p>
+          </div>
+        </div>
+        <div style="background:#fff7ef;border:2px solid #ffe0c2;border-radius:16px;padding:15px 20px;font-size:14px;line-height:1.55;color:#8a5f21">📝 <b>Relates to your assignment:</b> when you design multi-VPC or hybrid connectivity, justify each choice against scale, transitivity, overlapping CIDRs, security inspection and cost — exactly the trade-offs practised above.</div>
+        <div style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap">
+          <button onClick="{{ startLesson }}" style="background:#fff;color:#0e8f74;border:2px solid #b5ded2;border-radius:14px;padding:14px 26px;font-family:'Bricolage Grotesque';font-weight:700;font-size:16px;cursor:pointer" style-hover="background:#f4fbf8">↻ Review from the start</button>
+          <button onClick="{{ toggleGlossary }}" style="background:#0e8f74;color:#fff;border:none;border-radius:14px;padding:14px 26px;font-family:'Bricolage Grotesque';font-weight:700;font-size:16px;cursor:pointer">📖 Open glossary</button>
+        </div>
+        <div style="text-align:center;font-size:14px;color:#8ba39e">Lesson prepared by <b style="color:#4c6660">Reza Shahabian</b></div>
+      </section>
+
+    </div>
+  </div>
+
+  <div style="position:sticky;bottom:0;z-index:20;width:100%;display:flex;justify-content:center;background:linear-gradient(to top,#edf5f2 55%,transparent);padding:10px 24px 22px">
+    <div style="width:100%;max-width:1180px;display:flex;align-items:center;justify-content:space-between;gap:14px">
+      <button onClick="{{ prev }}" style="display:flex;align-items:center;gap:8px;background:#fff;border:1px solid #d5e6e0;border-radius:13px;padding:13px 22px;font-family:'Bricolage Grotesque';font-weight:700;font-size:15px;color:#33534c;cursor:pointer" style-hover="border-color:#8fc9b9">← Back</button>
+      <div style="display:flex;align-items:center;gap:12px;font-weight:600;color:#6a857f;font-size:15px">
+        <span style="font-family:'Bricolage Grotesque';color:#1d2b2a;font-size:17px">{{ sceneNum }}</span>
+        <span style="color:#b6ccc6">/</span>
+        <span>{{ total }}</span>
+        <span style="color:#b6ccc6">·</span>
+        <span style="color:#33534c">{{ sceneTitle }}</span>
+      </div>
+      <button onClick="{{ next }}" style="display:flex;align-items:center;gap:8px;background:{{ accent }};border:none;border-radius:13px;padding:13px 26px;font-family:'Bricolage Grotesque';font-weight:700;font-size:15px;color:#fff;cursor:pointer;box-shadow:0 10px 20px -10px rgba(20,70,60,.5)" style-hover="transform:translateY(-2px)">Next →</button>
+    </div>
+  </div>
+
+  <sc-if value="{{ glossaryOpen }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ toggleGlossary }}" style="position:fixed;inset:0;z-index:50;background:rgba(20,40,36,.34);backdrop-filter:blur(2px)"></div>
+    <div style="position:fixed;top:0;right:0;bottom:0;z-index:51;width:min(460px,92vw);background:#fff;box-shadow:-20px 0 60px -20px rgba(20,70,60,.4);display:flex;flex-direction:column">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:24px 26px;border-bottom:1px solid #e8f1ee">
+        <div style="display:flex;flex-direction:column;gap:2px">
+          <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:22px">📖 Glossary</div>
+          <div style="font-size:13px;color:#7b948e">BGP &amp; cloud peering terms</div>
+        </div>
+        <button onClick="{{ toggleGlossary }}" style="background:#eef5f3;border:none;border-radius:10px;width:38px;height:38px;font-size:18px;cursor:pointer;color:#4c6660">✕</button>
+      </div>
+      <div style="overflow-y:auto;padding:18px 26px 40px;display:flex;flex-direction:column;gap:14px">
+        <sc-for list="{{ glossary }}" as="g" hint-placeholder-count="6">
+          <div style="border:1px solid #e8f1ee;border-radius:14px;padding:14px 16px;background:#fafcfb">
+            <div style="display:flex;align-items:center;gap:8px;font-family:'Bricolage Grotesque';font-weight:700;font-size:16px;color:#1d2b2a"><span>{{ g.icon }}</span>{{ g.term }}</div>
+            <div style="font-size:14.5px;line-height:1.5;color:#4c6660;margin-top:5px">{{ g.def }}</div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:820}}">
+class Component extends DCLogic {
+  state = { idx:0, playing:false, glossary:false, quiz:{q1:null,q2:null,q3:null},
+    bgpType:'ebgp', fsm:0, fsmFail:false, path:'lp', n:6, vpcs:10, conn:'peering', cloud:'peer',
+    drops:{}, sel:null, dragChecked:false };
+
+  total = 17;
+  interactive = new Set([1,2,3,4,6,8,10,11,13,14,15]);
+  durations = { 0:5200 };
+
+  chapTitles = ['Welcome','What is BGP peering','Session setup','Quick check','Path selection simulator','Advertisement & filtering','Scaling iBGP','BGP in SDN','Quick check','Cloud peering','Hub-and-spoke vs mesh','Connectivity explorer','Egress, security & global WAN','AWS vs Azure','Pick the connection','Final check','Wrap-up'];
+  chapColors = ['#0e8f74','#2e7fd4','#7a5cf0','#ffb43d','#ec7211','#0e8f74','#e0564a','#7a5cf0','#ffb43d','#2e7fd4','#0e8f74','#ec7211','#e0564a','#2e7fd4','#0e8f74','#ffb43d','#0e8f74'];
+
+  bgpTypes = {
+    ebgp:{name:'External BGP (eBGP)',color:'#ec7211',leftOrg:'Your company',linkLabel:'eBGP session',r2bg:'#2f4340',r2fg:'#8fb8ac',rightOpacity:'1',
+      d:'Used between routers in DIFFERENT Autonomous Systems — how separate organisations and ISPs exchange routes.',
+      ex:'Your company\u2019s edge router (AS 65001) peers with your ISP\u2019s router (AS 65002).'},
+    ibgp:{name:'Internal BGP (iBGP)',color:'#2e7fd4',leftOrg:'Your company',linkLabel:'iBGP inside AS 65001',r2bg:'#19c39a',r2fg:'#fff',rightOpacity:'.35',
+      d:'Used between routers INSIDE the same Autonomous System — sharing routing information within one network.',
+      ex:'R1 and R2 both belong to AS 65001 and share the routes R1 learned from the ISP.'},
+  };
+
+  fsmStates = {
+    idle:{name:'Idle',d:'No connection is active with the neighbour. The router is waiting to start.'},
+    connect:{name:'Connect',d:'The router tries to create a TCP connection to the neighbour on port 179.'},
+    active:{name:'Active',d:'The first TCP attempt failed — the router keeps retrying the connection.'},
+    connect2:{name:'Connect',d:'The retry succeeds: TCP is up, so the OPEN message can be exchanged.'},
+    est:{name:'Established',d:'OPEN accepted — the session is up and UPDATE messages carrying routes are exchanged.'},
+  };
+
+  pathScenarios = {
+    lp:{name:'Local preference',aVia:'ISP-1',bVia:'ISP-2',decide:1,winner:'A',
+      vals:{a:['0','200','3 hops','20','✓'],b:['0','100','2 hops','10','✓']},
+      verdict:'Route A wins on Local Preference',
+      why:'Weights tie, so BGP checks Local Preference: 200 beats 100. B has a shorter AS path and lower MED, but those are never reached — the decision is already made.'},
+    aspath:{name:'AS path length',aVia:'ISP-1',bVia:'ISP-2',decide:2,winner:'B',
+      vals:{a:['0','100','3 hops','10','✓'],b:['0','100','2 hops','50','✓']},
+      verdict:'Route B wins on AS path length',
+      why:'Weight and Local Preference tie, so BGP compares AS path length: B passes through fewer networks (2 vs 3). B\u2019s worse MED does not matter.'},
+    med:{name:'MED',aVia:'Link-1',bVia:'Link-2',decide:3,winner:'B',
+      vals:{a:['0','100','2 hops','50','✓'],b:['0','100','2 hops','10','✓']},
+      verdict:'Route B wins on MED',
+      why:'Everything ties down to MED, the neighbour\u2019s hint about the preferred entry point. Lower is better, so B (10) beats A (50).'},
+    prepend:{name:'AS path prepending',aVia:'ISP-1 (prepended)',bVia:'ISP-2',decide:2,winner:'B',
+      vals:{a:['0','100','1 → 4 hops','10','✓'],b:['0','100','2 hops','10','✓']},
+      verdict:'Route B wins — because A was prepended',
+      why:'A was naturally shorter (1 hop), but the admin prepended its own AS three extra times so A looks 4 hops long. Traffic engineering: deliberately steering traffic onto ISP-2.'},
+  };
+  pathOrder = ['lp','aspath','med','prepend'];
+  pathAttrs = [
+    {name:'Weight',rule:'Higher wins (Cisco only)',better:'high'},
+    {name:'Local Preference',rule:'Higher wins',better:'high'},
+    {name:'AS path length',rule:'Shorter wins',better:'low'},
+    {name:'MED',rule:'Lower wins',better:'low'},
+    {name:'Next-hop reachable',rule:'Must be reachable',better:'eq'},
+  ];
+
+  connData = {
+    peering:{name:'VPC Peering',icon:'🔗',color:'#0e8f74',what:'Direct, private connection between two VPCs — same region or across regions. Traffic stays on the AWS network.',
+      pros:'Low latency, simple setup',cons:'No transitive routing · hard to manage at scale · CIDRs must not overlap',use:'Small environments, simple designs, latency-sensitive workloads',trans:'No'},
+    tgw:{name:'Transit Gateway',icon:'🎯',color:'#7a5cf0',what:'A central routing hub connecting many VPCs and on-premises networks.',
+      pros:'Transitive routing · thousands of VPCs on one gateway · central routing & policy · IPv4 and IPv6',cons:'An extra managed service to design and pay for',use:'Large, complex, multi-region environments',trans:'Yes'},
+    privatelink:{name:'PrivateLink',icon:'🚪',color:'#2e7fd4',what:'Private access to a specific SERVICE across VPCs via interface endpoints — not the whole VPC.',
+      pros:'Works even with overlapping IP ranges · exposes only the service',cons:'Service access only — not general VPC-to-VPC routing',use:'Secure service access across VPCs with no public exposure',trans:'N/A'},
+    vpn:{name:'Site-to-Site VPN',icon:'🔐',color:'#ec7211',what:'Encrypted IPsec tunnel between an on-premises network and a VPC, over the Internet.',
+      pros:'Low cost, quick to set up',cons:'Depends on the public Internet · higher latency · limited bandwidth',use:'Small/medium workloads and backup connectivity',trans:'—'},
+    dx:{name:'Direct Connect',icon:'🛤️',color:'#e0564a',what:'A private, dedicated network link between your data centre and AWS.',
+      pros:'Predictable performance · low latency · high bandwidth',cons:'Takes longer to provision; not encrypted by itself',use:'Data-heavy apps, real-time workloads, hybrid cloud',trans:'—'},
+    hybrid:{name:'Direct Connect + VPN',icon:'🧩',color:'#12a87f',what:'Combines a dedicated Direct Connect line with VPN encryption on top.',
+      pros:'Stable high-speed link AND end-to-end encryption',cons:'Two services to configure and run',use:'When both reliability and strong encryption are required',trans:'—'},
+  };
+  connOrder = ['peering','tgw','privatelink','vpn','dx','hybrid'];
+
+  cloudData = {
+    peer:{name:'Direct peering',aws:{t:'AWS VPC Peering',d:'Private VPC-to-VPC link, same or cross-region. No transitive routing; CIDRs must not overlap.'},
+      az:{t:'Azure VNet Peering',d:'Private VNet-to-VNet over the Azure backbone. No bandwidth bottleneck; not transitive by default; cross-region transfer costs extra.'}},
+    hub:{name:'Hub-and-spoke',aws:{t:'AWS Transit Gateway',d:'Central hub with transitive routing between thousands of VPCs and on-prem networks.'},
+      az:{t:'Azure Virtual WAN hubs',d:'Central hubs connect VNets, branches and on-prem; Azure Firewall can be integrated for central security.'}},
+    global:{name:'Global WAN',aws:{t:'AWS Cloud WAN',d:'Policy-based (declarative) global network; automates multi-region routing; works with Transit Gateway.'},
+      az:{t:'Azure Virtual WAN',d:'Branch-to-branch, branch-to-Azure and VNet-to-VNet on Microsoft\u2019s global backbone; built-in VPN, SD-WAN and ExpressRoute.'}},
+    onprem:{name:'Dedicated private link',aws:{t:'AWS Direct Connect',d:'Dedicated private link from your data centre into AWS.'},
+      az:{t:'Azure ExpressRoute',d:'Dedicated private, low-latency connection from on-premises into Azure (via Virtual WAN gateways).'}},
+  };
+  cloudOrder = ['peer','hub','global','onprem'];
+
+  dragMeta = {
+    d1:{label:'Two dev VPCs that just need a simple, low-latency link',cat:'peering'},
+    d2:{label:'300 VPCs across regions that all need to reach each other',cat:'tgw'},
+    d3:{label:'Expose one payment API to a partner VPC with an overlapping CIDR',cat:'privatelink'},
+    d4:{label:'Data centre streaming terabytes daily with predictable latency',cat:'dx'},
+    d5:{label:'Route all inter-VPC traffic through one central firewall',cat:'tgw'},
+    d6:{label:'Reach a SaaS service privately without opening the whole VPC',cat:'privatelink'},
+    d7:{label:'Production and staging VPC — only these two, same region',cat:'peering'},
+    d8:{label:'Dedicated on-prem line that must also be encrypted end-to-end',cat:'dx'},
+  };
+  buckets = [
+    {k:'peering',name:'🔗 VPC Peering',bg:'#e9f6f1',border:'#c2e4da',fg:'#0e8f74'},
+    {k:'tgw',name:'🎯 Transit Gateway',bg:'#f5f2fe',border:'#ded3fb',fg:'#7a5cf0'},
+    {k:'privatelink',name:'🚪 PrivateLink',bg:'#eef4fd',border:'#cfdffa',fg:'#2e7fd4'},
+    {k:'dx',name:'🛤️ Direct Connect (+VPN)',bg:'#fdf2f0',border:'#f8d6d0',fg:'#e0564a'},
+  ];
+
+  quizDefs = {
+    q1:{question:'Which transport and port does BGP use to build a reliable session between two peers?',
+      options:[{label:'TCP port 179',correct:true},{label:'UDP port 179'},{label:'TCP port 443'},{label:'UDP port 53'}],
+      explanation:'BGP runs over TCP port 179, so the session gets TCP\u2019s reliability. The OPEN message then agrees the AS number and BGP version.'},
+    q2:{question:'In a large AS, iBGP\u2019s full-mesh requirement no longer scales. Which feature lets routers peer with one central device that redistributes routes?',
+      options:[{label:'AS path prepending'},{label:'MED'},{label:'Route reflectors',correct:true},{label:'Prefix filtering'}],
+      explanation:'Route reflectors cut the number of iBGP sessions: clients peer only with the reflector, which shares routes with the others. Confederations are the other option — splitting one AS into sub-ASes.'},
+    q3:{question:'A company has 200 VPCs across three regions and needs every VPC to reach every other with centrally managed routing. What fits best?',
+      options:[{label:'A full mesh of VPC peering connections'},{label:'AWS PrivateLink endpoints'},{label:'AWS Site-to-Site VPN'},{label:'AWS Transit Gateway',correct:true}],
+      explanation:'VPC peering is not transitive, so 200 VPCs would need 19,900 connections. Transit Gateway is a hub with transitive routing: one attachment per VPC, managed centrally.'},
+  };
+
+  glossary = [
+    {icon:'🌐',term:'BGP',def:'Border Gateway Protocol — exchanges routing information between Autonomous Systems.'},
+    {icon:'🏢',term:'Autonomous System (AS)',def:'A network under one administrative control, identified by an AS number.'},
+    {icon:'🤝',term:'BGP peering',def:'Two routers connected to exchange routing information.'},
+    {icon:'↔️',term:'eBGP',def:'BGP between routers in different Autonomous Systems.'},
+    {icon:'🔁',term:'iBGP',def:'BGP between routers inside the same Autonomous System.'},
+    {icon:'📨',term:'OPEN / UPDATE',def:'OPEN starts a session; UPDATE carries routes (NLRI + path attributes).'},
+    {icon:'⭐',term:'Local Preference',def:'Chooses the exit point from your AS — higher wins.'},
+    {icon:'🧭',term:'AS path',def:'The list of ASes a route passes through — shorter is preferred.'},
+    {icon:'🚪',term:'MED',def:'Multi-Exit Discriminator — a neighbour\u2019s hint for the preferred entry point; lower wins.'},
+    {icon:'➕',term:'AS path prepending',def:'Repeating your AS number to make a path look longer and less attractive.'},
+    {icon:'📦',term:'Route aggregation',def:'Combining many prefixes into one summary route.'},
+    {icon:'🪞',term:'Route reflector',def:'A router that redistributes iBGP routes, removing the full-mesh requirement.'},
+    {icon:'🔗',term:'VPC peering',def:'A private, non-transitive link between two VPCs.'},
+    {icon:'🎯',term:'Transit Gateway',def:'AWS hub that connects many VPCs and networks with transitive routing.'},
+    {icon:'🚪',term:'PrivateLink',def:'Private access to a specific service via interface endpoints.'},
+    {icon:'🛤️',term:'Direct Connect',def:'Dedicated private link from on-premises to AWS.'},
+    {icon:'🌍',term:'Cloud WAN',def:'AWS policy-based global network across regions.'},
+    {icon:'🔷',term:'Azure Virtual WAN',def:'Microsoft\u2019s hub-based global connectivity service.'},
+  ];
+
+  shuffle(a){ const r=a.slice(); for(let i=r.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [r[i],r[j]]=[r[j],r[i]]; } return r; }
+  ensureShuffles(){
+    if(this._qOrder) return;
+    this._qOrder={};
+    const used=[];
+    Object.keys(this.quizDefs).forEach(k=>{
+      const n=this.quizDefs[k].options.length; let ord, pos, tries=0;
+      do { ord=this.shuffle([...Array(n).keys()]); pos=ord.findIndex(ix=>this.quizDefs[k].options[ix].correct); tries++; }
+      while(used.includes(pos) && tries<12);
+      used.push(pos); this._qOrder[k]=ord;
+    });
+    let t, tries=0;
+    do { t=this.shuffle(Object.keys(this.dragMeta)); tries++; }
+    while(tries<12 && t.some((id,ix)=>ix>0 && this.dragMeta[id].cat===this.dragMeta[t[ix-1]].cat));
+    this._tray=t;
+  }
+
+  componentDidMount(){}
+  componentWillUnmount(){ window.removeEventListener('keydown', this.onKey); clearTimeout(this.t); }
+  ensureWiring(){
+    if(!this._kb){ this._kb=true; window.addEventListener('keydown', this.onKey); }
+    if(this._lastIdx!==this.state.idx || this._lastPlay!==this.state.playing){
+      this._lastIdx=this.state.idx; this._lastPlay=this.state.playing; this.scheduleAutoplay();
+    }
+  }
+  onKey = (e)=>{
+    const tag=(e.target&&e.target.tagName)||'';
+    if(tag==='INPUT'||tag==='TEXTAREA') return;
+    if(e.key==='ArrowRight'){ this.next(); }
+    else if(e.key==='ArrowLeft'){ this.prev(); }
+    else if(e.key===' '){ e.preventDefault(); this.togglePlay(); }
+  };
+
+  sceneCfg = [
+    {gap:22,center:true,pos:true},{gap:14},{gap:14},{gap:22,vcenter:true},{gap:13},
+    {gap:16},{gap:14},{gap:16},{gap:22,vcenter:true},{gap:16},
+    {gap:14},{gap:14},{gap:16},{gap:14},{gap:14},{gap:22,vcenter:true},{gap:18},
+  ];
+  sceneStyle(k){
+    const c=this.sceneCfg[k]; const on=this.state.idx===k;
+    const s={display:on?'flex':'none',flexDirection:'column',minHeight:'560px',gap:c.gap+'px',width:'100%'};
+    if(c.center){ s.alignItems='center'; s.justifyContent='center'; s.textAlign='center'; }
+    if(c.vcenter){ s.justifyContent='center'; }
+    if(c.pos){ s.position='relative'; }
+    return s;
+  }
+  scheduleAutoplay(){
+    clearTimeout(this.t);
+    const i=this.state.idx;
+    if(this.state.playing && !this.interactive.has(i) && i<this.total-1){
+      this.t=setTimeout(()=>this.next(), this.durations[i]||9000);
+    }
+  }
+
+  next=()=> this.setState(s=> s.idx<this.total-1 ? {idx:s.idx+1} : {playing:false});
+  prev=()=> this.setState(s=> ({idx:Math.max(0,s.idx-1)}));
+  goTo=(i)=>()=> this.setState({idx:i});
+  togglePlay=()=> this.setState(s=>({playing:!s.playing}));
+  startLesson=()=> this.setState({idx:1});
+  playFromStart=()=> this.setState({idx:1, playing:true});
+  toggleGlossary=()=> this.setState(s=>({glossary:!s.glossary}));
+
+  answer=(q,i)=> this.setState(s=> s.quiz[q]!=null ? null : ({quiz:{...s.quiz,[q]:i}}));
+  setBgpType=(k)=>()=> this.setState({bgpType:k});
+  fsmSeq(){ return this.state.fsmFail ? ['idle','connect','active','connect2','est'] : ['idle','connect','est']; }
+  fsmNext=()=> this.setState(s=>({fsm:Math.min(s.fsm+1,(s.fsmFail?5:3)-1)}));
+  fsmReset=()=> this.setState({fsm:0});
+  fsmToggleFail=()=> this.setState(s=>({fsmFail:!s.fsmFail, fsm:0}));
+  setPath=(k)=>()=> this.setState({path:k});
+  setN=(v)=>()=> this.setState({n:v});
+  setVpcs=(v)=>()=> this.setState({vpcs:v});
+  setConn=(k)=>()=> this.setState({conn:k});
+  setCloud=(k)=>()=> this.setState({cloud:k});
+
+  pick=(id)=>()=> this.setState(s=>({sel: s.sel===id?null:id}));
+  drop=(b)=>()=> this.setState(s=>{ if(!s.sel) return null; return {drops:{...s.drops,[s.sel]:b}, sel:null}; });
+  toTray=(id)=>(e)=>{ if(e&&e.stopPropagation) e.stopPropagation(); this.setState(s=>({drops:{...s.drops,[id]:null}, sel:null})); };
+  checkDrag=()=> this.setState({dragChecked:true, sel:null});
+  resetDrag=()=> this.setState({drops:{}, dragChecked:false, sel:null});
+
+  buildQuiz(qKey){
+    const def=this.quizDefs[qKey]; const sel=this.state.quiz[qKey];
+    const options=this._qOrder[qKey].map(i=>{
+      const o=def.options[i];
+      let bg='#fff',fg='#1d2b2a',border='#e2ebe8',mark='';
+      if(sel!=null){
+        if(o.correct){ bg='#e4f5ed';fg='#0a6b50';border='#19c39a';mark='✓'; }
+        else if(i===sel){ bg='#fdeceb';fg='#c2362b';border='#ff6b5e';mark='✗'; }
+        else { fg='#97a8a4';border='#eef3f1'; }
+      }
+      return {label:o.label,bg,fg,border,mark,onClick:()=>this.answer(qKey,i)};
+    });
+    const answered=sel!=null;
+    const isCorrect=answered && def.options[sel].correct;
+    return {question:def.question,options,answered,isCorrect,explanation:def.explanation,
+      banner: !answered ? '' : (isCorrect?'✅ Correct!':'❌ Not quite —'),
+      bannerBg: !answered ? '' : (isCorrect?'#e4f5ed':'#fdeceb'),
+      bannerFg: !answered ? '' : (isCorrect?'#0a6b50':'#c2362b')};
+  }
+
+  buildDragItem(id, place){
+    const m=this.dragMeta[id]; const drops=this.state.drops; const checked=this.state.dragChecked;
+    const selected=this.state.sel===id;
+    let bg='#fff',fg='#1d2b2a',border='#d5e6e0',mark='';
+    if(checked && place!=='tray'){
+      const ok=drops[id]===m.cat;
+      bg=ok?'#e4f5ed':'#fdeceb'; fg=ok?'#0a6b50':'#c2362b'; border=ok?'#19c39a':'#ff6b5e'; mark=ok?'✓':'✗';
+    } else if(selected){ bg='#e4f3ee'; border='#0e8f74'; }
+    const onClick = place==='tray' ? this.pick(id) : this.toTray(id);
+    return {id,label:m.label,bg,fg,border,mark,selected,onClick};
+  }
+
+  fmt(n){ return n.toLocaleString('en-GB'); }
+
+  renderVals(){
+    this.ensureWiring();
+    this.ensureShuffles();
+    const i=this.state.idx;
+    const accent=this.chapColors[i]||'#0e8f74';
+    const sc={}; for(let k=0;k<this.total;k++) sc['sc'+k]=this.sceneStyle(k);
+    const chapters=this.chapTitles.map((t,k)=>({num:k+1,label:t,onClick:this.goTo(k),bg: k===i?this.chapColors[k] : (k<i?'#9ab9b1':'#d3e3de')}));
+
+    const bgpTypeTabs=['ebgp','ibgp'].map(k=>{ const B=this.bgpTypes[k]; const on=this.state.bgpType===k;
+      return {k,name:B.name,onClick:this.setBgpType(k),bg:on?B.color:'#f2f7f5',fg:on?'#fff':'#33534c',border:on?B.color:'#e2ebe8'}; });
+
+    const seq=this.fsmSeq(); const f=this.state.fsm;
+    const fsmPath=seq.map((k,ix)=>{ const S=this.fsmStates[k];
+      const cur=ix===f, done=ix<f, isEst=k==='est', isAct=k==='active';
+      let bg='#f8fafa',fg='#a9bcb7',border='#e8f1ee';
+      if(cur){ bg=isEst?'#0e8f74':(isAct?'#e0564a':'#7a5cf0'); fg='#fff'; border=bg; }
+      else if(done){ bg='#f2f7f5'; fg='#4c6660'; border='#dcebe6'; }
+      return {name:S.name,bg,fg,border,arrow: ix<seq.length-1?'→':''}; });
+    const fsmCur=this.fsmStates[seq[f]];
+
+    const ps=this.pathScenarios[this.state.path];
+    const pathTabs=this.pathOrder.map(k=>{ const on=this.state.path===k;
+      return {k,name:this.pathScenarios[k].name,onClick:this.setPath(k),bg:on?'#ec7211':'#f2f7f5',fg:on?'#fff':'#33534c',border:on?'#ec7211':'#e2ebe8'}; });
+    const pathRows=this.pathAttrs.map((A,ix)=>{
+      let state,bg,sFg,aFg='#3c4a58',bFg='#3c4a58';
+      if(ix<ps.decide){ state='tie → next'; bg='#fff'; sFg='#8ba39e'; }
+      else if(ix===ps.decide){ state='decides: '+ps.winner+' wins'; bg='#fff7ef'; sFg='#c26a0a';
+        if(ps.winner==='A'){ aFg='#0a6b50'; bFg='#c2453a'; } else { bFg='#0a6b50'; aFg='#c2453a'; } }
+      else { state='not checked'; bg='#f8fafa'; sFg='#b6ccc6'; aFg='#b6ccc6'; bFg='#b6ccc6'; }
+      return {name:A.name,rule:A.rule,a:ps.vals.a[ix],b:ps.vals.b[ix],state,bg,sFg,aFg,bFg};
+    });
+
+    const n=this.state.n;
+    const nChips=[3,5,10,20,50,100].map(v=>({v:String(v),onClick:this.setN(v),bg:v===n?'#e0564a':'#f2f7f5',fg:v===n?'#fff':'#33534c',border:v===n?'#e0564a':'#e2ebe8'}));
+    const meshCount=n*(n-1)/2, rrCount=n-1;
+    const meshInfo={n:String(n),mesh:this.fmt(meshCount),rr:this.fmt(rrCount),
+      rrW:Math.max(2,Math.round(rrCount/meshCount*100))+'%',
+      saved: meshCount>rrCount ? this.fmt(meshCount-rrCount)+' fewer sessions with a route reflector' : 'Too small to matter'};
+
+    const v=this.state.vpcs;
+    const vChips=[4,10,25,50,100,500].map(x=>({v:String(x),onClick:this.setVpcs(x),bg:x===v?'#0e8f74':'#f2f7f5',fg:x===v?'#fff':'#33534c',border:x===v?'#0e8f74':'#e2ebe8'}));
+    const vMesh=v*(v-1)/2;
+    const vpcInfo={v:String(v),mesh:this.fmt(vMesh),tgw:this.fmt(v),routes:this.fmt(v*(v-1)),
+      tgwW:Math.max(2,Math.round(v/vMesh*100))+'%'};
+
+    const connList=this.connOrder.map(k=>{ const C=this.connData[k]; const on=this.state.conn===k;
+      return {k,name:C.name,icon:C.icon,onClick:this.setConn(k),bg:on?C.color:'#f2f7f5',fg:on?'#fff':'#33534c',border:on?C.color:'#e2ebe8'}; });
+
+    const cloudTabs=this.cloudOrder.map(k=>{ const on=this.state.cloud===k;
+      return {k,name:this.cloudData[k].name,onClick:this.setCloud(k),bg:on?'#2e7fd4':'#f2f7f5',fg:on?'#fff':'#33534c',border:on?'#2e7fd4':'#e2ebe8'}; });
+
+    const tray=this._tray.filter(id=>this.state.drops[id]==null).map(id=>this.buildDragItem(id,'tray'));
+    const bucketList=this.buckets.map(B=>({...B,onClick:this.drop(B.k),
+      items:this._tray.filter(id=>this.state.drops[id]===B.k).map(id=>this.buildDragItem(id,B.k))}));
+    const total=Object.keys(this.dragMeta).length;
+    const correct=Object.keys(this.dragMeta).filter(id=>this.state.drops[id]===this.dragMeta[id].cat).length;
+
+    return {
+      ...sc,
+      progressPct: Math.round(i/(this.total-1)*100)+'%',
+      accent, sceneNum:i+1, total:this.total, sceneTitle:this.chapTitles[i], chapters,
+      next:this.next, prev:this.prev, togglePlay:this.togglePlay,
+      playLabel: this.state.playing?'⏸ Pause':'▶ Play',
+      startLesson:this.startLesson, playFromStart:this.playFromStart,
+      glossaryOpen:this.state.glossary, toggleGlossary:this.toggleGlossary, glossary:this.glossary,
+      bgpTypeTabs, bgpType:this.bgpTypes[this.state.bgpType],
+      fsmPath, fsmCur, fsmNext:this.fsmNext, fsmReset:this.fsmReset, fsmToggleFail:this.fsmToggleFail,
+      fsmFailLabel: this.state.fsmFail?'⚠️ TCP failure: ON':'Simulate TCP failure',
+      fsmFailBorder: this.state.fsmFail?'#e0564a':'#d5e6e0', fsmFailFg: this.state.fsmFail?'#c2362b':'#4c6660',
+      pathTabs, pathRows, pathInfo:ps,
+      nChips, meshInfo, vChips, vpcInfo,
+      connList, connInfo:this.connData[this.state.conn],
+      cloudTabs, cloudInfo:this.cloudData[this.state.cloud],
+      q1:this.buildQuiz('q1'), q2:this.buildQuiz('q2'), q3:this.buildQuiz('q3'),
+      dragTray:tray, bucketList,
+      checkDrag:this.checkDrag, resetDrag:this.resetDrag, dragChecked:this.state.dragChecked,
+      dragScore:correct+' / '+total+' correct', dragScoreBg: correct===total?'#e4f5ed':'#fff4e8', dragScoreFg: correct===total?'#0a6b50':'#d98a18',
+    };
+  }
+}
+</script>
+</body>
+</html>
