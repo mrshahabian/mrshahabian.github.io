@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{background:#edf5f2;font-family:'Figtree',system-ui,sans-serif;color:#1d2b2a;-webkit-font-smoothing:antialiased}
+  a{color:#0e8f74}
+  a:hover{color:#0a6b57}
+  @keyframes floatA{0%,100%{transform:translateY(0) translateX(0)}50%{transform:translateY(-22px) translateX(10px)}}
+  @keyframes floatB{0%,100%{transform:translateY(0)}50%{transform:translateY(26px)}}
+  ::-webkit-scrollbar{width:10px;height:10px}
+  ::-webkit-scrollbar-thumb{background:#c2dcd4;border-radius:8px}
+</style>
+</helmet>
+<div style="min-height:100vh;position:relative;overflow-x:hidden;display:flex;flex-direction:column;align-items:center">
+
+  <div style="position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden">
+    <div style="position:absolute;top:12%;left:6%;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#ffffff,#d3ece3);opacity:.55;filter:blur(2px);animation:floatA 13s ease-in-out infinite"></div>
+    <div style="position:absolute;top:58%;left:80%;width:280px;height:280px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#ffffff,#e6dcfb);opacity:.45;filter:blur(2px);animation:floatB 17s ease-in-out infinite"></div>
+  </div>
+
+  <div style="position:sticky;top:0;z-index:30;width:100%;display:flex;justify-content:center;background:rgba(237,245,242,.85);backdrop-filter:blur(10px);border-bottom:1px solid #d5e6e0">
+    <div style="width:100%;max-width:1180px;display:flex;align-items:center;gap:20px;padding:14px 24px">
+      <div style="display:flex;align-items:center;gap:10px;font-family:'Bricolage Grotesque';font-weight:800;font-size:18px;color:#1d2b2a;white-space:nowrap">
+        <span style="font-size:22px">🎬</span><span>HLS &amp; DASH Streaming</span>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;gap:6px;min-width:0">
+        <div style="height:8px;border-radius:99px;background:#d3e3de;overflow:hidden">
+          <div style="height:100%;border-radius:99px;transition:width .45s cubic-bezier(.22,.9,.3,1);width:{{ progressPct }};background:{{ accent }}"></div>
+        </div>
+        <div style="display:flex;gap:5px;flex-wrap:wrap">
+          <sc-for list="{{ chapters }}" as="c" hint-placeholder-count="17">
+            <button onClick="{{ c.onClick }}" title="{{ c.label }}" style="width:18px;height:18px;border:none;border-radius:50%;cursor:pointer;padding:0;font-size:9px;font-weight:700;color:#fff;line-height:18px;transition:transform .15s;background:{{ c.bg }}" style-hover="transform:scale(1.25)">{{ c.num }}</button>
+          </sc-for>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;white-space:nowrap">
+        <button onClick="{{ toggleGlossary }}" style="display:flex;align-items:center;gap:6px;background:#fff;border:1px solid #d5e6e0;border-radius:11px;padding:9px 14px;font-family:'Figtree';font-weight:600;font-size:14px;color:#33534c;cursor:pointer" style-hover="border-color:#0e8f74;color:#0e8f74">📖 Glossary</button>
+        <button onClick="{{ togglePlay }}" style="display:flex;align-items:center;gap:7px;background:{{ accent }};border:none;border-radius:11px;padding:10px 16px;font-family:'Bricolage Grotesque';font-weight:700;font-size:14px;color:#fff;cursor:pointer" style-hover="filter:brightness(1.06)">{{ playLabel }}</button>
+      </div>
+    </div>
+  </div>
+
+  <div style="width:100%;max-width:1180px;padding:30px 24px 16px;z-index:5">
+    <div style="position:relative;width:100%;background:#fff;border-radius:30px;box-shadow:0 24px 60px -28px rgba(20,70,60,.32),0 2px 0 #ffffff inset;padding:52px 56px;min-height:580px;overflow:hidden">
+
+      <section data-scene data-screen-label="Welcome" style="{{ sc0 }}">
+        <div style="position:absolute;top:0;right:8%;font-size:40px;animation:floatA 9s ease-in-out infinite">📺</div>
+        <div style="position:absolute;bottom:6%;left:6%;font-size:34px;animation:floatB 11s ease-in-out infinite">📶</div>
+        <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.22em;text-transform:uppercase;font-weight:700;color:#0e8f74">Interactive Lesson</div>
+        <h1 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:56px;line-height:1.02;margin:0;max-width:18ch;letter-spacing:-.02em">Video Streaming with <span style="background:linear-gradient(120deg,#0e8f74,#7a5cf0);-webkit-background-clip:text;background-clip:text;color:transparent">HLS &amp; DASH</span></h1>
+        <p style="font-size:20px;line-height:1.55;color:#4c6660;max-width:68ch;margin:0">How on-demand and live video really reaches a viewer over a CDN — segments, playlists, adaptive bitrate, ad breaks, and the two protocols behind almost every stream you watch.</p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:4px">
+          <span style="background:#e4f3ee;border:1px solid #c2e4da;border-radius:99px;padding:8px 16px;font-weight:600;font-size:15px;color:#0e8f74">⏱️ ~30 min</span>
+          <span style="background:#eaf1fd;border:1px solid #cfdffa;border-radius:99px;padding:8px 16px;font-weight:600;font-size:15px;color:#2e7fd4">📑 17 chapters</span>
+          <span style="background:#fdeeed;border:1px solid #ffd9d5;border-radius:99px;padding:8px 16px;font-weight:600;font-size:15px;color:#e0564a">🧠 3 quizzes</span>
+          <span style="background:#fef4e8;border:1px solid #ffe6c2;border-radius:99px;padding:8px 16px;font-weight:600;font-size:15px;color:#d98a18">🎯 ABR simulator</span>
+        </div>
+        <div style="display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-top:14px">
+          <button onClick="{{ startLesson }}" style="background:#0e8f74;color:#fff;border:none;border-radius:15px;padding:18px 34px;font-family:'Bricolage Grotesque';font-weight:700;font-size:18px;cursor:pointer;box-shadow:0 12px 24px -8px rgba(14,143,116,.6)" style-hover="transform:translateY(-2px)">Start lesson →</button>
+          <button onClick="{{ playFromStart }}" style="background:#fff;color:#0e8f74;border:2px solid #b5ded2;border-radius:15px;padding:16px 30px;font-family:'Bricolage Grotesque';font-weight:700;font-size:18px;cursor:pointer" style-hover="border-color:#0e8f74;background:#f4fbf8">▶ Play as video</button>
+        </div>
+        <div style="margin-top:18px;display:flex;align-items:center;gap:10px;background:#f3f9f7;border:1px solid #dcebe6;border-radius:99px;padding:8px 8px 8px 18px">
+          <span style="font-size:14px;color:#6a857f">Prepared by</span>
+          <span style="background:#1d2b2a;color:#fff;border-radius:99px;padding:7px 16px;font-weight:700;font-size:14px;font-family:'Bricolage Grotesque'">Reza Shahabian</span>
+        </div>
+      </section>
+
+      <section data-scene data-screen-label="Types of streaming content" style="{{ sc1 }}">
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#2e7fd4">🎯 Try it · Three kinds of content</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:38px;line-height:1.04;margin:0;letter-spacing:-.01em">Not all video is delivered the same way</h2>
+          <p style="font-size:16px;line-height:1.55;color:#4c6660;margin:0">Online content falls into three categories, each with its own delivery strategy. <b>Tap each one.</b></p>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <sc-for list="{{ ctList }}" as="c" hint-placeholder-count="3">
+            <button onClick="{{ c.onClick }}" style="flex:1;min-width:200px;display:flex;align-items:center;justify-content:center;gap:9px;border-radius:13px;padding:14px 18px;cursor:pointer;transition:all .15s;border:2px solid {{ c.border }};background:{{ c.bg }};color:{{ c.fg }}"><span style="font-size:20px">{{ c.icon }}</span><span style="font-family:'Bricolage Grotesque';font-weight:800;font-size:15px">{{ c.name }}</span></button>
+          </sc-for>
+        </div>
+        <div style="background:#f6faf9;border:2px solid #dcebe6;border-radius:20px;padding:24px;display:grid;grid-template-columns:repeat(3,1fr);gap:14px">
+          <div style="display:flex;flex-direction:column;gap:5px"><div style="font-size:11px;font-weight:800;letter-spacing:.08em;color:#8ba39e">EXAMPLES</div><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:18px;color:{{ ctInfo.color }}">{{ ctInfo.ex }}</div></div>
+          <div style="display:flex;flex-direction:column;gap:5px"><div style="font-size:11px;font-weight:800;letter-spacing:.08em;color:#8ba39e">STRATEGY</div><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:18px;color:{{ ctInfo.color }}">{{ ctInfo.strategy }}</div></div>
+          <div style="display:flex;flex-direction:column;gap:5px"><div style="font-size:11px;font-weight:800;letter-spacing:.08em;color:#8ba39e">WHY</div><div style="font-size:14.5px;line-height:1.5;color:#3c4a58">{{ ctInfo.why }}</div></div>
+        </div>
+        <div style="background:#e9f6f1;border:1px solid #c2e4da;border-radius:16px;padding:16px 20px;font-size:14.5px;line-height:1.55;color:#33534c">📶 <b>ABR (Adaptive Bitrate Streaming)</b> keeps playback uninterrupted by adapting video quality to the viewer's current network conditions — the idea at the heart of both HLS and DASH.</div>
+      </section>
+
+      <section data-scene data-screen-label="Codecs and latency" style="{{ sc2 }}">
+        <div style="display:flex;flex-direction:column;gap:7px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#7a5cf0">Chapter 02 · Squeezing and trading off</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:38px;line-height:1.04;margin:0;letter-spacing:-.01em">Codecs &amp; the latency–quality trade-off</h2>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+          <div style="background:#f5f2fe;border:2px solid #ded3fb;border-radius:18px;padding:20px;display:flex;flex-direction:column;gap:10px">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:16px;color:#7a5cf0">🗜️ Codecs (compress / decompress)</div>
+            <div style="background:#fff;border:1px solid #ded3fb;border-radius:12px;padding:12px 14px;font-size:13.5px;line-height:1.5;color:#3c4a58"><b>H.264 (video) + AAC (audio)</b> — the widely compatible default with a good quality balance.</div>
+            <div style="background:#fff;border:1px solid #ded3fb;border-radius:12px;padding:12px 14px;font-size:13.5px;line-height:1.5;color:#3c4a58"><b>HEVC (H.265)</b> — better for high-quality 4K/8K content, but more limited device adoption.</div>
+          </div>
+          <div style="background:#fff7ef;border:2px solid #ffe0c2;border-radius:18px;padding:20px;display:flex;flex-direction:column;gap:10px">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:16px;color:#ec7211">⚖️ Latency vs quality</div>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <div style="display:flex;justify-content:space-between;align-items:center;background:#fff;border:1px solid #ffe0c2;border-radius:11px;padding:10px 13px;font-size:13px"><b>🏟️ Live sport / events</b><span style="font-weight:800;color:#e0564a">latency critical</span></div>
+              <div style="display:flex;justify-content:space-between;align-items:center;background:#fff;border:1px solid #ffe0c2;border-radius:11px;padding:10px 13px;font-size:13px"><b>🎬 On-demand film</b><span style="font-weight:800;color:#0e8f74">quality first</span></div>
+            </div>
+            <div style="font-size:13px;line-height:1.5;color:#8a5f21">ABR technologies like HLS help reduce latency, but ultra-low latency for real-time interactivity is still hard.</div>
+          </div>
+        </div>
+        <div style="background:#f3f9f7;border:1px solid #dcebe6;border-radius:14px;padding:13px 19px;font-size:13.5px;color:#33534c">💡 Rule of thumb: a few seconds of delay is invisible on a movie — but if your neighbour cheers a goal before you see it, live latency has failed.</div>
+      </section>
+
+      <section data-scene data-screen-label="How HLS works" style="{{ sc3 }}">
+        <div style="display:flex;flex-direction:column;gap:7px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#0e8f74">Chapter 03 · HTTP Live Streaming</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:38px;line-height:1.04;margin:0;letter-spacing:-.01em">How HLS works</h2>
+          <p style="font-size:16px;line-height:1.55;color:#4c6660;margin:0;max-width:88ch">HLS adapts media quality to changing bandwidth for smooth playback, and supports encryption, captions and alternative audio tracks. It works efficiently on Apple devices and many other platforms.</p>
+        </div>
+        <div style="background:#1d2b2a;border-radius:18px;padding:22px;display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap">
+          <div style="background:#2f4340;color:#fff;border-radius:12px;padding:12px 14px;text-align:center"><div style="font-size:20px">🎥</div><div style="font-size:11.5px;font-weight:800">Source video</div></div>
+          <span style="color:#8fb8ac;font-weight:800">→</span>
+          <div style="background:#7a5cf0;color:#fff;border-radius:12px;padding:12px 14px;text-align:center"><div style="font-size:20px">🗜️</div><div style="font-size:11.5px;font-weight:800">Encoder</div><div style="font-size:10px;opacity:.85">H.264 + AAC</div></div>
+          <span style="color:#8fb8ac;font-weight:800">→</span>
+          <div style="background:#ec7211;color:#fff;border-radius:12px;padding:12px 14px;text-align:center"><div style="font-size:20px">✂️</div><div style="font-size:11.5px;font-weight:800">Segmenter</div><div style="font-size:10px;opacity:.85">.ts chunks + .m3u8</div></div>
+          <span style="color:#8fb8ac;font-weight:800">→</span>
+          <div style="background:#0e8f74;color:#fff;border-radius:12px;padding:12px 14px;text-align:center"><div style="font-size:20px">🌍</div><div style="font-size:11.5px;font-weight:800">CDN edge</div><div style="font-size:10px;opacity:.85">plain HTTP caching</div></div>
+          <span style="color:#8fb8ac;font-weight:800">→</span>
+          <div style="background:#2e7fd4;color:#fff;border-radius:12px;padding:12px 14px;text-align:center"><div style="font-size:20px">📱</div><div style="font-size:11.5px;font-weight:800">Player</div><div style="font-size:10px;opacity:.85">reads playlist, fetches chunks</div></div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
+          <div style="background:#e9f6f1;border:1px solid #c2e4da;border-radius:14px;padding:15px;font-size:13.5px;line-height:1.5;color:#3c4a58"><b style="color:#0e8f74">✂️ Segments</b><br/>The video is cut into short files (often .ts), a few seconds each.</div>
+          <div style="background:#eef4fd;border:1px solid #cfdffa;border-radius:14px;padding:15px;font-size:13.5px;line-height:1.5;color:#3c4a58"><b style="color:#2e7fd4">📜 Playlist (.m3u8)</b><br/>A text file listing the segments in order — the player follows it.</div>
+          <div style="background:#fff7ef;border:1px solid #ffe0c2;border-radius:14px;padding:15px;font-size:13.5px;line-height:1.5;color:#3c4a58"><b style="color:#8a5f21">🌍 Just HTTP</b><br/>Because it's ordinary HTTP, any CDN can cache and serve it — that's why it scales.</div>
+        </div>
+      </section>
+
+      <section data-scene data-screen-label="VOD playlist inspector" style="{{ sc4 }}">
+        <div style="display:flex;flex-direction:column;gap:5px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#ec7211">🎯 Try it · Read a real playlist</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:32px;line-height:1.05;margin:0">Video-on-demand playlist inspector</h2>
+          <p style="font-size:14.5px;color:#4c6660;margin:0"><b>Click any line</b> of the playlist to see what it does.</p>
+        </div>
+        <div style="display:grid;grid-template-columns:1.15fr .85fr;gap:16px;align-items:start">
+          <div style="background:#1d2b2a;border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:2px">
+            <sc-for list="{{ vodLines }}" as="l" hint-placeholder-count="12">
+              <button onClick="{{ l.onClick }}" style="text-align:left;border:none;border-radius:7px;padding:5px 10px;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:12.5px;transition:background .15s;background:{{ l.bg }};color:{{ l.fg }}">{{ l.text }}</button>
+            </sc-for>
+          </div>
+          <div style="background:#fff7ef;border:2px solid #ffe0c2;border-radius:18px;padding:22px;display:flex;flex-direction:column;gap:10px;min-height:240px">
+            <div style="font-family:'JetBrains Mono',monospace;font-weight:600;font-size:14px;color:#c26a0a;word-break:break-all">{{ vodCur.tag }}</div>
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:19px;color:#1d2b2a">{{ vodCur.title }}</div>
+            <p style="margin:0;font-size:14.5px;line-height:1.6;color:#3c4a58">{{ vodCur.d }}</p>
+          </div>
+        </div>
+        <div style="font-size:13px;color:#4c6660">💡 Total running time = 10 + 10 + 10 + 9 = <b>39 seconds</b>. Every EXTINF must be ≤ the target duration (10).</div>
+      </section>
+
+      <section data-scene data-screen-label="Quick check 1" style="{{ sc5 }}">
+        <div style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#d98a18">🧠 Knowledge check</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:30px;line-height:1.2;margin:0;max-width:40ch">{{ q1.question }}</h2>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:840px;width:100%;margin:0 auto">
+          <sc-for list="{{ q1.options }}" as="o" hint-placeholder-count="4">
+            <button onClick="{{ o.onClick }}" style="display:flex;align-items:center;justify-content:space-between;gap:10px;text-align:left;border-radius:15px;padding:18px 20px;font-family:'Figtree';font-weight:600;font-size:15.5px;cursor:pointer;transition:all .15s;border:2px solid {{ o.border }};background:{{ o.bg }};color:{{ o.fg }}"><span>{{ o.label }}</span><span style="font-weight:800;font-size:18px">{{ o.mark }}</span></button>
+          </sc-for>
+        </div>
+        <sc-if value="{{ q1.answered }}" hint-placeholder-val="{{ false }}">
+          <div style="max-width:840px;width:100%;margin:0 auto;border-radius:16px;padding:18px 22px;background:{{ q1.bannerBg }}">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:17px;color:{{ q1.bannerFg }};margin-bottom:5px">{{ q1.banner }}</div>
+            <div style="font-size:16px;line-height:1.55;color:#33534c">{{ q1.explanation }}</div>
+          </div>
+        </sc-if>
+      </section>
+
+      <section data-scene data-screen-label="Live sliding window" style="{{ sc6 }}">
+        <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:14px;flex-wrap:wrap">
+          <div style="display:flex;flex-direction:column;gap:4px">
+            <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#e0564a">🎯 Try it · Live streaming</div>
+            <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:32px;line-height:1.05;margin:0">The sliding-window playlist</h2>
+            <p style="font-size:14.5px;color:#4c6660;margin:0">For a live broadcast, the playlist is a moving window. <b>Advance time</b> and watch it slide.</p>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:14px;color:#e0564a;background:#fdf2f0;border-radius:10px;padding:10px 14px">{{ winInfo.time }}</div>
+            <button onClick="{{ winReset }}" style="background:#fff;border:1px solid #d5e6e0;border-radius:10px;padding:10px 13px;font-family:'Figtree';font-weight:600;font-size:13px;color:#4c6660;cursor:pointer">↺</button>
+            <button onClick="{{ winNext }}" style="background:#e0564a;border:none;border-radius:10px;padding:10px 17px;font-family:'Bricolage Grotesque';font-weight:700;font-size:13.5px;color:#fff;cursor:pointer">+10 s ▶</button>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start">
+          <div style="background:#1d2b2a;border-radius:16px;padding:16px;font-family:'JetBrains Mono',monospace;font-size:12.5px;line-height:1.75;color:#8fb8ac">
+            <div style="color:#ffcf9e">#EXTM3U</div>
+            <div style="color:#ffcf9e">#EXT-X-TARGETDURATION:10</div>
+            <div style="color:#ffcf9e">#EXT-X-VERSION:4</div>
+            <div style="color:#ffcf6b;font-weight:600">#EXT-X-MEDIA-SEQUENCE:{{ winInfo.seq }}</div>
+            <sc-for list="{{ winSegs }}" as="s" hint-placeholder-count="5">
+              <div><span style="color:#ffcf9e">#EXTINF:10.0,</span></div>
+              <div style="display:flex;align-items:center;gap:8px"><span style="border-radius:6px;padding:1px 7px;background:{{ s.bg }};color:{{ s.fg }}">{{ s.name }}</span><span style="font-family:'Figtree';font-size:10px;font-weight:800;color:#19c39a">{{ s.tag }}</span></div>
+            </sc-for>
+            <div style="color:#5d7a74;font-style:italic">— no #EXT-X-ENDLIST —</div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <div style="background:#fdf2f0;border:1px solid #f8d6d0;border-radius:13px;padding:13px 16px;font-size:14px;line-height:1.5;color:#3c4a58"><b style="color:#c2453a">➖ </b>{{ winInfo.removed }}</div>
+            <div style="background:#e9f6f1;border:1px solid #c2e4da;border-radius:13px;padding:13px 16px;font-size:14px;line-height:1.5;color:#3c4a58"><b style="color:#0a6b50">➕ </b>{{ winInfo.added }}</div>
+            <div style="background:#f6faf9;border:1px solid #dcebe6;border-radius:13px;padding:13px 16px;font-size:13.5px;line-height:1.55;color:#3c4a58"><b>Rules:</b> MEDIA-SEQUENCE goes up by 1 for every segment removed · segments are removed in the order they appear · always use floating-point EXTINF durations (version 3+) to avoid round-off when seeking.</div>
+          </div>
+        </div>
+      </section>
+
+      <section data-scene data-screen-label="ABR simulator" style="{{ sc7 }}">
+        <div style="display:flex;flex-direction:column;gap:5px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#0e8f74">🎯 Try it · Multivariant playlists</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:32px;line-height:1.05;margin:0">Adaptive bitrate simulator</h2>
+          <p style="font-size:14.5px;color:#4c6660;margin:0">A <b>multivariant playlist</b> lists every bitrate version of the stream. <b>Change the viewer's bandwidth</b> and watch the player switch.</p>
+        </div>
+        <div style="display:flex;gap:7px;flex-wrap:wrap;align-items:center">
+          <span style="font-size:13px;font-weight:700;color:#4c6660">📶 Measured bandwidth:</span>
+          <sc-for list="{{ bwChips }}" as="c" hint-placeholder-count="5">
+            <button onClick="{{ c.onClick }}" style="border-radius:10px;padding:9px 14px;cursor:pointer;font-family:'Bricolage Grotesque';font-weight:800;font-size:13.5px;border:2px solid {{ c.border }};background:{{ c.bg }};color:{{ c.fg }}">{{ c.v }}</button>
+          </sc-for>
+        </div>
+        <div style="display:grid;grid-template-columns:1.25fr .75fr;gap:16px;align-items:stretch">
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <sc-for list="{{ variantRows }}" as="v" hint-placeholder-count="5">
+              <div style="display:grid;grid-template-columns:.9fr 1fr 1fr 1.6fr .9fr;align-items:center;gap:8px;border-radius:11px;padding:10px 14px;transition:all .2s;background:{{ v.bg }};color:{{ v.fg }};border:2px solid {{ v.border }}">
+                <span style="font-family:'Bricolage Grotesque';font-weight:800;font-size:14px">{{ v.name }}</span>
+                <span style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600">{{ v.bwLabel }}</span>
+                <span style="font-size:12px;font-weight:600">{{ v.res }}</span>
+                <span style="font-family:'JetBrains Mono',monospace;font-size:11px">{{ v.url }}</span>
+                <span style="font-size:11px;font-weight:800;text-align:right">{{ v.state }}</span>
+              </div>
+            </sc-for>
+          </div>
+          <div style="background:#1d2b2a;border-radius:16px;padding:18px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:8px;text-align:center">
+            <div style="font-size:30px">📺</div>
+            <div style="font-size:10.5px;font-weight:800;letter-spacing:.08em;color:#8fb8ac">NOW PLAYING</div>
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:26px;color:#fff">{{ chosenName }}</div>
+            <div style="font-size:13px;font-weight:700;color:#9be3cc">{{ chosenRes }} · {{ chosenBw }}</div>
+          </div>
+        </div>
+        <div style="background:#e9f6f1;border:1px solid #c2e4da;border-radius:14px;padding:13px 19px;font-size:14px;line-height:1.5;color:#33534c">{{ abrNote }}</div>
+      </section>
+
+      <section data-scene data-screen-label="Variant attributes" style="{{ sc8 }}">
+        <div style="display:flex;flex-direction:column;gap:7px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#2e7fd4">Chapter 08 · Inside EXT-X-STREAM-INF</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:36px;line-height:1.04;margin:0;letter-spacing:-.01em">Describing each variant</h2>
+        </div>
+        <div style="background:#1d2b2a;border-radius:14px;padding:13px 16px;font-family:'JetBrains Mono',monospace;font-size:12px;line-height:1.7;color:#cfe5df;word-break:break-all">
+          <div style="color:#ffcf9e">#EXTM3U</div>
+          <div><span style="color:#ffcf6b">#EXT-X-STREAM-INF:</span>BANDWIDTH=640000,RESOLUTION=640x360,CODECS="avc1.42e00a,mp4a.40.2"</div>
+          <div style="color:#9be3cc">http://example.com/high/index.m3u8</div>
+        </div>
+        <div style="font-size:13.5px;color:#4c6660"><b>#EXT-X-STREAM-INF</b> says the next URL is <i>another playlist</i> — one per bitrate. Its parameters:</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          <sc-for list="{{ attrs }}" as="a" hint-placeholder-count="7">
+            <div style="background:#f6faf9;border:1px solid #dcebe6;border-radius:12px;padding:11px 14px;display:flex;flex-direction:column;gap:3px">
+              <div style="display:flex;justify-content:space-between;gap:8px;align-items:center"><span style="font-family:'JetBrains Mono',monospace;font-weight:600;font-size:12.5px;color:#2e7fd4">{{ a.k }}</span><span style="font-size:10.5px;font-weight:800;color:#8ba39e">{{ a.req }}</span></div>
+              <div style="font-size:12.5px;line-height:1.45;color:#3c4a58">{{ a.d }}</div>
+            </div>
+          </sc-for>
+        </div>
+      </section>
+
+      <section data-scene data-screen-label="Quick check 2" style="{{ sc9 }}">
+        <div style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#d98a18">🧠 Knowledge check</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:30px;line-height:1.2;margin:0;max-width:40ch">{{ q2.question }}</h2>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:840px;width:100%;margin:0 auto">
+          <sc-for list="{{ q2.options }}" as="o" hint-placeholder-count="4">
+            <button onClick="{{ o.onClick }}" style="display:flex;align-items:center;justify-content:space-between;gap:10px;text-align:left;border-radius:15px;padding:18px 20px;font-family:'Figtree';font-weight:600;font-size:15.5px;cursor:pointer;transition:all .15s;border:2px solid {{ o.border }};background:{{ o.bg }};color:{{ o.fg }}"><span>{{ o.label }}</span><span style="font-weight:800;font-size:18px">{{ o.mark }}</span></button>
+          </sc-for>
+        </div>
+        <sc-if value="{{ q2.answered }}" hint-placeholder-val="{{ false }}">
+          <div style="max-width:840px;width:100%;margin:0 auto;border-radius:16px;padding:18px 22px;background:{{ q2.bannerBg }}">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:17px;color:{{ q2.bannerFg }};margin-bottom:5px">{{ q2.banner }}</div>
+            <div style="font-size:16px;line-height:1.55;color:#33534c">{{ q2.explanation }}</div>
+          </div>
+        </sc-if>
+      </section>
+
+      <section data-scene data-screen-label="Ad insertion explorer" style="{{ sc10 }}">
+        <div style="display:flex;flex-direction:column;gap:5px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#e0564a">🎯 Try it · Ads in the manifest</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:32px;line-height:1.05;margin:0">Ad insertion explorer</h2>
+          <p style="font-size:14.5px;color:#4c6660;margin:0"><b>Pick a technique</b> — <span style="color:#c2453a;font-weight:700">ad segments</span>, <span style="color:#0a6b50;font-weight:700">content</span> and <span style="color:#a8790f;font-weight:700">markers</span> are highlighted.</p>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <sc-for list="{{ adList }}" as="a" hint-placeholder-count="3">
+            <button onClick="{{ a.onClick }}" style="flex:1;min-width:180px;display:flex;align-items:center;justify-content:center;gap:8px;border-radius:13px;padding:13px 18px;cursor:pointer;transition:all .15s;border:2px solid {{ a.border }};background:{{ a.bg }};color:{{ a.fg }}"><span style="font-size:17px">{{ a.icon }}</span><span style="font-family:'Bricolage Grotesque';font-weight:800;font-size:14.5px">{{ a.name }}</span></button>
+          </sc-for>
+        </div>
+        <div style="display:grid;grid-template-columns:1.15fr .85fr;gap:16px;align-items:start">
+          <div style="background:#1d2b2a;border-radius:16px;padding:12px;display:flex;flex-direction:column;gap:1px">
+            <sc-for list="{{ adLines }}" as="l" hint-placeholder-count="12">
+              <div style="border-radius:6px;padding:3px 9px;font-family:'JetBrains Mono',monospace;font-size:11.5px;word-break:break-all;background:{{ l.bg }};color:{{ l.fg }}">{{ l.t }}</div>
+            </sc-for>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <div style="background:#fdf2f0;border:2px solid #f8d6d0;border-radius:16px;padding:18px;display:flex;flex-direction:column;gap:7px">
+              <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:18px;color:{{ adInfo.color }}">{{ adInfo.icon }} {{ adInfo.name }}</div>
+              <p style="margin:0;font-size:14px;line-height:1.55;color:#3c4a58">{{ adInfo.d }}</p>
+            </div>
+            <div style="background:#f6faf9;border:1px solid #dcebe6;border-radius:13px;padding:13px 15px;font-size:13px;line-height:1.5;color:#3c4a58"><b>😤 Why can't you skip?</b> The player can't tell ads from content — they're just segments. Custom players or DRM can also disable seeking during ad segments.</div>
+          </div>
+        </div>
+      </section>
+
+      <section data-scene data-screen-label="Introducing DASH" style="{{ sc11 }}">
+        <div style="display:flex;flex-direction:column;gap:7px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#7a5cf0">Chapter 11 · The open alternative</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:36px;line-height:1.04;margin:0;letter-spacing:-.01em">DASH: Dynamic Adaptive Streaming over HTTP</h2>
+          <p style="font-size:15.5px;line-height:1.55;color:#4c6660;margin:0;max-width:88ch">A widely adopted adaptive streaming protocol, similar to HLS — media is segmented into time-based chunks and quality adapts to the network. Its key difference: it's <b>codec-agnostic</b>.</p>
+        </div>
+        <div style="display:grid;grid-template-columns:1.1fr .9fr;gap:16px;align-items:start">
+          <div style="background:#1d2b2a;border-radius:16px;padding:14px 16px;display:flex;flex-direction:column;gap:1px">
+            <div style="font-size:10px;font-weight:800;letter-spacing:.08em;color:#8fb8ac;margin-bottom:4px">EXAMPLE MPD (SIMPLIFIED)</div>
+            <sc-for list="{{ mpdLines }}" as="m" hint-placeholder-count="11">
+              <div style="font-family:'JetBrains Mono',monospace;font-size:11.5px;line-height:1.6;color:#c9b8f5;white-space:pre;overflow:hidden;text-overflow:ellipsis">{{ m.t }}</div>
+            </sc-for>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:9px">
+            <div style="background:#f5f2fe;border:1px solid #ded3fb;border-radius:13px;padding:13px 15px;font-size:13.5px;line-height:1.5;color:#3c4a58"><b style="color:#7a5cf0">🗂️ MPD</b> — the manifest describing tracks, bitrates and chunk durations, with finer control over switching logic and alternative content.</div>
+            <div style="background:#e9f6f1;border:1px solid #c2e4da;border-radius:13px;padding:13px 15px;font-size:13.5px;line-height:1.5;color:#3c4a58"><b style="color:#0e8f74">📶 ABR in DASH</b> — switches between Representations seamlessly to avoid buffering.</div>
+            <div style="background:#fdf2f0;border:1px solid #f8d6d0;border-radius:13px;padding:13px 15px;font-size:13.5px;line-height:1.5;color:#3c4a58"><b style="color:#c2453a">⚡ LL-DASH</b> — low-latency DASH for live sport: high quality with minimal delay from capture to screen.</div>
+          </div>
+        </div>
+        <div style="font-size:13px;color:#4c6660">💡 Each <b>Representation</b> in the MPD is the DASH equivalent of one HLS variant playlist.</div>
+      </section>
+
+      <section data-scene data-screen-label="HLS vs DASH" style="{{ sc12 }}">
+        <div style="display:flex;flex-direction:column;gap:5px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#2e7fd4">🎯 Try it · Compare the protocols</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:32px;line-height:1.05;margin:0">HLS vs DASH</h2>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <sc-for list="{{ protoTabs }}" as="p" hint-placeholder-count="2">
+            <button onClick="{{ p.onClick }}" style="flex:1;min-width:200px;border-radius:13px;padding:14px 18px;cursor:pointer;transition:all .15s;font-family:'Bricolage Grotesque';font-weight:800;font-size:16px;border:2px solid {{ p.border }};background:{{ p.bg }};color:{{ p.fg }}">{{ p.name }}</button>
+          </sc-for>
+        </div>
+        <div style="border:2px solid #dcebe6;border-radius:16px;overflow:hidden">
+          <sc-for list="{{ protoRows }}" as="r" hint-placeholder-count="6">
+            <div style="display:grid;grid-template-columns:.7fr 1.6fr;border-top:1px solid #e8f1ee">
+              <div style="padding:13px 17px;font-weight:800;font-size:13.5px;color:#4c6660;background:#f6faf9">{{ r.a }}</div>
+              <div style="padding:13px 17px;font-size:14px;color:#1d2b2a;font-weight:600">{{ r.b }}</div>
+            </div>
+          </sc-for>
+        </div>
+        <div style="background:#f3f9f7;border:1px solid #dcebe6;border-radius:14px;padding:13px 19px;font-size:13.5px;color:#33534c">🤝 In practice many services publish <b>both</b> from the same encoded media, so every device gets a format it can play.</div>
+      </section>
+
+      <section data-scene data-screen-label="Streaming on AWS" style="{{ sc13 }}">
+        <div style="display:flex;flex-direction:column;gap:5px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#ec7211">🎯 Try it · A VOD pipeline on AWS</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:32px;line-height:1.05;margin:0">Streaming on AWS</h2>
+          <p style="font-size:14.5px;color:#4c6660;margin:0">Everything in this lesson maps to managed AWS services. <b>Tap each stage.</b></p>
+        </div>
+        <div style="background:#1d2b2a;border-radius:18px;padding:20px;display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap">
+          <sc-for list="{{ awsList }}" as="a" hint-placeholder-count="5">
+            <div style="display:flex;align-items:center;gap:8px">
+              <button onClick="{{ a.onClick }}" style="display:flex;flex-direction:column;align-items:center;gap:4px;border-radius:13px;padding:12px 14px;cursor:pointer;transition:all .15s;min-width:104px;border:2px solid {{ a.border }};background:{{ a.bg }};color:{{ a.fg }}"><span style="font-size:20px">{{ a.icon }}</span><span style="font-family:'Bricolage Grotesque';font-weight:800;font-size:12px">{{ a.name }}</span></button>
+              <span style="color:#8fb8ac;font-weight:800">{{ a.arrow }}</span>
+            </div>
+          </sc-for>
+        </div>
+        <div style="background:#fff7ef;border:2px solid #ffe0c2;border-radius:18px;padding:22px;display:flex;gap:18px;align-items:center;min-height:150px">
+          <div style="width:60px;height:60px;flex-shrink:0;border-radius:15px;background:{{ awsInfo.color }};display:flex;align-items:center;justify-content:center;font-size:28px">{{ awsInfo.icon }}</div>
+          <div style="display:flex;flex-direction:column;gap:5px">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:20px;color:{{ awsInfo.color }}">{{ awsInfo.name }}</div>
+            <div style="font-size:12.5px;font-weight:800;color:#8a5f21">{{ awsInfo.role }}</div>
+            <p style="margin:0;font-size:14.5px;line-height:1.55;color:#3c4a58">{{ awsInfo.d }}</p>
+          </div>
+        </div>
+        <div style="font-size:13px;color:#4c6660">🎥 For <b>live</b> events, AWS Elemental MediaLive replaces MediaConvert as the real-time encoder feeding MediaPackage.</div>
+      </section>
+
+      <section data-scene data-screen-label="Sort it out" style="{{ sc14 }}">
+        <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap">
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#0e8f74">🎯 Try it · Which protocol?</div>
+            <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:32px;line-height:1.05;margin:0">HLS, DASH, or both?</h2>
+            <p style="font-size:14.5px;color:#4c6660;margin:0"><b>Tap a feature</b>, then <b>tap where it belongs</b>.</p>
+          </div>
+          <div style="display:flex;gap:10px">
+            <sc-if value="{{ dragChecked }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;align-items:center;border-radius:12px;padding:11px 18px;font-family:'Bricolage Grotesque';font-weight:800;font-size:16px;background:{{ dragScoreBg }};color:{{ dragScoreFg }}">{{ dragScore }}</div>
+            </sc-if>
+            <button onClick="{{ resetDrag }}" style="background:#fff;border:1px solid #d5e6e0;border-radius:12px;padding:11px 18px;font-family:'Figtree';font-weight:600;font-size:14px;color:#4c6660;cursor:pointer">↺ Reset</button>
+            <button onClick="{{ checkDrag }}" style="background:#0e8f74;border:none;border-radius:12px;padding:11px 20px;font-family:'Bricolage Grotesque';font-weight:700;font-size:15px;color:#fff;cursor:pointer">Check answers</button>
+          </div>
+        </div>
+        <div style="min-height:54px;background:#f2f7f5;border:2px dashed #c6ddd6;border-radius:16px;padding:12px;display:flex;flex-wrap:wrap;gap:8px;align-items:center">
+          <span style="font-size:13px;font-weight:700;color:#8ba39e;padding:0 6px">TRAY:</span>
+          <sc-for list="{{ dragTray }}" as="it" hint-placeholder-count="9">
+            <button onClick="{{ it.onClick }}" style="border-radius:11px;padding:10px 14px;font-family:'Figtree';font-weight:600;font-size:13px;cursor:pointer;transition:all .15s;border:2px solid {{ it.border }};background:{{ it.bg }};color:{{ it.fg }}">{{ it.label }}</button>
+          </sc-for>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px">
+          <sc-for list="{{ bucketList }}" as="b" hint-placeholder-count="3">
+            <div onClick="{{ b.onClick }}" style="border-radius:16px;padding:14px;min-height:180px;display:flex;flex-direction:column;gap:8px;cursor:pointer;background:{{ b.bg }};border:2px solid {{ b.border }}">
+              <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:15px;color:{{ b.fg }}">{{ b.name }}</div>
+              <sc-for list="{{ b.items }}" as="it" hint-placeholder-count="0">
+                <button onClick="{{ it.onClick }}" style="display:flex;justify-content:space-between;align-items:center;gap:6px;text-align:left;border-radius:9px;padding:9px 11px;font-weight:600;font-size:12.5px;cursor:pointer;border:2px solid {{ it.border }};background:{{ it.bg }};color:{{ it.fg }}"><span>{{ it.label }}</span><span style="font-weight:800">{{ it.mark }}</span></button>
+              </sc-for>
+            </div>
+          </sc-for>
+        </div>
+      </section>
+
+      <section data-scene data-screen-label="Final check" style="{{ sc15 }}">
+        <div style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px">
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#d98a18">🧠 Final knowledge check</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:30px;line-height:1.2;margin:0;max-width:40ch">{{ q3.question }}</h2>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:840px;width:100%;margin:0 auto">
+          <sc-for list="{{ q3.options }}" as="o" hint-placeholder-count="4">
+            <button onClick="{{ o.onClick }}" style="display:flex;align-items:center;justify-content:space-between;gap:10px;text-align:left;border-radius:15px;padding:18px 20px;font-family:'Figtree';font-weight:600;font-size:15.5px;cursor:pointer;transition:all .15s;border:2px solid {{ o.border }};background:{{ o.bg }};color:{{ o.fg }}"><span>{{ o.label }}</span><span style="font-weight:800;font-size:18px">{{ o.mark }}</span></button>
+          </sc-for>
+        </div>
+        <sc-if value="{{ q3.answered }}" hint-placeholder-val="{{ false }}">
+          <div style="max-width:840px;width:100%;margin:0 auto;border-radius:16px;padding:18px 22px;background:{{ q3.bannerBg }}">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:17px;color:{{ q3.bannerFg }};margin-bottom:5px">{{ q3.banner }}</div>
+            <div style="font-size:16px;line-height:1.55;color:#33534c">{{ q3.explanation }}</div>
+          </div>
+        </sc-if>
+      </section>
+
+      <section data-scene data-screen-label="Wrap-up" style="{{ sc16 }}">
+        <div style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px">
+          <div style="font-size:40px">🎉</div>
+          <div style="font-family:'Bricolage Grotesque';font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#0e8f74">Session wrap-up</div>
+          <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:38px;line-height:1.04;margin:0;letter-spacing:-.01em">Small chunks, smart playlists, smooth video</h2>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px">
+          <div style="background:#e9f6f1;border:1px solid #c2e4da;border-radius:18px;padding:20px;display:flex;flex-direction:column;gap:7px">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:15px;color:#0e8f74">📜 HLS</div>
+            <p style="margin:0;font-size:14px;line-height:1.55;color:#3c4a58">Versatile for VOD and live — playlists, sliding windows, multivariant ABR and manifest-level ad insertion.</p>
+          </div>
+          <div style="background:#f5f2fe;border:1px solid #ded3fb;border-radius:18px;padding:20px;display:flex;flex-direction:column;gap:7px">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:15px;color:#7a5cf0">🧩 DASH</div>
+            <p style="margin:0;font-size:14px;line-height:1.55;color:#3c4a58">Flexible, codec-agnostic open standard described by an MPD — from on-demand to live with LL-DASH.</p>
+          </div>
+          <div style="background:#fff7ef;border:1px solid #ffe0c2;border-radius:18px;padding:20px;display:flex;flex-direction:column;gap:7px">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:15px;color:#ec7211">☁️ On AWS</div>
+            <p style="margin:0;font-size:14px;line-height:1.55;color:#3c4a58">MediaConvert → S3 → MediaPackage → MediaTailor → CloudFront: encode, store, package, monetise, deliver.</p>
+          </div>
+        </div>
+        <div style="background:#e9f6f1;border:2px solid #c2e4da;border-radius:16px;padding:15px 20px;font-size:14px;line-height:1.55;color:#33534c">🎥 <b>Link it to your assessment:</b> the InnovateCore video-streaming component needs exactly these decisions — segment length, the ABR ladder, HLS and/or DASH, and CDN delivery. FFmpeg (from your lab setup) can produce HLS segments and playlists locally.</div>
+        <div style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap">
+          <button onClick="{{ startLesson }}" style="background:#fff;color:#0e8f74;border:2px solid #b5ded2;border-radius:14px;padding:14px 26px;font-family:'Bricolage Grotesque';font-weight:700;font-size:16px;cursor:pointer" style-hover="background:#f4fbf8">↻ Review from the start</button>
+          <button onClick="{{ toggleGlossary }}" style="background:#0e8f74;color:#fff;border:none;border-radius:14px;padding:14px 26px;font-family:'Bricolage Grotesque';font-weight:700;font-size:16px;cursor:pointer">📖 Open glossary</button>
+        </div>
+        <div style="text-align:center;font-size:12.5px;color:#8ba39e">Source: Robinson, D. (2017) <i>Content Delivery Networks: Fundamentals, Design, and Evolution</i>; Apple Developer documentation on HLS.</div>
+        <div style="text-align:center;font-size:14px;color:#8ba39e">Lesson prepared by <b style="color:#4c6660">Reza Shahabian</b></div>
+      </section>
+
+    </div>
+  </div>
+
+  <div style="position:sticky;bottom:0;z-index:20;width:100%;display:flex;justify-content:center;background:linear-gradient(to top,#edf5f2 55%,transparent);padding:10px 24px 22px">
+    <div style="width:100%;max-width:1180px;display:flex;align-items:center;justify-content:space-between;gap:14px">
+      <button onClick="{{ prev }}" style="display:flex;align-items:center;gap:8px;background:#fff;border:1px solid #d5e6e0;border-radius:13px;padding:13px 22px;font-family:'Bricolage Grotesque';font-weight:700;font-size:15px;color:#33534c;cursor:pointer" style-hover="border-color:#8fc9b9">← Back</button>
+      <div style="display:flex;align-items:center;gap:12px;font-weight:600;color:#6a857f;font-size:15px">
+        <span style="font-family:'Bricolage Grotesque';color:#1d2b2a;font-size:17px">{{ sceneNum }}</span>
+        <span style="color:#b6ccc6">/</span>
+        <span>{{ total }}</span>
+        <span style="color:#b6ccc6">·</span>
+        <span style="color:#33534c">{{ sceneTitle }}</span>
+      </div>
+      <button onClick="{{ next }}" style="display:flex;align-items:center;gap:8px;background:{{ accent }};border:none;border-radius:13px;padding:13px 26px;font-family:'Bricolage Grotesque';font-weight:700;font-size:15px;color:#fff;cursor:pointer;box-shadow:0 10px 20px -10px rgba(20,70,60,.5)" style-hover="transform:translateY(-2px)">Next →</button>
+    </div>
+  </div>
+
+  <sc-if value="{{ glossaryOpen }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ toggleGlossary }}" style="position:fixed;inset:0;z-index:50;background:rgba(20,40,36,.34);backdrop-filter:blur(2px)"></div>
+    <div style="position:fixed;top:0;right:0;bottom:0;z-index:51;width:min(460px,92vw);background:#fff;box-shadow:-20px 0 60px -20px rgba(20,70,60,.4);display:flex;flex-direction:column">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:24px 26px;border-bottom:1px solid #e8f1ee">
+        <div style="display:flex;flex-direction:column;gap:2px">
+          <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:22px">📖 Glossary</div>
+          <div style="font-size:13px;color:#7b948e">Streaming terms, plain English</div>
+        </div>
+        <button onClick="{{ toggleGlossary }}" style="background:#eef5f3;border:none;border-radius:10px;width:38px;height:38px;font-size:18px;cursor:pointer;color:#4c6660">✕</button>
+      </div>
+      <div style="overflow-y:auto;padding:18px 26px 40px;display:flex;flex-direction:column;gap:14px">
+        <sc-for list="{{ glossary }}" as="g" hint-placeholder-count="6">
+          <div style="border:1px solid #e8f1ee;border-radius:14px;padding:14px 16px;background:#fafcfb">
+            <div style="display:flex;align-items:center;gap:8px;font-family:'Bricolage Grotesque';font-weight:700;font-size:16px;color:#1d2b2a"><span>{{ g.icon }}</span>{{ g.term }}</div>
+            <div style="font-size:14.5px;line-height:1.5;color:#4c6660;margin-top:5px">{{ g.def }}</div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:820}}">
+class Component extends DCLogic {
+  state = { idx:0, playing:false, glossary:false, quiz:{q1:null,q2:null,q3:null},
+    ct:'small', vod:0, win:0, bw:500, ad:'pre', proto:'hls', aws:'convert',
+    drops:{}, sel:null, dragChecked:false };
+
+  total = 17;
+  interactive = new Set([1,4,5,6,7,9,10,12,13,14,15]);
+  durations = { 0:5200 };
+
+  chapTitles = ['Welcome','Types of content','Codecs & latency','How HLS works','VOD playlist inspector','Quick check','Live sliding window','ABR simulator','Variant attributes','Quick check','Ad insertion explorer','Introducing DASH','HLS vs DASH','Streaming on AWS','Sort it out','Final check','Wrap-up'];
+  chapColors = ['#0e8f74','#2e7fd4','#7a5cf0','#0e8f74','#ec7211','#ffb43d','#e0564a','#0e8f74','#2e7fd4','#ffb43d','#e0564a','#7a5cf0','#2e7fd4','#ec7211','#0e8f74','#ffb43d','#0e8f74'];
+
+  ctData = {
+    small:{name:'Small objects',icon:'🖼️',color:'#0e8f74',ex:'Ads, trailers',strategy:'Caching',why:'Short clips are cached at the edge so they start instantly and play responsively.'},
+    large:{name:'Large objects',icon:'🎬',color:'#7a5cf0',ex:'Full movies, series',strategy:'Adaptive streaming',why:'Long files are segmented and delivered with ABR, so quality adapts instead of the video stopping.'},
+    live:{name:'Continuous streams',icon:'🏟️',color:'#e0564a',ex:'Live broadcasts, sport',strategy:'Low-latency streaming',why:'Content is created as it is watched — the delay between camera and screen must stay small.'},
+  };
+  ctOrder = ['small','large','live'];
+
+  vodLinesData = [
+    {text:'#EXTM3U',tag:'#EXTM3U',title:'Extended M3U header',d:'Marks the file as an extended M3U playlist. Every HLS playlist must start with this tag on its first line.'},
+    {text:'#EXT-X-PLAYLIST-TYPE:VOD',tag:'#EXT-X-PLAYLIST-TYPE',title:'Playlist mutability',d:'VOD means the playlist is static and will never change. EVENT means existing entries never change but new ones can be appended.'},
+    {text:'#EXT-X-TARGETDURATION:10',tag:'#EXT-X-TARGETDURATION',title:'Maximum segment length',d:'The longest any media segment may be, in seconds. Every EXTINF duration must be less than or equal to this value.'},
+    {text:'#EXT-X-VERSION:4',tag:'#EXT-X-VERSION',title:'Protocol version',d:'States which version of the HLS specification the playlist follows, so players know which features to expect.'},
+    {text:'#EXT-X-MEDIA-SEQUENCE:0',tag:'#EXT-X-MEDIA-SEQUENCE',title:'First sequence number',d:'The sequence number of the first media file listed. Each following file is one higher. (Numbers are unrelated to file names.)'},
+    {text:'#EXTINF:10.0,',tag:'#EXTINF',title:'Segment duration',d:'Describes the media file on the next line — here, 10.0 seconds. Must be ≤ the target duration.'},
+    {text:'http://example.com/movie1/fileSequenceA.ts',tag:'Segment URI',title:'Media segment',d:'The URL of an actual chunk of video. The player downloads these in order, usually from a CDN edge.'},
+    {text:'#EXTINF:10.0,',tag:'#EXTINF',title:'Segment duration',d:'Another 10-second segment follows.'},
+    {text:'http://example.com/movie1/fileSequenceB.ts',tag:'Segment URI',title:'Media segment',d:'The second chunk of the movie.'},
+    {text:'#EXTINF:9.0,',tag:'#EXTINF',title:'A shorter final segment',d:'The last piece is only 9 seconds — fine, because it is still ≤ the 10-second target.'},
+    {text:'http://example.com/movie1/fileSequenceD.ts',tag:'Segment URI',title:'Final media segment',d:'The last chunk of the content.'},
+    {text:'#EXT-X-ENDLIST',tag:'#EXT-X-ENDLIST',title:'End of playlist',d:'Tells the player no more segments will ever be added — this is what makes it on-demand rather than live.'},
+  ];
+
+  variants = [
+    {bw:64000,name:'audio',res:'audio only',codecs:'mp4a.40.5',url:'audio/index.m3u8'},
+    {bw:150000,name:'low',res:'416x234',codecs:'avc1.42e00a,mp4a.40.2',url:'low/index.m3u8'},
+    {bw:240000,name:'lo_mid',res:'416x234',codecs:'avc1.42e00a,mp4a.40.2',url:'lo_mid/index.m3u8'},
+    {bw:440000,name:'hi_mid',res:'416x234',codecs:'avc1.42e00a,mp4a.40.2',url:'hi_mid/index.m3u8'},
+    {bw:640000,name:'high',res:'640x360',codecs:'avc1.42e00a,mp4a.40.2',url:'high/index.m3u8'},
+  ];
+  bwOptions = [100,200,300,500,800];
+
+  attrs = [
+    {k:'BANDWIDTH',req:'Required',d:'Upper bound of the overall bit rate for each media file, in bits per second — including container overhead.'},
+    {k:'AVERAGE-BANDWIDTH',req:'Recommended',d:'The average bit rate for the variant stream.'},
+    {k:'RESOLUTION',req:'Recommended',d:'Display size in pixels; include it for any stream that has video.'},
+    {k:'CODECS',req:'Recommended',d:'Quoted, comma-separated list of formats present in the segments (RFC 6381 identifiers).'},
+    {k:'FRAME-RATE',req:'Recommended',d:'Maximum frame rate in the variant stream, as a floating-point value.'},
+    {k:'HDCP-LEVEL',req:'Optional',d:'TYPE-0 if the stream may only play on HDCP-protected outputs; otherwise NONE.'},
+    {k:'VIDEO-RANGE',req:'Depends on encoding',d:'SDR or PQ — required only for certain transfer characteristic codes.'},
+  ];
+
+  adData = {
+    pre:{name:'Pre-roll',icon:'⏮️',color:'#e0564a',
+      lines:[['#EXTM3U','tag'],['#EXT-X-VERSION:3','tag'],['#EXT-X-TARGETDURATION:8','tag'],['#EXTINF:6.000,','tag'],['ad_segment_1.ts','ad'],['#EXTINF:6.000,','tag'],['ad_segment_2.ts','ad'],['#EXTINF:6.000,','tag'],['ad_segment_3.ts','ad'],['#EXTINF:8.000,','tag'],['video_segment_1.ts','vid'],['#EXTINF:8.000,','tag'],['video_segment_2.ts','vid']],
+      d:'Ad segments are placed BEFORE the content segments. The player treats them as the first content chunks that must be played — so they are unskippable.'},
+    mid:{name:'Mid-roll',icon:'⏯️',color:'#7a5cf0',
+      lines:[['#EXTINF:8.000,','tag'],['video_segment_4.ts','vid'],['#EXT-X-CUE-OUT:DURATION=30','mark'],['#EXTINF:10.000,','tag'],['ad_segment_1.ts','ad'],['#EXTINF:10.000,','tag'],['ad_segment_2.ts','ad'],['#EXTINF:10.000,','tag'],['ad_segment_3.ts','ad'],['#EXT-X-CUE-IN','mark'],['#EXTINF:8.000,','tag'],['video_segment_5.ts','vid']],
+      d:'#EXT-X-CUE-OUT marks the start of an ad break at a natural break in the content; #EXT-X-CUE-IN marks the return. The player plays the ad segments in place of the next content segment.'},
+    track:{name:'Ad tracking',icon:'📊',color:'#2e7fd4',
+      lines:[['#EXTM3U','tag'],['#EXT-X-VERSION:3','tag'],['#EXT-X-DATERANGE:ID="ad-break-1",START-DATE="2024-10-03T12:00:00Z",DURATION=30.0','mark'],['#EXTINF:10.000,','tag'],['ad_segment_1.ts','ad'],['#EXTINF:10.000,','tag'],['ad_segment_2.ts','ad'],['#EXTINF:10.000,','tag'],['ad_segment_3.ts','ad'],['#EXT-X-DATERANGE:ID="ad-break-end",END-DATE="2024-10-03T12:00:30Z"','mark'],['#EXTINF:8.000,','tag'],['video_segment_5.ts','vid']],
+      d:'#EXT-X-DATERANGE defines the ad period. Page code listens for that time range and reports back to the advertiser — measuring impressions and enforcing business rules.'},
+  };
+  adOrder = ['pre','mid','track'];
+
+  mpdLines = [
+    '<MPD type="static" mediaPresentationDuration="PT39S">',
+    '  <Period>',
+    '    <AdaptationSet mimeType="video/mp4" segmentAlignment="true">',
+    '      <Representation id="360p" bandwidth="640000" width="640" height="360"/>',
+    '      <Representation id="234p" bandwidth="240000" width="416" height="234"/>',
+    '    </AdaptationSet>',
+    '    <AdaptationSet mimeType="audio/mp4" lang="en">',
+    '      <Representation id="aac" bandwidth="64000"/>',
+    '    </AdaptationSet>',
+    '  </Period>',
+    '</MPD>',
+  ];
+
+  protoData = {
+    hls:{name:'HLS',color:'#0e8f74',rows:[['Origin','Apple-centric, but widely supported'],['Manifest','.m3u8 playlist (plain text)'],['Segments','Fixed segment durations'],['Codecs','Tied to specific codecs (H.264/HEVC + AAC)'],['Low latency','Low-Latency HLS'],['Sweet spot','Apple devices, broad compatibility, ad insertion']]},
+    dash:{name:'DASH',color:'#7a5cf0',rows:[['Origin','Open international standard'],['Manifest','.mpd — Media Presentation Description (XML)'],['Segments','Flexible segment lengths'],['Codecs','Codec-agnostic — H.264, HEVC, VP9 and more'],['Low latency','LL-DASH, for live sport and events'],['Sweet spot','Codec flexibility, multi-period MPD, interoperability']]},
+  };
+
+  awsData = {
+    convert:{name:'AWS Elemental MediaConvert',icon:'🗜️',color:'#7a5cf0',role:'Encode & package files',d:'Transcodes source video into multiple bitrates (the ABR ladder) and packages it as HLS or DASH segments and manifests — typically writing to Amazon S3.'},
+    s3:{name:'Amazon S3',icon:'🪣',color:'#1f8a4c',role:'Origin storage',d:'Stores the segments and playlists for video on demand. It acts as the origin that the CDN pulls from.'},
+    package:{name:'AWS Elemental MediaPackage',icon:'📦',color:'#ec7211',role:'Just-in-time packaging',d:'Takes one input and produces HLS and DASH on demand, so a single stream can serve both Apple and DASH players. Also handles live time-shift and DRM.'},
+    tailor:{name:'AWS Elemental MediaTailor',icon:'🎯',color:'#e0564a',role:'Server-side ad insertion',d:'Stitches personalised ads into the manifest at the CUE-OUT/CUE-IN markers, and reports ad impressions — the ad ideas from chapter 11, as a managed service.'},
+    cf:{name:'Amazon CloudFront',icon:'📡',color:'#2e7fd4',role:'Global delivery',d:'Caches segments and manifests at edge locations worldwide, so viewers fetch video from a nearby server.'},
+  };
+  awsOrder = ['convert','s3','package','tailor','cf'];
+
+  dragMeta = {
+    m3u8:{label:'Uses an .m3u8 playlist',cat:'hls'},
+    apple:{label:'Originated with Apple devices',cat:'hls'},
+    cue:{label:'Ad breaks via EXT-X-CUE-OUT / CUE-IN',cat:'hls'},
+    mpd:{label:'Describes content in an MPD (XML)',cat:'dash'},
+    agnostic:{label:'Codec-agnostic open standard',cat:'dash'},
+    lldash:{label:'LL-DASH for live sport',cat:'dash'},
+    segs:{label:'Splits media into short time-based chunks',cat:'both'},
+    abr:{label:'Adaptive bitrate switching',cat:'both'},
+    http:{label:'Delivered over plain HTTP via a CDN',cat:'both'},
+  };
+  buckets = [
+    {k:'hls',name:'📜 HLS',bg:'#e9f6f1',border:'#c2e4da',fg:'#0e8f74'},
+    {k:'both',name:'🤝 Both',bg:'#fff7ef',border:'#ffe0c2',fg:'#c26a0a'},
+    {k:'dash',name:'🧩 DASH',bg:'#f5f2fe',border:'#ded3fb',fg:'#7a5cf0'},
+  ];
+
+  quizDefs = {
+    q1:{question:'Which tag tells an HLS player that no more segments will be added — making the playlist on-demand rather than live?',
+      options:[{label:'#EXT-X-TARGETDURATION'},{label:'#EXT-X-MEDIA-SEQUENCE'},{label:'#EXT-X-ENDLIST',correct:true},{label:'#EXTINF'}],
+      explanation:'#EXT-X-ENDLIST marks the end of a VOD playlist. A live sliding-window playlist leaves it out, telling the player to keep re-fetching for new segments.'},
+    q2:{question:'A viewer\u2019s connection measures 300 kbps. Using the multivariant playlist, which variant should the player choose?',
+      options:[{label:'high — 640,000 bps'},{label:'lo_mid — 240,000 bps',correct:true},{label:'hi_mid — 440,000 bps'},{label:'Pause and buffer until bandwidth improves'}],
+      explanation:'The player picks the highest variant whose BANDWIDTH fits the measured rate: 240,000 bps fits under 300 kbps; 440,000 does not. Real players also keep a safety margin to minimise stalling.'},
+    q3:{question:'A publisher wants one streaming format that works with H.264, HEVC and VP9 and is an open standard. What fits best?',
+      options:[{label:'HLS with a single variant'},{label:'A VOD playlist with EXT-X-ENDLIST'},{label:'Pre-roll ad insertion'},{label:'MPEG-DASH',correct:true}],
+      explanation:'DASH is codec-agnostic and an open international standard, described by an MPD. HLS is more tied to specific codecs.'},
+  };
+
+  glossary = [
+    {icon:'📶',term:'ABR',def:'Adaptive Bitrate Streaming — switches quality to match current network conditions.'},
+    {icon:'🗜️',term:'Codec',def:'Compresses and decompresses media — e.g. H.264, HEVC, AAC.'},
+    {icon:'📜',term:'HLS',def:'HTTP Live Streaming — segments + .m3u8 playlists over HTTP.'},
+    {icon:'📄',term:'.m3u8',def:'The text playlist format HLS uses to list segments or variants.'},
+    {icon:'✂️',term:'Segment',def:'A short chunk of media (often .ts) a few seconds long.'},
+    {icon:'⏱️',term:'EXT-X-TARGETDURATION',def:'The maximum duration any segment may have.'},
+    {icon:'🔢',term:'EXT-X-MEDIA-SEQUENCE',def:'Sequence number of the first segment listed.'},
+    {icon:'🏁',term:'EXT-X-ENDLIST',def:'Marks a playlist as complete — present in VOD, absent in live.'},
+    {icon:'🪟',term:'Sliding window',def:'A live playlist that drops old segments as new ones are added.'},
+    {icon:'🎚️',term:'Multivariant playlist',def:'A top-level playlist listing each bitrate variant (EXT-X-STREAM-INF).'},
+    {icon:'⏮️',term:'Pre-roll / mid-roll',def:'Ads before the content, or inside it at marked breaks.'},
+    {icon:'✂️',term:'EXT-X-CUE-OUT / CUE-IN',def:'Markers for the start and end of an ad break.'},
+    {icon:'📊',term:'EXT-X-DATERANGE',def:'Defines a time period — used for ad tracking and reporting.'},
+    {icon:'🧩',term:'DASH',def:'Dynamic Adaptive Streaming over HTTP — an open, codec-agnostic standard.'},
+    {icon:'🗂️',term:'MPD',def:'Media Presentation Description — DASH\u2019s XML manifest.'},
+    {icon:'⚡',term:'LL-DASH',def:'Low-Latency DASH, for real-time events like sport.'},
+    {icon:'🎯',term:'MediaTailor',def:'AWS service for server-side ad insertion into streams.'},
+  ];
+
+  shuffle(a){ const r=a.slice(); for(let i=r.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [r[i],r[j]]=[r[j],r[i]]; } return r; }
+  ensureShuffles(){
+    if(this._qOrder) return;
+    this._qOrder={}; const used=[];
+    Object.keys(this.quizDefs).forEach(k=>{
+      const n=this.quizDefs[k].options.length; let ord,pos,tries=0;
+      do { ord=this.shuffle([...Array(n).keys()]); pos=ord.findIndex(ix=>this.quizDefs[k].options[ix].correct); tries++; }
+      while(used.includes(pos) && tries<12);
+      used.push(pos); this._qOrder[k]=ord;
+    });
+    let t,tries=0;
+    do { t=this.shuffle(Object.keys(this.dragMeta)); tries++; }
+    while(tries<20 && t.some((id,ix)=>ix>0 && this.dragMeta[id].cat===this.dragMeta[t[ix-1]].cat));
+    this._tray=t;
+  }
+
+  componentDidMount(){}
+  componentWillUnmount(){ window.removeEventListener('keydown', this.onKey); clearTimeout(this.t); }
+  ensureWiring(){
+    if(!this._kb){ this._kb=true; window.addEventListener('keydown', this.onKey); }
+    if(this._lastIdx!==this.state.idx || this._lastPlay!==this.state.playing){
+      this._lastIdx=this.state.idx; this._lastPlay=this.state.playing; this.scheduleAutoplay();
+    }
+  }
+  onKey = (e)=>{
+    const tag=(e.target&&e.target.tagName)||'';
+    if(tag==='INPUT'||tag==='TEXTAREA') return;
+    if(e.key==='ArrowRight'){ this.next(); }
+    else if(e.key==='ArrowLeft'){ this.prev(); }
+    else if(e.key===' '){ e.preventDefault(); this.togglePlay(); }
+  };
+
+  sceneCfg = [
+    {gap:22,center:true,pos:true},{gap:16},{gap:16},{gap:16},{gap:14},
+    {gap:22,vcenter:true},{gap:14},{gap:14},{gap:14},{gap:22,vcenter:true},
+    {gap:14},{gap:14},{gap:14},{gap:14},{gap:14},{gap:22,vcenter:true},{gap:18},
+  ];
+  sceneStyle(k){
+    const c=this.sceneCfg[k]; const on=this.state.idx===k;
+    const s={display:on?'flex':'none',flexDirection:'column',minHeight:'560px',gap:c.gap+'px',width:'100%'};
+    if(c.center){ s.alignItems='center'; s.justifyContent='center'; s.textAlign='center'; }
+    if(c.vcenter){ s.justifyContent='center'; }
+    if(c.pos){ s.position='relative'; }
+    return s;
+  }
+  scheduleAutoplay(){
+    clearTimeout(this.t);
+    const i=this.state.idx;
+    if(this.state.playing && !this.interactive.has(i) && i<this.total-1){
+      this.t=setTimeout(()=>this.next(), this.durations[i]||9000);
+    }
+  }
+
+  next=()=> this.setState(s=> s.idx<this.total-1 ? {idx:s.idx+1} : {playing:false});
+  prev=()=> this.setState(s=> ({idx:Math.max(0,s.idx-1)}));
+  goTo=(i)=>()=> this.setState({idx:i});
+  togglePlay=()=> this.setState(s=>({playing:!s.playing}));
+  startLesson=()=> this.setState({idx:1});
+  playFromStart=()=> this.setState({idx:1, playing:true});
+  toggleGlossary=()=> this.setState(s=>({glossary:!s.glossary}));
+
+  answer=(q,i)=> this.setState(s=> s.quiz[q]!=null ? null : ({quiz:{...s.quiz,[q]:i}}));
+  setCt=(k)=>()=> this.setState({ct:k});
+  setVod=(i)=>()=> this.setState({vod:i});
+  winNext=()=> this.setState(s=>({win:Math.min(s.win+1,5)}));
+  winReset=()=> this.setState({win:0});
+  setBw=(v)=>()=> this.setState({bw:v});
+  setAd=(k)=>()=> this.setState({ad:k});
+  setProto=(k)=>()=> this.setState({proto:k});
+  setAws=(k)=>()=> this.setState({aws:k});
+
+  pick=(id)=>()=> this.setState(s=>({sel: s.sel===id?null:id}));
+  drop=(b)=>()=> this.setState(s=>{ if(!s.sel) return null; return {drops:{...s.drops,[s.sel]:b}, sel:null}; });
+  toTray=(id)=>(e)=>{ if(e&&e.stopPropagation) e.stopPropagation(); this.setState(s=>({drops:{...s.drops,[id]:null}, sel:null})); };
+  checkDrag=()=> this.setState({dragChecked:true, sel:null});
+  resetDrag=()=> this.setState({drops:{}, dragChecked:false, sel:null});
+
+  buildQuiz(qKey){
+    const def=this.quizDefs[qKey]; const sel=this.state.quiz[qKey];
+    const options=this._qOrder[qKey].map(i=>{
+      const o=def.options[i];
+      let bg='#fff',fg='#1d2b2a',border='#e2ebe8',mark='';
+      if(sel!=null){
+        if(o.correct){ bg='#e4f5ed';fg='#0a6b50';border='#19c39a';mark='✓'; }
+        else if(i===sel){ bg='#fdeceb';fg='#c2362b';border='#ff6b5e';mark='✗'; }
+        else { fg='#97a8a4';border='#eef3f1'; }
+      }
+      return {label:o.label,bg,fg,border,mark,onClick:()=>this.answer(qKey,i)};
+    });
+    const answered=sel!=null;
+    const isCorrect=answered && def.options[sel].correct;
+    return {question:def.question,options,answered,isCorrect,explanation:def.explanation,
+      banner: !answered ? '' : (isCorrect?'✅ Correct!':'❌ Not quite —'),
+      bannerBg: !answered ? '' : (isCorrect?'#e4f5ed':'#fdeceb'),
+      bannerFg: !answered ? '' : (isCorrect?'#0a6b50':'#c2362b')};
+  }
+
+  buildDragItem(id, place){
+    const m=this.dragMeta[id]; const drops=this.state.drops; const checked=this.state.dragChecked;
+    const selected=this.state.sel===id;
+    let bg='#fff',fg='#1d2b2a',border='#d5e6e0',mark='';
+    if(checked && place!=='tray'){
+      const ok=drops[id]===m.cat;
+      bg=ok?'#e4f5ed':'#fdeceb'; fg=ok?'#0a6b50':'#c2362b'; border=ok?'#19c39a':'#ff6b5e'; mark=ok?'✓':'✗';
+    } else if(selected){ bg='#e4f3ee'; border='#0e8f74'; }
+    const onClick = place==='tray' ? this.pick(id) : this.toTray(id);
+    return {id,label:m.label,bg,fg,border,mark,selected,onClick};
+  }
+
+  renderVals(){
+    this.ensureWiring();
+    this.ensureShuffles();
+    const i=this.state.idx;
+    const accent=this.chapColors[i]||'#0e8f74';
+    const sc={}; for(let k=0;k<this.total;k++) sc['sc'+k]=this.sceneStyle(k);
+    const chapters=this.chapTitles.map((t,k)=>({num:k+1,label:t,onClick:this.goTo(k),bg: k===i?this.chapColors[k] : (k<i?'#9ab9b1':'#d3e3de')}));
+
+    const ctList=this.ctOrder.map(k=>{ const C=this.ctData[k]; const on=this.state.ct===k;
+      return {k,name:C.name,icon:C.icon,onClick:this.setCt(k),bg:on?C.color:'#f2f7f5',fg:on?'#fff':'#33534c',border:on?C.color:'#e2ebe8'}; });
+
+    const vodLines=this.vodLinesData.map((L,ix)=>{ const on=this.state.vod===ix; const isUri=!L.text.startsWith('#');
+      return {text:L.text,onClick:this.setVod(ix),bg:on?'#ec7211':'transparent',fg:on?'#fff':(isUri?'#9be3cc':'#ffcf9e')}; });
+
+    const w=this.state.win; const seq=1+w;
+    const winSegs=[]; for(let s=seq;s<seq+5;s++){ winSegs.push({name:'fileSequence'+s+'.ts',num:String(s),
+      bg: s===seq+4 && w>0 ? '#0e8f74':'#2f4340', fg:'#fff', tag: s===seq+4 && w>0 ? 'NEW':''}); }
+    const winInfo={seq:String(seq),removed: w>0 ? 'fileSequence'+(seq-1)+'.ts removed from the top' : 'Initial live window — five segments',
+      added: w>0 ? 'fileSequence'+(seq+4)+'.ts appended at the bottom' : 'No #EXT-X-ENDLIST: the player keeps reloading',
+      time: (w*10)+'s into the broadcast'};
+
+    const bw=this.state.bw*1000;
+    let chosen=this.variants[0];
+    this.variants.forEach(v=>{ if(v.bw<=bw) chosen=v; });
+    const variantRows=this.variants.slice().reverse().map(v=>{ const on=v===chosen; const fits=v.bw<=bw;
+      return {name:v.name,bwLabel:(v.bw/1000)+' kbps',res:v.res,url:v.url,
+        bg:on?'#0e8f74':(fits?'#f2f7f5':'#fafbfb'),fg:on?'#fff':(fits?'#33534c':'#b6ccc6'),
+        state:on?'▶ PLAYING':(fits?'fits':'too high'),border:on?'#0e8f74':'#e2ebe8'}; });
+    const bwChips=this.bwOptions.map(v=>({v:v+' kbps',onClick:this.setBw(v),bg:v===this.state.bw?'#0e8f74':'#f2f7f5',fg:v===this.state.bw?'#fff':'#33534c',border:v===this.state.bw?'#0e8f74':'#e2ebe8'}));
+    const abrNote = chosen.name==='audio' ? '📻 Not enough bandwidth for any video variant — the player falls back to audio only rather than stalling.'
+      : (chosen.name==='high' ? '🎉 Plenty of bandwidth — the player picks the best-quality variant.' : '⚖️ The player picks the highest variant that fits under the measured bandwidth, keeping playback smooth.');
+
+    const adList=this.adOrder.map(k=>{ const A=this.adData[k]; const on=this.state.ad===k;
+      return {k,name:A.name,icon:A.icon,onClick:this.setAd(k),bg:on?A.color:'#f2f7f5',fg:on?'#fff':'#33534c',border:on?A.color:'#e2ebe8'}; });
+    const ad=this.adData[this.state.ad];
+    const adColors={tag:'#8fb8ac',ad:'#ff9e93',vid:'#9be3cc',mark:'#ffcf6b'};
+    const adLines=ad.lines.map(([t,k])=>({t,fg:adColors[k],bg:k==='ad'?'rgba(224,86,74,.16)':(k==='mark'?'rgba(255,180,61,.14)':'transparent')}));
+
+    const protoTabs=['hls','dash'].map(k=>{ const P=this.protoData[k]; const on=this.state.proto===k;
+      return {k,name:P.name,onClick:this.setProto(k),bg:on?P.color:'#f2f7f5',fg:on?'#fff':'#33534c',border:on?P.color:'#e2ebe8'}; });
+    const pd=this.protoData[this.state.proto];
+    const protoRows=pd.rows.map(([a,b])=>({a,b}));
+
+    const awsList=this.awsOrder.map((k,ix)=>{ const A=this.awsData[k]; const on=this.state.aws===k;
+      return {k,name:A.name.replace('AWS Elemental ','').replace('Amazon ',''),icon:A.icon,onClick:this.setAws(k),arrow:ix<this.awsOrder.length-1?'→':'',
+        bg:on?A.color:'#2f4340',fg:'#fff',border:on?'#fff':'#2f4340'}; });
+
+    const tray=this._tray.filter(id=>this.state.drops[id]==null).map(id=>this.buildDragItem(id,'tray'));
+    const bucketList=this.buckets.map(B=>({...B,onClick:this.drop(B.k),
+      items:this._tray.filter(id=>this.state.drops[id]===B.k).map(id=>this.buildDragItem(id,B.k))}));
+    const totalD=Object.keys(this.dragMeta).length;
+    const correct=Object.keys(this.dragMeta).filter(id=>this.state.drops[id]===this.dragMeta[id].cat).length;
+
+    return {
+      ...sc,
+      progressPct: Math.round(i/(this.total-1)*100)+'%',
+      accent, sceneNum:i+1, total:this.total, sceneTitle:this.chapTitles[i], chapters,
+      next:this.next, prev:this.prev, togglePlay:this.togglePlay,
+      playLabel: this.state.playing?'⏸ Pause':'▶ Play',
+      startLesson:this.startLesson, playFromStart:this.playFromStart,
+      glossaryOpen:this.state.glossary, toggleGlossary:this.toggleGlossary, glossary:this.glossary,
+      ctList, ctInfo:this.ctData[this.state.ct],
+      vodLines, vodCur:this.vodLinesData[this.state.vod],
+      winSegs, winInfo, winNext:this.winNext, winReset:this.winReset, winStep:(w+1)+' / 6',
+      bwChips, variantRows, chosenName:chosen.name, chosenRes:chosen.res, chosenBw:(chosen.bw/1000)+' kbps', abrNote,
+      attrs:this.attrs,
+      adList, adInfo:ad, adLines,
+      mpdLines:this.mpdLines.map(t=>({t})),
+      protoTabs, protoInfo:pd, protoRows,
+      awsList, awsInfo:this.awsData[this.state.aws],
+      q1:this.buildQuiz('q1'), q2:this.buildQuiz('q2'), q3:this.buildQuiz('q3'),
+      dragTray:tray, bucketList,
+      checkDrag:this.checkDrag, resetDrag:this.resetDrag, dragChecked:this.state.dragChecked,
+      dragScore:correct+' / '+totalD+' correct', dragScoreBg: correct===totalD?'#e4f5ed':'#fff4e8', dragScoreFg: correct===totalD?'#0a6b50':'#d98a18',
+    };
+  }
+}
+</script>
+</body>
+</html>
