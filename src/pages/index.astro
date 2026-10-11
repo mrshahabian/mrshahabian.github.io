@@ -5,6 +5,7 @@ import Header from '../components/Header.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 import { getCollection } from 'astro:content';
 import { getSections } from '../utils/tutorials';
+import { sortEventsNewestFirst } from '../utils/events';
 
 const tutorials = getSections();
 
@@ -28,9 +29,7 @@ const education = (await getCollection('education')).sort((a, b) => {
     return (b.data.end || '9999').localeCompare(a.data.end || '9999');
 });
 
-const events = (await getCollection('events')).sort((a, b) => {
-    return b.data.date.localeCompare(a.data.date);
-});
+const events = sortEventsNewestFirst(await getCollection('events'));
 ---
 
 <!doctype html>
